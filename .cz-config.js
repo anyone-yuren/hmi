@@ -19,24 +19,18 @@ module.exports = {
   scopeOverrides: {
     // 当选择 feat 或 fix 时要跳过 Questions
     feat: [
-      { name: "wms" },
-      { name: "rcs" },
-      { name: "wcs" },
-      { name: "3d" }, // 全部
-      { name: "pad" },
-      { name: "dashboard" },
-      { name: "pda" },
-      { name: "root" }, // 根目录,框架搭建
+      { name: "customer" },
+      { name: "deployer" },
+      {
+        name: "common",
+      },
     ],
     fix: [
-      { name: "wms" },
-      { name: "rcs" },
-      { name: "wcs" },
-      { name: "3d" }, // 全部
-      { name: "pad" },
-      { name: "pda" },
-      { name: "dashboard" },
-      { name: "root" }, // 根目录,框架搭建
+      { name: "customer" },
+      { name: "deployer" },
+      {
+        name: "common",
+      },
     ],
   },
   // 确认提交

@@ -1,5 +1,4 @@
-import { message, Tag } from 'antd';
-import { dashboard } from 'apis';
+import { Tag } from 'antd';
 import dayjs from 'dayjs';
 import { GAction, GCtrl, GSearchTable, GTableCtrlField } from 'gbeata';
 import { useRef } from 'react';
@@ -118,14 +117,7 @@ const NotificationList = () => {
             confirm
             disabled={status === 1}
             confirmMsg={t('global.billing.isRead')}
-            onConfirm={async () => {
-              const res = await dashboard.readNotification(record.id);
-              if (res) {
-                message.success(t('global.billing.readSuccess'));
-                tableRef.current?.refresh();
-                refreshNotification();
-              }
-            }}
+            onConfirm={async () => {}}
             record={record}
           >
             {t('global.billing.read')}
@@ -140,7 +132,7 @@ const NotificationList = () => {
   return (
     <GSearchTable
       ref={tableRef}
-      api={dashboard.getNotificationList}
+      // api={dashboard.getNotificationList}
       fields={fields}
       rowKey='concurrencyStamp'
       tableExtend={{

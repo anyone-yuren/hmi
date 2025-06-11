@@ -10,9 +10,7 @@ import {
 } from "../typing";
 import { createAppConfigPlugin } from "./appConfig";
 import { viteInjectAppLoadingPlugin } from "./inject-app-loading";
-import { configMockPlugin } from "./mock";
 import { configSvgIconsPlugin } from "./svgSprite";
-import { configStaticCopyPlugin } from "./viteStaticCopy";
 
 interface Options {
   isBuild: boolean;
@@ -40,9 +38,9 @@ async function createPlugins({
   // vite-plugin-svg-icons
   vitePlugins.push(configSvgIconsPlugin({ isBuild }));
 
-  if (enableMock) {
-    vitePlugins.push(configMockPlugin({ isBuild, root }));
-  }
+  // if (enableMock) {
+  //   vitePlugins.push(configMockPlugin({ isBuild, root }));
+  // }
   return vitePlugins;
 }
 
@@ -144,10 +142,6 @@ async function loadApplicationPlugins(
     {
       condition: injectAppLoading,
       plugins: async () => [await viteInjectAppLoadingPlugin(!!isBuild, env)],
-    },
-    {
-      condition: !!extraAppConfig,
-      plugins: async () => [await configStaticCopyPlugin()],
     },
     {
       condition: pwa,

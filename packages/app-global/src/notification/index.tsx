@@ -1,7 +1,7 @@
 import { useNotificationStore } from '@gbeata/store';
 import { useSize } from 'ahooks';
-import { Button, Divider, Empty, message, Tabs, TabsProps, Tag } from 'antd';
-import { dashboard } from 'apis';
+import { Button, Divider, Empty, Tabs, TabsProps, Tag } from 'antd';
+// import { dashboard } from 'apis';
 import dayjs from 'dayjs';
 import VirtualList from 'rc-virtual-list';
 import { useRef } from 'react';
@@ -46,11 +46,11 @@ const GlobalNotification = () => {
                   variant='filled'
                   color='orange'
                   onClick={async () => {
-                    const res = await dashboard.readNotification(item.id);
-                    if (res) {
-                      message.success(t('global.billing.readSuccess'));
-                      refreshNotification();
-                    }
+                    // const res = await dashboard.readNotification(item.id);
+                    // if (res) {
+                    //   message.success(t('global.billing.readSuccess'));
+                    //   refreshNotification();
+                    // }
                   }}
                 >
                   {t('global.billing.read')}
