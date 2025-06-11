@@ -101,6 +101,9 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
       locale={localeConfig}
       theme={{
         // token: { colorTextHeading: '#fff' },
+        token: {
+          colorPrimary: '#00d1d1',
+        },
         components: {
           Table: {
             /* 这里是你的组件 token */

@@ -20,11 +20,6 @@ const GlobalProvider: FC<GlobalProviderProps> = ({ children }) => {
           header: '!px-2 !min-h-10',
         },
       }}
-      theme={{
-        token: {
-          colorPrimary: '#235EFF',
-        },
-      }}
     >
       <Fragment>
         {children}

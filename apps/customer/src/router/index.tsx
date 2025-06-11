@@ -1,7 +1,6 @@
 import { createHashRouter } from 'react-router-dom';
 
 import Home from '@/views/Home';
-import TaskPage from '@/views/Task';
 import { PdaLayout } from '@gbeata/layout-ui';
 
 const router = createHashRouter([
@@ -12,10 +11,6 @@ const router = createHashRouter([
       {
         path: '',
         element: <Home />,
-      },
-      {
-        path: 'task',
-        element: <TaskPage />,
       },
     ],
   },
