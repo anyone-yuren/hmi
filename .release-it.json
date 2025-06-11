@@ -5,6 +5,9 @@
   "git": {
     "commitMessage": "release: v${version}"
   },
+  "gitlab": {
+    "release": true
+  },
   "npm": {
     "publish": false
   },
@@ -54,6 +57,9 @@
           }
         ]
       }
+    },
+    "@release-it/keep-a-changelog": {
+      "filename": "CHANGELOG.md"
     }
   }
 }
