@@ -4,7 +4,7 @@ stages:
 release-job:
   stage: release
   variables:
-    GITLAB_TOKEN: "W3ysr1iL9gVM1y4fqvjj"
+    GITLAB_TOKEN: "PiXbZ5JJpvVdzsr1QnKN"
   script:
     - echo "当前 token：$GITLAB_TOKEN"
     - pnpm install
