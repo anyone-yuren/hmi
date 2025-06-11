@@ -3,7 +3,8 @@
     "commitMessage": "release: v${version}"
   },
   "gitlab": {
-    "release": true
+    "release": true,
+    "url": "http://multiway.8866.org:10080"
   },
   "npm": {
     "publish": false
