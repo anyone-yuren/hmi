@@ -1,0 +1,147 @@
+@import '../less/variable.less';
+
+.g-search-table {
+  .g-table-content {
+    margin: @space;
+  }
+
+  > .ant-card + .ant-card {
+    margin-top: @space;
+  }
+
+  .ant-alert {
+    margin: @space;
+  }
+
+  &.full {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    padding: @space2;
+    padding-bottom: 70px;
+    background-color: #fff;
+    z-index: 999;
+    position: fixed;
+    overflow: auto;
+  }
+
+  &.compact {
+    .g-table-header {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .g-table {
+      border-color: transparent;
+      background-color: transparent;
+      margin-top: 0;
+    }
+
+    .g-table-content {
+      margin: -1px;
+    }
+
+    .ant-pagination {
+      margin-right: 0;
+    }
+
+    .g-search {
+      padding: 0;
+      margin-bottom: 0;
+      border-color: transparent;
+      background-color: transparent;
+    }
+  }
+}
+
+.g-search-table-more {
+  padding-right: 0;
+
+  .ant-row {
+    flex-wrap: wrap;
+  }
+
+  .ant-col {
+    flex: 1;
+  }
+
+  .ant-col-24 + .ant-col-24 {
+    margin-left: 8px;
+  }
+
+  /* stylelint-disable-next-line no-duplicate-selectors */
+  .ant-col {
+    max-width: unset;
+  }
+
+  .ant-form-item-label {
+    display: none;
+  }
+
+  .ant-form-item {
+    margin-bottom: 0;
+  }
+}
+
+.g-search-table-more-submit {
+  display: none !important;
+}
+
+.g-search-table-extra-fields-edit-line {
+  margin: @gap 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.g-search-table-extra-fields-edit-line-right {
+  display: flex;
+  align-items: center;
+}
+
+.g-search-table-alert {
+  margin: 0 @space2 @space2 !important;
+
+  .ant-alert-icon {
+    transform: translateY(1px);
+  }
+}
+
+.g-search-poper {
+  width: 300px;
+  max-height: 180px;
+  overflow: auto;
+}
+
+.g-search-table-extra-btns {
+  margin-left: @space;
+  font-size: 16px;
+}
+
+.g-search-table-footer-actions {
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  padding: @space @space2;
+  box-shadow: 0 -6px 16px -8px rgba(0, 0, 0, 8%),
+    0 -9px 28px 0 rgba(0, 0, 0, 5%), 0 -12px 48px 16px rgba(0, 0, 0, 3%);
+  background-color: #fff;
+  z-index: 101;
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dark {
+  .g-search-table-footer-actions {
+    border-top: 1px solid #434343;
+    box-shadow: 0 -2px 8px 0 rgb(0 0 0 / 65%);
+    background-color: #141414;
+  }
+
+  .full {
+    background-color: #141414;
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@gbeata/utils",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "homepage": "https://github.com/anyone-yuren/react-antd-admin-pnpm",
+  "bugs": {
+    "url": "https://github.com/anyone-yuren/react-antd-admin-pnpm/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anyone-yuren/react-antd-admin-pnpm.git",
+    "directory": "internal/vite-config"
+  },
+  "scripts": {
+    "clean": "pnpm rimraf .turbo node_modules dist",
+    "lint": "pnpm eslint .",
+    "jiti-fix": "find ./dist -type f -exec sed -i '' 's|file://||g' {} \\;",
+    "stub": "pnpm unbuild --stub"
+  },
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "vite",
+    "vite-config"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@gbeata/eslint-config": "workspace:^",
+    "@gbeata/ts-config": "workspace:^",
+    "@types/lodash-es": "^4.17.11"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "github": {
+    "release": true
+  },
+  "git": {
+    "commitMessage": "release: v${version}"
+  },
+  "npm": {
+    "publish": false
+  },
+  "hooks": {
+    "after:bump": "echo 更新版本成功"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "infile": "CHANGELOG.md",
+      "ignoreRecommendedBump": true,
+      "strictSemVer": true,
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          {
+            "type": "feat",
+            "section": "✨新功能"
+          },
+          {
+            "type": "fix",
+            "section": "🐛问题修复"
+          },
+          {
+            "type": "docs",
+            "section": "📚文档"
+          },
+          {
+            "type": "chore",
+            "section": "🔧配置文件"
+          },
+          {
+            "type": "style",
+            "hidden": "true",
+            "section": "💄修改样式"
+          },
+          {
+            "type": "refactor",
+            "section": "🔨重构"
+          },
+          {
+            "type": "perf",
+            "section": "🚀性能优化"
+          },
+          {
+            "type": "test",
+            "hidden": true
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,229 @@
+{
+  // "tailwindCSS.experimental.configFile": "internal/tailwind-config/tailwind.config.ts",
+  // workbench
+  "workbench.list.smoothScrolling": true,
+  "workbench.startupEditor": "newUntitledFile",
+  "workbench.tree.indent": 10,
+  "workbench.editor.highlightModifiedTabs": true,
+  "workbench.editor.closeOnFileDelete": true,
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.perEditorGroup": true,
+  "workbench.editor.limit.value": 20,
+
+  // editor
+  "editor.detectIndentation": false,
+  "editor.cursorBlinking": "expand",
+  "editor.largeFileOptimizations": false,
+  "editor.accessibilitySupport": "off",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.guides.bracketPairs": "active",
+  "editor.inlineSuggest.enabled": true,
+  "editor.suggestSelection": "recentlyUsedByPrefix",
+  "editor.acceptSuggestionOnEnter": "smart",
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "editor.stickyScroll.enabled": true,
+  "editor.hover.sticky": true,
+  "editor.suggest.insertMode": "replace",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.autoClosingBrackets": "beforeWhitespace",
+  "editor.autoClosingDelete": "always",
+  "editor.autoClosingOvertype": "always",
+  "editor.autoClosingQuotes": "beforeWhitespace",
+  "editor.wordSeparators": "`~!@#%^&*()=+[{]}\\|;:'\",.<>/?",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // extensions
+  "extensions.ignoreRecommendations": true,
+
+  // terminal
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.persistentSessionReviveProcess": "never",
+  "terminal.integrated.tabs.enabled": true,
+  "terminal.integrated.stickyScroll.enabled": true,
+
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": "file:///Users/niyonggui/multiway/learn/2024/pnpm-monorepo-mui/.github/workflows/deploy-ui.yml"
+  },
+  "eslint.enable": true, // 开启eslint检查
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "volar.tsPlugin": true,
+  "volar.tsPluginStatus": false,
+  "npm.packageManager": "pnpm",
+  "editor.tabSize": 2,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.eol": "\n",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/*.log": true,
+    "**/*.log*": true,
+    "**/bower_components": true,
+    "**/dist": true,
+    "**/elehukouben": true,
+    "**/.git": true,
+    "**/.gitignore": true,
+    "**/.svn": true,
+    "**/.DS_Store": true,
+    "**/.idea": true,
+    "**/.vscode": false,
+    "**/yarn.lock": true,
+    "**/tmp": true,
+    "out": true,
+    "dist": true,
+    "node_modules": true,
+    "CHANGELOG.md": true,
+    "examples": true,
+    "res": true,
+    "screenshots": true,
+    "yarn-error.log": true,
+    "**/.yarn": true
+  },
+  "files.exclude": {
+    "**/.cache": true,
+    "**/.editorconfig": true,
+    "**/.eslintcache": true,
+    "**/bower_components": true,
+    "**/.idea": true,
+    "**/tmp": true,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/.vscode/**": true,
+    "**/node_modules/**": true,
+    "**/tmp/**": true,
+    "**/bower_components/**": true,
+    "**/dist/**": true,
+    "**/yarn.lock": true
+  },
+  "stylelint.enable": true,
+  "stylelint.validate": ["css", "less", "postcss", "scss", "vue", "sass"],
+  "path-intellisense.mappings": {
+    "@/": "${workspaceRoot}/src"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[less]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  // "i18n-ally.localesPaths": [
+  //   "packages/locales/src/langs",
+  //   "apps/*/src/i18n/locales/langs"
+  // ],
+  // "i18n-ally.keystyle": "nested",
+  // "i18n-ally.sortKeys": true,
+  // "i18n-ally.pathMatcher": "{locale}/{namespaces}.{ext}",
+  // "i18n-ally.enabledParsers": ["json"],
+  // "i18n-ally.sourceLanguage": "en-US",
+  // "i18n-ally.displayLanguage": "zh-CN",
+  // "i18n-ally.enabledFrameworks": ["vue", "react"],
+
+  // "i18n-ally.namespace": true,
+  "i18n-ally.localesPaths": [
+    "apps/*/src/i18n/locales/lang",
+    "packages/locales/locales"
+  ],
+  "i18n-ally.enabledParsers": ["json"], // 翻译文件可允许的格式，默认json
+  "i18n-ally.pathMatcher": "{locale}/{namespaces}.{ext}",
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sortKeys": true,
+  "i18n-ally.enabledFrameworks": ["react"],
+  "i18n-ally.sourceLanguage": "zh-CN",
+  "i18n-ally.displayLanguage": "zh_CN",
+  "i18n-ally.encoding": "utf-8", // 翻译文件的编码
+
+  // "i18n-ally.localesPaths": ["src/locales/lang"],
+  // "i18n-ally.enabledParsers": ["json"],
+  // "i18n-ally.pathMatcher": "{locale}/{namespaces}.{ext}",
+  // "i18n-ally.keystyle": "flat",
+  // "i18n-ally.sortKeys": true,
+  // "i18n-ally.sourceLanguage": "zh",
+  // "i18n-ally.displayLanguage": "zh_CN",
+  "MicroPython.executeButton": [
+    {
+      "text": "▶",
+      "tooltip": "运行",
+      "alignment": "left",
+      "command": "extension.executeFile",
+      "priority": 3.5
+    }
+  ],
+  "MicroPython.syncButton": [
+    {
+      "text": "$(sync)",
+      "tooltip": "同步",
+      "alignment": "left",
+      "command": "extension.execute",
+      "priority": 4
+    }
+  ],
+  // 控制相关文件嵌套展示
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "$(capture).test.ts, $(capture).test.tsx",
+    "*.tsx": "$(capture).test.ts, $(capture).test.tsx",
+    "*.env": "$(capture).env.*",
+    "CHANGELOG.md": "CHANGELOG*",
+    "package.json": "pnpm-lock.yaml,pnpm-workspace.yaml,LICENSE,.gitattributes,.gitignore,.gitpod.yml,CNAME,README*,.npmrc,.browserslistrc",
+    ".eslintrc.cjs": ".eslintignore,.prettierignore,.stylelintignore,.commitlintrc.*,.prettierrc.*,.stylelintrc.*",
+    ".eslintrc.mjs": ".eslintignore,.prettierignore,.stylelintignore,.commitlintrc.*,.prettierrc.*,.stylelintrc.*"
+  },
+  "terminal.integrated.scrollback": 10000,
+  "i18next.i18nPaths": "/Users/niyonggui/multiway/learn/2024/pnpm-monorepo-mui/packages/gbeata/es/locale,/Users/niyonggui/multiway/learn/2024/pnpm-monorepo-mui/packages/gbeata/lib/locale,/Users/niyonggui/multiway/learn/2024/pnpm-monorepo-mui/packages/gbeata/src/locale",
+  "cSpell.words": [
+    "Catmull",
+    "gbeata",
+    "pixi",
+    "Selectlangulage",
+    "Sider",
+    "signalr",
+    "tanstack",
+    "troubleprool"
+  ],
+  "deepscan.enable": true,
+
+  "commentTranslate.hover.enabled": false,
+  "commentTranslate.multiLineMerge": true,
+  "vue.server.hybridMode": true,
+  "oxc.enable": false
+}

@@ -1,0 +1,40 @@
+{
+  "pda": {
+    "applyIn": {
+      "fromSlotId": "起始位置"
+    },
+    "container": {
+      "fromAreaIds": "来源容器区域",
+      "toSlotId": "搬运目标位置"
+    },
+    "home": {
+      "ApplyContainer": "呼叫空托",
+      "ApplySlotToSlot": "载具搬运",
+      "applyContainer": "出库申请",
+      "applyEmptyContainer": "呼叫空托",
+      "applyIn": "入库申请",
+      "autoBind": "是否自动绑盘",
+      "bind": "绑盘",
+      "charts": "统计报表",
+      "containerId": "容器编号",
+      "containerState": "容器状态",
+      "isAutomatic": "是否自动任务",
+      "multiplyApplyContainer": "批量出库",
+      "slotCount": "库容",
+      "slotId": "组盘位置",
+      "taskCount": "任务统计",
+      "unBind": "解盘",
+      "warehourse": "仓库管理"
+    },
+    "task": {
+      "container": "容器",
+      "containerType": "容器类型",
+      "quantity": "数量"
+    },
+    "unbind": {
+      "container": "容器编号",
+      "slot": "库位编号",
+      "type": "解绑方式"
+    }
+  }
+}

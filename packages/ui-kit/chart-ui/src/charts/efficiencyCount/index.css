@@ -1,0 +1,7 @@
+.icon1:before {
+  content: ' ';
+  width: 3px;
+  height: 16px;
+  background: #47a8ec;
+  border-radius: 5px;
+}

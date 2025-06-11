@@ -1,0 +1,321 @@
+services:
+  mysql:
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/mysql:8.0.29
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=yourStrong(!)Password
+      - TZ=Asia/Shanghai
+    volumes:
+      - /opt/store/logistics/mysql:/var/lib/mysql
+    #  - /opt/store/logistics/mysql/log:/var/log/mysql
+    ports:
+      - 3306:3306
+      - 25003:3306
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.2
+
+  phpmyadmin:
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/phpmyadmin
+    depends_on:
+      - mysql
+    restart: always
+    # ports:
+    #   - 25012:80
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORTS=3306
+      - MYSQL_ROOT_PASSWORD=yourStrong(!)Password
+      - TZ=Asia/Shanghai
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.3
+
+  wcs:
+    image: registry.cn-shenzhen.aliyuncs.com/mwlogistics/wcs_direct_build:latest
+    restart: always
+    depends_on:
+      - redis
+      - rabbitmq
+      - identity
+      - seq
+      - agile-config
+    volumes:
+      - /opt/store/logistics/wcs/Activities:/app/Activities
+    ports:
+      - 25001:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - NEED_MIGRATE_AND_SEED=TRUE
+      - TZ=Asia/Shanghai
+    command: ["dotnet", "Multiway.Logistics.Wcs.HttpApi.Host.dll"]
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.4
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024M"
+        max-file: "1"
+
+  fcu:
+    image: registry.cn-shenzhen.aliyuncs.com/mwlogistics/fcu:3.0.0
+    restart: always
+    depends_on:
+      - redis
+      - rabbitmq
+      - identity
+      - seq
+      - agile-config
+    volumes:
+      - /opt/store/logistics/fcu/Activities:/app/Activities
+    # ports:
+    #   - 25002:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - TZ=Asia/Shanghai
+    command: ["dotnet", "Multiway.Logistics.Fcu.Host.dll"]
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024M"
+        max-file: "1"
+
+  rabbitmq:
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/rabbitmq:3.11.8-management
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+      - TZ=Asia/Shanghai
+    ports:
+      - 25004:5672
+      - 25005:15672
+      - 5672:5672
+      - 15672:15672
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.6
+
+  redis:
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/redis:7.0.4
+    restart: always
+    ports:
+      - 25006:6379
+      - 6379:6379
+    command: --slave-read-only no
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.7
+    environment:
+      - TZ=Asia/Shanghai
+
+  identity:
+    image: registry.cn-shenzhen.aliyuncs.com/mwlogistics/common_identity:1.0.0
+    restart: always
+    depends_on:
+      - redis
+      - rabbitmq
+      - seq
+      - agile-config
+    ports:
+      - 25007:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - NEED_MIGRATE_AND_SEED=TRUE
+      - TZ=Asia/Shanghai
+      - ASPNETCORE_HTTP_PORTS=80
+    command:
+      [
+        "./wait-for-it.sh",
+        "mysql:3306",
+        "-t",
+        "30",
+        "--",
+        "./wait-for-it.sh",
+        "redis:6379",
+        "-t",
+        "30",
+        "--",
+        "./wait-for-it.sh",
+        "rabbitmq:5672",
+        "-t",
+        "30",
+        "--",
+        "./wait-for-it.sh",
+        "seq:5341",
+        "-t",
+        "30",
+        "--",
+        "./wait-for-it.sh",
+        "agile-config:5000",
+        "-t",
+        "30",
+        "--",
+        "dotnet",
+        "Multiway.Logistics.Identity.AuthServer.dll",
+      ]
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.8
+
+  seq:
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/seq
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - TZ=Asia/Shanghai
+    ports:
+      - 25009:80
+    #   - 25010:5341
+    volumes:
+      - /opt/store/logistics/seq/data:/data
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.10
+
+  agile-config:
+    image: registry.cn-shenzhen.aliyuncs.com/mwcloud/agile_config
+    restart: always
+    environment:
+      - adminConsole=true
+      - db__provider=sqlite
+      - db__conn=Data Source=/app/db/agile_config.db
+      - TZ=Asia/Shanghai
+    ports:
+      - 25011:5000
+    volumes:
+      - /opt/store/logistics/agile-config/db:/app/db
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.11
+
+  frontend:
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/nginx:latest
+    restart: always
+    hostname: nginx
+    privileged: true
+    volumes:
+      - /opt/store/logistics/frontend/html/:/usr/share/nginx/html/
+      - /opt/store/logistics/frontend/nginx.conf:/etc/nginx/nginx.conf
+      - /opt/store/logistics/frontend/init.js:/usr/share/nginx/html/dashboard/init.js
+    command: sh -c "chown -R nginx:nginx /usr/share/nginx/html && exec nginx -g 'daemon off;'"
+    ports:
+      - 80:80
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.12
+
+  redisui:
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/p3x-redis-ui
+    restart: always
+    depends_on:
+      - redis
+    # ports:
+    #   - 25013:7843
+    volumes:
+      - /opt/store/logistics/redisui/settings:/settings
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.13
+
+  portainer:
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/portainer-ce
+    restart: always
+    ports:
+      # - 25014:8000
+      - 25015:9000
+    #   - 25016:9443
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/store/logistics/portainer/data:/data
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.14
+
+  rcs:
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/rcs4:editor-1.0.0
+    restart: always
+    ports:
+      - 25018:5203
+      - 10007:10007
+      - 10008:10008
+      - 10009:10009
+      - 10000:10000
+      - 10017:10017
+      - 10019:10019
+      - 10028:10028
+      - 10077:10077
+    volumes:
+      - /opt/store/logistics/rcs/Map:/app/Map
+    command: ["dotnet", "MW.RCS4.0.dll"]
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.15
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024M"
+    environment:
+      - TZ=Asia/Shanghai
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  wms:
+    image: registry.cn-shenzhen.aliyuncs.com/multiway/wms:standard-4.0.0
+    restart: always
+    ports:
+      - 25023:5000
+    depends_on:
+      - redis
+      - rabbitmq
+      - seq
+      - agile-config
+    command:
+      [
+        "./wait-for-it.sh",
+        "mysql:3306",
+        "-t",
+        "30",
+        "--",
+        "dotnet",
+        "Multiway.Logistics.Wms.HttpApi.Host.dll",
+      ]
+    networks:
+      multiway_logistics:
+        ipv4_address: 172.20.0.16
+    volumes:
+      - /opt/store/logistics/wms/Plugins:/app/Plugins
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024M"
+    environment:
+      - TZ=Asia/Shanghai
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  frontend_wcs:
+    image: registry.cn-shenzhen.aliyuncs.com/mwlogistics/frontend-logistics:wcs-standard-3.5.0
+    depends_on:
+      - wcs
+      - fcu
+      - identity
+    restart: always
+    ports:
+      - 8089:80
+    networks:
+      - multiway_logistics
+    volumes:
+      - /opt/store/logistics/frontend_wcs/nginx.conf:/etc/nginx/nginx.conf
+      - /opt/store/logistics/frontend_wcs/config:/usr/share/nginx/html/config
+
+networks:
+  multiway_logistics:
+    name: logistics_net
+    external: true

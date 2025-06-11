@@ -1,0 +1,37 @@
+{
+  "name": "@gbeata/layout-ui",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "clean": "pnpm rimraf .turbo node_modules dist",
+    "lint": "pnpm eslint ."
+  },
+  "main": "./src/index.ts",
+  "devDependencies": {
+    "@gbeata/eslint-config": "workspace:^",
+    "@gbeata/store": "workspace:*",
+    "@gbeata/ts-config": "workspace:^",
+    "@gbeata/tailwind-config": "workspace:^",
+    "ahooks": "catalog:",
+    "classnames": "catalog:",
+    "react-router-dom": "catalog:",
+    "ui": "workspace:*"
+  },
+  "dependencies": {
+    "@iconify/react": "^4.1.1",
+    "gbeata": "workspace:*",
+    "@gbeata/app-global": "workspace:*",
+    "zustand": "catalog:",
+    "framer-motion": "^12.7.4",
+    "@gbeata/hooks": "workspace:*"
+  },
+  "peerDependencies": {
+    "@types/react-router-dom": "catalog:",
+    "antd": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  }
+}

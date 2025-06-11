@@ -1,0 +1,20 @@
+{
+  "name": "@gbeata/locales",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "main": "./index.ts",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "@gbeata/eslint-config": "workspace:^",
+    "@gbeata/tailwind-config": "workspace:^",
+    "@gbeata/ts-config": "workspace:^",
+    "@types/node": "^20.11.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "prop-types": "^15.8.1"
+  }
+}

@@ -1,0 +1,21 @@
+.g-card {
+  &.collapsed {
+    .g-card-collapsible-icon {
+      transform: rotate(-90deg);
+    }
+
+    .ant-card-head {
+      border-bottom: none;
+    }
+
+    .ant-card-body {
+      display: none;
+    }
+  }
+}
+
+.g-card-collapsible-icon {
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 200ms;
+}

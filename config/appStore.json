@@ -1,0 +1,144 @@
+{
+  "apps": [
+    {
+      "title": "global.appstore.rcs",
+      "url": "/rcs-web/",
+      "icon": "RCS",
+      "description": "global.appstore.rcsContent",
+      "vision": "v4.2.0"
+    },
+
+    {
+      "title": "global.appstore.wms",
+      "url": "/wms-pc/",
+      "description": "global.appstore.wmsContent",
+      "icon": "WMS",
+      "vision": "v4.0.0",
+      "localStorageKey": "wms-global-storage",
+      "getCode": true
+    },
+    {
+      "title": "global.appstore.wmsPad",
+      "url": "/wms-pad/",
+      "description": "global.appstore.padContent",
+      "icon": "pingbandiannao",
+      "system": "Pad",
+      "vision": "v4.0.0",
+      "localStorageKey": "wms-global-storage",
+      "getCode": true
+    },
+    {
+      "title": "global.appstore.wcs",
+      "url": "/wcs-web/",
+      "icon": "shebeiguanli",
+      "description": "global.appstore.wcsContent",
+      "vision": "v3.5.0",
+      "cookieKey": "access_token",
+      "getCode": true
+    },
+    {
+      "title": "global.appstore.3dTitle",
+      "description": "global.appstore.3dContent",
+      "icon": "shuziluansheng-xuanzhong",
+      "system": "3D DIGITAL TWIN",
+      "devUrl": "http://work.multiway-cloud.com:4000/#/",
+      "url": "/twin/",
+      "vision": "v1.0.0"
+    },
+    {
+      "title": "global.appstore.wmsPda",
+      "url": "/wms-pda/",
+      "description": "global.appstore.pdaContent",
+      "icon": "PDAshouchigongzuoshebei",
+      "system": "PDA",
+      "vision": "v4.0.0",
+      "localStorageKey": "wms-global-storage",
+      "getCode": true
+    },
+    {
+      "title": "global.appstore.device",
+      "url": "/#/device",
+      "icon": "shebeiguanli",
+      "description": "global.appstore.deviceContent",
+      "vision": "v1.0.0"
+    },
+    {
+      "title": "global.appstore.logs",
+      "url": "/#/logs/service",
+      "icon": "fuwurizhi",
+      "description": "global.appstore.logsContent",
+      "vision": "v1.0.0"
+    }
+  ],
+
+  "quickLinks": [
+    {
+      "title": "global.appstore.rcsDataEntry",
+      "url": "/rcs-web/#/home"
+    },
+    {
+      "title": "global.appstore.wmsTaskEntry",
+      "url": "/wms-pad/#/home"
+    },
+    {
+      "title": "global.appstore.slotBinder",
+      "url": "/rcs-web/#/configuration/slotBinder"
+    },
+    {
+      "title": "global.appstore.vehicle",
+      "url": "/rcs-web/#/vehicle/configuration"
+    },
+    {
+      "title": "global.appstore.wmsTask",
+      "url": "/wms-pc/#/task"
+    },
+    {
+      "title": "global.appstore.rcsTask",
+      "url": "/rcs-web/#/task"
+    }
+  ],
+  "tools": [
+    {
+      "title": "global.appstore.mySqlTitle",
+      "description": "global.appstore.mySqlContent",
+      "icon": "devicon--mysql-wordmark",
+      "href": "/phpmyadmin"
+    },
+    {
+      "title": "global.appstore.configCenterTitle",
+      "description": "global.appstore.configCenterContent",
+      "icon": "guidance--fragile",
+      "href": "/agileconfig/ui"
+    },
+    {
+      "title": "global.appstore.portainerTitle",
+      "description": "global.appstore.portainerContent",
+      "icon": "devicon--portainer",
+      "href": "/portainer"
+    },
+    {
+      "title": "global.appstore.logManagementTitle",
+      "description": "global.appstore.logManagementContent",
+      "icon": "material-icon-theme--sequelize",
+      "href": "/seq"
+    },
+    {
+      "title": "global.appstore.redisTitle",
+      "description": "global.appstore.redisContent",
+      "icon": "devicon--redis",
+      "href": "/redisui"
+    },
+    {
+      "title": "global.appstore.rabbitMqTitle",
+      "description": "global.appstore.rabbitMqContent",
+      "icon": "devicon--rabbitmq",
+      "href": "/rabbitmq"
+    },
+    {
+      "title": "global.appstore.fileDownloadTitle",
+      "description": "wms-app.apk",
+      "icon": "icon-park--mail-download",
+      "href": "/dashboard/wms-app.apk"
+    }
+  ]
+}

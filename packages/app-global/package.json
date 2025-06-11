@@ -1,0 +1,51 @@
+{
+  "name": "@gbeata/app-global",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "main": "./index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@gbeata/hooks": "workspace:*",
+    "@gbeata/store": "workspace:^",
+    "@gbeata/three": "workspace:*",
+    "@headlessui/react": "^1.4.0",
+    "@heroicons/react": "^1.0.6",
+    "@iconify/react": "^4.1.1",
+    "@jiaminghi/data-view-react": "^1.2.5",
+    "@microsoft/signalr": "catalog:",
+    "@react-spring/three": "^9.7.3",
+    "@react-three/csg": "^3.3.0",
+    "@react-three/drei": "^9.121.3",
+    "@react-three/fiber": "^8.15.14",
+    "@react-three/postprocessing": "^2.19.1",
+    "ahooks": "catalog:",
+    "antd": "catalog:",
+    "apis": "workspace:*",
+    "dayjs": "catalog:",
+    "rc-virtual-list": "^3.18.5",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "zustand": "^4.4.7",
+    "react-router-dom": "catalog:",
+    "gbeata": "workspace:*",
+    "@gbeata/charts-ui": "workspace:^",
+    "ui": "workspace:^",
+    "@loadable/component": "catalog:"
+  },
+  "devDependencies": {
+    "@gbeata/eslint-config": "workspace:^",
+    "@gbeata/tailwind-config": "workspace:^",
+    "@gbeata/ts-config": "workspace:^",
+    "@types/node": "^20.11.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "prop-types": "^15.8.1"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@gbeata/ts-config/react-app.json",
+  "include": ["src", "typings/**/*.d.ts", "typings/**/*.ts"],
+  "exclude": ["node_modules", "dist", "**/*.js"]
+}

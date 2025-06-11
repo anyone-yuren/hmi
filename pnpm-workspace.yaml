@@ -1,0 +1,44 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "internal/*"
+  - "packages/ui-kit/*"
+catalog:
+  typescript: ^5.7.3
+  unbuild: ^3.5.0
+  "antd": "^5.12.1"
+  "antd-style": "^3.6.1"
+  "i18next": "^23.7.19"
+  "i18next-browser-languagedetector": "^7.2.0"
+  "i18next-http-backend": "^2.4.2"
+  "numeral": "^2.0.6"
+  "ramda": "^0.29.1"
+  "react": "^18.3.1"
+  "react-dom": "^18.3.1"
+  "react-i18next": "^14.0.1"
+  "classnames": "^2.3.2"
+  "echarts": "^5.4.3"
+  "echarts-for-react": "^3.0.2"
+  "react-beautiful-dnd": "^13.1.1"
+  "react-router-dom": "^6.21.1"
+  "tailwindcss": "^3.4.4"
+  "zustand": "^4.5.0"
+  "postcss": "^8.4.33"
+  "prettier": "^3.1.0"
+  "ahooks": "^3.7.8"
+  vite-plugin-html: ^3.2.2
+  vite-plugin-lazy-import: ^1.0.7
+  "@manypkg/get-packages": ^2.2.2
+  "@microsoft/signalr": "^8.0.7"
+  "dayjs": "^1.11.10"
+  "sonner": "^1.7.2"
+  "rc-virtual-list": "^3.18.5"
+
+  "@types/react-router-dom": "^5.3.3"
+  "rollup-plugin-visualizer": "^5.14.0"
+  "vite-plugin-pwa": "^0.21.1"
+  "@types/react": "^18.2.37"
+  "@types/react-dom": "^18.2.15"
+  "@types/react-copy-to-clipboard": "5.0.7"
+  "react-copy-to-clipboard": "5.1.0"
+  "@loadable/component": "^5.16.3"

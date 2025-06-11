@@ -1,0 +1,41 @@
+{
+  "name": "@gbeata/charts-ui",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "main": "./index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@gbeata/hooks": "workspace:*",
+    "@gbeata/store": "workspace:^",
+    "ui": "workspace:^",
+    "@iconify/react": "^4.1.1",
+    "@jiaminghi/data-view-react": "^1.2.5",
+    "ahooks": "catalog:",
+    "antd": "catalog:",
+    "apexcharts": "^4.5.0",
+    "apis": "workspace:*",
+    "gbeata": "workspace:*",
+    "react": "catalog:",
+    "react-apexcharts": "^1.7.0",
+    "react-dom": "catalog:",
+    "zustand": "catalog:",
+    "echarts": "catalog:",
+    "echarts-for-react": "catalog:"
+  },
+  "devDependencies": {
+    "@gbeata/eslint-config": "workspace:^",
+    "@gbeata/tailwind-config": "workspace:^",
+    "@gbeata/ts-config": "workspace:^",
+    "@types/node": "^20.11.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "prop-types": "^15.8.1"
+  }
+}
