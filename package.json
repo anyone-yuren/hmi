@@ -60,6 +60,7 @@
     "@types/numeral": "^2.0.5",
     "@types/ramda": "^0.29.10",
     "commitizen": "^4.3.0",
+    "cross-env": "^7.0.3",
     "cz-customizable": "^7.1.0",
     "dotenv-cli": "^7.4.4",
     "esbuild": "0.19.11",

@@ -4,7 +4,8 @@
   },
   "gitlab": {
     "release": true,
-    "url": "http://multiway.8866.org:10080"
+    "tokenHeader": "PRIVATE-TOKEN",
+    "url": "http://multiway.8866.org:10080/api/v4"
   },
   "npm": {
     "publish": false
