@@ -1,2 +1,10 @@
-variables:
-  GITLAB_TOKEN: "W3ysr1iL9gVM1y4fqvjj"
+stages:
+  - release
+
+release-job:
+  stage: release
+  variables:
+    GITLAB_TOKEN: "W3ysr1iL9gVM1y4fqvjj"
+  script:
+    - echo "当前 token：$GITLAB_TOKEN"
+    - pnpm install
