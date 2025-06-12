@@ -4,7 +4,7 @@ import { loadEnv } from 'vite';
 
 const root = process.cwd();
 
-const { VITE_APP_BASE_API, VITE_APP_UNIQUE_API, VITE_APP_WMS_API } = loadEnv(process.env.NODE_ENV as string, root);
+const { VITE_APP_API } = loadEnv(process.env.NODE_ENV as string, root);
 
 export default defineApplicationConfig({
   overrides: {
@@ -16,11 +16,15 @@ export default defineApplicationConfig({
       host: true,
       port: 4000,
       proxy: {
-        '/wms': {
-          target: VITE_APP_WMS_API,
+        '/api': {
+          target: 'http://192.168.2.233:10009',
           changeOrigin: true,
-          secure: true,
-          // rewrite: (path) => path.replace(/^\/wms/, '/wms'),
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+        '/admin': {
+          target: 'http://192.168.2.233:10001',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/admin/, ''),
         },
       },
     },

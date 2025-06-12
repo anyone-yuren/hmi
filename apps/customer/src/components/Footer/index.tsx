@@ -13,7 +13,7 @@ const GlobalFooter = () => {
   const { t } = useTranslation();
   const responsive = useResponsive();
   return (
-    <div className=' bg-[linear-gradient(to_right,#ffffff80_0%,#ffffff40_0%,transparent_20%,transparent_80%,#ffffff40_100%,#ffffff20_100%)] p-[1px]'>
+    <div className=' bg-[linear-gradient(to_right,#ffffff80_0%,#ffffff40_0%,transparent_20%,transparent_80%,#ffffff40_100%,#ffffff20_100%)] p-[1px] mx-[-1px]'>
       <div className=' p-4 bg-gradient-to-b from-black to-[#ffffff10]'>
         <div className='grid grid-cols-3 justify-between items-center max-sm:h-16 h-20 '>
           <div
@@ -25,8 +25,8 @@ const GlobalFooter = () => {
               color: active === '/' ? token.colorPrimary : token.colorText,
             }}
           >
-            <SvgIcon name='home' size={responsive.xs ? 24 : 38} />
-            <span>首页</span>
+            <SvgIcon name='chache' size={responsive.xs ? 24 : 38} />
+            <span>车辆</span>
           </div>
           <div
             onClick={() => {
@@ -34,8 +34,8 @@ const GlobalFooter = () => {
             }}
             className={'h-full col-span-1 justify-center flex  flex-col items-center '}
           >
-            <SvgIcon name='task' size={responsive.xs ? 24 : 38} />
-            <span>任务</span>
+            <SvgIcon name='weibao' size={responsive.xs ? 24 : 38} />
+            <span>维保</span>
           </div>
           <div
             onClick={() => {
@@ -43,8 +43,8 @@ const GlobalFooter = () => {
             }}
             className={'h-full col-span-1 justify-center flex flex-col items-center  '}
           >
-            <SvgIcon name='me' size={responsive.xs ? 24 : 38} />
-            <span>我的</span>
+            <SvgIcon name='shezhi' size={responsive.xs ? 24 : 38} />
+            <span>设置</span>
           </div>
         </div>
       </div>

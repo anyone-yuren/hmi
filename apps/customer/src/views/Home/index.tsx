@@ -1,8 +1,11 @@
+import bg from '@/assets/img/bg.png';
 import GlobalFooter from '@/components/Footer';
 import { Skeleton } from 'antd';
 import { useResponsive } from 'antd-style';
+import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import VehiclePanel from './components/vehiclePanel';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -10,11 +13,21 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='flex flex-col h-full w-full justify-between'>
+    <div
+      className='flex flex-col h-full w-full justify-between filter grayscale'
+      style={{
+        backgroundImage: `url(${bg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       <div className='flex flex-1 flex-col overflow-y-auto gap-4 h-full p-4'>
         <div className='gap-4 w-full grid grid-cols-3 flex-1'>
           <div className='col-span-2'>
-            <Skeleton.Button active className='!h-full !w-full' />
+            <Suspense fallback={<Skeleton.Button active className='!h-full !w-full' />}>
+              <VehiclePanel />
+            </Suspense>
           </div>
           <div className='col-span-1 flex flex-col h-full gap-4'>
             <div className='w-full flex-1'>
