@@ -1,5 +1,8 @@
-// import { useHybirdStore } from "@/components/Pages/Hybrid/store/hybird.store";
+import { useHybridStore } from '@/store/hyBridStore';
 import { Grid } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
+import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 // interface IProps {
 //   agvPosition: {
 //     x: number;
@@ -8,24 +11,33 @@ import { Grid } from '@react-three/drei';
 //   };
 // }
 const StageBase = (props) => {
-  // const { agvPosition } = useHybirdStore(
-  //   useShallow((state) => ({
-  //     agvPosition: state.agvPosition,
-  //   })),
-  // );
-  // const { camera, controls } = useThree();
+  const { agvPosition } = useHybridStore(
+    useShallow((state) => ({
+      agvPosition: state.agvPosition,
+    })),
+  );
+  const { camera, controls } = useThree();
+
+  // const directionalLightRef = useRef<DirectionalLight>(null!);
+  // useHelper(directionalLightRef, DirectionalLightHelper, 2);
 
   // useEffect(() => {
-  //   if (controls) {
-  //     controls.setPosition(
-  //       agvPosition.x / 1000 + 1,
-  //       4,
-  //       agvPosition.y / 1000,
-  //       true
+  //   if (directionalLightRef.current) {
+  //     directionalLightRef.current.target.position.set(
+  //       agvPosition.x / 1000,
+  //       0,
+  //       agvPosition.y / 1000
   //     );
-  //     controls.setTarget(agvPosition.x / 1000, 0, agvPosition.y / 1000, true);
+  //     directionalLightRef.current.target.updateMatrixWorld();
   //   }
-  // }, [agvPosition]);
+  // }, []);
+
+  useEffect(() => {
+    if (controls) {
+      controls.setPosition(agvPosition.x / 1000 + 1, 4, agvPosition.y / 1000, true);
+      controls.setTarget(agvPosition.x / 1000, 0, agvPosition.y / 1000, true);
+    }
+  }, [agvPosition]);
 
   // 设置网格样式
   const gridConfig = {

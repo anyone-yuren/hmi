@@ -5,10 +5,12 @@ import { Skeleton, Spin } from 'antd';
 import { memo, Suspense } from 'react';
 import { getSegmentsInfo } from '../../services';
 import LocationPoint from '../point/locationPoint';
+import Car from './components/car';
 import RcsLines from './components/routeLiles';
 import StageBase from './components/stageBase';
 const CarStage = () => {
   const { data: routeLinesData, loading: routeLinesLoading } = useRequest(getSegmentsInfo);
+
   return (
     <Suspense fallback={<Spin />}>
       {routeLinesLoading ? (
@@ -16,11 +18,14 @@ const CarStage = () => {
       ) : (
         <Canvas
           dpr={[1, 2]}
+          gl={{
+            alpha: true,
+          }}
           // scene={{
           //   fog: new Fog("#fff", 3, 6),
           // }}
         >
-          <color attach='background' args={['#445260']} />
+          <color attach='background' args={['#000d0f']} />
           <CameraControls
             makeDefault
             minDistance={2}
@@ -51,12 +56,10 @@ const CarStage = () => {
           }}
           adjustCamera={1}
         > */}
-          <Suspense>
-            {/* <Car /> */}
-            <LocationPoint />
-            {routeLinesData?.length ? <RcsLines mapEdges={routeLinesData} /> : null}
-            {/* <ActiveLine /> */}
-          </Suspense>
+          <Car />
+          <LocationPoint />
+          {routeLinesData?.length ? <RcsLines mapEdges={routeLinesData} /> : null}
+          {/* <ActiveLine /> */}
           <StageBase />
           {/* </Stage> */}
           {/* <Gltf castShadow receiveShadow src="Perseverance-transformed.glb" /> */}

@@ -1,16 +1,8 @@
-import { useRequest } from "ahooks";
-import { getSegmentsInfo } from "../../../services";
-import { memo, useMemo, useState } from "react";
+import { useMemo, useState } from 'react';
 
-import {
-  Vector3,
-  CatmullRomCurve3,
-  BufferGeometry,
-  LineBasicMaterial,
-} from "three";
-import LineText from "../../point/lineText";
-import CanvasText from "../../point/cavansText";
-import { useThree, useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from '@react-three/fiber';
+import { BufferGeometry, CatmullRomCurve3, LineBasicMaterial, Vector3 } from 'three';
+import CanvasText from '../../point/cavansText';
 
 const convertToMeters = (value: number) => {
   return value / 1000;
@@ -27,15 +19,12 @@ const RcsLines = ({ mapEdges = [] }) => {
     }
   });
   const curves = useMemo(() => {
+    debugger;
     if (!mapEdges.length) return [];
     return mapEdges?.map((edge) => {
       const controlPoints = edge?.control_points?.map((point) => {
         // const position = [convertToMeters(item.x), 0, convertToMeters(item.y)];
-        const position = new Vector3(
-          convertToMeters(point.x),
-          0,
-          convertToMeters(point.y)
-        );
+        const position = new Vector3(convertToMeters(point.x), 0, convertToMeters(point.y));
         return position;
       });
       const curve = new CatmullRomCurve3(controlPoints);
@@ -70,7 +59,7 @@ const RcsLines = ({ mapEdges = [] }) => {
             fontSize={0.3}
             color="white"
           /> */}
-          <CanvasText text={edgeId} position={center} fontSize={"4px"} />
+          <CanvasText text={edgeId} position={center} fontSize={'4px'} />
         </group>
       );
     });

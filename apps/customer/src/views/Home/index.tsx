@@ -6,15 +6,16 @@ import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import VehiclePanel from './components/vehiclePanel';
+import WsContainer from './components/wsContainer';
 
 const Home = () => {
   const { t } = useTranslation();
   const responsive = useResponsive();
   const navigate = useNavigate();
-
+  console.log(1111111);
   return (
     <div
-      className='flex flex-col h-full w-full justify-between filter grayscale'
+      className='flex flex-col h-full w-full justify-between '
       style={{
         backgroundImage: `url(${bg})`,
         backgroundSize: 'cover',
@@ -46,6 +47,9 @@ const Home = () => {
         </div>
       </div>
       <GlobalFooter />
+      <div className='fixed bottom-0 left-0 right-0 z-10'>
+        <WsContainer />
+      </div>
     </div>
   );
 };

@@ -13,8 +13,9 @@ const GlobalFooter = () => {
   const { t } = useTranslation();
   const responsive = useResponsive();
   return (
-    <div className=' bg-[linear-gradient(to_right,#ffffff80_0%,#ffffff40_0%,transparent_20%,transparent_80%,#ffffff40_100%,#ffffff20_100%)] p-[1px] mx-[-1px]'>
-      <div className=' p-4 bg-gradient-to-b from-black to-[#ffffff10]'>
+    <div className=' bg-[linear-gradient(to_right,#ffffff80_0%,#ffffff40_0%,transparent_40%,transparent_60%,#ffffff40_100%,#ffffff20_100%)] p-[1px] mx-[-1px]'>
+      {/* <div className=' p-4 bg-gradient-to-b from-black to-[#ffffff10]'> */}
+      <div className='bg-black'>
         <div className='grid grid-cols-3 justify-between items-center max-sm:h-16 h-20 '>
           <div
             onClick={() => {

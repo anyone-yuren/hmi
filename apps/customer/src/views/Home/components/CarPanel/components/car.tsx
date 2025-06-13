@@ -1,7 +1,9 @@
 // import { useHybirdStore } from '@/components/Pages/Hybrid/store/hybird.store';
+import { useHybridStore } from '@/store/hyBridStore';
 import { Svg, useHelper } from '@react-three/drei';
 import { useMemo, useRef } from 'react';
 import { PointLightHelper, type DirectionalLight } from 'three';
+import { useShallow } from 'zustand/react/shallow';
 // import { PointLight } from "@react-three/drei";
 
 export const convertToMeters = (value: number) => value / 1000;
@@ -15,16 +17,11 @@ export const convertToMeters = (value: number) => value / 1000;
 const Car = (props) => {
   // const { agvPosition } = props;
 
-  // const { agvPosition } = useHybirdStore(
-  //   useShallow((state) => ({
-  //     agvPosition: state.agvPosition,
-  //   })),
-  // );
-  const agvPosition = {
-    x: 1000,
-    y: 1000,
-    angel: 0,
-  };
+  const { agvPosition } = useHybridStore(
+    useShallow((state) => ({
+      agvPosition: state.agvPosition,
+    })),
+  );
 
   const directionalLightRef = useRef<DirectionalLight>(null!);
   useHelper(directionalLightRef, PointLightHelper, 2);
