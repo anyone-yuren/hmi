@@ -26,10 +26,20 @@ const Home = () => {
     >
       <div className='flex flex-1 flex-col overflow-y-auto gap-4 h-full p-4'>
         <div className='gap-4 w-full grid grid-cols-3 flex-1'>
-          <div className='col-span-2'>
-            <Suspense fallback={<Skeleton.Button active className='!h-full !w-full' />}>
-              <VehiclePanel />
-            </Suspense>
+          <div className='col-span-2 flex gap-4 flex-col'>
+            <div className='flex-1'>
+              <Suspense fallback={<Skeleton.Button active className='!h-full !w-full' />}>
+                <VehiclePanel />
+              </Suspense>
+            </div>
+            <div className='h-[200px] flex gap-4'>
+              <div className='flex-1'>
+                <Skeleton.Node active className='!h-full !w-full' />
+              </div>
+              <div className='flex-1'>
+                <Skeleton.Node active className='!h-full !w-full' />
+              </div>
+            </div>
           </div>
           <div className='col-span-1 flex flex-col h-full gap-4'>
             <div className='w-full flex-1'>
@@ -40,13 +50,11 @@ const Home = () => {
               {/* <Skeleton.Node active className='!h-full !w-full' /> */}
               <VehicleInfo />
             </div>
+            <div className='w-full flex-1'>
+              {/* <Skeleton.Node active className='!h-full !w-full' /> */}
+              <VehicleInfo />
+            </div>
           </div>
-        </div>
-        <div className='h-[200px]'>
-          <Skeleton.Node active className='!h-full !w-full' />
-          {/* <div className='rounded-xl bg-[linear-gradient(to_right,#ffffff80_0%,#ffffff80_0%,transparent_20%,transparent_80%,#ffffff80_100%,#ffffff80_100%)] p-[1px]'>
-            <div className='rounded-xl p-4 bg-gradient-to-t from-black to-[#ffffff01]'>渐变边框盒子</div>
-          </div> */}
         </div>
       </div>
       <GlobalFooter />
