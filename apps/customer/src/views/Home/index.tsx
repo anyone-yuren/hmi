@@ -5,6 +5,7 @@ import { useResponsive } from 'antd-style';
 import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import VehicleInfo from './components/vehicleInfo';
 import VehiclePanel from './components/vehiclePanel';
 import WsContainer from './components/wsContainer';
 
@@ -32,10 +33,12 @@ const Home = () => {
           </div>
           <div className='col-span-1 flex flex-col h-full gap-4'>
             <div className='w-full flex-1'>
-              <Skeleton.Node active className='!h-full !w-full' />
+              {/* <Skeleton.Node active className='!h-full !w-full' /> */}
+              <VehicleInfo />
             </div>
             <div className='w-full flex-1'>
-              <Skeleton.Node active className='!h-full !w-full' />
+              {/* <Skeleton.Node active className='!h-full !w-full' /> */}
+              <VehicleInfo />
             </div>
           </div>
         </div>
