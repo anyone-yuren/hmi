@@ -115,10 +115,10 @@ function defineApplicationConfig(options: DefineOptions = {}) {
           },
         },
       },
-      esbuild: {
-        drop: isBuild ? ["console", "debugger"] : [],
-        legalComments: "none",
-      },
+      // esbuild: {
+      //   drop: isBuild ? ["console", "debugger"] : [],
+      //   legalComments: "none",
+      // },
       plugins: [...plugins, ...otherPlugins],
     };
     const common = commonConfig(mode);

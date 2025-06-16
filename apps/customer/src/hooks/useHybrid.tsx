@@ -2,7 +2,12 @@ import { useHybridStore } from '@/store/hyBridStore';
 import { useWebSocket } from 'ahooks';
 import { useShallow } from 'zustand/react/shallow';
 
-const HYBRID_URL = 'ws://192.168.2.233:10001';
+// 动态获取当前 host
+const currentHost = window.location.hostname;
+// 使用相对路径，Vite 会自动处理代理
+const HYBRID_URL = import.meta.env.DEV
+  ? '/ws' // 开发环境使用代理
+  : `ws://${currentHost}:10001`; // 生产环境使用真实地址
 
 export const useHybrid = () => {
   const { setAgvPosition, agvPosition } = useHybridStore(

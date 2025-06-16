@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import Battery from '../battery';
 
 const VehicleInfo = () => {
   return (
@@ -35,7 +34,6 @@ const VehicleInfo = () => {
           }}
           className='h-[1px] bg-gradient-to-r from-teal-500 to-purple-500/0 rounded-full'
         />
-        <Battery level={90} />
       </div>
     </motion.div>
   );

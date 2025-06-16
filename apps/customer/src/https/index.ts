@@ -8,9 +8,11 @@ export enum ResultEnum {
   TIMEOUT = 401,
 }
 
-// 读取环境变量
-const BASE_API = import.meta.env.VITE_BASE_API;
-const ADMIN_API = import.meta.env.VITE_ADMIN_API;
+// 动态获取当前 host
+const currentHost = window.location.hostname;
+
+const BASE_API = import.meta.env.VITE_BASE_API || `http://${currentHost}:10009`;
+const ADMIN_API = import.meta.env.VITE_ADMIN_API || `http://${currentHost}:10001`;
 
 // 创建 axios 实例
 const instance = axios.create({
