@@ -19,7 +19,6 @@ const RcsLines = ({ mapEdges = [] }) => {
     }
   });
   const curves = useMemo(() => {
-    debugger;
     if (!mapEdges.length) return [];
     return mapEdges?.map((edge) => {
       const controlPoints = edge?.control_points?.map((point) => {

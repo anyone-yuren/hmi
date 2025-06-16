@@ -29,7 +29,6 @@
     "ahooks": "catalog:",
     "antd": "catalog:",
     "antd-style": "catalog:",
-    "apis": "workspace:*",
     "classnames": "catalog:",
     "dayjs": "^1.11.10",
     "echarts": "catalog:",
@@ -45,7 +44,8 @@
     "ui": "workspace:^",
     "umi-request": "^1.4.0",
     "vite-plugin-mock": "2.9.6",
-    "zustand": "catalog:"
+    "zustand": "catalog:",
+    "axios": "catalog:"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",

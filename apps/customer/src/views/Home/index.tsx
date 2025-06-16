@@ -1,5 +1,4 @@
 import bg from '@/assets/img/bg.png';
-import GlobalFooter from '@/components/Footer';
 import { Skeleton } from 'antd';
 import { useResponsive } from 'antd-style';
 import { Suspense } from 'react';
@@ -7,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import VehicleControl from './components/vehicleControl';
 import VehicleFork from './components/vehicleFork';
-import VehicleInfo from './components/vehicleInfo';
 import VehiclePanel from './components/vehiclePanel';
 import VehicleStatus from './components/vehicleStatus';
 import VehicleTask from './components/vehicleTask';
@@ -37,16 +35,19 @@ const Home = () => {
             </div>
             <div className='h-[200px] flex gap-4'>
               <div className='flex-1'>
-                {/* <Skeleton.Node active className='!h-full !w-full' /> */}
-                <VehicleStatus />
-              </div>
-              <div className='flex-1'>
-                {/* <Skeleton.Node active className='!h-full !w-full' /> */}
-                <VehicleControl />
+                <Skeleton.Node active className='!h-full !w-full' />
               </div>
             </div>
           </div>
           <div className='col-span-1 flex flex-col h-full gap-4'>
+            <div className='flex-1'>
+              {/* <Skeleton.Node active className='!h-full !w-full' /> */}
+              <VehicleStatus />
+            </div>
+            <div className='flex-1'>
+              {/* <Skeleton.Node active className='!h-full !w-full' /> */}
+              <VehicleControl />
+            </div>
             <div className='w-full flex-1'>
               {/* <Skeleton.Node active className='!h-full !w-full' /> */}
               <VehicleTask />
@@ -55,14 +56,9 @@ const Home = () => {
               {/* <Skeleton.Node active className='!h-full !w-full' /> */}
               <VehicleFork />
             </div>
-            <div className='w-full flex-1'>
-              {/* <Skeleton.Node active className='!h-full !w-full' /> */}
-              <VehicleInfo />
-            </div>
           </div>
         </div>
       </div>
-      <GlobalFooter />
       <div className='fixed bottom-0 left-0 right-0 z-10'>
         <WsContainer />
       </div>

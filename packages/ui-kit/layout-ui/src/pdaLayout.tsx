@@ -4,17 +4,16 @@ import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import LayoutHeader from './header/pdaHeader';
-
 interface IProps {
   children?: React.ReactNode;
   menuNodes?: React.ReactNode;
   footer?: React.ReactNode;
   title?: string;
+  header?: React.ReactNode;
 }
 
 export const PdaLayout = (props: IProps) => {
-  const { title } = props;
+  const { title, header } = props;
   const { state } = useLocation();
   const token = useTheme();
   const { setThemeMode } = useThemeMode();
@@ -23,9 +22,10 @@ export const PdaLayout = (props: IProps) => {
   const location = useLocation();
   return (
     <ThemeProvider appearance='dark'>
-      <Layout className=' h-full'>
-        <LayoutHeader title={title} />
-        <Content className='overflow-y-auto bg-[#0c1a1b]'>
+      <Layout className='h-full'>
+        {/* <LayoutHeader title={title} /> */}
+        {header}
+        <Content className='overflow-y-auto bg-[#162640]'>
           <ErrorBoundary>
             <Outlet key={key} />
           </ErrorBoundary>

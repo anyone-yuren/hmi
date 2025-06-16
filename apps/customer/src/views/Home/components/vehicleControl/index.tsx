@@ -1,6 +1,6 @@
 import earth from '@/assets/img/earth.png';
 import { useHybridStore } from '@/store/hyBridStore';
-import { Switch, Typography } from 'antd';
+import { Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
 import { useShallow } from 'zustand/react/shallow';
@@ -81,14 +81,15 @@ const VehicleControl = () => {
         <div className='flex-1 grid grid-cols-3'>
           <div className='flex-1 flex flex-col justify-center items-center'>
             <Typography.Title level={4}>
-              <Switch
+              {/* <Switch
                 className={`${styles.customSwitch} shadow-lg shadow-teal-500/20 `}
                 checkedChildren='多机'
                 unCheckedChildren='单机'
                 defaultChecked
-              />
+              /> */}
+              100kg
             </Typography.Title>
-            <Typography.Text className='opacity-50'>调度模式</Typography.Text>
+            <Typography.Text className='opacity-50'>货物重量</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
             <Typography.Title
