@@ -25,7 +25,7 @@ export const PdaLayout = (props: IProps) => {
     <ThemeProvider appearance='dark'>
       <Layout className=' h-full'>
         <LayoutHeader title={title} />
-        <Content className='overflow-y-auto'>
+        <Content className='overflow-y-auto bg-[#0c1a1b]'>
           <ErrorBoundary>
             <Outlet key={key} />
           </ErrorBoundary>

@@ -5,15 +5,18 @@ import { useResponsive } from 'antd-style';
 import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import VehicleControl from './components/vehicleControl';
+import VehicleFork from './components/vehicleFork';
 import VehicleInfo from './components/vehicleInfo';
 import VehiclePanel from './components/vehiclePanel';
+import VehicleStatus from './components/vehicleStatus';
+import VehicleTask from './components/vehicleTask';
 import WsContainer from './components/wsContainer';
 
 const Home = () => {
   const { t } = useTranslation();
   const responsive = useResponsive();
   const navigate = useNavigate();
-  console.log(1111111);
   return (
     <div
       className='flex flex-col h-full w-full justify-between '
@@ -34,21 +37,23 @@ const Home = () => {
             </div>
             <div className='h-[200px] flex gap-4'>
               <div className='flex-1'>
-                <Skeleton.Node active className='!h-full !w-full' />
+                {/* <Skeleton.Node active className='!h-full !w-full' /> */}
+                <VehicleStatus />
               </div>
               <div className='flex-1'>
-                <Skeleton.Node active className='!h-full !w-full' />
+                {/* <Skeleton.Node active className='!h-full !w-full' /> */}
+                <VehicleControl />
               </div>
             </div>
           </div>
           <div className='col-span-1 flex flex-col h-full gap-4'>
             <div className='w-full flex-1'>
               {/* <Skeleton.Node active className='!h-full !w-full' /> */}
-              <VehicleInfo />
+              <VehicleTask />
             </div>
             <div className='w-full flex-1'>
               {/* <Skeleton.Node active className='!h-full !w-full' /> */}
-              <VehicleInfo />
+              <VehicleFork />
             </div>
             <div className='w-full flex-1'>
               {/* <Skeleton.Node active className='!h-full !w-full' /> */}

@@ -1,10 +1,10 @@
-import { Space } from "antd";
+import { Space } from 'antd';
 
-import Notification from "../../components/notification";
+import Notification from '../../components/notification';
 
 export default function LayoutFeature() {
   return (
-    <Space size={"small"}>
+    <Space size={'small'}>
       {/* <Selectlangulage /> */}
       {/* <DocLink />
       <GithubLink /> */}

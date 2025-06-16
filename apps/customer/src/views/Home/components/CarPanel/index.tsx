@@ -26,6 +26,11 @@ const CarStage = () => {
           // }}
         >
           <color attach='background' args={['#000d0f']} />
+          {/* <Environment files='/textures/abandoned_factory_canteen_01_1k.hdr' background /> */}
+          <ambientLight intensity={0.3} />
+          <pointLight position={[0, 5, 0]} intensity={1.5} color='#ffffff' />
+          <spotLight position={[2, 8, 2]} angle={0.3} penumbra={0.5} intensity={2} castShadow />
+          {/* <Sky sunPosition={[100, 20, 10]} /> */}
           <CameraControls
             makeDefault
             minDistance={2}
