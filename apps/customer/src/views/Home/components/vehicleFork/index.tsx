@@ -34,7 +34,7 @@ const VehicleFork = () => {
         />
         <div className='flex-1 grid grid-cols-3'>
           <div className='flex-1 flex flex-col justify-center items-center'>
-            <Typography.Title level={4}>1</Typography.Title>
+            <Typography.Title level={2}>1</Typography.Title>
             <Typography.Text className='opacity-50'>左右</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
@@ -44,14 +44,14 @@ const VehicleFork = () => {
                   // color: theme.colorPrimary,
                 }
               }
-              level={4}
+              level={2}
             >
               2
             </Typography.Title>
             <Typography.Text className='opacity-50'>前后</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
-            <Typography.Title level={4}>0</Typography.Title>
+            <Typography.Title level={2}>0</Typography.Title>
             <Typography.Text className='opacity-50'>上下</Typography.Text>
           </div>
         </div>

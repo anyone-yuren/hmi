@@ -1,10 +1,19 @@
 'use client';
 
+import { useVehicleStore } from '@/store/vehicleStore';
 import { useTheme } from 'antd-style';
 import { motion, useAnimation } from 'framer-motion';
 import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
+  const { power } = useVehicleStore(
+    useShallow((state) => {
+      return {
+        power: state.power,
+      };
+    }),
+  );
   const controls = useAnimation();
   const theme = useTheme();
 
@@ -14,7 +23,7 @@ const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
   const midBatteryColor = theme.colorWarning;
 
   useEffect(() => {
-    const shadowColor = level < 20 ? lowBatteryColor : level > 80 ? highBatteryColor : midBatteryColor;
+    const shadowColor = power < 20 ? lowBatteryColor : power > 80 ? highBatteryColor : midBatteryColor;
     controls.start({
       filter: [
         `drop-shadow(0 0 4px ${shadowColor})`,
@@ -27,12 +36,12 @@ const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
         repeatType: 'reverse',
       },
     });
-  }, [controls, level]);
+  }, [controls, power]);
 
   // 计算电量条宽度
-  const batteryWidth = (level / 100) * (width - 6); // 3px padding
+  const batteryWidth = (power / 100) * (width - 6); // 3px padding
 
-  const batteryColor = level < 20 ? lowBatteryColor : level > 80 ? highBatteryColor : midBatteryColor;
+  const batteryColor = power < 20 ? lowBatteryColor : power > 80 ? highBatteryColor : midBatteryColor;
 
   return (
     <div className='flex flex-col items-center relative'>
@@ -64,7 +73,7 @@ const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
       </svg>
       {/* 电量百分比文字 */}
       <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-sm font-semibold'>
-        {level}%
+        {power}%
       </div>
     </div>
   );

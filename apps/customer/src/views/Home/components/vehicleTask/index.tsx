@@ -1,5 +1,5 @@
 import { Typography } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStyles, useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
 
 const useStyles = createStyles(({ css }) => ({
@@ -34,6 +34,7 @@ const useStyles = createStyles(({ css }) => ({
 
 const VehicleTask = () => {
   const { styles } = useStyles();
+  const theme = useTheme();
   return (
     <motion.div
       className='relative h-full p-4 rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm shadow-teal-500/40 overflow-hidden'
@@ -73,11 +74,23 @@ const VehicleTask = () => {
             </div>
             <div className='p-2'>
               <Typography.Title level={4}>任务号：P002-23-23-4-1-12</Typography.Title>
-              <div className='flex items-center gap-6 opacity-80'>
+              <div className='flex items-center gap-6 opacity-100 text-md'>
                 <div>任务类型：移动</div>
                 <div>任务点：2232</div>
-                <Typography.Text>实际速度:0mm/s</Typography.Text>
-                <Typography.Text>规划速度:0mm/s</Typography.Text>
+                <Typography.Text
+                  style={{
+                    color: theme.colorWarning,
+                  }}
+                >
+                  实际速度: 0mm/s
+                </Typography.Text>
+                <Typography.Text
+                  style={{
+                    color: theme.colorPrimary,
+                  }}
+                >
+                  规划速度: 0mm/s
+                </Typography.Text>
               </div>
             </div>
           </div>

@@ -43,12 +43,14 @@ const VehicleInfo = () => {
               </span>
             </div>
             <Space className='flex-1' split={<Divider type='vertical' />}>
-              <Typography.Text>x: {Math.round((agvPosition.x / 1000) * 100) / 100}</Typography.Text>
-              <Typography.Text>y: {Math.round((agvPosition.y / 1000) * 100) / 100}</Typography.Text>
-              <Typography.Text>theta: {Math.round((agvPosition?.angel * 180) / Math.PI) || 0}°</Typography.Text>
+              <Typography.Title level={5}>x: {Math.round((agvPosition.x / 1000) * 100) / 100} m</Typography.Title>
+              <Typography.Title level={5}>y: {Math.round((agvPosition.y / 1000) * 100) / 100} m</Typography.Title>
+              <Typography.Title level={5}>
+                theta: {Math.round((agvPosition?.angel * 180) / Math.PI) || 0}°
+              </Typography.Title>
             </Space>
             <div className='flex-1 col-span-1'>
-              <Typography.Title level={5} className='!m-0'>
+              <Typography.Title level={4} className='!m-0'>
                 IP: 129.12.12.123
               </Typography.Title>
             </div>
