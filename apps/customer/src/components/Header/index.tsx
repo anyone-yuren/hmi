@@ -3,6 +3,7 @@ import { useResponsive } from 'antd-style';
 import { useNavigate } from 'react-router-dom';
 import { SvgIcon } from 'ui';
 import BarBattery from '../battery';
+import WsVehicleContainer from '../wsVehicleContainer';
 
 const GlobalHeader = () => {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ const GlobalHeader = () => {
           <BarBattery level={40} height={24} />
         </div>
       </div>
+      <WsVehicleContainer />
     </div>
   );
 };

@@ -33,9 +33,10 @@ const Home = () => {
                 <VehiclePanel />
               </Suspense>
             </div>
-            <div className='h-[200px] flex gap-4'>
+            <div className='flex gap-4'>
               <div className='flex-1'>
-                <Skeleton.Node active className='!h-full !w-full' />
+                {/* <Skeleton.Node active className='!h-full !w-full' /> */}
+                <VehicleTask />
               </div>
             </div>
           </div>
@@ -48,10 +49,9 @@ const Home = () => {
               {/* <Skeleton.Node active className='!h-full !w-full' /> */}
               <VehicleControl />
             </div>
-            <div className='w-full flex-1'>
-              {/* <Skeleton.Node active className='!h-full !w-full' /> */}
+            {/* <div className='w-full flex-1'>
               <VehicleTask />
-            </div>
+            </div> */}
             <div className='w-full flex-1'>
               {/* <Skeleton.Node active className='!h-full !w-full' /> */}
               <VehicleFork />

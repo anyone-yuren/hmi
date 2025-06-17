@@ -27,12 +27,18 @@ export default defineApplicationConfig({
           ws: true,
           rewrite: (path) => path.replace(/^\/admin/, ''),
         },
-        '/ws': {
+        '/ws10001': {
           // 新增 WebSocket 代理
           target: 'ws://192.168.2.223:10001',
           ws: true,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/ws/, ''),
+        },
+        '/ws10009': {
+          target: 'ws://192.168.2.223:10009',
+          ws: true,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/ws10009/, ''),
         },
       },
     },

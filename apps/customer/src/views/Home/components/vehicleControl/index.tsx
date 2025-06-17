@@ -76,7 +76,7 @@ const VehicleControl = () => {
       {/* 内容 */}
       <div className='relative z-10 text-white flex flex-col h-full'>
         {/* <SvgIcon name='slam' className='absolute -right-10 -bottom-10 scale-125 opacity-5' size={160} /> */}
-        <img src={earth} className='w-60 absolute -right-10 -bottom-10 scale-125 opacity-35' />
+        <img src={earth} className='w-60 absolute -right-10 top-0 scale-125 opacity-35' />
         <h2 className='text-lg font-bold mb-2'>控制状态</h2>
         <div className='flex-1 grid grid-cols-3'>
           <div className='flex-1 flex flex-col justify-center items-center'>
