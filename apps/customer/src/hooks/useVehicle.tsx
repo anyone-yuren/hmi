@@ -27,7 +27,7 @@ export const useVehicle = () => {
       if (e?.data?.includes('/sirius/topics/robot_status_battery')) {
         const data = YAML.load(e?.data);
         if (data) {
-          setPower(data?.power);
+          setPower(Math.round(data?.power));
         }
       }
     },

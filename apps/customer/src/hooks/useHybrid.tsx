@@ -24,17 +24,24 @@ export const useHybrid = () => {
       if (data?.uri === '/navigation/robot_status_localizer_result') {
         data.pose.x = data.pose.x * 1000;
         data.pose.y = data.pose.y * 1000;
-
-        const diffX = Math.abs(data.pose.x - agvPosition.x);
-        const diffY = Math.abs(data.pose.y - agvPosition.y);
-
-        if (diffX > 5 || diffY > 5) {
+        // TODO 转整数
+        if (!agvPosition) {
           setAgvPosition({
             angel: data.pose.theta,
             x: data.pose.x,
             y: data.pose.y,
           });
         }
+        const diffX = Math.abs(data.pose.x - agvPosition.x);
+        const diffY = Math.abs(data.pose.y - agvPosition.y);
+
+        // if (diffX > 1 || diffY > 1) {
+        // }
+        setAgvPosition({
+          angel: data.pose.theta,
+          x: data.pose.x,
+          y: data.pose.y,
+        });
       }
     },
   });

@@ -96,7 +96,6 @@ const Setting = () => {
       agvPosition: state.agvPosition,
     })),
   );
-  console.log(agvPosition);
   // const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map((icon, index) => ({
   //   key: String(index + 1),
   //   icon: React.createElement(icon),
@@ -160,7 +159,7 @@ const Setting = () => {
               切换到施工端
             </Button>
           </div>
-          <div>
+          {/* <div>
             <Typography.Title level={5}>AGV位置</Typography.Title>
             <div>
               <Typography.Text>X轴：{agvPosition?.x}</Typography.Text>
@@ -171,7 +170,7 @@ const Setting = () => {
             <div>
               <Typography.Text>角度：{agvPosition?.angel}</Typography.Text>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className='absolute top-10 right-10'>
           <img src={x20} className='rounded-lg  w-96' />

@@ -6,6 +6,7 @@ import useChart from './src/useChart';
 
 export { default as ChartPie } from './src/chartPie';
 
+import BatteryChart from './src/Battery';
 import echarts from './src/charts/index';
 import DeviceChart from './src/deviceChart';
 import LogChart from './src/LogChart';
@@ -21,4 +22,4 @@ const title = { title1, title2 };
 //   vehicleAbnormals: vehicleError,
 //   vehicleStates: vehicleState,
 // };
-export { Chart, ChartArea, ChartMixed, DeviceChart, echarts, LogChart, title, TotalCard, useChart };
+export { BatteryChart, Chart, ChartArea, ChartMixed, DeviceChart, echarts, LogChart, title, TotalCard, useChart };

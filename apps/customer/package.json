@@ -46,7 +46,8 @@
     "ui": "workspace:^",
     "umi-request": "^1.4.0",
     "vite-plugin-mock": "2.9.6",
-    "zustand": "catalog:"
+    "zustand": "catalog:",
+    "@gbeata/charts-ui": "workspace:^"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",
