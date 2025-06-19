@@ -18,13 +18,13 @@ export const PdaLayout = (props: IProps) => {
   const token = useTheme();
   const { setThemeMode } = useThemeMode();
   const { key = 'key' } = state || {};
-  const { Content } = Layout;
+  const { Content, Sider } = Layout;
   const location = useLocation();
   return (
     <ThemeProvider appearance='dark'>
       <Layout className='h-full'>
         {/* <LayoutHeader title={title} /> */}
-        {header}
+        <Sider width={120}>{header}</Sider>
         <Content className='overflow-y-auto bg-[#162640]'>
           <ErrorBoundary>
             <Outlet key={key} />

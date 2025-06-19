@@ -1,7 +1,7 @@
 import x20 from '@/assets/img/X20-M_320-500.png';
 import { useHybridStore } from '@/store/hyBridStore';
 import { UserOutlined } from '@ant-design/icons';
-import { Button, Layout, Menu, Segmented, Slider, Switch, Typography } from 'antd';
+import { Button, Layout, Segmented, Slider, Switch, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import React from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -116,7 +116,7 @@ const Setting = () => {
   return (
     <Layout className='h-full bg-transparent'>
       <WsContainer />
-      <Sider
+      {/* <Sider
         breakpoint='lg'
         collapsedWidth={0}
         onBreakpoint={(broken) => {
@@ -127,7 +127,7 @@ const Setting = () => {
         }}
       >
         <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']} items={items} />
-      </Sider>
+      </Sider> */}
       <Content className='relative'>
         <div className='p-5 flex flex-col gap-8 w-2/3 h-full rounded-lg bg-gradient-to-r from-black to-purple-500/0'>
           <div>
