@@ -34,7 +34,7 @@ const CarStage = () => {
           <CameraControls
             makeDefault
             minDistance={2}
-            maxDistance={10}
+            maxDistance={100}
             maxPolarAngle={Math.PI / 4}
             minAzimuthAngle={0}
             maxAzimuthAngle={Math.PI}

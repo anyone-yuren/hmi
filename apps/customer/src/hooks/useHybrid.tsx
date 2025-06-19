@@ -35,13 +35,14 @@ export const useHybrid = () => {
         const diffX = Math.abs(data.pose.x - agvPosition.x);
         const diffY = Math.abs(data.pose.y - agvPosition.y);
 
-        // if (diffX > 1 || diffY > 1) {
-        // }
-        setAgvPosition({
-          angel: data.pose.theta,
-          x: data.pose.x,
-          y: data.pose.y,
-        });
+        if (diffX > 1 || diffY > 1) {
+          // }
+          setAgvPosition({
+            angel: data.pose.theta,
+            x: data.pose.x,
+            y: data.pose.y,
+          });
+        }
       }
     },
   });

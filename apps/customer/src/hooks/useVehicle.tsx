@@ -11,9 +11,10 @@ const HYBRID_URL = import.meta.env.DEV
   : `ws://${currentHost}:10009`; // 生产环境使用真实地址
 
 export const useVehicle = () => {
-  const { setPower } = useVehicleStore(
+  const { setPower, setSeniorPoints } = useVehicleStore(
     useShallow((state) => ({
       setPower: state.setPower,
+      setSeniorPoints: state.setSeniorPoints,
     })),
   );
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
@@ -29,6 +30,10 @@ export const useVehicle = () => {
         if (data) {
           setPower(Math.round(data?.power));
         }
+      }
+      if (e?.data?.includes('/sirius/topics/compose_sensor_point')) {
+        const data = JSON.parse(e?.data);
+        setSeniorPoints(data?.points);
       }
     },
   });

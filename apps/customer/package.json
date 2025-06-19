@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@gbeata/charts-ui": "workspace:^",
     "@gbeata/hooks": "workspace:^",
     "@gbeata/layout-ui": "workspace:^",
     "@gbeata/locales": "workspace:*",
@@ -34,6 +35,7 @@
     "dayjs": "^1.11.10",
     "echarts": "catalog:",
     "echarts-for-react": "catalog:",
+    "flubber": "^0.4.2",
     "gbeata": "workspace:*",
     "js-yaml": "^4.1.0",
     "lodash-es": "^4.17.21",
@@ -46,8 +48,7 @@
     "ui": "workspace:^",
     "umi-request": "^1.4.0",
     "vite-plugin-mock": "2.9.6",
-    "zustand": "catalog:",
-    "@gbeata/charts-ui": "workspace:^"
+    "zustand": "catalog:"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",

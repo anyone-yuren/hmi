@@ -4,6 +4,7 @@ import { Svg, useHelper } from '@react-three/drei';
 import { useMemo, useRef } from 'react';
 import { PointLightHelper, type DirectionalLight } from 'three';
 import { useShallow } from 'zustand/react/shallow';
+import PointCloud from './pointCloud';
 // import { PointLight } from "@react-three/drei";
 
 export const convertToMeters = (value: number) => value / 1000;
@@ -66,6 +67,7 @@ const Car = (props) => {
           position={[agvPosition.x / 1000, 0.01, agvPosition.y / 1000]}
           rotation={[Math.PI / 2, 0, deltaRotation]}
         >
+          <PointCloud />
           {/* 使 Svg 旋转，确保是绕中心旋转 */}
           <Svg
             src={process.env.NODE_ENV == 'development' ? '/assets/direction.svg' : '/assets/direction.svg'}

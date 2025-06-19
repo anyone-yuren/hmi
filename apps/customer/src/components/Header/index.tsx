@@ -3,6 +3,7 @@ import { useResponsive } from 'antd-style';
 import { useNavigate } from 'react-router-dom';
 import { SvgIcon } from 'ui';
 import BarBattery from '../battery';
+import ChargingAnimation from '../charging';
 import WsVehicleContainer from '../wsVehicleContainer';
 
 const GlobalHeader = () => {
@@ -63,6 +64,7 @@ const GlobalHeader = () => {
           />
         </div>
       </div>
+      {false && <ChargingAnimation />}
       <WsVehicleContainer />
     </div>
   );
