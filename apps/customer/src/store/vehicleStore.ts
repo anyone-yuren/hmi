@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash-es';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { useGlobalStore } from './globalStore';
@@ -6,6 +7,8 @@ interface State {
   setPower: (power: number) => void;
   seniorPoints: any[];
   setSeniorPoints: (seniorPoints: any[]) => void;
+  auto_manual_status: number;
+  setAutoManualStatus: (auto_manual_status: number) => void;
 }
 export const useVehicleStore = create<State>()(
   persist(
@@ -22,6 +25,13 @@ export const useVehicleStore = create<State>()(
         const { cacheSave } = useGlobalStore.getState();
         if (cacheSave) {
           set({ seniorPoints });
+        }
+      },
+      auto_manual_status: 0,
+      setAutoManualStatus: (auto_manual_status: number) => {
+        const { cacheSave } = useGlobalStore.getState();
+        if (cacheSave && !isEqual(auto_manual_status, get().auto_manual_status)) {
+          set({ auto_manual_status });
         }
       },
     }),
