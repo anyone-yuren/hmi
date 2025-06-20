@@ -1,6 +1,8 @@
+import { useGlobalStore } from '@/store/globalStore';
 import { Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
+import { useShallow } from 'zustand/react/shallow';
 
 const useStyles = createStyles(({ css }) => ({
   loader: css`
@@ -13,7 +15,7 @@ const useStyles = createStyles(({ css }) => ({
       38px 0 0 3px,
       57px 0 0 0;
     transform: translateX(-38px);
-    animation: l21 0.5s infinite alternate linear;
+    // animation: l21 0.5s infinite alternate linear;
 
     @keyframes l21 {
       50% {
@@ -35,6 +37,11 @@ const useStyles = createStyles(({ css }) => ({
 const VehicleTask = () => {
   const { styles } = useStyles();
   const theme = useTheme();
+  const { showAnimate } = useGlobalStore(
+    useShallow((state) => ({
+      showAnimate: state.showAnimate,
+    })),
+  );
   return (
     <motion.div
       className='relative h-full p-4 rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm shadow-teal-500/40 overflow-hidden'
@@ -42,27 +49,36 @@ const VehicleTask = () => {
       transition={{ type: 'spring', stiffness: 200, damping: 15 }}
     >
       {/* 动态发光圈 */}
-      <motion.div
-        className='absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-teal-500 via-purple-500 to-blue-500 opacity-10 blur-3xl'
-        animate={{ x: ['-20%', '20%', '-20%'], y: ['-40%', '20%', '-40%'], scale: [1.4, 2, 1.4], rotate: [0, 180, 0] }}
-        transition={{ repeat: Infinity, duration: 15, ease: 'easeInOut', repeatType: 'reverse' }}
-      />
+      {showAnimate ? (
+        <motion.div
+          className='absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-teal-500 via-purple-500 to-blue-500 opacity-10 blur-3xl'
+          animate={{
+            x: ['-20%', '20%', '-20%'],
+            y: ['-40%', '20%', '-40%'],
+            scale: [1.4, 2, 1.4],
+            rotate: [0, 180, 0],
+          }}
+          transition={{ repeat: Infinity, duration: 15, ease: 'easeInOut', repeatType: 'reverse' }}
+        />
+      ) : null}
 
       {/* 内容 */}
       <div className='relative z-10 text-white flex h-full flex-col'>
         <h2 className='text-lg font-bold mb-1'>任务</h2>
-        <motion.div
-          initial={{ width: '40px', opacity: 0.2 }}
-          animate={{
-            width: '160px',
-            opacity: 1,
-          }}
-          transition={{
-            duration: 3,
-            ease: 'easeInOut',
-          }}
-          className='h-[1px] bg-gradient-to-r from-teal-500 to-purple-500/0 rounded-full'
-        />
+        {showAnimate ? (
+          <motion.div
+            initial={{ width: '40px', opacity: 0.2 }}
+            animate={{
+              width: '160px',
+              opacity: 1,
+            }}
+            transition={{
+              duration: 3,
+              ease: 'easeInOut',
+            }}
+            className='h-[1px] bg-gradient-to-r from-teal-500 to-purple-500/0 rounded-full'
+          />
+        ) : null}
         {/* <Empty></Empty> */}
         <div className='flex-1'>
           <div className='flex flex-row items-start py-2 gap-4'>

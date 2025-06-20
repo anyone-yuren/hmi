@@ -1,5 +1,5 @@
 import x20 from '@/assets/img/X20-M_320-500.png';
-import { useHybridStore } from '@/store/hyBridStore';
+import { useGlobalStore } from '@/store/globalStore';
 import { UserOutlined } from '@ant-design/icons';
 import { Button, Layout, Segmented, Slider, Switch, Typography } from 'antd';
 import { createStyles } from 'antd-style';
@@ -91,10 +91,17 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const Setting = () => {
   const { styles } = useStyles();
-  const { agvPosition } = useHybridStore(
-    useShallow((state) => ({
-      agvPosition: state.agvPosition,
-    })),
+  const { showTree, setShowThree, cacheSave, setCacheSave, showAnimate, setShowAnimate } = useGlobalStore(
+    useShallow((state) => {
+      return {
+        showTree: state.showThree,
+        setShowThree: state.setShowThree,
+        cacheSave: state.cacheSave,
+        setCacheSave: state.setCacheSave,
+        showAnimate: state.showAnimate,
+        setShowAnimate: state.setShowAnimate,
+      };
+    }),
   );
   // const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map((icon, index) => ({
   //   key: String(index + 1),
@@ -149,6 +156,36 @@ const Setting = () => {
           <div className='flex gap-4 items-center'>
             <Switch defaultChecked className={styles.customSwitch} onChange={() => {}} />
             <Typography.Text>库位自动校准</Typography.Text>
+          </div>
+          <div className='flex gap-4 items-center'>
+            <Switch
+              checked={showAnimate}
+              className={styles.customSwitch}
+              onChange={(checked) => {
+                setShowAnimate(checked);
+              }}
+            />
+            <Typography.Text>显示动画</Typography.Text>
+          </div>
+          <div className='flex gap-4 items-center'>
+            <Switch
+              checked={showTree}
+              className={styles.customSwitch}
+              onChange={(checked) => {
+                setShowThree(checked);
+              }}
+            />
+            <Typography.Text>显示3D</Typography.Text>
+          </div>
+          <div className='flex gap-4 items-center'>
+            <Switch
+              checked={cacheSave}
+              className={styles.customSwitch}
+              onChange={(checked) => {
+                setCacheSave(checked);
+              }}
+            />
+            <Typography.Text>开启内存缓存</Typography.Text>
           </div>
           <div className='w-1/2'>
             <Typography.Title level={5}>喇叭音量</Typography.Title>

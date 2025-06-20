@@ -1,5 +1,6 @@
 'use client';
 
+import { useGlobalStore } from '@/store/globalStore';
 import { useVehicleStore } from '@/store/vehicleStore';
 import { useTheme } from 'antd-style';
 import { motion, useAnimation } from 'framer-motion';
@@ -14,6 +15,13 @@ const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
       };
     }),
   );
+  const { showAnimate } = useGlobalStore(
+    useShallow((state) => {
+      return {
+        showAnimate: state.showAnimate,
+      };
+    }),
+  );
   const controls = useAnimation();
   const theme = useTheme();
 
@@ -23,6 +31,9 @@ const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
   const midBatteryColor = theme.colorWarning;
 
   useEffect(() => {
+    if (!showAnimate) {
+      return;
+    }
     const shadowColor = power < 20 ? lowBatteryColor : power > 80 ? highBatteryColor : midBatteryColor;
     controls.start({
       filter: [
@@ -36,7 +47,7 @@ const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
         repeatType: 'reverse',
       },
     });
-  }, [controls, power]);
+  }, [controls, power, showAnimate]);
 
   // 计算电量条宽度
   const batteryWidth = (power / 100) * (width - 6); // 3px padding

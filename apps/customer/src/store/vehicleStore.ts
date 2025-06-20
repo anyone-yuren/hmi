@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { useGlobalStore } from './globalStore';
 interface State {
   power: number;
   setPower: (power: number) => void;
@@ -8,11 +9,21 @@ interface State {
 }
 export const useVehicleStore = create<State>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       power: 0,
-      setPower: (power: number) => set({ power }),
+      setPower: (power: number) => {
+        const { cacheSave } = useGlobalStore.getState();
+        if (cacheSave) {
+          set({ power });
+        }
+      },
       seniorPoints: [],
-      setSeniorPoints: (seniorPoints: any[]) => set({ seniorPoints }),
+      setSeniorPoints: (seniorPoints: any[]) => {
+        const { cacheSave } = useGlobalStore.getState();
+        if (cacheSave) {
+          set({ seniorPoints });
+        }
+      },
     }),
     {
       name: 'vehicle-store',

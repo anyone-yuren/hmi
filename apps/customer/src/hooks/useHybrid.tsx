@@ -10,10 +10,11 @@ const HYBRID_URL = import.meta.env.DEV
   : `ws://${currentHost}:10001`; // 生产环境使用真实地址
 
 export const useHybrid = () => {
-  const { setAgvPosition, agvPosition } = useHybridStore(
+  const { setAgvPosition, agvPosition, setRobotStatus } = useHybridStore(
     useShallow((state) => ({
       setAgvPosition: state.setAgvPosition,
       agvPosition: state.agvPosition,
+      setRobotStatus: state.setRobotStatus,
     })),
   );
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
@@ -22,8 +23,9 @@ export const useHybrid = () => {
     onMessage: (e) => {
       const data = JSON.parse(e?.data);
       if (data?.uri === '/navigation/robot_status_localizer_result') {
-        data.pose.x = data.pose.x * 1000;
-        data.pose.y = data.pose.y * 1000;
+        data.pose.x = Math.round(data.pose.x * 1000 * 100) / 100;
+        data.pose.y = Math.round(data.pose.y * 1000 * 100) / 100;
+        data.pose.theta = Math.round(data.pose.theta * 100) / 100;
         // TODO 转整数
         if (!agvPosition) {
           setAgvPosition({
@@ -35,14 +37,22 @@ export const useHybrid = () => {
         const diffX = Math.abs(data.pose.x - agvPosition.x);
         const diffY = Math.abs(data.pose.y - agvPosition.y);
 
-        if (diffX > 1 || diffY > 1) {
-          // }
-          setAgvPosition({
-            angel: data.pose.theta,
-            x: data.pose.x,
-            y: data.pose.y,
-          });
-        }
+        // if (diffX > 1 || diffY > 1) {
+        // }
+        setAgvPosition({
+          angel: data.pose.theta,
+          x: data.pose.x,
+          y: data.pose.y,
+        });
+        // }
+      }
+      if (data?.uri === '/navigation/robot_current_status') {
+        setRobotStatus({
+          floor_number: data.floor_number,
+          navi_status: data.navi_status,
+          navigation_type: data.navigation_type,
+          system_status: data.system_status,
+        });
       }
     },
   });

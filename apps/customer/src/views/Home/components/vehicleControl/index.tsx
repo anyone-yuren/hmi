@@ -1,9 +1,8 @@
 import earth from '@/assets/img/earth.png';
-import { useHybridStore } from '@/store/hyBridStore';
 import { Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
-import { useShallow } from 'zustand/react/shallow';
+import { SvgIcon } from 'ui';
 
 const useStyles = createStyles(({ token, css }) => ({
   customSwitch: css`
@@ -59,14 +58,6 @@ const useStyles = createStyles(({ token, css }) => ({
 const VehicleControl = () => {
   const { styles } = useStyles();
   const theme = useTheme();
-  const { agvPosition } = useHybridStore(
-    useShallow((state) => {
-      return {
-        agvPosition: state.agvPosition,
-      };
-    }),
-  );
-  console.log('agvPosition', agvPosition);
 
   return (
     <motion.div
@@ -98,7 +89,7 @@ const VehicleControl = () => {
               }}
               level={4}
             >
-              手动
+              <SvgIcon name='handle' size={24} />
             </Typography.Title>
             <Typography.Text className='opacity-50'>控制模式</Typography.Text>
           </div>

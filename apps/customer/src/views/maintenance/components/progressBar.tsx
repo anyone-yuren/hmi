@@ -1,8 +1,10 @@
 'use client';
 
+import { useGlobalStore } from '@/store/globalStore';
 import { useTheme } from 'antd-style';
 import { motion, useAnimation } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 interface ProgressBarProps {
   min: number;
   max: number;
@@ -12,6 +14,11 @@ interface ProgressBarProps {
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ min, max, value, height = 20, className }) => {
+  const { showAnimate } = useGlobalStore(
+    useShallow((state) => ({
+      showAnimate: state.showAnimate,
+    })),
+  );
   const theme = useTheme();
   const controls = useAnimation();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,6 +37,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ min, max, value, height = 20,
 
   // 呼吸发光动画
   useEffect(() => {
+    if (!showAnimate) {
+      return;
+    }
     controls.start({
       opacity: [0.6, 1, 0.6],
       transition: {
@@ -38,7 +48,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ min, max, value, height = 20,
         ease: 'easeInOut',
       },
     });
-  }, [controls]);
+  }, [controls, showAnimate]);
 
   // 监听容器宽度变化
   useEffect(() => {

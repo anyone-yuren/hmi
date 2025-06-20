@@ -1,20 +1,33 @@
 import diqiu from '@/assets/img/diqiu.png';
 import { useHybridStore } from '@/store/hyBridStore';
-import { Divider, Space, Typography } from 'antd';
+import { Divider, Space, Tag, Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
 import { useShallow } from 'zustand/react/shallow';
 
 const VehicleInfo = () => {
-  const { agvPosition } = useHybridStore(
+  const { agvPosition, robotStatus } = useHybridStore(
     useShallow((state) => {
       return {
         agvPosition: state.agvPosition,
+        robotStatus: state.robotStatus,
       };
     }),
   );
-  console.log('agvPosition', agvPosition);
   const theme = useTheme();
+
+  const getNavigationType = (type: number) => {
+    switch (type) {
+      case 1:
+        return '反光板';
+      case 2:
+        return 'SLAM';
+      case 5:
+        return '二维码';
+      default:
+        return '未知';
+    }
+  };
 
   return (
     <motion.div
@@ -43,10 +56,28 @@ const VehicleInfo = () => {
               </span>
             </div>
             <Space className='flex-1' split={<Divider type='vertical' />}>
-              <Typography.Title level={5}>x: {Math.round((agvPosition.x / 1000) * 100) / 100} m</Typography.Title>
+              {/* <Typography.Title level={5}>x: {Math.round((agvPosition.x / 1000) * 100) / 100} m</Typography.Title>
               <Typography.Title level={5}>y: {Math.round((agvPosition.y / 1000) * 100) / 100} m</Typography.Title>
               <Typography.Title level={5}>
                 theta: {Math.round((agvPosition?.angel * 180) / Math.PI) || 0}°
+              </Typography.Title> */}
+              <Typography.Title level={5}>
+                定位类型:
+                <Tag bordered={false} color='default' className='text-base ml-1'>
+                  {getNavigationType(robotStatus?.navigation_type || 0)}
+                </Tag>
+              </Typography.Title>
+              <Typography.Title level={5}>
+                定位状态:
+                {!robotStatus?.navi_status ? (
+                  <Tag bordered={false} color='success' className='text-base ml-1'>
+                    正常
+                  </Tag>
+                ) : (
+                  <Tag bordered={false} color='error' className='text-base ml-1'>
+                    定位丢失
+                  </Tag>
+                )}
               </Typography.Title>
             </Space>
             <div className='flex-1 col-span-1'>
