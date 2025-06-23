@@ -30,7 +30,6 @@ const PointCloud = ({ color = '#00ff00', size = 0.05 }: PointCloudProps) => {
   const geometry = useMemo(() => {
     const geom = new BufferGeometry();
     const positions = seniorPoints.flatMap(({ x, y, z = 0 }) => [meterToPixel(x - 1), meterToPixel(y), 0]);
-    console.log(positions);
     geom.setAttribute('position', new Float32BufferAttribute(positions, 3));
     return geom;
   }, [seniorPoints]);

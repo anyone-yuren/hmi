@@ -1,3 +1,4 @@
+import runningGif from '@/assets/img/running.gif';
 import { useGlobalStore } from '@/store/globalStore';
 import { Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
@@ -15,7 +16,7 @@ const useStyles = createStyles(({ css }) => ({
       38px 0 0 3px,
       57px 0 0 0;
     transform: translateX(-38px);
-    // animation: l21 0.5s infinite alternate linear;
+    animation: l21 5s infinite alternate linear;
 
     @keyframes l21 {
       50% {
@@ -82,8 +83,9 @@ const VehicleTask = () => {
         {/* <Empty></Empty> */}
         <div className='flex-1'>
           <div className='flex flex-row items-start py-2 gap-4'>
-            <div className='py-4 flex items-center gap-5 flex-col'>
+            <div className=' flex items-center flex-col'>
               <div className={styles.loader}></div>
+              <img className='w-12 h-10' src={runningGif} alt='' />
               <Typography.Title level={4} className='!m-0'>
                 运行中
               </Typography.Title>

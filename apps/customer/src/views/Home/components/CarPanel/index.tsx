@@ -3,13 +3,15 @@ import { Canvas } from '@react-three/fiber';
 import { useRequest } from 'ahooks';
 import { Skeleton, Spin } from 'antd';
 import { memo, Suspense } from 'react';
-import { getSegmentsInfo } from '../../services';
+import { getSegmentsInfo, getVehicleShape } from '../../services';
 import LocationPoint from '../point/locationPoint';
 import Car from './components/car';
+import MxwCar from './components/device';
 import RcsLines from './components/routeLiles';
 import StageBase from './components/stageBase';
 const CarStage = () => {
   const { data: routeLinesData, loading: routeLinesLoading } = useRequest(getSegmentsInfo);
+  const { data: vehicleShapeData, loading: vehicleShapeLoading } = useRequest(getVehicleShape);
 
   return (
     <Suspense fallback={<Spin />}>
@@ -35,7 +37,7 @@ const CarStage = () => {
             makeDefault
             minDistance={2}
             maxDistance={100}
-            maxPolarAngle={Math.PI / 4}
+            // maxPolarAngle={Math.PI / 4}
             minAzimuthAngle={0}
             maxAzimuthAngle={Math.PI}
             minPolarAngle={0}
@@ -62,6 +64,7 @@ const CarStage = () => {
           adjustCamera={1}
         > */}
           <Car />
+          <MxwCar />
           <LocationPoint />
           {routeLinesData?.length ? <RcsLines mapEdges={routeLinesData} /> : null}
           {/* <ActiveLine /> */}

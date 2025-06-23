@@ -7,3 +7,6 @@ export const getPointsList = (params: any) => get('/sirius/topics/point_info_lis
 
 // 获取线数据
 export const getSegmentsInfo = () => get('/mwrobot/get_segments_info');
+
+// 获取车辆轮廓
+export const getVehicleShape = () => get('/sirius/topics/safety_foot_print');
