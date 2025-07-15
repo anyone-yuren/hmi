@@ -1,0 +1,32 @@
+{
+  "pda": {
+    "applyIn": {
+      "fromSlotId": "Starting location"
+    },
+    "container": {
+      "fromAreaIds": "Source container area",
+      "toSlotId": "Move the target location"
+    },
+    "home": {
+      "applyContainer": "Call container",
+      "applyIn": "Application for entry",
+      "bind": "Tape tied",
+      "charts": "Statistical Report",
+      "containerId": "Container number",
+      "containerState": "Container status",
+      "slotCount": "Storage capacity",
+      "slotId": "Group disk position",
+      "taskCount": "Task statistics",
+      "unBind": "Explanation",
+      "warehourse": "Warehouse management"
+    },
+    "task": {
+      "containerType": "Container Type"
+    },
+    "unbind": {
+      "container": "Container number",
+      "slot": "Store location number",
+      "type": "Unbinding method"
+    }
+  }
+}

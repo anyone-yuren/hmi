@@ -1,0 +1,32 @@
+{
+  "pda": {
+    "applyIn": {
+      "fromSlotId": "開始場所"
+    },
+    "container": {
+      "fromAreaIds": "ソースコンテナエリア",
+      "toSlotId": "ターゲットの場所を移動します"
+    },
+    "home": {
+      "applyContainer": "コンテナを呼び出します",
+      "applyIn": "入力の申請",
+      "bind": "縛られたテープ",
+      "charts": "統計レポート",
+      "containerId": "コンテナ番号",
+      "containerState": "コンテナステータス",
+      "slotCount": "curong",
+      "slotId": "グループディスクの位置",
+      "taskCount": "タスク統計",
+      "unBind": "説明",
+      "warehourse": "倉庫管理"
+    },
+    "task": {
+      "containerType": "コンテナタイプ"
+    },
+    "unbind": {
+      "container": "パレット番号",
+      "slot": "場所番号を保存します",
+      "type": "バインディング方法"
+    }
+  }
+}
