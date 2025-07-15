@@ -31,7 +31,7 @@
     "dev:act": "pnpm run dev --filter=@gbeata/activation --force",
     "dev:dash": "pnpm run dev --filter=@gbeata/dashboard --force",
     "build:dash": "pnpm run build --filter=@gbeata/dashboard ",
-    "dev:wms-pc": "pnpm -F @gbeata/wms-pc run dev",
+    "dev:customer": "pnpm -F @gbeata/customer run dev",
     "dev:3d": "pnpm -F @gbeata/twin run dev"
   },
   "keywords": [],

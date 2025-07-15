@@ -1,10 +1,8 @@
-import { createHashRouter } from 'react-router-dom';
-
 import GlobalHeader from '@/components/Header';
-import Home from '@/views/Home';
-import Maintenance from '@/views/maintenance';
-import Setting from '@/views/Setting';
+import LazyLoad from '@/components/LazyLoad';
 import { PdaLayout } from '@gbeata/layout-ui';
+import { lazy } from '@loadable/component';
+import { createHashRouter } from 'react-router-dom';
 
 const router = createHashRouter([
   {
@@ -17,15 +15,24 @@ const router = createHashRouter([
     children: [
       {
         path: '',
-        element: <Home />,
+        element: LazyLoad(
+          lazy(() => import('@/views/Home')),
+          'Wms.ReceivingOrders',
+        ),
       },
       {
         path: 'maintenance',
-        element: <Maintenance />,
+        element: LazyLoad(
+          lazy(() => import('@/views/maintenance')),
+          'Wms.ReceivingOrders',
+        ),
       },
       {
         path: 'setting',
-        element: <Setting />,
+        element: LazyLoad(
+          lazy(() => import('@/views/Setting')),
+          'Wms.ReceivingOrders',
+        ),
       },
     ],
   },
