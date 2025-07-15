@@ -15,24 +15,19 @@ const router = createHashRouter([
     children: [
       {
         path: '',
-        element: LazyLoad(
-          lazy(() => import('@/views/Home')),
-          'Wms.ReceivingOrders',
-        ),
+        element: LazyLoad(lazy(() => import('@/views/Home'))),
       },
       {
         path: 'maintenance',
-        element: LazyLoad(
-          lazy(() => import('@/views/maintenance')),
-          'Wms.ReceivingOrders',
-        ),
+        element: LazyLoad(lazy(() => import('@/views/maintenance'))),
       },
       {
         path: 'setting',
-        element: LazyLoad(
-          lazy(() => import('@/views/Setting')),
-          'Wms.ReceivingOrders',
-        ),
+        element: LazyLoad(lazy(() => import('@/views/Setting'))),
+      },
+      {
+        path: 'slider',
+        element: LazyLoad(lazy(() => import('@/views/SliderPage'))),
       },
     ],
   },

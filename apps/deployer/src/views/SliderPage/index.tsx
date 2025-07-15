@@ -1,0 +1,165 @@
+import mainBg from '@/assets/img/mainBg.jpg';
+import { Typography } from 'antd';
+import { createStyles } from 'antd-style';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { SvgIcon } from 'ui';
+
+// 去除table hover央视
+const useStyles = createStyles(({ css, token }) => {
+  return {
+    customerSwiper: css`
+      height: 100%;
+      background: url(${mainBg}) no-repeat center center;
+      background-size: cover;
+      .swiper-slide {
+        display: flex;
+        width: 100%;
+        padding: 80px;
+      }
+      .swiper-pagination-bullet {
+        background-color: ${token.colorTextBase};
+        width: 15px;
+        height: 15px;
+        opacity: 0.2;
+      }
+      .swiper-pagination-bullet-active-main {
+        width: 30px;
+        opacity: 1;
+        border-radius: 8px;
+      }
+    `,
+  };
+});
+
+const SwiperPage = () => {
+  const { styles } = useStyles();
+  return (
+    <>
+      <Swiper
+        className={styles.customerSwiper}
+        pagination={{
+          dynamicBullets: true,
+        }}
+        modules={[Pagination]}
+      >
+        <SwiperSlide>
+          <div className='grid grid-cols-4 w-full justify-center'>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44 py-2 px-4 bg-gradient-to-b from-[#223d62] to-[#3b587e] rounded-3xl'>
+                <SvgIcon name={'task'} size={140} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                任务
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'diagnosis'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                诊断
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'hybrid'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                导航
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44 py-2 px-4 bg-gradient-to-b from-yellow-500 to-yellow-400 rounded-3xl'>
+                <SvgIcon name={'safety'} size={140} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                安全
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44 py-2 px-4 bg-gradient-to-b from-[#ff7e5f] to-red-600 rounded-3xl'>
+                <SvgIcon name={'vision'} size={140} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                视觉
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'offset'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                偏移表
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'about'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                车辆信息
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'calibration'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                标定
+              </Typography.Title>
+            </div>
+          </div>
+        </SwiperSlide>
+        <SwiperSlide>
+          <div className='grid grid-cols-4 w-full'>
+            <div className='flex flex-col items-center justify-center gap-2 '>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'cloud'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                上传下载
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'io'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                I/O 信息
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'setting'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                设置
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2 invisible'>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'setting'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                设置
+              </Typography.Title>
+            </div>
+            <div className='flex flex-col items-center justify-center gap-2 invisible'>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'setting'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                设置
+              </Typography.Title>
+            </div>
+          </div>
+        </SwiperSlide>
+      </Swiper>
+    </>
+  );
+};
+
+export default SwiperPage;

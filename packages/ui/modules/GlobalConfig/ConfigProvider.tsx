@@ -103,6 +103,9 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
         // token: { colorTextHeading: '#fff' },
         token: {
           colorPrimary: '#00d1d1',
+          colorText: 'white',
+          fontFamily:
+            'Microsoft YaHei, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         },
         components: {
           Table: {

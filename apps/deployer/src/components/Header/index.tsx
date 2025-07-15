@@ -77,6 +77,13 @@ const GlobalHeader = () => {
           />
         </div>
       </div>
+      <div>
+        <Button
+          className='border-none !w-[82px] h-[62px] !bg-transparent flex items-center justify-center !rounded-2xl text-white'
+          icon={<SvgIcon name='bar' size={responsive.xs ? 42 : 54} />}
+          onClick={() => navigate('/slider')}
+        ></Button>
+      </div>
       {false && <ChargingAnimation />}
       <WsVehicleContainer />
     </div>
