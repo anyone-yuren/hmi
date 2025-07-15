@@ -56,4 +56,9 @@ export const useHybrid = () => {
       }
     },
   });
+  return {
+    sendMessage,
+    latestMessage,
+    readyState,
+  };
 };
