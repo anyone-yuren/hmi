@@ -69,7 +69,12 @@ const SwiperPage = () => {
                 诊断
               </Typography.Title>
             </div>
-            <div className='flex flex-col items-center justify-center gap-2'>
+            <div
+              className='flex flex-col items-center justify-center gap-2'
+              onClick={() => {
+                navigate('/hybrid');
+              }}
+            >
               <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
                 <SvgIcon name={'hybrid'} size={180} />
               </div>

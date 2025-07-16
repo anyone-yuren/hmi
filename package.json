@@ -97,6 +97,16 @@
     "react-i18next": "^14.0.1",
     "sonner": "catalog:",
     "@mui/icons-material": "catalog:",
-    "@mui/material": "catalog:"
+    "@mui/material": "catalog:",
+    "@react-spring/web": "catalog:",
+    "react-konva": "catalog:",
+    "react-konva-utils": "catalog:",
+    "konva": "catalog:",
+    "@use-gesture/react": "catalog:",
+    "use-image": "catalog:",
+    "react-simple-keyboard": "catalog:",
+    "@emotion/react": "catalog:",
+    "@mui/lab": "catalog:",
+    "@emotion/styled": "catalog:"
   }
 }
