@@ -52,6 +52,7 @@ import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import CanvaOnline from './components/CanvaOnline';
 import MwConfirm from './components/MwConfirm';
+import WsContainer from './components/WsContainer';
 import ChangePose from './components/changePose';
 import InputWidthKeyboard from './components/inputWithKeyboard';
 import { NavigationRegion } from './components/navigationRegion';
@@ -336,6 +337,7 @@ const Mapping = () => {
                     },
                   ],
                 }}
+                trigger={['click']}
               >
                 <IconButton size='small' shape='circle'>
                   <MoreVertIcon fontSize='small' className='opacity-80' />
@@ -581,6 +583,7 @@ const Mapping = () => {
         </Drawer>
       </ThemeProvider>
       {contextHolder}
+      <WsContainer />
     </>
   );
 };

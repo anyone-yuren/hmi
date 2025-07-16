@@ -1,8 +1,8 @@
+import agv from '@/assets/agv.svg';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
 import * as React from 'react';
 import { Image as KonvaImage } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
-
 const Agv = (props: any) => {
   const { floor } = props;
 
@@ -18,7 +18,7 @@ const Agv = (props: any) => {
 
   React.useEffect(() => {
     const image = new Image();
-    image.src = './assets/agv.svg';
+    image.src = agv;
     image.onload = () => setImageObj(image);
   }, []);
 
