@@ -1,12 +1,12 @@
 import mainBg from '@/assets/img/mainBg.jpg';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
+import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SvgIcon } from 'ui';
-
 // 去除table hover央视
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -36,6 +36,7 @@ const useStyles = createStyles(({ css, token }) => {
 
 const SwiperPage = () => {
   const { styles } = useStyles();
+  const navigate = useNavigate();
   return (
     <>
       <Swiper
@@ -55,7 +56,12 @@ const SwiperPage = () => {
                 任务
               </Typography.Title>
             </div>
-            <div className='flex flex-col items-center justify-center gap-2'>
+            <div
+              className='flex flex-col items-center justify-center gap-2'
+              onClick={() => {
+                navigate('/diagnosis');
+              }}
+            >
               <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
                 <SvgIcon name={'diagnosis'} size={180} />
               </div>

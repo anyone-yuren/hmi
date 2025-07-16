@@ -8,6 +8,7 @@
     "preinstall": "npx only-allow pnpm",
     "postinstall": "turbo run stub",
     "build": "rm -rf ./@gbeata  && turbo build --no-cache --force",
+    "dev:dep": "pnpm run dev --filter @gbeata/deployer",
     "docs:build": "turbo docs:build --filter gbeata",
     "build:admin": "pnpm run build --filter gbeata-admin",
     "dev": "turbo run dev --parallel --no-cache",
