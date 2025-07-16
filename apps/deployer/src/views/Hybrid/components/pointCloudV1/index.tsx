@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { Circle, FastLayer, Rect } from "react-konva";
-import { useHybirdStore } from "../../store/hybird.store";
-import { useShallow } from "zustand/react/shallow";
-import Konva from "konva";
+import Konva from 'konva';
+import { useRef } from 'react';
+import { FastLayer, Line } from 'react-konva';
+import { useShallow } from 'zustand/react/shallow';
+import { useHybirdStore } from '../../store/hybird.store';
 
 export default function PointsCloudV1() {
   const layerRef = useRef<Konva.FastLayer>(null);
@@ -10,28 +10,18 @@ export default function PointsCloudV1() {
     useShallow((state) => ({
       showPointCloud: state.showPointCloud,
       pointCloudV1Data: state.pointCloudV1Data,
-    }))
+    })),
   );
 
+  // 转换点数据为 Konva Line 接受的格式
+  const points = pointCloudV1Data?.flatMap((point) => [point.x / 50, 0 - point.y / 50]) || [];
+
   return (
-    <FastLayer
-      ref={layerRef}
-      gpuAcceleration
-      hitGraphEnabled={false}
-      draggable={false}
-    >
+    <FastLayer ref={layerRef} gpuAcceleration hitGraphEnabled={false} draggable={false}>
       {showPointCloud &&
-        pointCloudV1Data?.map((point, index) => {
-          return (
-            <Circle
-              key={index}
-              x={point.x / 50}
-              y={0 - point.y / 50}
-              radius={1}
-              fill={"red"}
-            ></Circle>
-          );
-        })}
+        points.length >= 6 && ( // 至少3个点，6个数
+          <Line points={points} closed={true} fill='#00d1d1' opacity={0.3} strokeWidth={1} />
+        )}
     </FastLayer>
   );
 }

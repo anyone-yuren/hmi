@@ -76,7 +76,7 @@ const CenterActions = () => {
       const scale = Math.min(hybirdStage.width()! / (width * 1), (hybirdStage.height()! - 100) / (height * 1));
       const x1 = round(x * scale + (width * scale - hybirdStage.width()!) / 2, 4);
       const y1 = round(y * scale + (height * scale - hybirdStage.height()!) / 2, 4);
-
+      console.log(-x1, -y1 - 50);
       hybirdStage.to({
         x: -x1,
         y: -y1 - 50,

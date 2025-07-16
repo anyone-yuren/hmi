@@ -37,7 +37,7 @@ const GridGroup = ({ width, height, gridSize, scale }: any) => {
     const startY = Math.floor(-offsetY / gridSize) * gridSize;
     const endY = Math.ceil((height - offsetY) / gridSize) * gridSize;
 
-    const lines = [];
+    const lines: any[] = [];
 
     // 垂直线
     for (let x = startX; x <= endX; x += gridSize) {
@@ -67,9 +67,7 @@ const GridGroup = ({ width, height, gridSize, scale }: any) => {
   return (
     <Group name='grid-group'>
       {/* 绘制水平网格线 */}
-      {gridLines.map((line, index) => (
-        <Line key={index} points={line.points} stroke={line.color} strokeWidth={0.5} />
-      ))}
+      {gridLines?.map((line, index) => <Line key={index} points={line.points} stroke={line.color} strokeWidth={0.5} />)}
     </Group>
   );
 };

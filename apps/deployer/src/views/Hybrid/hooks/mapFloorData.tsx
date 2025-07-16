@@ -1,14 +1,15 @@
-import { useState } from "react";
-import { getFloorData } from "../service";
-import { useRequest } from "ahooks";
-import { useHybirdStore } from "../store/hybird.store";
-import { useShallow } from "zustand/react/shallow";
+import { useRequest } from 'ahooks';
+import { useShallow } from 'zustand/react/shallow';
+import { getFloorData } from '../service';
+import { useHybirdStore } from '../store/hybird.store';
 const useMapFloorData = () => {
-  const { setFloorData, setMapLoading } = useHybirdStore(useShallow((state) => ({
-    setFloorData: state.setFloorData,
-    setMapLoading: state.setMapLoading,
-  })));
-  
+  const { setFloorData, setMapLoading } = useHybirdStore(
+    useShallow((state) => ({
+      setFloorData: state.setFloorData,
+      setMapLoading: state.setMapLoading,
+    })),
+  );
+
   const { runAsync: getFloor, loading: floorMapLoading } = useRequest<
     Result<{
       grid_map: {

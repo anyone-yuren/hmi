@@ -1,14 +1,13 @@
 import { Circle, Group, Text } from 'react-konva';
 
-import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
 import { useRequest } from 'ahooks';
+import { Modal } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { relocatePoint } from '../service';
-import MwConfirm from './MwConfirm';
-
+import { useHybirdStore } from '../store/hybird.store';
 const DeviceList = () => {
   const { t } = useTranslation();
   const { onlineData } = useHybirdStore(
@@ -30,9 +29,11 @@ const DeviceList = () => {
     const targetName = target.className;
     const id = target.attrs.id;
     if (targetName === 'Circle' || targetName === 'Text') {
-      MwConfirm.confirm({
-        title: t('上线') as string,
-        content: t('是否上线'),
+      Modal.confirm({
+        title: '提示',
+        content: '是否确认上线?',
+        okText: '确认',
+        cancelText: '取消',
         onOk: async () => {
           const res: any = await run({
             cmd_type: 3,

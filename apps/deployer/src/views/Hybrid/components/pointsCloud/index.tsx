@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { Group } from "react-konva";
-import { Image as KonvaImage } from "react-konva";
-import { useHybirdStore } from "../../store/hybird.store";
-import { useShallow } from "zustand/react/shallow";
-import useImage from "use-image";
+import { useRef } from 'react';
+import { Group, Image as KonvaImage } from 'react-konva';
+import useImage from 'use-image';
+import { useShallow } from 'zustand/react/shallow';
+import { useHybirdStore } from '../../store/hybird.store';
 
 export default function PointsCloud() {
   const { scanHead, robot_current_status, showPointCloud } = useHybirdStore(
@@ -11,7 +10,7 @@ export default function PointsCloud() {
       scanHead: state.scan_head,
       showPointCloud: state.showPointCloud,
       robot_current_status: state.robot_current_status,
-    }))
+    })),
   );
   // system_status为【1，2】时，表示正在建图或者是扩展
   // const { system_status = 0 } = robot_current_status;
@@ -33,7 +32,7 @@ export default function PointsCloud() {
       {showPointCloud && prevData?.current && (
         <KonvaImage
           image={image || showmageRef.current}
-          name="point-scanImage"
+          name='point-scanImage'
           x={prevData?.current?.pose.x * 20} // 设置图片的 x 位置
           y={0 - prevData.current?.pose.y * 20} // 设置图片的 y 位置
           width={prevData.current?.data.width} // 设置图片的宽度

@@ -1,14 +1,12 @@
 // 智能重定位
-import Konva from "konva";
-import React, { memo, useEffect } from "react";
-import { Group, Image as KonvaImage, Text } from "react-konva";
-import { useStageEvents } from "../../hooks/useStage";
-import { useHybirdStore } from "../../store/hybird.store";
-import { useShallow } from "zustand/react/shallow";
-import { useRequest } from "ahooks";
-import { initalPose } from "../../service";
-import { useHttpCode } from "../../hooks/useHttpCode";
-
+import { useRequest } from 'ahooks';
+import { memo, useEffect } from 'react';
+import { Group, Image as KonvaImage, Text } from 'react-konva';
+import { useShallow } from 'zustand/react/shallow';
+import { useHttpCode } from '../../hooks/useHttpCode';
+import { useStageEvents } from '../../hooks/useStage';
+import { initalPose } from '../../service';
+import { useHybirdStore } from '../../store/hybird.store';
 const ChangePose = (props: { floor: number }) => {
   const { useErrorMessage } = useHttpCode();
   const { startTouch, vehiclePosition, beginPose, showAgv } = useHybirdStore(
@@ -17,7 +15,7 @@ const ChangePose = (props: { floor: number }) => {
       vehiclePosition: store.vehiclePosition,
       beginPose: store.beginPose,
       showAgv: store.showAgv,
-    }))
+    })),
   );
   const { runAsync: runInitPose } = useRequest(initalPose, {
     manual: true,
@@ -42,11 +40,11 @@ const ChangePose = (props: { floor: number }) => {
     }
   }, [showAgv, beginPose, vehiclePosition]);
   return (
-    <Group name="pose-agv">
+    <Group name='pose-agv'>
       {imageObj && beginPose && showAgv && (
         <>
           <KonvaImage
-            name="agv"
+            name='agv'
             image={imageObj}
             x={startTouch?.x}
             y={startTouch?.y}
@@ -55,12 +53,12 @@ const ChangePose = (props: { floor: number }) => {
             offsetY={10} // 偏移中心
           />
           <Text
-            text={vehiclePosition?.angle?.toFixed(0) + "°"}
+            text={vehiclePosition?.angle?.toFixed(0) + '°'}
             x={startTouch?.x}
             y={startTouch?.y}
             fontSize={12}
             offsetY={30}
-            fill="yellow"
+            fill='yellow'
           ></Text>
         </>
       )}

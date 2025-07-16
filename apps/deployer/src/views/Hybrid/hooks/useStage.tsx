@@ -1,16 +1,10 @@
-import Konva from "konva";
-import { useEffect, useRef, useState } from "react";
-import { useHybirdStore } from "../store/hybird.store";
-import { useShallow } from "zustand/react/shallow";
+import Konva from 'konva';
+import { useEffect, useRef, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+import { useHybirdStore } from '../store/hybird.store';
 
 export const useStageEvents = () => {
-  const {
-    setVehiclePosition,
-    setStartTouch,
-    setShowAgv,
-    setStagePos,
-    showAgv,
-  } = useHybirdStore(
+  const { setVehiclePosition, setStartTouch, setShowAgv, setStagePos, showAgv } = useHybirdStore(
     useShallow((store) => {
       return {
         setVehiclePosition: store.setVehiclePosition,
@@ -20,17 +14,15 @@ export const useStageEvents = () => {
         setShowAgv: store.setShowAgv,
         setStagePos: store.setStagePos,
       };
-    })
+    }),
   );
 
-  const [imageObj, setImageObj] = useState<HTMLImageElement | undefined>(
-    undefined
-  );
+  const [imageObj, setImageObj] = useState<HTMLImageElement | undefined>(undefined);
 
   // 加载 AGV 图片
   useEffect(() => {
     const img = new Image();
-    img.src = "./assets/agv.svg";
+    img.src = './assets/agv.svg';
     img.onload = () => setImageObj(img);
   }, []);
 
@@ -42,7 +34,7 @@ export const useStageEvents = () => {
     // const touch = e.evt.touches[0];
     const stage = e.target.getStage();
     const pointer = stage?.getPointerPosition();
-    const coordName = stage?.findOne(".coordinateSystem");
+    const coordName = stage?.findOne('.coordinateSystem');
     const { x, y } = coordName?.getClientRect()!;
 
     const scalex = stage?.scaleX();
@@ -69,12 +61,8 @@ export const useStageEvents = () => {
     // 计算旋转角度
     const dx = currentX - startTouch.current.x;
     const dy = currentY - startTouch.current.y;
-    const angle = parseFloat(
-      (Math.atan2(-dy, dx) * (180 / Math.PI)).toFixed(2)
-    );
-    const showAngle = parseFloat(
-      (Math.atan2(dy, dx) * (180 / Math.PI)).toFixed(2)
-    );
+    const angle = parseFloat((Math.atan2(-dy, dx) * (180 / Math.PI)).toFixed(2));
+    const showAngle = parseFloat((Math.atan2(dy, dx) * (180 / Math.PI)).toFixed(2));
 
     // const angle = Math.round(Math.atan2(dy, dx) * (180 / Math.PI) * 100) / 100;
 

@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface State {
   floorData: any;
@@ -118,23 +118,20 @@ export const useHybirdStore = create<State>()(
         set((state) => {
           return { refreshFloorData: !state.refreshFloorData };
         }),
-      reflectorType: "",
+      reflectorType: '',
       setReflectorType: (type: string) => set({ reflectorType: type }),
       isSettled: false,
       setIsSettled: (bol: boolean) => set({ isSettled: bol }),
 
       radarVisible: true,
-      setRadarVisible: (visible: boolean = true) =>
-        set({ radarVisible: visible }),
+      setRadarVisible: (visible: boolean = true) => set({ radarVisible: visible }),
 
       currentReflectors: [],
       setCurrentReflectors: (map: any) => set({ currentReflectors: map }),
       matchedReflectors: [],
-      setMatchedReflectors: (reflectors: any) =>
-        set({ matchedReflectors: reflectors }),
+      setMatchedReflectors: (reflectors: any) => set({ matchedReflectors: reflectors }),
       mismatchedReflectors: [],
-      setMismatchedReflectors: (reflectors: any) =>
-        set({ mismatchedReflectors: reflectors }),
+      setMismatchedReflectors: (reflectors: any) => set({ mismatchedReflectors: reflectors }),
 
       hybirdStage: null,
       addSlamMappingData: {},
@@ -217,15 +214,21 @@ export const useHybirdStore = create<State>()(
       navigationType: 0,
       setNavigationType: (type: number) => set({ navigationType: type }),
       pointCloudV1Data: [],
-      setPointCloudV1Data: (data: any) => set({ pointCloudV1Data: data }),
+      setPointCloudV1Data: (data: any) => {
+        set({ pointCloudV1Data: data });
+      },
       onlineData: [],
       setOnlineData: (data: any) => set({ onlineData: data }),
       qrCodeData: {},
       setQrCodeData: (data: any) => set({ qrCodeData: data }),
     }),
     {
-      name: "hybird-store",
+      name: 'hybird-store',
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+      partialize: (state) => {
+        delete state.pointCloudV1Data;
+        return state;
+      },
+    },
+  ),
 );

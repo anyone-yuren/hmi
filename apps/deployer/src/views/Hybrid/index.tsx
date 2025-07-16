@@ -4,6 +4,9 @@ import CoordinateSystem from '@/components/InitStage/components/coordinateSystem
 import { Add } from '@mui/icons-material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import {
   Box,
   Button,
@@ -18,7 +21,6 @@ import {
   ListItemText,
   MenuItem,
   Paper,
-  Radio,
   Select,
   SelectChangeEvent,
   styled,
@@ -27,7 +29,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useRequest, useSize } from 'ahooks';
-import { Modal } from 'antd';
+import { Badge, ConfigProvider, Dropdown, Modal } from 'antd';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,7 +41,7 @@ import ReflectorActions from './components/reflector/handles/actions';
 import ReflectorLayer from './components/reflector/reflectorLayer';
 import SlamHandle from './components/slam/handles';
 import SlamLayer from './components/slam/slamLayer';
-import { addFloor, delFloor, postFloorList } from './service';
+import { addFloor, delFloor, postFloorList, switchFloor } from './service';
 
 import DeleteIcon from '@/components/SvgIcon/DeleteIcon';
 import ExchangeIcon from '@/components/SvgIcon/ExchangeIcon';
@@ -55,8 +57,6 @@ import InputWidthKeyboard from './components/inputWithKeyboard';
 import { NavigationRegion } from './components/navigationRegion';
 import OnlinePoint from './components/onLinePoint';
 import PointCloudV1 from './components/pointCloudV1';
-import PointsCloud from './components/pointsCloud';
-import PointsCloudDiagV1 from './components/pointsCloudDiagV1';
 import PositionView from './components/reflector/positionView';
 import { postDeleteTargetReflectors } from './components/reflector/services';
 import useMapFloorData from './hooks/mapFloorData';
@@ -91,6 +91,7 @@ const Mapping = () => {
     setShowFloor,
     showFloor,
     navigationType,
+    setBeginPose,
   } = useHybirdStore(
     useShallow((state) => ({
       setMapLoading: state.setMapLoading,
@@ -102,6 +103,7 @@ const Mapping = () => {
       setShowFloor: state.setShowFloor,
       showFloor: state.showFloor,
       navigationType: state.navigationType,
+      setBeginPose: state.setBeginPose,
     })),
   );
 
@@ -172,6 +174,21 @@ const Mapping = () => {
           return;
         }
         toast.success(t('删除成功'));
+        getFloors();
+      }
+    },
+  });
+
+  // 切换楼层
+  const { runAsync: postSwitchFloor } = useRequest(switchFloor, {
+    manual: true,
+    onSuccess: (res: any) => {
+      if (res) {
+        if (res.error_code !== 10000) {
+          useErrorMessage(res.error_description, res.solution);
+          return;
+        }
+        toast.success(t('切换成功'));
         getFloors();
       }
     },
@@ -260,32 +277,71 @@ const Mapping = () => {
   const renderFloorList = useMemo(() => {
     return listData?.floor_list?.map((value) => {
       return (
-        <SwipeAction
-          rightActions={rightActions}
-          onAction={(object: any) => {
-            modal.confirm({
-              title: t('确认删除'),
-              content: t('确认删除该楼层吗？'),
-              zIndex: 2000,
-              okText: t('确认'),
-              cancelText: t('取消'),
-              onOk: async () => {
-                await postDelFloor(value);
-              },
-            });
-          }}
-          key={value}
-        >
-          <ListItem
-            secondaryAction={<Radio size='small' checked={floor === value}></Radio>}
-            disablePadding
-            onClick={() => handleChange(value)}
-          >
-            <ListItemButton sx={{ padding: '8px 16px !important' }}>
-              <ListItemText disableTypography sx={{ color: 'text.primary', fontSize: '14px' }}>
-                {t('楼层') + ' ' + value}
-              </ListItemText>
-            </ListItemButton>
+        <SwipeAction key={value}>
+          <ListItem disablePadding>
+            <>
+              <ListItemButton
+                sx={{ padding: '8px 8px !important' }}
+                onClick={() => {
+                  setBeginPose(false);
+                  handleChange(value);
+                }}
+              >
+                <Badge
+                  classNames={{
+                    indicator: '!w-2 !h-2 !bg-teal-400 mr-1',
+                  }}
+                  status={floor === value ? 'processing' : null}
+                />
+                <ListItemText disableTypography sx={{ color: 'text.primary', fontSize: '14px' }}>
+                  {t('楼层') + ' ' + value}
+                </ListItemText>
+              </ListItemButton>
+              <Dropdown
+                menu={{
+                  items: [
+                    {
+                      key: '1',
+                      icon: <SwapHorizIcon fontSize='large' />,
+                      label: t('切换'),
+                      onClick: () => {
+                        modal.confirm({
+                          title: t('确认切换'),
+                          content: t('确认切换到该楼层吗？'),
+                          zIndex: 2000,
+                          okText: t('确认'),
+                          cancelText: t('取消'),
+                          onOk: async () => {
+                            await postSwitchFloor(value);
+                          },
+                        });
+                      },
+                    },
+                    {
+                      key: '2',
+                      icon: <DeleteSweepIcon fontSize='large' />,
+                      label: t('删除'),
+                      onClick: () => {
+                        modal.confirm({
+                          title: t('确认删除'),
+                          content: t('确认删除该楼层吗？'),
+                          zIndex: 2000,
+                          okText: t('确认'),
+                          cancelText: t('取消'),
+                          onOk: async () => {
+                            await postDelFloor(value);
+                          },
+                        });
+                      },
+                    },
+                  ],
+                }}
+              >
+                <IconButton size='small' shape='circle'>
+                  <MoreVertIcon fontSize='small' className='opacity-80' />
+                </IconButton>
+              </Dropdown>
+            </>
           </ListItem>
         </SwipeAction>
       );
@@ -374,6 +430,7 @@ const Mapping = () => {
             }}
           >
             <InitStage size={size}>
+              <PointCloudV1 />
               <Layer ref={layerRef} name='active-layer'>
                 {alignment === 'slam' && isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? <SlamLayer /> : null}
                 {alignment === 'reflector' && isShowNavigation(navigationType, 'REFLECTOR') ? (
@@ -381,7 +438,7 @@ const Mapping = () => {
                 ) : null}
                 {/* <QrCodemap /> */}
                 <Group>
-                  <PointsCloud />
+                  {/* <PointsCloud /> */}
                   <Group>
                     <Agv isOnline={true} floor={floor}></Agv>
                     <CoordinateSystem />
@@ -392,8 +449,7 @@ const Mapping = () => {
                 </Group>
                 <CanvaOnline />
               </Layer>
-              <PointsCloudDiagV1 />
-              <PointCloudV1 />
+              {/* <PointsCloudDiagV1 /> */}
             </InitStage>
           </Box>
         ) : (
@@ -505,7 +561,13 @@ const Mapping = () => {
           <Divider />
           {/* 渲染楼层列表 */}
           {listData?.floor_list?.length ? (
-            <CustomList>{renderFloorList}</CustomList>
+            <ConfigProvider
+              theme={{
+                algorithm: theme.defaultAlgorithm,
+              }}
+            >
+              <CustomList>{renderFloorList}</CustomList>
+            </ConfigProvider>
           ) : (
             <EmptyBox
               backgroundColor='transparent'

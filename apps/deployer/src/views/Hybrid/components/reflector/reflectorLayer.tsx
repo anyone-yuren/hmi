@@ -1,8 +1,8 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
-import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
 import { Circle, Group } from 'react-konva';
+import { useHybirdStore } from '../../store/hybird.store';
 
 export type IMapStatus = 'add' | 'update' | null;
 
@@ -18,7 +18,16 @@ export const formatPosition = (list: any[]) => {
 };
 
 const Reflector = ({ onReflectorClick }: { onReflectorClick: (id: number) => void }) => {
-  const { reflectorMap, systemStatus, currentReflectors, matchedReflectors, mismatchedReflectors } = useHybirdStore(
+  const {
+    reflectorMap,
+    systemStatus,
+    currentReflectors,
+    matchedReflectors,
+    mismatchedReflectors,
+    setStagePos,
+    hybirdStage,
+    setStageScale,
+  } = useHybirdStore(
     useShallow((state) => ({
       reflectorMap: state.floorData?.reflector_map,
       systemStatus: state.robot_current_status?.system_status ?? 0,
@@ -31,12 +40,21 @@ const Reflector = ({ onReflectorClick }: { onReflectorClick: (id: number) => voi
 
       // 当前未匹配成功的反光板
       mismatchedReflectors: state.mismatchedReflectors,
+      hybirdStage: state.hybirdStage,
+      setStageScale: state.setStageScale,
     })),
   );
 
-  // useEffect(() => {
-  //   console.log('systemStatus = ', systemStatus)
-  // }, [systemStatus])
+  useEffect(() => {
+    if (!hybirdStage || !hybirdStage?.attrs) return;
+    setTimeout(() => {
+      const { width, height } = hybirdStage?.attrs;
+      hybirdStage && hybirdStage.to && hybirdStage.to({ x: width / 2, y: height / 2 });
+    }, 1000);
+    setTimeout(() => {
+      setStageScale(0.9); // 设置网格显示
+    }, 2000);
+  }, [hybirdStage?.attrs, setStageScale]);
 
   const isViewOnly = useMemo(() => [0].includes(systemStatus), [systemStatus]);
 

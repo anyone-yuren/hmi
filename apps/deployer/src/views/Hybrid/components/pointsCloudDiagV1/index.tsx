@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { Circle, FastLayer, Rect } from "react-konva";
-import { pointCloudDiag } from "../../service";
-import { useHybirdStore } from "../../store/hybird.store";
-import { useShallow } from "zustand/react/shallow";
-import Konva from "konva";
+import Konva from 'konva';
+import { useEffect, useRef, useState } from 'react';
+import { Circle, FastLayer } from 'react-konva';
+import { useShallow } from 'zustand/react/shallow';
+import { useHybirdStore } from '../../store/hybird.store';
 
 export default function PointsCloudDiag() {
   const [minIntensity, setMinIntensity] = useState(0);
@@ -14,7 +13,7 @@ export default function PointsCloudDiag() {
     useShallow((state) => ({
       showPointCloudDiag: state.showPointCloudDiag,
       pointCloudV1Data: state.pointCloudV1Data,
-    }))
+    })),
   );
   useEffect(() => {
     const data = pointCloudV1Data || [];
@@ -28,22 +27,16 @@ export default function PointsCloudDiag() {
   // 将强度映射到红橙黄绿青蓝紫
   const getColorFromIntensity = (intensity: number) => {
     if (minIntensity === 0 && maxIntensity === 0) return `hsl(0, 100%, 50%)`;
-    const normalized =
-      (intensity - minIntensity) / (maxIntensity - minIntensity); // 归一化到 0-1
+    const normalized = (intensity - minIntensity) / (maxIntensity - minIntensity); // 归一化到 0-1
     const hue = normalized * 300; // 映射到 HSL 的 0-300（红橙黄绿青蓝紫）
     return `hsl(${hue}, 100%, 50%)`; // 高饱和度和中等亮度
   };
 
   return (
-    <FastLayer
-      ref={layerRef}
-      gpuAcceleration
-      hitGraphEnabled={false}
-      draggable={false}
-    >
+    <FastLayer ref={layerRef} gpuAcceleration hitGraphEnabled={false} draggable={false}>
       {showPointCloudDiag &&
         pointCloudV1Data?.map((point, index) => {
-          if (index % 10 === 0 || point.intensity > 1000) {
+          if (index % 5 === 0 || point.intensity > 1000) {
             return (
               // <Rect
               //   key={index}

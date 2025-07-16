@@ -14,8 +14,8 @@ import { useHybirdStore } from '../../../store/hybird.store';
 
 import { MyLocationOutlined } from '@mui/icons-material';
 import type { TourProps } from 'antd';
-import Konva from 'konva';
 import { useHttpCode } from '../../../hooks/useHttpCode';
+// import { QrCodeHandleButton, QrCodeHandleBuilding } from "../../qrCodeHandle";
 
 interface HandleButtonProps extends ButtonBaseProps {
   selected?: boolean;
@@ -48,8 +48,8 @@ const SlamHandles = (props: any) => {
     floorData,
     setCoverFloorData,
     showFloor,
-    agvPosition,
     setStagePos,
+    agvPosition,
   } = useHybirdStore(
     useShallow((state) => ({
       hybirdStage: state.hybirdStage,
@@ -63,8 +63,8 @@ const SlamHandles = (props: any) => {
       floorData: state.floorData,
       setCoverFloorData: state.setCoverFloorData,
       showFloor: state.showFloor,
-      agvPosition: state.agvPosition,
       setStagePos: state.setStagePos,
+      agvPosition: state.agvPosition,
     })),
   );
 
@@ -134,7 +134,6 @@ const SlamHandles = (props: any) => {
       setShowPointCloud(true);
     }
     if (buttonName === 'cancel') {
-      debugger;
       setMapLoading(true);
       setAddSlamMappingData({});
       if (system_status === 1) {
@@ -354,30 +353,32 @@ const SlamHandles = (props: any) => {
               {t("点云诊断")}
             </HandleButton> */}
 
-            <div className='rounded-sm shadow-md bg-white px-2'>
-              <FormControlLabel
-                value='end'
-                control={<Switch color='primary' className='mr-2' />}
-                label={t('智能重定位')}
-                onChange={(e) => {
-                  handleButtonClick('hybird');
-                }}
-                checked={beginPose}
-                sx={{
-                  '& MuiFormControlLabel-root': {
-                    margin: 0,
-                  },
-                  '& .MuiFormControlLabel-label': {
-                    color: '#333', // 修改标签的颜色
-                    fontSize: '0.875rem',
-                  },
-                }}
-                labelPlacement='start'
-              />
+            <div className='rounded-sm shadow-md bg-white px-2 !text-right' style={{ textAlign: 'right' }}>
+              {floorData?.grid_map ? (
+                <FormControlLabel
+                  value='end'
+                  control={<Switch color='primary' />}
+                  label={t('智能重定位')}
+                  onChange={(e) => {
+                    handleButtonClick('hybird');
+                  }}
+                  checked={beginPose}
+                  sx={{
+                    '& MuiFormControlLabel-root': {
+                      margin: 0,
+                    },
+                    '& .MuiFormControlLabel-label': {
+                      color: '#333', // 修改标签的颜色
+                      fontSize: '0.875rem',
+                    },
+                  }}
+                  labelPlacement='start'
+                />
+              ) : null}
             </div>
             <Divider orientation='vertical' variant='middle' flexItem />
 
-            <div className='rounded-sm shadow-md bg-white px-2'>
+            <div className='rounded-sm shadow-md bg-white px-2 ' style={{ textAlign: 'right' }}>
               <FormControlLabel
                 value='end'
                 control={<Switch color='primary' />}

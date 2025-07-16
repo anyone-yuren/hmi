@@ -32,6 +32,16 @@ export const delFloor = (floor: number) => {
   );
 };
 
+export const switchFloor = (floor: number) => {
+  return post(
+    '/navigation/switch_floor',
+    {
+      floor_number: floor,
+    },
+    '10001',
+  );
+};
+
 export const addSlamMap = (data: { floor_number: number; cmd_type: number }) => {
   return post('/navigation/slam_mapping', data, '10001');
 };

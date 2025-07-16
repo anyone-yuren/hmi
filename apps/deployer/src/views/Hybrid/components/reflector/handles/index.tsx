@@ -334,10 +334,10 @@ const ReflectorHandles = (props: any) => {
       </div>
       {systemStatus === 0 || hide ? (
         <div className={`absolute bottom-2 ${showFloor ? 'right-[190px]' : 'right-2'}  flex flex-col`}>
-          <div className='rounded-sm shadow-md bg-white px-2'>
+          <div className='rounded-sm shadow-md bg-white px-2 text-right'>
             <FormControlLabel
               value='end'
-              control={<Switch color='primary' className='mr-2' />}
+              control={<Switch color='primary' />}
               label={t('智能重定位')}
               onChange={(e) => {
                 handleButtonClick(ActionsEnum['relocation']);
@@ -357,7 +357,7 @@ const ReflectorHandles = (props: any) => {
           </div>
           <Divider orientation='vertical' variant='middle' flexItem />
 
-          <div className='rounded-sm shadow-md bg-white px-2'>
+          <div className='rounded-sm shadow-md bg-white px-2 text-right'>
             <FormControlLabel
               value='end'
               control={<Switch color='primary' />}

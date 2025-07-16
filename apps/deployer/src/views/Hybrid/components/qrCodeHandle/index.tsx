@@ -1,30 +1,21 @@
-import { useShallow } from "zustand/react/shallow";
-import { useHybirdStore } from "../../store/hybird.store";
-import { isShowNavigation } from "../../utils";
-import { Icon } from "@iconify/react";
-import { useCallback, useMemo } from "react";
-import { qrcode_mapping } from "../../service";
-import {
-  Button as ButtonBase,
-  ButtonBaseProps,
-  Divider,
-  styled,
-} from "@mui/material";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
+import { Icon } from '@iconify/react';
+import { Button as ButtonBase, ButtonBaseProps, Divider, styled } from '@mui/material';
+import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { useShallow } from 'zustand/react/shallow';
+import { qrcode_mapping } from '../../service';
+import { useHybirdStore } from '../../store/hybird.store';
+import { isShowNavigation } from '../../utils';
 interface HandleButtonProps extends ButtonBaseProps {
   selected?: boolean;
 }
-const HandleButton = styled(ButtonBase)<HandleButtonProps>(
-  ({ theme, selected }) => ({
-    color: selected ? "red" : theme.palette.text.primary,
-    "&:active": {
-      backgroundColor: selected
-        ? theme.palette.primary.main
-        : theme.palette.action.selected,
-    },
-  })
-);
+const HandleButton = styled(ButtonBase)<HandleButtonProps>(({ theme, selected }) => ({
+  color: selected ? 'red' : theme.palette.text.primary,
+  '&:active': {
+    backgroundColor: selected ? theme.palette.primary.main : theme.palette.action.selected,
+  },
+}));
 
 const QrCodeHandle = () => {
   const { t } = useTranslation();
@@ -32,24 +23,24 @@ const QrCodeHandle = () => {
     useShallow((state) => ({
       robot_current_status: state.robot_current_status,
       navigationType: state.navigationType,
-    }))
+    })),
   );
 
   const { system_status } = robot_current_status || {};
 
-  const isQrcode = isShowNavigation(navigationType, "QRCODE");
+  const isQrcode = isShowNavigation(navigationType, 'QRCODE');
 
   const showQrCodeHandle = useMemo(() => {
     return isQrcode ? (
       <>
         <HandleButton
-          variant="contained"
+          variant='contained'
           onClick={() => {}}
-          className="flex-1 flex  gap-1 items-center justify-center text-sm"
+          className='flex-1 flex  gap-1 items-center justify-center text-sm'
         >
-          {t("补码")}
+          {t('补码')}
         </HandleButton>
-        <Divider orientation="vertical" variant="middle" flexItem />
+        <Divider orientation='vertical' variant='middle' flexItem />
       </>
     ) : null;
   }, [isQrcode]);
@@ -67,22 +58,22 @@ const QrCodeHandle = () => {
       return (
         <>
           <HandleButton
-            variant="contained"
+            variant='contained'
             onClick={() => qrCodeMapping(2)}
-            className="flex-1 flex  gap-1 items-center justify-center text-sm"
+            className='flex-1 flex  gap-1 items-center justify-center text-sm'
           >
-            <Icon fontSize={24} icon="ix:success" />
-            {t("完成")}
+            <Icon fontSize={24} icon='ix:success' />
+            {t('完成')}
           </HandleButton>
-          <Divider orientation="vertical" variant="middle" flexItem />
+          <Divider orientation='vertical' variant='middle' flexItem />
 
           <HandleButton
-            variant="contained"
+            variant='contained'
             onClick={() => qrCodeMapping(2)}
-            className="flex-1 flex  gap-1 items-center justify-center text-sm"
+            className='flex-1 flex  gap-1 items-center justify-center text-sm'
           >
-            <Icon fontSize={24} icon="material-symbols:cancel-outline" />
-            {t("取消")}
+            <Icon fontSize={24} icon='material-symbols:cancel-outline' />
+            {t('取消')}
           </HandleButton>
         </>
       );

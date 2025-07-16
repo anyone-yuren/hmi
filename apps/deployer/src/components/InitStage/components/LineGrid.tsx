@@ -44,7 +44,7 @@ export const LineGrid = (props: any) => {
     const startY = -Math.ceil(toStageValue(stageDatas.y) / cellSize);
 
     // 需要插入的网格 components
-    const gridComponents = [];
+    const gridComponents: any[] = [];
 
     for (let x = startX; x < LenX + startX + 2; x++) {
       gridComponents.push(
