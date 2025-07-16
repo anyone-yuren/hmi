@@ -25,7 +25,7 @@ export const PdaLayout = (props: IProps) => {
       <Layout className='h-full'>
         {/* <LayoutHeader title={title} /> */}
         <Sider width={120}>{header}</Sider>
-        <Content className='overflow-y-auto bg-[#162640]'>
+        <Content className='overflow-y-auto relative bg-[#162640]'>
           <ErrorBoundary>
             <Outlet key={key} />
           </ErrorBoundary>

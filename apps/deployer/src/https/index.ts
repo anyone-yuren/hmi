@@ -14,6 +14,11 @@ const currentHost = window.location.hostname;
 const BASE_API = import.meta.env.VITE_BASE_API || `http://${currentHost}:10009`;
 const ADMIN_API = import.meta.env.VITE_ADMIN_API || `http://${currentHost}:10001`;
 
+const PORT_BASEURL = {
+  10009: BASE_API,
+  10001: ADMIN_API,
+};
+
 // 创建 axios 实例
 const instance = axios.create({
   baseURL: BASE_API, // 设置默认 baseURL
@@ -99,17 +104,17 @@ instance.interceptors.response.use(
 );
 
 // GET 封装
-export const get = (url: string, params?: any, isAdmin = false) => {
+export const get = (url: string, params?: any, port: string = '10009') => {
   return instance.get(url, {
-    baseURL: isAdmin ? ADMIN_API : BASE_API,
+    baseURL: PORT_BASEURL[port],
     params,
   });
 };
 
 // POST 封装
-export const post = (url: string, data?: any, isAdmin = false) => {
+export const post = (url: string, data?: any, port: string = '10009') => {
   return instance.post(url, data, {
-    baseURL: isAdmin ? ADMIN_API : BASE_API,
+    baseURL: PORT_BASEURL[port],
   });
 };
 

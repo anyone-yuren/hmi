@@ -29,6 +29,10 @@ const router = createHashRouter([
         path: 'slider',
         element: LazyLoad(lazy(() => import('@/views/SliderPage'))),
       },
+      {
+        path: 'hybrid',
+        element: LazyLoad(lazy(() => import('@/views/Hybrid'))),
+      },
     ],
   },
 ]);
