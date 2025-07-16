@@ -1,6 +1,7 @@
 import mainBg from '@/assets/img/mainBg.jpg';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -38,6 +39,7 @@ const useStyles = createStyles(({ css, token }) => {
 const SwiperPage = () => {
   const { styles } = useStyles();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <>
       <Swiper
@@ -54,7 +56,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'task'} size={140} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                任务
+                {t('deployer.sliderPage.task')}
               </Typography.Title>
             </div>
             <div className='flex flex-col items-center justify-center gap-2'>

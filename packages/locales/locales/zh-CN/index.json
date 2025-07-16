@@ -1,4 +1,9 @@
 {
+  "deployer": {
+    "sliderPage": {
+      "task": "任务"
+    }
+  },
   "editor": {
     "add": "添加",
     "addBRC": "新增块行列",
@@ -213,6 +218,7 @@
       "resetSuccess": "复位成功",
       "videoNotSupport": "您的浏览器不支持 HTML5 视频标签。"
     },
+    "language": "中文",
     "logs": {
       "conent": "信息",
       "creationTime": "发生时间",

@@ -1,4 +1,9 @@
 {
+  "deployer": {
+    "sliderPage": {
+      "task": "Task"
+    }
+  },
   "editor": {
     "add": "Add",
     "addBRC": "Add B & R & C",

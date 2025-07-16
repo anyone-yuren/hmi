@@ -7,6 +7,7 @@ import ChargingAnimation from '../charging';
 import WsVehicleContainer from '../wsVehicleContainer';
 
 import { createStyles } from 'antd-style';
+import Selectlangulage from './components/Selectlangulage';
 
 // 去除table hover央视
 const useStyles = createStyles(({ css, token }) => {
@@ -30,6 +31,7 @@ const GlobalHeader = () => {
       <div>
         <BarBattery level={40} height={24} />
       </div>
+      <Selectlangulage />
       <div className='flex flex-1 flex-col gap-8 items-center justify-center'>
         <div
           onClick={() => {
