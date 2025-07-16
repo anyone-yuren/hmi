@@ -353,46 +353,47 @@ const Mapping = () => {
 
   return (
     <>
-      <div className='h-full w-full flex flex-col gap-2 absolute top-0 left-0'>
-        {/* 反光板导航 左上角坐标显示 */}
-        <ThemeProvider
-          theme={createTheme({
-            palette: {
-              mode: 'light',
-              primary: {
-                main: '#00D1D1',
+      <WsContainer>
+        <div className='h-full w-full flex flex-col gap-2 absolute top-0 left-0'>
+          {/* 反光板导航 左上角坐标显示 */}
+          <ThemeProvider
+            theme={createTheme({
+              palette: {
+                mode: 'light',
+                primary: {
+                  main: '#00D1D1',
+                },
               },
-            },
-          })}
-        >
-          <Paper className='flex items-baseline flex-col justify-between absolute  w-[220px] z-[9999] text-black p-2 left-2 top-2'>
-            <HybirdStatus />
-            <PositionView />
-            <>
-              <Divider sx={{ width: '100%', margin: '10px 0' }} />
-              <FormControl variant='standard' sx={{ width: '100%' }}>
-                <Select
-                  size='small'
-                  value={alignment}
-                  onChange={changeHybird}
-                  label={t('导航类型')}
-                  sx={{
-                    '& .MuiSelect-select': {
-                      color: 'black',
-                      fontSize: '14px',
-                    },
-                  }}
-                >
-                  {isShowNavigation(navigationType, 'REFLECTOR') ? (
-                    <MenuItem value='reflector'>{t('反光板导航')}</MenuItem>
-                  ) : null}
-                  {isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? (
-                    <MenuItem value='slam'>{t('slam导航')}</MenuItem>
-                  ) : null}
-                  {/* <MenuItem value="hybird">混合导航</MenuItem> */}
-                </Select>
-              </FormControl>
-              {/* <ToggleButtonGroup
+            })}
+          >
+            <Paper className='flex items-baseline flex-col justify-between absolute  w-[220px] z-[9999] text-black p-2 left-2 top-2'>
+              <HybirdStatus />
+              <PositionView />
+              <>
+                <Divider sx={{ width: '100%', margin: '10px 0' }} />
+                <FormControl variant='standard' sx={{ width: '100%' }}>
+                  <Select
+                    size='small'
+                    value={alignment}
+                    onChange={changeHybird}
+                    label={t('导航类型')}
+                    sx={{
+                      '& .MuiSelect-select': {
+                        color: 'black',
+                        fontSize: '14px',
+                      },
+                    }}
+                  >
+                    {isShowNavigation(navigationType, 'REFLECTOR') ? (
+                      <MenuItem value='reflector'>{t('反光板导航')}</MenuItem>
+                    ) : null}
+                    {isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? (
+                      <MenuItem value='slam'>{t('slam导航')}</MenuItem>
+                    ) : null}
+                    {/* <MenuItem value="hybird">混合导航</MenuItem> */}
+                  </Select>
+                </FormControl>
+                {/* <ToggleButtonGroup
                     color="primary"
                     value={alignment}
                     exclusive
@@ -403,187 +404,189 @@ const Mapping = () => {
                     <ToggleButton value="reflector">反光板导航</ToggleButton>
                     <ToggleButton value="slam">slam导航</ToggleButton>
                   </ToggleButtonGroup> */}
-            </>
-            <OnlinePoint />
-          </Paper>
-        </ThemeProvider>
-        <Button
-          type='primary'
-          variant='contained'
-          sx={{
-            color: 'white',
-          }}
-          className='!absolute top-2 right-2 z-10'
-          endIcon={<ExchangeIcon />}
-          onClick={() => setShowFloor(true)}
-        >
-          {t('楼层管理')}
-        </Button>
-
-        {/* 根据楼层数据决定显示内容 */}
-        {listData?.floor_list?.length ? (
-          <Box
-            className='flex-1 relative'
-            ref={ref}
+              </>
+              <OnlinePoint />
+            </Paper>
+          </ThemeProvider>
+          <Button
+            type='primary'
+            variant='contained'
             sx={{
-              width: '100%',
-              height: '100%',
-              background: 'white',
+              color: 'white',
             }}
+            className='!absolute top-2 right-2 z-10'
+            endIcon={<ExchangeIcon />}
+            onClick={() => setShowFloor(true)}
           >
-            <InitStage size={size}>
-              <PointCloudV1 />
-              <Layer ref={layerRef} name='active-layer'>
-                {alignment === 'slam' && isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? <SlamLayer /> : null}
-                {alignment === 'reflector' && isShowNavigation(navigationType, 'REFLECTOR') ? (
-                  <ReflectorLayer onReflectorClick={handleReflectorClick} />
-                ) : null}
-                {/* <QrCodemap /> */}
-                <Group>
-                  {/* <PointsCloud /> */}
-                  <Group>
-                    <Agv isOnline={true} floor={floor}></Agv>
-                    <CoordinateSystem />
-                  </Group>
-                  <ChangePose floor={floor} />
-                  <NavigationRegion />
-                  {/* <GridGroup width={size?.width} height={size?.height} /> */}
-                </Group>
-                <CanvaOnline />
-              </Layer>
-              {/* <PointsCloudDiagV1 /> */}
-            </InitStage>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              padding: '20px',
-              background: '#445260e6',
-              borderRadius: '20px',
-              height: '100%',
-            }}
-          >
-            <EmptyBox
-              backgroundColor='transparent'
-              title={
-                <>
-                  <Typography>{t('暂无楼层数据，请添加')}</Typography>
-                </>
-              }
-            ></EmptyBox>
-          </Box>
-        )}
+            {t('楼层管理')}
+          </Button>
 
-        {alignment === 'slam' && isShowNavigation(navigationType, 'LIDAR_SLAM_2D') && listData?.floor_list?.length ? (
-          <SlamHandle floor={floor} hide={!listData?.floor_list?.length}></SlamHandle>
-        ) : null}
-
-        {/* 导航切换区域 */}
-        <div className='absolute bottom-2 right-2 left-2 flex flex-col gap-2 z-50'>
-          {/* 反光板导航 */}
-          <ReflectorActions isReflector={alignment === 'reflector' && isShowNavigation(navigationType, 'REFLECTOR')} />
-          <div className='flex'>
-            {/* 反光板导航 */}
-            {alignment === 'reflector' &&
-              listData?.floor_list?.length &&
-              isShowNavigation(navigationType, 'REFLECTOR') && (
-                <ReflectorHandle hide={!listData?.floor_list?.length} floor={floor} />
-              )}
-          </div>
-        </div>
-      </div>
-      <ThemeProvider
-        theme={createTheme({
-          palette: {
-            mode: 'light',
-            primary: {
-              main: '#00D1D1',
-            },
-          },
-          typography: {
-            fontSize: 16,
-          },
-        })}
-      >
-        <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              // height: "auto",
-              // top: "4rem",
-              // bottom: "3.5rem",
-            },
-          }}
-          variant='persistent'
-          anchor='right'
-          open={showFloor}
-        >
-          <DrawerHeader>
-            <Add
-              // fontSize="small"
-              sx={{
-                color: robot_current_status.system_status !== 0 ? 'gray' : '#00D1D1',
-              }}
-              onClick={async () => {
-                if (robot_current_status.system_status !== 0) {
-                  toast.error(t('请先取消当前操作'));
-                  return;
-                }
-                MwConfirm.confirm({
-                  title: t('楼层号'),
-                  content: (
-                    <>
-                      {/* <div style={{ textAlign: "center" }}>{t("楼层号")}</div> */}
-                      <InputWidthKeyboard
-                        mode='numbers'
-                        input={''}
-                        placeholder={t('请输入')}
-                        setInput={setNewFloor}
-                      ></InputWidthKeyboard>
-                    </>
-                  ),
-
-                  onOk: async () => {
-                    const addFloorNumber = Number(latestInputText.current);
-                    await postAddFloor(addFloorNumber);
-                    currentAddFloor.current = addFloorNumber;
-                  },
-                });
-              }}
-            />
-            <IconButton onClick={() => setShowFloor(false)}>
-              {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          {/* 渲染楼层列表 */}
+          {/* 根据楼层数据决定显示内容 */}
           {listData?.floor_list?.length ? (
-            <ConfigProvider
-              theme={{
-                algorithm: theme.defaultAlgorithm,
+            <Box
+              className='flex-1 relative'
+              ref={ref}
+              sx={{
+                width: '100%',
+                height: '100%',
+                background: 'white',
               }}
             >
-              <CustomList>{renderFloorList}</CustomList>
-            </ConfigProvider>
+              <InitStage size={size}>
+                <PointCloudV1 />
+                <Layer ref={layerRef} name='active-layer'>
+                  {alignment === 'slam' && isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? <SlamLayer /> : null}
+                  {alignment === 'reflector' && isShowNavigation(navigationType, 'REFLECTOR') ? (
+                    <ReflectorLayer onReflectorClick={handleReflectorClick} />
+                  ) : null}
+                  {/* <QrCodemap /> */}
+                  <Group>
+                    {/* <PointsCloud /> */}
+                    <Group>
+                      <Agv isOnline={true} floor={floor}></Agv>
+                      <CoordinateSystem />
+                    </Group>
+                    <ChangePose floor={floor} />
+                    <NavigationRegion />
+                    {/* <GridGroup width={size?.width} height={size?.height} /> */}
+                  </Group>
+                  <CanvaOnline />
+                </Layer>
+                {/* <PointsCloudDiagV1 /> */}
+              </InitStage>
+            </Box>
           ) : (
-            <EmptyBox
-              backgroundColor='transparent'
-              title={
-                <>
-                  <Typography>{t('暂无楼层数据，请添加')}</Typography>
-                </>
-              }
-            ></EmptyBox>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                padding: '20px',
+                background: '#445260e6',
+                borderRadius: '20px',
+                height: '100%',
+              }}
+            >
+              <EmptyBox
+                backgroundColor='transparent'
+                title={
+                  <>
+                    <Typography>{t('暂无楼层数据，请添加')}</Typography>
+                  </>
+                }
+              ></EmptyBox>
+            </Box>
           )}
-        </Drawer>
-      </ThemeProvider>
-      {contextHolder}
-      <WsContainer />
+
+          {alignment === 'slam' && isShowNavigation(navigationType, 'LIDAR_SLAM_2D') && listData?.floor_list?.length ? (
+            <SlamHandle floor={floor} hide={!listData?.floor_list?.length}></SlamHandle>
+          ) : null}
+
+          {/* 导航切换区域 */}
+          <div className='absolute bottom-2 right-2 left-2 flex flex-col gap-2 z-50'>
+            {/* 反光板导航 */}
+            <ReflectorActions
+              isReflector={alignment === 'reflector' && isShowNavigation(navigationType, 'REFLECTOR')}
+            />
+            <div className='flex'>
+              {/* 反光板导航 */}
+              {alignment === 'reflector' &&
+                listData?.floor_list?.length &&
+                isShowNavigation(navigationType, 'REFLECTOR') && (
+                  <ReflectorHandle hide={!listData?.floor_list?.length} floor={floor} />
+                )}
+            </div>
+          </div>
+        </div>
+        <ThemeProvider
+          theme={createTheme({
+            palette: {
+              mode: 'light',
+              primary: {
+                main: '#00D1D1',
+              },
+            },
+            typography: {
+              fontSize: 16,
+            },
+          })}
+        >
+          <Drawer
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              '& .MuiDrawer-paper': {
+                width: drawerWidth,
+                // height: "auto",
+                // top: "4rem",
+                // bottom: "3.5rem",
+              },
+            }}
+            variant='persistent'
+            anchor='right'
+            open={showFloor}
+          >
+            <DrawerHeader>
+              <Add
+                // fontSize="small"
+                sx={{
+                  color: robot_current_status.system_status !== 0 ? 'gray' : '#00D1D1',
+                }}
+                onClick={async () => {
+                  if (robot_current_status.system_status !== 0) {
+                    toast.error(t('请先取消当前操作'));
+                    return;
+                  }
+                  MwConfirm.confirm({
+                    title: t('楼层号'),
+                    content: (
+                      <>
+                        {/* <div style={{ textAlign: "center" }}>{t("楼层号")}</div> */}
+                        <InputWidthKeyboard
+                          mode='numbers'
+                          input={''}
+                          placeholder={t('请输入')}
+                          setInput={setNewFloor}
+                        ></InputWidthKeyboard>
+                      </>
+                    ),
+
+                    onOk: async () => {
+                      const addFloorNumber = Number(latestInputText.current);
+                      await postAddFloor(addFloorNumber);
+                      currentAddFloor.current = addFloorNumber;
+                    },
+                  });
+                }}
+              />
+              <IconButton onClick={() => setShowFloor(false)}>
+                {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
+            {/* 渲染楼层列表 */}
+            {listData?.floor_list?.length ? (
+              <ConfigProvider
+                theme={{
+                  algorithm: theme.defaultAlgorithm,
+                }}
+              >
+                <CustomList>{renderFloorList}</CustomList>
+              </ConfigProvider>
+            ) : (
+              <EmptyBox
+                backgroundColor='transparent'
+                title={
+                  <>
+                    <Typography>{t('暂无楼层数据，请添加')}</Typography>
+                  </>
+                }
+              ></EmptyBox>
+            )}
+          </Drawer>
+        </ThemeProvider>
+        {contextHolder}
+      </WsContainer>
     </>
   );
 };

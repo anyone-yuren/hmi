@@ -1,8 +1,8 @@
+import agv from '@/assets/agv.svg';
 import Konva from 'konva';
 import { useEffect, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useHybirdStore } from '../store/hybird.store';
-
 export const useStageEvents = () => {
   const { setVehiclePosition, setStartTouch, setShowAgv, setStagePos, showAgv } = useHybirdStore(
     useShallow((store) => {
@@ -22,7 +22,7 @@ export const useStageEvents = () => {
   // 加载 AGV 图片
   useEffect(() => {
     const img = new Image();
-    img.src = './assets/agv.svg';
+    img.src = agv;
     img.onload = () => setImageObj(img);
   }, []);
 

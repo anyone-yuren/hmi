@@ -60,6 +60,7 @@ const CenterActions = () => {
   }, [mismatchedReflectors, isViewOnly]);
 
   const handleClick = useCallback(() => {
+    debugger;
     // console.log("CenterActions handleClick = ", reflectorMap, currentReflectors)
     if (hybirdStage?.attrs && (currentList?.length || matchedList?.length || misMatchedList?.length)) {
       // console.log("Reflector currentList = ", currentList)

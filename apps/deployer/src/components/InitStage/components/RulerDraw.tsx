@@ -6,12 +6,10 @@ import { cellSize, rulerSize, size, toStageValue } from '../constants/config';
 
 const RulerDraw = () => {
   const fontSizeMax = 12;
-  const { hybirdStage, stageScale, stagePos } = useHybirdStore(
+  const { hybirdStage } = useHybirdStore(
     useShallow((store) => {
       return {
         hybirdStage: store.hybirdStage,
-        stageScale: store.stageScale,
-        stagePos: store.stagePos,
       };
     }),
   );

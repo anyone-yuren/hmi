@@ -2,9 +2,10 @@ import { FC, Fragment, ReactNode } from 'react';
 
 import { unmountGlobalLoading } from '@gbeata/utils';
 import { createTheme, ThemeProvider } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 import { useTranslation } from 'react-i18next';
+import { Toaster } from 'sonner';
 import { GlobalConfig } from 'ui';
-
 interface GlobalProviderProps {
   children: ReactNode;
 }
@@ -34,6 +35,8 @@ const GlobalProvider: FC<GlobalProviderProps> = ({ children }) => {
         },
       }}
     >
+      <Toaster position='top-center' richColors />
+      <CssBaseline />
       <ThemeProvider theme={darkTheme}>
         <Fragment>
           {children}

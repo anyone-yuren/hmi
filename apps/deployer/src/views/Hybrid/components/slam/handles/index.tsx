@@ -91,6 +91,7 @@ const SlamHandles = (props: any) => {
   const { runAsync: runExtendMapping, loading: extendLoading } = useRequest(extendMapping, {
     manual: true,
     onSuccess: (res: any) => {
+      debugger;
       if (res.error_code !== 10000) {
         useErrorMessage(res.error_description, res.solution);
         return;

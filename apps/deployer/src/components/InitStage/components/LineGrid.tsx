@@ -1,10 +1,11 @@
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
 import { flatten } from 'lodash';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { Layer, Line } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 
 export const LineGrid = (props: any) => {
+  const lineRef = useRef<any>(null);
   const cellSize = 20;
   const { stagePos, hybirdStage, stageScale } = useHybirdStore(
     useShallow((store) => {
@@ -21,13 +22,15 @@ export const LineGrid = (props: any) => {
   };
 
   const renderGrid = useMemo(() => {
-    if (typeof hybirdStage !== 'object') return;
+    if (!lineRef.current) return;
+    const stage = lineRef.current.getStage();
+    if (typeof stage !== 'object') return;
     const stageDatas = {
-      width: hybirdStage?.width(),
-      height: hybirdStage?.height(),
-      scale: hybirdStage?.scaleX(),
-      x: hybirdStage?.x(),
-      y: hybirdStage?.y(),
+      width: stage?.width(),
+      height: stage?.height(),
+      scale: stage?.scaleX(),
+      x: stage?.x(),
+      y: stage?.y(),
     };
 
     const toStageValue = (value: number) => {
@@ -80,10 +83,10 @@ export const LineGrid = (props: any) => {
       );
     }
     return gridComponents;
-  }, [stagePos, hybirdStage, stageScale]);
+  }, [stagePos, hybirdStage, stageScale, lineRef.current]);
 
   return (
-    <Layer listening={false}>
+    <Layer listening={false} ref={lineRef}>
       {/* <RulerDraw /> */}
       {renderGrid}
     </Layer>

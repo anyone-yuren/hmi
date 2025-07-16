@@ -1,9 +1,12 @@
+import { useUpdateEffect } from 'ahooks';
 import Konva from 'konva';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { Group, Image as KonvaImage, Rect } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import { useHybirdStore } from '../../store/hybird.store';
 const SlamLayer = () => {
+  const mapRef = useRef(null);
+
   const {
     floorMapData,
     addSlamMappingData,
@@ -24,7 +27,7 @@ const SlamLayer = () => {
     })),
   );
   const { floor_number = 0, system_status = 0 } = robot_current_status;
-
+  const [isImageReady, setIsImageReady] = useState(false);
   if (!floorMapData) return null;
   const { grid_map } = floorMapData;
   const data = grid_map ? grid_map.data : {};
@@ -32,52 +35,59 @@ const SlamLayer = () => {
   const slamOrigin = grid_map ? grid_map.origin : {};
   const [image, setImage] = useState(null);
 
-  useEffect(() => {
-    console.log(grid_map);
-  }, [grid_map]);
-
   // 定位到中心
-  useEffect(() => {
-    if (typeof hybirdStage !== 'object') return;
-    const scale = hybirdStage && hybirdStage?.scaleX();
-    if (!hybirdStage || !hybirdStage?.attrs || !map_to_cad || !scale) return;
-    setTimeout(() => {
-      hybirdStage &&
-        hybirdStage.to &&
-        hybirdStage.to({
-          x: hybirdStage?.width() / 2 - (data.width * scale) / 2 - map_to_cad.x * 20 * scale,
-          y: hybirdStage?.height() / 2 - (data.height * scale) / 2 + data.height * scale + map_to_cad.y * 20 * scale,
+  useUpdateEffect(() => {
+    if (
+      !image ||
+      !hybirdStage ||
+      typeof hybirdStage !== 'object' ||
+      !hybirdStage.attrs ||
+      !map_to_cad ||
+      !data?.width ||
+      !data?.height ||
+      !mapRef.current
+    ) {
+      console.log('⏳ 等待资源加载完成...');
+      return;
+    }
+    const stage = mapRef.current.getStage();
+    const scale = mapRef.current && stage?.scaleX();
+    if (!scale || scale <= 0) {
+      console.warn('❌ scaleX 无效:', scale);
+      return;
+    }
 
-          // x: 0 - Math.abs(map_to_cad.x) * 20 + data.width / 2 + width / 2,
-          // y: Math.abs(map_to_cad.y) * 20 - data.width / 2 + height / 2,
-          // x: width / 2,
-          // y: height / 2,
-          duration: 0.5,
-          easing: Konva.Easings.EaseInOut,
-          onFinish: () => {
-            // 使用Konva.Tween进行动画
-            const tween = new Konva.Tween({
-              node: hybirdStage,
-              duration: 0.3, // 缓慢缩放的持续时间
-              scaleX: 1 * 0.8, // 新的横向缩放比例
-              scaleY: 1 * 0.8, // 新的纵向缩放比例
-              easing: Konva.Easings.EaseInOut, // 缓动效果
-              onFinish: () => {
-                // console.log('缩放动画完成');
-                tween.destroy();
-                // 处理画线不完整问题
-                setStagePos({ x: 0, y: 0 });
-              },
-            });
+    const x = stage.width() / 2 - (data.width * scale) / 2 - map_to_cad.x * 20 * scale;
+    const y = stage.height() / 2 - (data.height * scale) / 2 + data.height * scale + map_to_cad.y * 20 * scale;
 
-            tween.play();
-          },
-        });
-    }, 1000);
-    setTimeout(() => {
-      setStageScale(0.9); // 设置网格显示
-    }, 2000);
-  }, [hybirdStage?.attrs, setStageScale, grid_map, data, hybirdStage]);
+    console.log('🎯 执行定位:', { x, y, scale });
+    if (!stage || !stage?.attrs || !map_to_cad || !scale) return;
+    stage &&
+      stage.to &&
+      stage.to({
+        x,
+        y,
+        duration: 0.5,
+        easing: Konva.Easings.EaseInOut,
+        onFinish: () => {
+          const tween = new Konva.Tween({
+            node: hybirdStage,
+            duration: 0.3, // 缓慢缩放的持续时间
+            scaleX: 1 * 0.8, // 新的横向缩放比例
+            scaleY: 1 * 0.8, // 新的纵向缩放比例
+            easing: Konva.Easings.EaseInOut, // 缓动效果
+            onFinish: () => {
+              tween.destroy();
+              // 处理画线不完整问题
+              setStagePos({ x: 0, y: 0 });
+              setStageScale(0.8);
+            },
+          });
+
+          tween.play();
+        },
+      });
+  }, [hybirdStage?.attrs, setStageScale, grid_map, data, hybirdStage, image]);
 
   // 新建的地图
   const {
@@ -104,9 +114,11 @@ const SlamLayer = () => {
       const img = new window.Image();
       img.src = `data:image/png;base64,${data.pic}`;
       img.onload = () => setImage(img);
+      setIsImageReady(true); // 设置为已加载
     }
     if (!data.pic) {
       setImage(null);
+      setIsImageReady(false);
     }
   }, [data]);
 
@@ -131,44 +143,8 @@ const SlamLayer = () => {
     }
   }, [slam_frozen_map]);
 
-  useEffect(() => {
-    return;
-    // return; // 和上面的定位有点冲突 先注释
-    if (typeof hybirdStage === 'object') {
-      if (!grid_map) return;
-      // debugger;
-      // const stageWidth = hybirdStage?.width();
-      // const stageHeight = hybirdStage?.height();
-      const targetX = -grid_map.map_to_cad.x * 20 + hybirdStage?.width() / 2;
-      const targetY = grid_map.map_to_cad.y * 20 + hybirdStage?.height() / 2;
-      hybirdStage?.to({
-        x: targetX,
-        y: targetY,
-        duration: 0.5,
-        onFinish: () => {
-          // 使用Konva.Tween进行动画
-          const tween = new Konva.Tween({
-            node: hybirdStage,
-            duration: 0.3, // 缓慢缩放的持续时间
-            scaleX: 1 * 0.8, // 新的横向缩放比例
-            scaleY: 1 * 0.8, // 新的纵向缩放比例
-            easing: Konva.Easings.EaseInOut, // 缓动效果
-            onFinish: () => {
-              // console.log('缩放动画完成');
-              tween.destroy();
-              // 处理画线不完整问题
-              setStagePos({ x: 0, y: 0 });
-            },
-          });
-
-          tween.play();
-        },
-      });
-    }
-  }, [grid_map]);
-
   return (
-    <Group name='map'>
+    <Group name='map' ref={mapRef}>
       {/* 扩展中的slam地图 固定不变的 */}
       {frozenImage && system_status === 2 && (
         <KonvaImage
