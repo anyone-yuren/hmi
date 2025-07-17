@@ -59,14 +59,19 @@ const Io = () => {
         return (
           <div
             key={key}
-            className='flex-1 h-full bg-[#445260] rounded-[20px] overflow-auto px-[20px]'
+            className='flex-1 h-full relative bg-[#445260] rounded-[20px] overflow-auto px-[20px]'
             style={{
               msOverflowStyle: 'none',
               scrollbarWidth: 'none',
               overflowY: 'scroll',
             }}
           >
-            <TableBox stickyHeader aria-label='simple table'>
+            {key === 'ioInputConfig' && (
+              <span className='top-[4px] absolute z-10 text-[12px] text-[#a2a9b0]'>
+                {'提示：灰色为未触发，绿色为触发'}
+              </span>
+            )}
+            <TableBox stickyHeader aria-label='simple table' className='h-full'>
               <TableHead>
                 <TableRow>
                   <TableCell align='center'>{t('状态')}</TableCell>
@@ -76,7 +81,7 @@ const Io = () => {
                   <TableCell align='center'>{t('端口号')}</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody className='relative h-full'>
                 {renderHashMap[key]?.length ? (
                   renderHashMap[key]?.map((row, index) => (
                     <TableRow key={index}>
