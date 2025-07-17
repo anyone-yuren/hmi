@@ -5,7 +5,7 @@ import * as React from 'react';
 import { postPhenomenon, queryPhenomenonList } from '../services';
 const Diagnosis = () => {
   const [renderList, setRenderList] = React.useState([]);
-  const [loadingKey, setLoadingKey] = React.useState<string | null>(null); // 用于标记当前加载的项
+  const [loadingKey, setLoadingKey] = React.useState<string | null>(null);
   const { data: phenomenonList } = useRequest(() => queryPhenomenonList());
   const { runAsync: run, loading } = useRequest(postPhenomenon, {
     manual: true,
@@ -16,7 +16,7 @@ const Diagnosis = () => {
       return {
         key: item.type,
         label: item.description,
-        children: <div>{item.description}</div>, // 默认显示description
+        children: <div>{item.description}</div>,
       };
     });
     setRenderList(ary);

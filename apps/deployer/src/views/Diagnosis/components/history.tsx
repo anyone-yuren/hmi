@@ -40,13 +40,6 @@ const History = () => {
       align: 'left',
       render: (text: any) => dayjs.unix(text).format('YYYY-MM-DD HH:mm:ss'),
     },
-    // {
-    //   title: "消失时间",
-    //   dataIndex: "disappear",
-    //   key: "disappear",
-    //   minWidth: 150,
-    //   align: "left",
-    // },
     {
       title: t('错误码'),
       dataIndex: 'error_code',
@@ -105,15 +98,8 @@ const History = () => {
               error_code,
               error_reason,
             });
-            const { diagnosis_result } = res;
             if (res.error_code == 0) {
               toast.success(t('操作成功'));
-              // tableData.map((item) => {
-              //   if (item.error_code == error_code) {
-              //     item.diagnosis_result = diagnosis_result;
-              //   }
-              // });
-              // setTableData([...tableData]);
               getHistoryData();
             }
           }}

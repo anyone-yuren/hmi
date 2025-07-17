@@ -2,7 +2,7 @@ import EmptyBox from '@/components/Empty';
 import { useRequest } from 'ahooks';
 import { Button, Space, Table, Tag } from 'antd';
 import * as dayjs from 'dayjs';
-import React, { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LevelColor, LevelEnum } from '../enum';
 import { error_log_download, getCurrent, postErrorCode } from '../services';
@@ -138,10 +138,6 @@ const Current = () => {
       },
     },
   ];
-
-  React.useEffect(() => {
-    console.log('[Diagnosis]:!!!');
-  }, []);
 
   return (
     <Table
