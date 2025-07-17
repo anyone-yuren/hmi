@@ -44,6 +44,6 @@ export const TableBox = styled(Table)(({ theme }) => ({
 }));
 export const EmptyBoxDiv = styled('div')(({ theme }) => ({
   position: 'absolute',
-  top: `calc(50% - ${theme.spacing(4)})`,
+  top: '100px',
   left: `calc(50% - ${theme.spacing(4)})`,
 }));

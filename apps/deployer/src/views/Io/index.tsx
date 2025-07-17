@@ -71,7 +71,7 @@ const Io = () => {
                 {'提示：灰色为未触发，绿色为触发'}
               </span>
             )}
-            <TableBox stickyHeader aria-label='simple table' className='h-full'>
+            <TableBox stickyHeader aria-label='simple table' className=''>
               <TableHead>
                 <TableRow>
                   <TableCell align='center'>{t('状态')}</TableCell>
@@ -81,7 +81,7 @@ const Io = () => {
                   <TableCell align='center'>{t('端口号')}</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody className='relative h-full'>
+              <TableBody className='relative'>
                 {renderHashMap[key]?.length ? (
                   renderHashMap[key]?.map((row, index) => (
                     <TableRow key={index}>
