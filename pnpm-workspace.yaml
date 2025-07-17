@@ -57,3 +57,4 @@ catalog:
   "@emotion/react": "^11.11.1"
   "@mui/lab": "5.0.0-alpha.152"
   "@emotion/styled": "^11.11.0"
+  "@react-spring/konva": "9.7.3"

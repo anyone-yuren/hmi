@@ -1,4 +1,4 @@
-import { App as AntApp, ConfigProvider } from 'antd';
+import { App as AntApp, ConfigProvider, theme } from 'antd';
 import enUS from 'antd/es/locale/en_US';
 import frFR from 'antd/es/locale/fr_FR';
 import jaJP from 'antd/es/locale/ja_JP';
@@ -107,6 +107,7 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
           fontFamily:
             'Microsoft YaHei, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         },
+        algorithm: theme.defaultAlgorithm,
         components: {
           Table: {
             /* 这里是你的组件 token */
