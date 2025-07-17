@@ -80,7 +80,12 @@ const SwiperPage = () => {
                 导航
               </Typography.Title>
             </div>
-            <div className='flex flex-col items-center justify-center gap-2'>
+            <div
+              className='flex flex-col items-center justify-center gap-2'
+              onClick={() => {
+                navigate('/safety');
+              }}
+            >
               <div className='flex justify-center items-center w-44 h-44 py-2 px-4 bg-gradient-to-b from-yellow-500 to-yellow-400 rounded-3xl'>
                 <SvgIcon name={'safety'} size={140} />
               </div>
