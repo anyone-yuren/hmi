@@ -134,7 +134,12 @@ const SwiperPage = () => {
                 上传下载
               </Typography.Title>
             </div>
-            <div className='flex flex-col items-center justify-center gap-2'>
+            <div
+              className='flex flex-col items-center justify-center gap-2'
+              onClick={() => {
+                navigate('/io');
+              }}
+            >
               <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
                 <SvgIcon name={'io'} size={180} />
               </div>

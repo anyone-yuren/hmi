@@ -28,7 +28,7 @@ export default defineApplicationConfig({
           rewrite: (path) => path.replace(/^\/admin/, ''),
         },
         '/tool': {
-          target: 'http://192.168.2.223:10020',
+          target: 'http://192.168.2.233:10020',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(/^\/tool/, ''),

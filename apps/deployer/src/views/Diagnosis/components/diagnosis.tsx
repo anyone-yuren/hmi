@@ -42,7 +42,6 @@ const Diagnosis = () => {
       }
       return item;
     });
-    console.log('[Diagnosis]:ary', ary);
     setRenderList(ary);
   };
   return (

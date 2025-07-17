@@ -129,7 +129,7 @@ const History = () => {
       size='large'
       loading={historyLoading || errorCodeLoading}
       dataSource={historyData?.data || []}
-      scroll={{ x: 1500, y: 570 }}
+      scroll={{ x: 1500, y: 500 }}
       locale={{
         emptyText: <EmptyBox titleColor='#fff' backgroundColor='transparent' />,
       }}
