@@ -13,10 +13,12 @@ const currentHost = window.location.hostname;
 
 const BASE_API = import.meta.env.VITE_BASE_API || `http://${currentHost}:10009`;
 const ADMIN_API = import.meta.env.VITE_ADMIN_API || `http://${currentHost}:10001`;
+const TOOL_API = import.meta.env.VITE_TOOL_API || `http://${currentHost}:10020`;
 
 const PORT_BASEURL = {
   10009: BASE_API,
   10001: ADMIN_API,
+  10020: TOOL_API,
 };
 
 // 创建 axios 实例
@@ -48,9 +50,8 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data, config } = response;
-
     // 如果没有 code 字段，直接返回原始数据（适配数组或对象）
-    if (!data || !('code' in data)) {
+    if (!data || typeof data === 'string' || !('code' in data)) {
       return data;
     }
 
