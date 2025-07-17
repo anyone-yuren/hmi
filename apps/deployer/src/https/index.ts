@@ -57,7 +57,7 @@ instance.interceptors.response.use(
     const { code, message: msg, data: resData } = data;
 
     if (code === ResultEnum.SUCCESS) {
-      return resData;
+      return data;
     }
 
     // 登录超时

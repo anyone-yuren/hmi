@@ -20,8 +20,8 @@ import { find, mapValues } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import CenterAction from './component/centerAction';
 import PointCloud from './component/pointCloud';
+import WsContainer from './component/WsContainer';
 import { safetyConfig } from './service';
-
 const Safety = () => {
   const { t } = useTranslation();
   const [scale, setScale] = useState(1);
@@ -174,6 +174,7 @@ const Safety = () => {
           placement={'right'}
           zIndex={1203}
           closable={false}
+          rootClassName='text-black'
           destroyOnClose
           extra={
             <Space>
@@ -224,6 +225,9 @@ const Safety = () => {
           <DrawerContent refresh={refreshObstacleData} />
         </Drawer>
       </ConfigProvider>
+      <WsContainer>
+        <div></div>
+      </WsContainer>
     </div>
   );
 };

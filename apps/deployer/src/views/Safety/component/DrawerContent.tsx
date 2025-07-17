@@ -84,8 +84,8 @@ const DrawerContent = ({ refresh }) => {
     return deviceList?.data
       ? deviceList?.data?.map((item) => {
           return (
-            <div className='p-4 bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-center justify-between text-lg'>
-              <div>{serviceLanguage === 'zh' ? item.ch_name : item.name}</div>
+            <div className='p-4 bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-center justify-between text-lg text-black'>
+              <div>{serviceLanguage.includes('zh') ? item.ch_name : item.name}</div>
               <div>
                 <CustomSwitch
                   checked={obstacleData.sensor_enable?.includes(item.id)}
@@ -138,7 +138,7 @@ const DrawerContent = ({ refresh }) => {
   const renderDirection = (data: Array<{ key: string; title: string }>) => {
     return data.map((item) => {
       return (
-        <div className='p-4 bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-center justify-between text-lg gap-4'>
+        <div className='p-4 bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-center justify-between text-lg gap-4 text-black'>
           <div>{item.title}</div>
           <Input
             className='flex-1 min-w-[30%]'
@@ -196,6 +196,7 @@ const DrawerContent = ({ refresh }) => {
             {t('修改')}
           </Button>
           <Button
+            className='text-black'
             size='large'
             onClick={async () => {
               setSetting(false);

@@ -95,7 +95,7 @@ const StatusPanel = (prop) => {
                   id='switch-list-label-bluetooth'
                   disableTypography
                   sx={{ color: 'text.primary', fontSize: '14px' }}
-                  primary={serviceLanguage === 'zh' ? item.ch_name : item.name}
+                  primary={serviceLanguage.includes('zh') ? item.ch_name : item.name}
                 />
                 <Switch
                   edge='end'
