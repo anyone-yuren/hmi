@@ -55,6 +55,9 @@ const Io = () => {
   return (
     <div className='p-[20px] flex gap-[20px] h-full'>
       {!loading && <WsContainer ioWssChange={ioWssChange}></WsContainer>}
+      <span className='top-[25px] left-[55px] absolute z-10 text-[12px] text-[#a2a9b0]'>
+        {'提示：灰色为未触发，绿色为触发'}
+      </span>
       {['ioInputConfig', 'ioOutputConfig']?.map((key) => {
         return (
           <div
@@ -66,11 +69,6 @@ const Io = () => {
               overflowY: 'scroll',
             }}
           >
-            {key === 'ioInputConfig' && (
-              <span className='top-[4px] absolute z-10 text-[12px] text-[#a2a9b0]'>
-                {'提示：灰色为未触发，绿色为触发'}
-              </span>
-            )}
             <TableBox stickyHeader aria-label='simple table' className=''>
               <TableHead>
                 <TableRow>
