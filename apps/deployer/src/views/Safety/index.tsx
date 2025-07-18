@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 import CenterAction from './component/centerAction';
 import PointCloud from './component/pointCloud';
 import WsContainer from './component/WsContainer';
-import { safetyConfig } from './service';
+import { postSubscription, postUnSubscription, safetyConfig } from './service';
 const Safety = () => {
   const { t } = useTranslation();
   const [scale, setScale] = useState(1);
@@ -91,6 +91,13 @@ const Safety = () => {
       });
     }
   }, [size?.height, size?.width]);
+  // 控制是否接收避障点云推送，合适时机切换避障方案
+  useEffect(() => {
+    postSubscription({ topics: ['safety'] });
+    return () => {
+      postUnSubscription({ topics: ['safety'] });
+    };
+  }, []);
 
   return (
     <div className='w-full h-full flex flex-col !absolute left-0 top-0'>
