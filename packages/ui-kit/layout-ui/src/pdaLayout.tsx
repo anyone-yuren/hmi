@@ -24,7 +24,9 @@ export const PdaLayout = (props: IProps) => {
     <ThemeProvider appearance='dark'>
       <Layout className='h-full'>
         {/* <LayoutHeader title={title} /> */}
-        <Sider width={120}>{header}</Sider>
+        <Sider className='bg-black' width={120}>
+          {header}
+        </Sider>
         <Content className='overflow-y-auto relative bg-[#162640]'>
           <ErrorBoundary>
             <Outlet key={key} />

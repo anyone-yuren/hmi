@@ -23,7 +23,6 @@
   "devDependencies": {
     "@gbeata/ts-config": "workspace:^",
     "@types/react-slick": "^0.23.13",
-    "eslint-config-gbeata-eslint": "workspace:^",
     "@gbeata/eslint-config": "workspace:^",
     "prettier": "^3.1.0",
     "typescript": "^5.2.2"

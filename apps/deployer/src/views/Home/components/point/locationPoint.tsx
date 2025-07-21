@@ -38,7 +38,7 @@ const LocationPoint = () => {
 
   return (
     <>
-      {pointsData
+      {pointsData?.data
         ?.filter((data) => data.types[0] == 1)
         ?.map((item) => {
           // const position = [convertToMeters(item.x), 0, convertToMeters(item.y)];

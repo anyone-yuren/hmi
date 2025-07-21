@@ -25,3 +25,11 @@ export const getDeviceList = (): Promise<Result<[]>> => {
 };
 
 export const config_agv_info = () => get('/robot_config/base_param/config_agv_info');
+
+export const postSubscription = (data: any) => {
+  return post('/topics/subscription', data);
+};
+
+export const postUnSubscription = (data: any) => {
+  return post('/topics/unsubscription', data);
+};
