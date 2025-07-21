@@ -45,6 +45,10 @@ const router = createHashRouter([
         path: 'safety',
         element: LazyLoad(lazy(() => import('@/views/Safety/home'))),
       },
+      {
+        path: 'singleTask',
+        element: LazyLoad(lazy(() => import('@/views/SingleTask'))),
+      },
     ],
   },
 ]);

@@ -2,6 +2,13 @@
   "deployer": {
     "sliderPage": {
       "task": "Task"
+    },
+    "io": {
+      "tips": "Tip: Gray indicates not triggered, green indicates triggered",
+      "status": "Status",
+      "input": "Input",
+      "port": "Port",
+      "output": "Output"
     }
   },
   "editor": {
