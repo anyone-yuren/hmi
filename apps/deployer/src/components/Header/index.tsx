@@ -6,9 +6,9 @@ import BarBattery from '../battery';
 import ChargingAnimation from '../charging';
 import WsVehicleContainer from '../wsVehicleContainer';
 
+import { GlobalNotification } from '@gbeata/app-global';
 import { createStyles } from 'antd-style';
 import Selectlangulage from './components/Selectlangulage';
-
 // 去除table hover央视
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -88,6 +88,7 @@ const GlobalHeader = () => {
       </div>
       {false && <ChargingAnimation />}
       <WsVehicleContainer />
+      <GlobalNotification />
     </div>
   );
 };

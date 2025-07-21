@@ -12,9 +12,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@gbeata/hooks": "workspace:*",
     "@gbeata/store": "workspace:^",
-    "@gbeata/three": "workspace:*",
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.6",
     "@iconify/react": "^4.1.1",
@@ -27,7 +25,6 @@
     "@react-three/postprocessing": "^2.19.1",
     "ahooks": "catalog:",
     "antd": "catalog:",
-    "apis": "workspace:*",
     "dayjs": "catalog:",
     "rc-virtual-list": "^3.18.5",
     "react": "catalog:",
@@ -35,7 +32,6 @@
     "zustand": "^4.4.7",
     "react-router-dom": "catalog:",
     "gbeata": "workspace:*",
-    "@gbeata/charts-ui": "workspace:^",
     "ui": "workspace:^",
     "@loadable/component": "catalog:"
   },
