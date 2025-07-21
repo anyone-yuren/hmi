@@ -50,7 +50,7 @@ const GlobalHeader = () => {
         </div>
         <div
           onClick={() => {
-            navigate('/maintenance');
+            navigate('/task');
           }}
           className={'justify-center flex  flex-col items-center '}
         >
@@ -58,14 +58,14 @@ const GlobalHeader = () => {
             classNames={{
               icon: 'flex items-center justify-center',
             }}
-            className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-yellow-500 to-yellow-400'
+            className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#223d62] to-[#3b587e]'
             shape='circle'
-            icon={<SvgIcon name='weibao' size={responsive.xs ? 42 : 54} />}
+            icon={<SvgIcon name='task' size={responsive.xs ? 42 : 54} />}
           />
         </div>
         <div
           onClick={() => {
-            navigate('/setting');
+            navigate('/hybrid');
           }}
           className={' justify-center flex flex-col items-center  '}
         >
@@ -73,9 +73,9 @@ const GlobalHeader = () => {
             classNames={{
               icon: 'flex items-center justify-center',
             }}
-            className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#049c66] to-[#05de6b]'
+            className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white'
             shape='circle'
-            icon={<SvgIcon name='shezhi' size={responsive.xs ? 42 : 54} />}
+            icon={<SvgIcon name='hybrid' size={responsive.xs ? 80 : 80} />}
           />
         </div>
       </div>

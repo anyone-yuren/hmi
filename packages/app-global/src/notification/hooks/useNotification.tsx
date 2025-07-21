@@ -13,6 +13,7 @@ const hashMap: any = {};
 export const useNotification = () => {
   const { getObsMsg } = useObsError();
   const [obsInfo, setObsInfo] = useState<any>();
+  const [errorMessage, setErrorMessage] = useState<any>();
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
@@ -26,12 +27,20 @@ export const useNotification = () => {
           return data.type;
         });
       }
+      if (message?.data?.includes('/sirius/topics/error_description')) {
+        // TODO 此处需要改造成json格式
+        // const data = JSON.parse(message.data);
+        // setErrorMessage((prev) => {
+        //   if (prev?.type === data.type) {
+        //     return prev;
+        //   }
+        //   return data;
+        // });
+      }
     },
   });
   useEffect(() => {
-    if (obsInfo !== 1) {
-      console.log(getObsMsg(obsInfo?.type));
-
+    if (obsInfo !== 1 && getObsMsg(obsInfo)) {
       toast({
         title: '避障消息',
         description: getObsMsg(obsInfo),

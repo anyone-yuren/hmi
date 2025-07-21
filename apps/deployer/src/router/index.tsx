@@ -1,8 +1,20 @@
 import GlobalHeader from '@/components/Header';
 import LazyLoad from '@/components/LazyLoad';
+import PageException from '@/components/PageException';
 import { PdaLayout } from '@gbeata/layout-ui';
 import { lazy } from '@loadable/component';
-import { createHashRouter } from 'react-router-dom';
+import { createHashRouter, Navigate } from 'react-router-dom';
+
+export enum ExceptionEnum {
+  // page not access
+  PAGE_NOT_ACCESS = 403,
+
+  // page not found
+  PAGE_NOT_FOUND = 404,
+
+  // server error
+  SERVER_ERROR = 500,
+}
 
 const router = createHashRouter([
   {
@@ -44,6 +56,25 @@ const router = createHashRouter([
       {
         path: 'safety',
         element: LazyLoad(lazy(() => import('@/views/Safety/home'))),
+      },
+      {
+        path: '*',
+        element: <Navigate to='/404' />,
+      },
+      {
+        path: '/403',
+        element: <PageException />,
+        loader: () => ({ status: ExceptionEnum.PAGE_NOT_ACCESS, withCard: false }),
+      },
+      {
+        path: '/404',
+        element: <PageException />,
+        loader: () => ({ status: ExceptionEnum.PAGE_NOT_FOUND, withCard: false }),
+      },
+      {
+        path: '/500',
+        element: <PageException />,
+        loader: () => ({ status: ExceptionEnum.SERVER_ERROR, withCard: false }),
       },
     ],
   },

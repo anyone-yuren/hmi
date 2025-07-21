@@ -1,7 +1,7 @@
 'use client';
 
+import { Button } from 'antd';
 import { toast as sonnerToast } from 'sonner';
-
 /** I recommend abstracting the toast function
  *  so that you can call it without having to use toast.custom everytime. */
 export function toast(toast: Omit<ToastProps, 'id'>) {
@@ -35,16 +35,16 @@ function Toast(props: ToastProps) {
           <p className='mt-1 text-lg text-white font-bold'>{description}</p>
         </div>
       </div>
-      <div className='ml-5 shrink-0 rounded-md text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden'>
-        <button
-          className='rounded bg-indigo-50 px-3 py-1 text-sm font-semibold text-indigo-600 hover:bg-indigo-100'
+      <div className='ml-5 shrink-0 rounded-md text-sm font-medium '>
+        <Button
+          type='link'
           onClick={() => {
             button.onClick();
             sonnerToast.dismiss(id);
           }}
         >
           {button.label}
-        </button>
+        </Button>
       </div>
     </div>
   );
