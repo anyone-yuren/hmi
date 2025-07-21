@@ -1,7 +1,7 @@
 import SvgIcon from '@mui/material/SvgIcon';
 
 // 充电点的icon
-function StartIcon({ fontSize = 30, sx = {} }: any) {
+function StartIcon({ isActive = false, fontSize = 30, sx = {} }) {
   return (
     <SvgIcon sx={{ ...sx, fontSize }}>
       <svg

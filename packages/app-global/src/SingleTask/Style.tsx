@@ -248,6 +248,27 @@ export const MapTaskPanelEmptyContainer: any = styled('div')(() => ({
   },
 }));
 
+export const RenderItemRow = styled(Box)(({ theme }) => ({
+  textAlign: 'left',
+  color: '#fff',
+  borderRadius: '20px',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  // margin: "10px 0",
+  width: '100%',
+  padding: '20px!important',
+  height: 'calc(100% - 60px)',
+  justifyContent: 'flex-start',
+  background: '#ffffff',
+  '&& p': {
+    padding: '0',
+    margin: '0',
+    fontSize: '1.5rem',
+    color: '#000',
+  },
+}));
+
 export const generateUniqueId = () => {
   return 'id-' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
 };

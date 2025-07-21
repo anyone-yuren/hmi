@@ -1,10 +1,10 @@
 import GlobalHeader from '@/components/Header';
 import LazyLoad from '@/components/LazyLoad';
 import PageException from '@/components/PageException';
+import { SingleTask } from '@gbeata/app-global';
 import { PdaLayout } from '@gbeata/layout-ui';
 import { lazy } from '@loadable/component';
 import { createHashRouter, Navigate } from 'react-router-dom';
-
 export enum ExceptionEnum {
   // page not access
   PAGE_NOT_ACCESS = 403,
@@ -59,7 +59,7 @@ const router = createHashRouter([
       },
       {
         path: 'singleTask',
-        element: LazyLoad(lazy(() => import('@/views/SingleTask'))),
+        element: <SingleTask />,
       },
       {
         path: '*',

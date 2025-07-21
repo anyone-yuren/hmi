@@ -108,6 +108,9 @@
     "@emotion/react": "catalog:",
     "@mui/lab": "catalog:",
     "@emotion/styled": "catalog:",
-    "@react-spring/konva": "catalog:"
+    "@react-spring/konva": "catalog:",
+    "@gbeata/mapping": "^1.0.25",
+    "react-hook-form": "^7.51.4",
+    "react-hook-form-mui": "^7.0.0"
   }
 }

@@ -17,7 +17,7 @@ export default defineApplicationConfig({
       port: 4000,
       proxy: {
         '/api': {
-          target: 'http://192.168.2.233:10009',
+          target: 'http://192.168.2.223:10009',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },

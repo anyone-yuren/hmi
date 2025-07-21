@@ -16,3 +16,5 @@ export const setTaskMode = (data) => post('/mwrobot/config/set_task_mode', data,
 export const uploadRcsMap = (data) => post('/mwrobot/config/upload_rcs_map', data, '10009');
 export const chargePolicy = (data) => post('/mwrobot/single_task/set_charge_policy', data, '10009');
 export const getChargePolicy = () => get('/mwrobot/single_task/get_charge_policy', {}, '10009');
+
+export const config_agv_info = () => get('/robot_config/base_param/config_agv_info', {}, '10009');

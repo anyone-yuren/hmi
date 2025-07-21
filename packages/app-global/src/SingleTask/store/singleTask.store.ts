@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface State {
+  agvPosition: any;
+  setAgvPosition: (position: any) => void;
   rcsInfo: any;
   setRcsInfo: (info: any) => void;
   refreshTaskList: number;
@@ -9,7 +11,7 @@ interface State {
 }
 
 const storageOptions = {
-  name: 'map',
+  name: 'singleTask',
 };
 
 const localAndMapStore = (
@@ -19,6 +21,11 @@ const localAndMapStore = (
   ) => void,
   get: () => State,
 ) => ({
+  agvPosition: {},
+  setAgvPosition: (position: any) => {
+    set({ agvPosition: position });
+  },
+
   refreshTaskList: 0,
   setRefreshTaskList: (count: number) => {
     set({ refreshTaskList: count });
@@ -30,4 +37,4 @@ const localAndMapStore = (
   },
 });
 
-export const useMapStore = create<State>()(persist(localAndMapStore, storageOptions));
+export const useSingleTaskStore = create<State>()(persist(localAndMapStore, storageOptions));
