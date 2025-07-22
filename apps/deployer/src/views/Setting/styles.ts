@@ -8,6 +8,7 @@ const useStyles = createStyles(({ css, token }) => ({
     }
     .ant-slider-track {
       height: 12px;
+      background-color: ${token.colorPrimary};
     }
     &.ant-slider-horizontal {
       padding-block: 6px;

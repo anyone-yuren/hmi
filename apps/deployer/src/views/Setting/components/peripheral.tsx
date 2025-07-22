@@ -1,7 +1,8 @@
 import useCommonStyles from '@/utils/commonStyle';
 import { useRequest } from 'ahooks';
-import { Slider, Switch, Typography } from 'antd';
-import { getPeripheralControlParam } from '../service';
+import { Skeleton, Slider, Switch, Typography } from 'antd';
+import { useEffect } from 'react';
+import { getPeripheralControlParam, postPeripheralControlParam } from '../service';
 /**
  * 外设参数
  */
@@ -15,31 +16,71 @@ const Peripheral = () => {
     manual: true,
   });
 
+  const postRun = useRequest(postPeripheralControlParam, {
+    manual: true,
+  });
+
+  useEffect(() => {
+    run();
+  }, []);
+
   return (
     <div className='flex-1 overflow-auto'>
       <Typography.Title className='text-center' level={3}>
         外设参数
       </Typography.Title>
-      <div className='flex flex-col gap-2'>
-        <div className='flex flex-col p-2 bg-[#d8d8d833] rounded-md'>
-          <div className='text-lg opacity-50'>喇叭音量</div>
-          <div className='flex flex-row'>
-            <Slider className={`${styles.customSlider} swiper-no-swiping w-full`} min={0} max={100} />
+      {!loading ? (
+        <div className='flex flex-col gap-2'>
+          <div className='flex flex-col p-2 bg-[#d8d8d833] rounded-md'>
+            <div className='text-lg opacity-50'>喇叭音量</div>
+            <div className='flex flex-row'>
+              <Slider
+                defaultValue={serviceControlParam?.volumn}
+                className={`${styles.customSlider} swiper-no-swiping w-full`}
+                min={0}
+                max={100}
+                onChangeComplete={(value) => {
+                  postRun.run({
+                    volumn: value,
+                  });
+                }}
+              />
+            </div>
+          </div>
+          <div className='flex flex-col p-2 bg-[#d8d8d833] rounded-md'>
+            <div className='text-lg opacity-50'>电量报警阈值</div>
+            <div className='flex flex-row'>
+              <Slider
+                defaultValue={serviceControlParam?.low_power}
+                className={`${styles.customSlider} swiper-no-swiping w-full`}
+                min={0}
+                max={100}
+                onChangeComplete={(value) => {
+                  postRun.run({
+                    low_power: value,
+                  });
+                }}
+              />
+            </div>
+          </div>
+          <div className='flex flex-row items-center justify-between p-2 bg-[#d8d8d833] rounded-md'>
+            <div className='text-lg opacity-50'>行走音乐</div>
+            <div className='flex flex-row'>
+              <Switch
+                defaultChecked={serviceControlParam?.use_run_music}
+                className={styles.customSwitch}
+                onChange={(checked) => {
+                  postRun.run({
+                    use_run_music: checked,
+                  });
+                }}
+              />
+            </div>
           </div>
         </div>
-        <div className='flex flex-col p-2 bg-[#d8d8d833] rounded-md'>
-          <div className='text-lg opacity-50'>电量报警阈值</div>
-          <div className='flex flex-row'>
-            <Slider className={`${styles.customSlider} swiper-no-swiping w-full`} min={0} max={100} />
-          </div>
-        </div>
-        <div className='flex flex-row items-center justify-between p-2 bg-[#d8d8d833] rounded-md'>
-          <div className='text-lg opacity-50'>行走音乐</div>
-          <div className='flex flex-row'>
-            <Switch className={styles.customSwitch} />
-          </div>
-        </div>
-      </div>
+      ) : (
+        <Skeleton active />
+      )}
     </div>
   );
 };
