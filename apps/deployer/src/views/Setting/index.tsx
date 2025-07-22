@@ -4,6 +4,7 @@ import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import ChassisParameters from './components/chasiss';
+import Peripheral from './components/peripheral';
 import TravelParameters from './components/travelParameters';
 export const SwiperWrapper = styled('div')(({ theme }) => ({
   width: '100%',
@@ -36,7 +37,9 @@ const Setting = () => {
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className='bg-[#445260] h-full rounded-2xl'>111</div>
+          <div className='bg-[#445260] h-full rounded-2xl p-4 flex flex-col'>
+            <Peripheral />
+          </div>
         </SwiperSlide>
         <SwiperSlide>
           <div className='bg-[#445260] h-full rounded-2xl'>111</div>

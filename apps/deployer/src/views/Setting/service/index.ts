@@ -23,3 +23,13 @@ export const getActionControlParam = (): Promise<any> => {
 export const postActionControlParam = (params: any): Promise<any> => {
   return post('/robot_config/control_param/action_control_param', params);
 };
+
+// 获取外设参数
+export const getPeripheralControlParam = (): Promise<any> => {
+  return get('/robot_config/peripheral_param/config_interactor_peripheral');
+};
+
+// 更新外设参数
+export const postPeripheralControlParam = (params: any): Promise<any> => {
+  return post('/robot_config/peripheral_param/config_interactor_peripheral', params);
+};

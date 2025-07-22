@@ -1,6 +1,6 @@
 import { createStyles } from 'antd-style';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useCommonStyles = createStyles(({ css, token }) => ({
   customSlider: css`
     margin: 12px !important;
     .ant-slider-rail {
@@ -17,10 +17,10 @@ const useStyles = createStyles(({ css, token }) => ({
       width: 24px;
       height: 24px;
       &::after {
-        width: 22px;
+        width: 24px;
         height: 24px;
         background-color: ${token.colorPrimary};
-        box-shadow: 0 0 0 2px ${token.colorBgContainer};
+        box-shadow: 0 0 0 2px ${token.colorText};
       }
       &::before {
         width: 20px;
@@ -86,4 +86,4 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-export default useStyles;
+export default useCommonStyles;
