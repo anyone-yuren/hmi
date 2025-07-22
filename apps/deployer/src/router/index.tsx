@@ -58,6 +58,10 @@ const router = createHashRouter([
         element: LazyLoad(lazy(() => import('@/views/Safety/home'))),
       },
       {
+        path: 'setting',
+        element: LazyLoad(lazy(() => import('@/views/Setting'))),
+      },
+      {
         path: '*',
         element: <Navigate to='/404' />,
       },
