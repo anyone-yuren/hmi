@@ -13,7 +13,7 @@ export const useGlobalStore = create<State>()(
     (set) => ({
       showAnimate: false,
       setShowAnimate: (showAnimate: boolean) => set({ showAnimate }),
-      cacheSave: false,
+      cacheSave: true,
       setCacheSave: (cacheSave: boolean) => set({ cacheSave }),
       showThree: false,
       setShowThree: (showThree: boolean) => set({ showThree }),

@@ -6,8 +6,10 @@ import BarBattery from '../battery';
 import ChargingAnimation from '../charging';
 import WsVehicleContainer from '../wsVehicleContainer';
 
+import { useVehicleStore } from '@/store/vehicleStore';
 import { GlobalNotification } from '@gbeata/app-global';
 import { createStyles } from 'antd-style';
+import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
 // 去除table hover央视
 const useStyles = createStyles(({ css, token }) => {
@@ -23,6 +25,13 @@ const GlobalHeader = () => {
   const navigate = useNavigate();
   const responsive = useResponsive();
   const { styles } = useStyles();
+  const { powerStatus } = useVehicleStore(
+    useShallow((state) => {
+      return {
+        powerStatus: state.powerStatus,
+      };
+    }),
+  );
   return (
     <div className='flex flex-col h-full items-center justify-between px-4 py-2 text-white '>
       <Typography.Title className='' level={2}>
@@ -86,7 +95,7 @@ const GlobalHeader = () => {
           onClick={() => navigate('/slider')}
         ></Button>
       </div>
-      {false && <ChargingAnimation />}
+      {[2, 3].includes(powerStatus.charge_status) && <ChargingAnimation />}
       <WsVehicleContainer />
       <GlobalNotification />
     </div>
