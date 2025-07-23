@@ -41,12 +41,6 @@ const Setting = () => {
             <Peripheral />
           </div>
         </SwiperSlide>
-        <SwiperSlide>
-          <div className='bg-[#445260] h-full rounded-2xl'>111</div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className='bg-[#445260] h-full rounded-2xl'>111</div>
-        </SwiperSlide>
       </Swiper>
     </SwiperWrapper>
   );

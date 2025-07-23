@@ -1,5 +1,5 @@
 import { mapValues } from 'lodash';
-import { Group, Image as KonvaImage } from 'react-konva';
+import { Group, Rect } from 'react-konva';
 import useImage from 'use-image';
 import { config_agv_info } from '../service';
 import { meterToPixel } from '../utils/index';
@@ -80,7 +80,7 @@ const Car = (props: any) => {
         y={meterToPixel(leftTopY)}
       >
         <Group name='car'>
-          <KonvaImage
+          {/* <KonvaImage
             height={meterToPixel(width)}
             width={meterToPixel(height)}
             image={image}
@@ -90,34 +90,24 @@ const Car = (props: any) => {
             // offsetX={meterToPixel(height)}
             x={0}
             y={0}
-          />
+          /> */}
           {/* 创建叉臂 */}
-          {/* <Group x={0} y={0} name="left-arm">
-            <Rect
-              width={20}
-              height={meterToPixel(height)}
-              fill="#8c8c8c"
-              strokeWidth={2}
-            />
+          <Group x={0} y={0} name='left-arm'>
+            <Rect width={20} height={meterToPixel(height)} fill='#8c8c8c' strokeWidth={2} />
           </Group>
-          <Group x={-20} name="right-arm">
+          <Group x={-20} name='right-arm'>
             <Rect
               x={meterToPixel(width)}
               y={0}
               width={20}
               height={meterToPixel(height)}
-              fill="#8c8c8c"
+              fill='#8c8c8c'
               strokeWidth={2}
             />
           </Group>
-          <Group x={0} y={0} name="car-header">
-            <Rect
-              width={meterToPixel(width)}
-              height={50}
-              fill="#fff"
-              strokeWidth={2}
-            />
-          </Group> */}
+          <Group x={0} y={0} name='car-header'>
+            <Rect width={meterToPixel(width)} height={50} fill='#00d1d1' strokeWidth={2} />
+          </Group>
         </Group>
         {footPoints.data ? <AvoidanceGroup width={width} height={height} /> : null}
       </Group>

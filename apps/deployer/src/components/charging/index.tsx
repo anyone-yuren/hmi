@@ -106,21 +106,22 @@ const ChargingAnimation = ({ level = 36 }) => {
         <div className='text-2xl mt-1 '>⚡</div>
         <div className='text-sm mt-1'>正在充电</div>
       </div>
+      <div className='w-60 h-7 z-2 bg-[#00d1d1] absolute bottom-0 backdrop-blur-md rounded-t-3xl'></div>
 
       {/* 气泡形变 */}
       {bubbles.map((bubble) => (
         <motion.div
           key={bubble.id}
-          className='absolute bg-teal-400 rounded-full'
+          className='absolute bg-[#00d1d1] rounded-full'
           style={{
             width: bubble.size,
             height: bubble.size,
             left: '50%',
             marginLeft: bubble.x,
-            bottom: 80,
+            bottom: 10,
           }}
           animate={{
-            y: -500,
+            y: -400,
             opacity: [1, 0],
             scaleX: [1, 1.2, 0.8, 1],
             scaleY: [1, 0.8, 1.2, 1],
