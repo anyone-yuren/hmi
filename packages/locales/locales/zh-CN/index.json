@@ -1,6 +1,15 @@
 {
   "common": {
     "backToHome": "返回主页",
+    "charging": {
+      "Voltage": "电压/电流",
+      "battery": "车辆电池",
+      "brushBoardStatus": "刷块状态",
+      "chargePile": "充电桩",
+      "chargeStatus": "充电状态",
+      "chargeingOutput": "充电输出光电",
+      "errorCode": "错误码"
+    },
     "noPermission": "对不起，您没有权限访问此页面。",
     "notFound": "对不起，您访问的页面不存在。",
     "pleaseInputNumber": "请输入正确的数字",

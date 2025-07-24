@@ -95,7 +95,7 @@ const GlobalHeader = () => {
           onClick={() => navigate('/slider')}
         ></Button>
       </div>
-      {[2, 3].includes(powerStatus.charge_status) && <ChargingAnimation />}
+      {[1, 2, 3].includes(powerStatus.charge_status) && <ChargingAnimation />}
       <WsVehicleContainer />
       <GlobalNotification />
     </div>

@@ -1,6 +1,15 @@
 {
   "common": {
     "backToHome": "ホームページに戻ります",
+    "charging": {
+      "Voltage": "電圧/電流",
+      "battery": "車両バッテリー",
+      "brushBoardStatus": "ブラシブロック状態",
+      "chargePile": "充電スタンド",
+      "chargeStatus": "充電状態",
+      "chargeingOutput": "充電出力光電",
+      "errorCode": "エラーコード"
+    },
     "noPermission": "申し訳ありませんが、このページにアクセスする許可はありません。",
     "notFound": "申し訳ありませんが、訪れたページは存在しません。",
     "pleaseInputNumber": "正しい番号を入力してください",

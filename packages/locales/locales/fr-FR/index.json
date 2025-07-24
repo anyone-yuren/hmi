@@ -1,6 +1,15 @@
 {
   "common": {
     "backToHome": "Retour à la page d'accueil",
+    "charging": {
+      "Voltage": "Tension/Courant",
+      "battery": "Batterie du véhicule",
+      "brushBoardStatus": "État du balai électrique",
+      "chargePile": "Station de charge",
+      "chargeStatus": "État de la charge",
+      "chargeingOutput": "Sortie de charge photoélectrique",
+      "errorCode": "Code d'erreur"
+    },
     "noPermission": "Désolé, vous n'avez pas la permission d'accéder à cette page.",
     "notFound": "Désolé, la page que vous avez visitée n'existe pas.",
     "pleaseInputNumber": "Veuillez saisir le bon numéro",

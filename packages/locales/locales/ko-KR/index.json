@@ -1,6 +1,15 @@
 {
   "common": {
     "backToHome": "홈페이지로 돌아갑니다",
+    "charging": {
+      "Voltage": "전압/전류",
+      "battery": "차량 배터리",
+      "brushBoardStatus": "블록 상태",
+      "chargePile": "충전소",
+      "chargeStatus": "충전 상태",
+      "chargeingOutput": "충전 출력 광학",
+      "errorCode": "오류 코드"
+    },
     "noPermission": "죄송합니다.이 페이지에 액세스 할 수있는 권한이 없습니다.",
     "notFound": "죄송합니다. 방문한 페이지는 존재하지 않습니다.",
     "pleaseInputNumber": "올바른 번호를 입력하십시오",

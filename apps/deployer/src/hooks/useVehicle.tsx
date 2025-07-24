@@ -11,11 +11,13 @@ const HYBRID_URL = import.meta.env.DEV
   : `ws://${currentHost}:10009`; // 生产环境使用真实地址
 
 export const useVehicle = () => {
-  const { setPowerStatus, setSeniorPoints, setAutoManualStatus } = useVehicleStore(
+  const { setPowerStatus, setSeniorPoints, setAutoManualStatus, setChargePileStatus } = useVehicleStore(
     useShallow((state) => ({
       setPowerStatus: state.setPowerStatus,
       setSeniorPoints: state.setSeniorPoints,
       setAutoManualStatus: state.setAutoManualStatus,
+      // 电池
+      setChargePileStatus: state.setChargePileStatus,
     })),
   );
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
@@ -43,6 +45,12 @@ export const useVehicle = () => {
         const data = YAML.load(e?.data);
         if (data) {
           setAutoManualStatus(data?.auto_manual_status);
+        }
+      }
+      if (e?.data?.includes('/sirius/topics/charge_pile_status')) {
+        const data = JSON.parse(e?.data);
+        if (data) {
+          setChargePileStatus(data);
         }
       }
     },
