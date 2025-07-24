@@ -60,7 +60,16 @@
       "volumn": "Volume du haut-parleur"
     },
     "sliderPage": {
-      "task": "Tâche"
+      "about": "Informations sur le véhicule",
+      "cloud": "Télécharger/Téléverser",
+      "diagnosis": "Diagnostic",
+      "io": "Informations E/S",
+      "navigation": "Navigation",
+      "offset": "Tableau des décalages",
+      "safety": "Sécurité",
+      "setting": "installation",
+      "task": "Tâche",
+      "vision": "Visuel"
     }
   }
 }

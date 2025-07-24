@@ -68,7 +68,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'diagnosis'} size={180} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                诊断
+                {t('deployer.sliderPage.diagnosis')}
               </Typography.Title>
             </div>
             <div
@@ -81,7 +81,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'hybrid'} size={180} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                导航
+                {t('deployer.sliderPage.navigation')}
               </Typography.Title>
             </div>
             <div
@@ -94,7 +94,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'safety'} size={140} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                安全
+                {t('deployer.sliderPage.safety')}
               </Typography.Title>
             </div>
             <div className='flex flex-col items-center justify-center gap-2'>
@@ -102,7 +102,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'vision'} size={140} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                视觉
+                {t('deployer.sliderPage.vision')}
               </Typography.Title>
             </div>
             <div className='flex flex-col items-center justify-center gap-2'>
@@ -110,7 +110,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'offset'} size={180} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                偏移表
+                {t('deployer.sliderPage.offset')}
               </Typography.Title>
             </div>
             <div className='flex flex-col items-center justify-center gap-2'>
@@ -118,7 +118,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'about'} size={180} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                车辆信息
+                {t('deployer.sliderPage.about')}
               </Typography.Title>
             </div>
             {/* <div className='flex flex-col items-center justify-center gap-2'>
@@ -139,7 +139,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'io'} size={180} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                I/O 信息
+                {t('deployer.sliderPage.io')}
               </Typography.Title>
             </div>
           </div>
@@ -151,7 +151,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'cloud'} size={180} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                上传下载
+                {t('deployer.sliderPage.cloud')}
               </Typography.Title>
             </div>
             <div
@@ -164,7 +164,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'setting'} size={180} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                设置
+                {t('deployer.sliderPage.setting')}
               </Typography.Title>
             </div>
             <div className='flex flex-col items-center justify-center gap-2 invisible'>

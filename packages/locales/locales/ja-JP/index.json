@@ -60,7 +60,16 @@
       "volumn": "スピーカーの音量"
     },
     "sliderPage": {
-      "task": "タスク"
+      "about": "車両情報",
+      "cloud": "アップロードとダウンロード",
+      "diagnosis": "診断",
+      "io": "I/O情報",
+      "navigation": "航法",
+      "offset": "オフセットテーブル",
+      "safety": "金庫",
+      "setting": "並べる",
+      "task": "タスク",
+      "vision": "視覚"
     }
   }
 }
