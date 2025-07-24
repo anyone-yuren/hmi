@@ -7,25 +7,33 @@ import { memo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import ChargingContainer from './styles';
 interface IChargingProps {
-  battery: number;
+  battery?: number;
   onClick?: MouseEventHandler<HTMLDivElement>;
   status?: any;
 }
 
 const Charging: FC<PropsWithChildren<IChargingProps>> = (props) => {
   const { status } = props;
-  const { charge_pile_status } = useVehicleStore(
+  const { charge_pile_status, powerStatus } = useVehicleStore(
     useShallow((store) => ({
       charge_pile_status: store.charge_pile_status,
+      powerStatus: store.powerStatus,
     })),
   );
-
-  const chargeStatus = ['', '', t('准备充电'), t('充电中'), t('充电完成'), t('充电失败')];
+  debugger;
+  const chargeStatus = [
+    '',
+    '',
+    t('common.charging.readyCharging'),
+    t('common.charging.charging'),
+    t('common.charging.success'),
+    t('common.charging.fail'),
+  ];
   return (
     <ChargingContainer onClick={props.onClick}>
-      <div className='text'>{props.battery || 0}%</div>
+      <div className='text'>{powerStatus?.power || 0}%</div>
       {charge_pile_status?.charge_status === 2 ? (
-        <div className='text text-gray-50 mt-10 opacity-50 animate-fadeIn'>{t('等待充电')}</div>
+        <div className='text text-gray-50 mt-10 opacity-50 animate-fadeIn'>{t('common.charging.waitting')}</div>
       ) : null}
       <div className='contrast'>
         {/* 小球 */}
@@ -65,7 +73,7 @@ const Charging: FC<PropsWithChildren<IChargingProps>> = (props) => {
                 {
                   dot: <Icon icon='svg-spinners:clock' />,
                   children: `${t('common.charging.brushBoardStatus')} :
-                    ${charge_pile_status?.brush_board_status === 0 ? t('伸出') : t('收回')}`,
+                    ${charge_pile_status?.brush_board_status === 0 ? t('common.charging.extend') : t('common.charging.retract')}`,
                 },
                 {
                   dot: <Icon icon='svg-spinners:clock' />,

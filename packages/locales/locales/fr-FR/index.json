@@ -8,7 +8,13 @@
       "chargePile": "Station de charge",
       "chargeStatus": "État de la charge",
       "chargeingOutput": "Sortie de charge photoélectrique",
-      "errorCode": "Code d'erreur"
+      "charging": "En charge",
+      "errorCode": "Code d'erreur",
+      "extend": "Sortir",
+      "fail": "Échec de la charge",
+      "readyCharging": "Préparation à la charge",
+      "success": "Charge terminée",
+      "waitting": "En attente de charge"
     },
     "noPermission": "Désolé, vous n'avez pas la permission d'accéder à cette page.",
     "notFound": "Désolé, la page que vous avez visitée n'existe pas.",

@@ -8,7 +8,13 @@
       "chargePile": "Charging station",
       "chargeStatus": "Charging status",
       "chargeingOutput": "Charging output photoelectric sensor",
-      "errorCode": "Error codes"
+      "charging": "Charging",
+      "errorCode": "Error codes",
+      "extend": "Extend",
+      "fail": "Charging failed",
+      "readyCharging": "Ready to charge",
+      "success": "Charging complete",
+      "waitting": "Waiting for charging"
     },
     "noPermission": "Sorry, you do not have permission to access this page.",
     "notFound": "Sorry, the page you visited does not exist.",

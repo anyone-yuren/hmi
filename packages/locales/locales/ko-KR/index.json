@@ -8,7 +8,13 @@
       "chargePile": "충전소",
       "chargeStatus": "충전 상태",
       "chargeingOutput": "충전 출력 광학",
-      "errorCode": "오류 코드"
+      "charging": "충전 중",
+      "errorCode": "오류 코드",
+      "extend": "펼치기",
+      "fail": "충전 실패",
+      "readyCharging": "충전 준비",
+      "success": "충전 완료",
+      "waitting": "충전 대기 중"
     },
     "noPermission": "죄송합니다.이 페이지에 액세스 할 수있는 권한이 없습니다.",
     "notFound": "죄송합니다. 방문한 페이지는 존재하지 않습니다.",
