@@ -62,6 +62,10 @@ const router = createHashRouter([
         element: <SingleTask />,
       },
       {
+        path: 'setting',
+        element: LazyLoad(lazy(() => import('@/views/Setting'))),
+      },
+      {
         path: '*',
         element: <Navigate to='/404' />,
       },

@@ -8,10 +8,10 @@ import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
-  const { power } = useVehicleStore(
+  const { powerStatus } = useVehicleStore(
     useShallow((state) => {
       return {
-        power: state.power,
+        powerStatus: state.powerStatus,
       };
     }),
   );
@@ -34,7 +34,8 @@ const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
     if (!showAnimate) {
       return;
     }
-    const shadowColor = power < 20 ? lowBatteryColor : power > 80 ? highBatteryColor : midBatteryColor;
+    const shadowColor =
+      powerStatus.power < 20 ? lowBatteryColor : powerStatus.power > 80 ? highBatteryColor : midBatteryColor;
     controls.start({
       filter: [
         `drop-shadow(0 0 4px ${shadowColor})`,
@@ -47,12 +48,13 @@ const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
         repeatType: 'reverse',
       },
     });
-  }, [controls, power, showAnimate]);
+  }, [controls, powerStatus.power, showAnimate]);
 
   // 计算电量条宽度
-  const batteryWidth = (power / 100) * (width - 6); // 3px padding
+  const batteryWidth = (powerStatus.power / 100) * (width - 6); // 3px padding
 
-  const batteryColor = power < 20 ? lowBatteryColor : power > 80 ? highBatteryColor : midBatteryColor;
+  const batteryColor =
+    powerStatus.power < 20 ? lowBatteryColor : powerStatus.power > 80 ? highBatteryColor : midBatteryColor;
 
   return (
     <div className='flex flex-col items-center relative'>
@@ -84,7 +86,7 @@ const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
       </svg>
       {/* 电量百分比文字 */}
       <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-sm font-semibold'>
-        {power}%
+        {powerStatus.power}%
       </div>
     </div>
   );

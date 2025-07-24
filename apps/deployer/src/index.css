@@ -11,6 +11,9 @@
   line-height: 24px;
   text-rendering: optimizelegibility;
   text-size-adjust: 100%;
+  --swiper-pagination-bullet-size: 15px;
+  --swiper-pagination-bullet-width: 15px;
+  --swiper-pagination-bullet-height: 15px;
 }
 * {
   font-family: Microsoft YaHei;
@@ -62,4 +65,21 @@ button {
   button {
     background-color: #f9f9f9;
   }
+}
+::-webkit-scrollbar-track-piece {
+  -webkit-border-radius: 0;
+}
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  -webkit-border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  height: 0px;
+  background-color: transparent;
+  -webkit-border-radius: 6px;
 }
