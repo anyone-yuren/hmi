@@ -25,7 +25,7 @@ const ChassisParameters = () => {
     //   run();
     // },
   });
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // 不同舵轮的参数
   const basicControlParam = {
@@ -40,40 +40,40 @@ const ChassisParameters = () => {
       return '';
     }
     const { type } = serviceControlParam;
-    const splitName = '底盘参数 - ';
+    const splitName = t('deployer.setting.chassis') + ' - ';
     switch (type) {
       case 1:
-        return splitName + '堆高车';
+        return splitName + t('deployer.setting.stacking');
       case 2:
-        return splitName + '托盘车';
+        return splitName + t('deployer.setting.pallet');
       case 3:
-        return splitName + '前移式';
+        return splitName + t('deployer.setting.Reach');
       case 4:
-        return splitName + '顶升';
+        return splitName + t('deployer.setting.Jacking');
       case 5:
-        return splitName + '滚筒';
+        return splitName + t('deployer.setting.Roller');
       case 6:
-        return splitName + '侧插';
+        return splitName + t('deployer.setting.SideInsert');
       case 7:
-        return splitName + '夹抱';
+        return splitName + t('deployer.setting.clamp');
       case 8:
-        return splitName + '复合式机器人';
+        return splitName + t('deployer.setting.composite');
       case 9:
-        return splitName + '平衡重';
+        return splitName + t('deployer.setting.counterbalanced');
       case 10:
-        return splitName + '劢微新形态';
+        return splitName + t('deployer.setting.micromorphic');
       case 11:
-        return splitName + '伸缩叉';
+        return splitName + t('deployer.setting.telescopic');
       case 12:
-        return splitName + '旋转顶升';
+        return splitName + t('deployer.setting.rotational');
       case 13:
-        return splitName + '三向叉';
+        return splitName + t('deployer.setting.threeWay');
       case 14:
-        return splitName + '全向车前移';
+        return splitName + t('deployer.setting.fullWay');
       default:
         return '--';
     }
-  }, [serviceControlParam?.type]);
+  }, [serviceControlParam?.type, i18n.language]);
   const renderParams = useMemo(() => {
     if (!serviceControlParam) {
       return <Empty />;
@@ -92,7 +92,7 @@ const ChassisParameters = () => {
               suffix={<EditOutlined style={{ fontSize: 20 }} />}
               onBlur={(e) => {
                 if (!/^-?\d+$/.test(e.target.value)) {
-                  toast.error('请输入正确的数字');
+                  toast.error(t('common.pleaseInputNumber'));
                   return;
                 }
                 const sendValue = Number(e.target.value);

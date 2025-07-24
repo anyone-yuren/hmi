@@ -22,7 +22,7 @@ const TravelParameters = () => {
   const { run: postRun } = useRequest(postBasicControlParam, {
     manual: true,
   });
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // 不同舵轮的参数
   const basicControlParam = {
@@ -52,15 +52,15 @@ const TravelParameters = () => {
     const { type } = serviceControlParam;
     switch (type) {
       case 1:
-        return '行走参数（单舵）';
+        return t('deployer.setting.single');
       case 2:
-        return '行走参数（双舵）';
+        return t('deployer.setting.double');
       case 3:
-        return '行走参数（差分）';
+        return t('deployer.setting.diff');
       default:
         return '--';
     }
-  }, [serviceControlParam?.type]);
+  }, [serviceControlParam?.type, i18n.language]);
   const renderParams = useMemo(() => {
     if (!serviceControlParam) {
       return <Empty />;

@@ -1,4 +1,46 @@
 {
+  "common": {
+    "pleaseInputNumber": "正しい番号を入力してください"
+  },
+  "deployer": {
+    "setting": {
+      "Jacking": "ジャッキアップ",
+      "Reach": "フォワード",
+      "Roller": "ローラー",
+      "SideInsert": "サイド プラグ",
+      "chassis": "シャーシパラメータ",
+      "clamp": "クランプ",
+      "composite": "ハイブリッドロボット",
+      "counterbalanced": "カウンターウェイト",
+      "diff": "トラベルパラメータ(差）",
+      "diffx_correction_backward": "後方駐車の縦方向精度の補正値",
+      "diffx_correction_forward": "前方駐車縦方向精度補正値",
+      "double": "トラベルパラメータ(ツインラダー)",
+      "fullWay": "全方向フォワード",
+      "lift_fork_vel_max": "ウィッシュボーンリフト最大速度",
+      "lift_fork_vel_max_rev": "ウィッシュボーン降下速度の最大値",
+      "lift_fork_vel_min": "ウィッシュボーンの最低リフト速度",
+      "lift_fork_vel_min_rev": "ウィッシュボーン 降下速度 最小",
+      "lowPower": "バッテリー低下アラームしきい値",
+      "micromorphic": "α2",
+      "pallet": "パレットトラック",
+      "peripheral": "ペリフェラルパラメータ",
+      "rotational": "ロータリージャッキ",
+      "runMusic": "運動しながら流れる音楽",
+      "single": "トラベルパラメータ(シングルラダー)",
+      "speed_backward_straight_max": "ストレートバック最高速度",
+      "speed_backward_turning_max": "リバースターン最大速度",
+      "speed_forward_straight_max": "ストレートフォワード最高速度",
+      "speed_forward_turning_max": "前進旋回最大速度",
+      "speed_omega_rotation": "スピン角速度",
+      "speed_rotation_max": "最大スピン速度",
+      "speed_turning_min": "最低回転速度",
+      "stacking": "スタッカー",
+      "telescopic": "テレスコピックフォーク",
+      "threeWay": "3ウェイフォーク",
+      "volumn": "スピーカーの音量"
+    }
+  },
   "editor": {
     "add": "追加",
     "addBRC": "ブロック列を追加します",

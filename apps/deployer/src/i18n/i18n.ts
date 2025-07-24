@@ -34,8 +34,8 @@ i18n
       en_US: { translation: { ...en_US, ...globalLocales['en-US'] } },
       zh_CN: { translation: { ...zh_CN, ...globalLocales['zh-CN'] } },
       ja_JP: { translation: { ...ja_JP, ...globalLocales['ja-JP'] } },
-      ko_KR: { translation: ko_KR, ...globalLocales['ko-KR'] },
-      fr_FR: { translation: fr_FR, ...globalLocales['fr-FR'] },
+      ko_KR: { translation: { ...ko_KR, ...globalLocales['ko-KR'] } },
+      fr_FR: { translation: { ...fr_FR, ...globalLocales['fr-FR'] } },
     },
   });
 

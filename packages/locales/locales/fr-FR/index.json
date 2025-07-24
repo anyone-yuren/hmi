@@ -1,4 +1,46 @@
 {
+  "common": {
+    "pleaseInputNumber": "Veuillez saisir le bon numéro"
+  },
+  "deployer": {
+    "setting": {
+      "Jacking": "élévation",
+      "Reach": "Avance avant",
+      "Roller": "rouleau",
+      "SideInsert": "insertion latérale",
+      "chassis": "Paramètres du châssis ",
+      "clamp": "pince",
+      "composite": "robot composite",
+      "counterbalanced": "contrepoids",
+      "diff": "Paramètres de marche （Différentiel）",
+      "diffx_correction_backward": "Valeur de compensation de précision longitudinale lors d'un arrêt en marche arrière",
+      "diffx_correction_forward": "Valeur de compensation de précision longitudinale lors d'un arrêt en marche avant",
+      "double": "Paramètres de marche (deux roues de direction)",
+      "fullWay": "déplacement avant omnidirectionnel",
+      "lift_fork_vel_max": "Valeur maximale de vitesse de levage du bras de fourche",
+      "lift_fork_vel_max_rev": "Valeur maximale de vitesse de descente du bras de fourche",
+      "lift_fork_vel_min": "Valeur minimale de vitesse de levage du bras de fourche",
+      "lift_fork_vel_min_rev": "Valeur minimale de vitesse de descente du bras de fourche",
+      "lowPower": "Seuil d'alerte de faible batterie",
+      "micromorphic": "α2",
+      "pallet": "chariot à palette",
+      "peripheral": "Paramètres des périphériques",
+      "rotational": "élévation rotative",
+      "runMusic": "Musique jouée pendant le mouvement",
+      "single": "Paramètres de marche (une roue de direction)",
+      "speed_backward_straight_max": "Vitesse maximale en ligne droite vers l'arrière",
+      "speed_backward_turning_max": "Vitesse maximale de virage en marche arrière",
+      "speed_forward_straight_max": "Vitesse maximale en ligne droite vers l'avant",
+      "speed_forward_turning_max": "Vitesse maximale de virage en marche avant",
+      "speed_omega_rotation": "Vitesse angulaire de rotation",
+      "speed_rotation_max": "Valeur maximale de vitesse de rotation",
+      "speed_turning_min": "Valeur minimale de la vitesse de virage",
+      "stacking": "chariot élévateur",
+      "telescopic": "fourche télescopique",
+      "threeWay": "fourche tri-directionnelle",
+      "volumn": "Volume du haut-parleur"
+    }
+  },
   "editor": {
     "add": "Ajouter",
     "addBRC": "Ajouter des lignes et colonnes de blocs",
