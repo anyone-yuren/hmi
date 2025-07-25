@@ -92,7 +92,10 @@ export const useNotification = () => {
 
   useEffect(() => {
     if (obsInfo !== 1 && getObsMsg(obsInfo)) {
-      toast({
+      if (obsMsg.current) {
+        sonnerToast.dismiss(obsMsg.current);
+      }
+      obsMsg.current = toast({
         title: t('common.obsError.title'),
         description: getObsMsg(obsInfo),
         button: {
@@ -102,6 +105,8 @@ export const useNotification = () => {
           },
         },
       });
+    } else {
+      sonnerToast.dismiss(obsMsg.current);
     }
   }, [obsInfo]);
   return {
