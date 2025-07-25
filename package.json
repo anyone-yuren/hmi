@@ -108,6 +108,7 @@
     "@emotion/react": "catalog:",
     "@mui/lab": "catalog:",
     "@emotion/styled": "catalog:",
-    "@react-spring/konva": "catalog:"
+    "@react-spring/konva": "catalog:",
+    "dayjs": "catalog:"
   }
 }

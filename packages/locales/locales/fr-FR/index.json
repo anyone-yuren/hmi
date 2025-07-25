@@ -1,5 +1,8 @@
 {
   "common": {
+    "errorMsg": {
+      "title": "Message d'exception"
+    },
     "obsError": {
       "tip0": "Contrôleur de sécurité non démarré",
       "tip1": "Évitement non déclenché",

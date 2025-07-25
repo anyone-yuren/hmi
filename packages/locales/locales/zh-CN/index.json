@@ -17,6 +17,9 @@
       "waitting": "等待充电"
     },
     "close": "关闭",
+    "errorMsg": {
+      "title": "异常消息"
+    },
     "modify": "修改",
     "noPermission": "对不起，您没有权限访问此页面。",
     "notFound": "对不起，您访问的页面不存在。",
