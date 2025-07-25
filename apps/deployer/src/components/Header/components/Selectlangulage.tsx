@@ -2,6 +2,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { Button, Dropdown } from 'antd';
 import { useTranslation } from 'react-i18next';
 
+import { postLanguageType } from '@/https/global';
 import type { MenuProps } from 'antd';
 import { setLanguage } from 'gbeata';
 import { useEffect } from 'react';
@@ -33,12 +34,16 @@ const Selectlangulage = () => {
       label: 'Français',
     },
   ];
+  const handleChange = async (key: string) => {
+    await postLanguageType(key.split('_')[0]);
+    i18n.changeLanguage(key);
+  };
   return (
     <Dropdown
       menu={{
         items: languages,
         onClick: ({ key }) => {
-          i18n.changeLanguage(key);
+          handleChange(key);
         },
       }}
       trigger={['click']}

@@ -15,7 +15,7 @@ const HYBRID_URL = import.meta.env.DEV
   : `ws://${currentHost}:10009`; // 生产环境使用真实地址
 
 export const useNotification = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const errorMsg = useRef<any>();
   const obsMsg = useRef<any>();
   const { getObsMsg } = useObsError();
@@ -88,7 +88,7 @@ export const useNotification = () => {
       // errorMsg.current?.close();
       sonnerToast.dismiss(errorMsg.current);
     }
-  }, [errorMessage]);
+  }, [errorMessage, i18n.language]);
 
   useEffect(() => {
     if (obsInfo !== 1 && getObsMsg(obsInfo)) {
@@ -108,7 +108,7 @@ export const useNotification = () => {
     } else {
       sonnerToast.dismiss(obsMsg.current);
     }
-  }, [obsInfo]);
+  }, [obsInfo, i18n.language]);
   return {
     sendMessage,
     latestMessage,
