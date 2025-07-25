@@ -150,7 +150,7 @@ const StatusPanel = (prop) => {
             // subheader={<ListSubheader>Settings</ListSubheader>}
           >
             <Typography sx={{ my: 0 }} variant='subtitle2' component='div'>
-              {t('避障信息')}
+              {t('deployer.safety.status')}
             </Typography>
             <ListItemButton
               // key={item.label}
@@ -162,7 +162,7 @@ const StatusPanel = (prop) => {
               <ListItemText
                 disableTypography
                 sx={{ color: 'text.primary', fontSize: '14px' }}
-                primary={t('车辆状态')}
+                primary={t('deployer.safety.vehicleStatus')}
               />
               {/* {motionStatus[motionInfo?.motion_state] || '-'} */}
             </ListItemButton>
@@ -176,7 +176,7 @@ const StatusPanel = (prop) => {
               <ListItemText
                 disableTypography
                 sx={{ color: 'text.primary', fontSize: '14px' }}
-                primary={t('避障类型')}
+                primary={t('deployer.safety.obsType')}
               />
               {getObsMsg(obsInfo.type as number) || '-'}
             </ListItemButton>
@@ -200,9 +200,9 @@ const StatusPanel = (prop) => {
               <ListItemText
                 disableTypography
                 sx={{ color: 'text.primary', fontSize: '14px' }}
-                primary={t('货物状态')}
+                primary={t('deployer.safety.goodsStatus')}
               />
-              {goodsInfo?.good_status ? t('有货') : t('无货')}
+              {goodsInfo?.good_status ? t('deployer.safety.hasGoods') : t('deployer.safety.noGoods')}
             </ListItemButton>
             <ListItemButton
               // key={item.label}
@@ -214,10 +214,10 @@ const StatusPanel = (prop) => {
               <ListItemText
                 disableTypography
                 sx={{ color: 'text.primary', fontSize: '14px' }}
-                primary={t('当前避障方案')}
+                primary={t('deployer.safety.currentScheme')}
               />
               {obsInfo.scheme_id || '-'}
-              <Tooltip title={t('设置')}>
+              <Tooltip title={t('common.setting')}>
                 <IconButton
                   onClick={() => handleChange(obsInfo.scheme_id)}
                   size='large'
@@ -256,7 +256,7 @@ const StatusPanel = (prop) => {
             </ListItemButton>
             <Divider sx={{ marginBlock: '10px' }} />
             <Typography sx={{ my: 0 }} variant='subtitle2' component='div'>
-              {t('传感器点云查看')}
+              {t('deployer.safety.sensorCloud')}
             </Typography>
             {controls}
           </ControlList>

@@ -1,5 +1,6 @@
 import { useWebSocket } from 'ahooks';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from '../components/CustomToast';
 import useObsError from './useObsError';
 // 动态获取当前 host
@@ -11,6 +12,7 @@ const HYBRID_URL = import.meta.env.DEV
 
 const hashMap: any = {};
 export const useNotification = () => {
+  const { t } = useTranslation();
   const { getObsMsg } = useObsError();
   const [obsInfo, setObsInfo] = useState<any>();
   const [errorMessage, setErrorMessage] = useState<any>();
@@ -42,10 +44,10 @@ export const useNotification = () => {
   useEffect(() => {
     if (obsInfo !== 1 && getObsMsg(obsInfo)) {
       toast({
-        title: '避障消息',
+        title: t('common.obsError.title'),
         description: getObsMsg(obsInfo),
         button: {
-          label: '查看',
+          label: t('common.obsError.view'),
           onClick: () => {
             console.log('查看通知');
           },

@@ -107,30 +107,30 @@ const DrawerContent = ({ refresh }) => {
 
   const renderDirectionData = [
     {
-      title: t('前进距离'),
+      title: t('deployer.safety.forwardDistance'),
       key: 'stop_distance_forward_empty',
     },
     {
-      title: t('后退距离'),
+      title: t('deployer.safety.backDistance'),
       key: 'stop_distance_backward_empty',
     },
     {
-      title: t('左旋距离'),
+      title: t('deployer.safety.leftDistance'),
       key: 'stop_distance_left_empty',
     },
     {
-      title: t('右旋距离'),
+      title: t('deployer.safety.rightDistance'),
       key: 'stop_distance_right_empty',
     },
   ];
 
   const lateralData = [
     {
-      title: t('左侧'),
+      title: t('deployer.safety.left'),
       key: 'stop_region_left',
     },
     {
-      title: t('右侧'),
+      title: t('deployer.safety.right'),
       key: 'stop_region_right',
     },
   ];
@@ -165,15 +165,15 @@ const DrawerContent = ({ refresh }) => {
         {contextHolder}
         <div className='flex-1 overflow-auto pt-0'>
           <Divider orientation='left'>
-            <p className='text-lg text-black'>{t('避障停车距离')}</p>
+            <p className='text-lg text-black'>{t('deployer.safety.obsDistance')}</p>
           </Divider>
           <div className='flex flex-col gap-4'>{renderDirection(renderDirectionData)}</div>
           <Divider orientation='left'>
-            <p className='text-lg text-black'>{t('侧方保护区域')}</p>
+            <p className='text-lg text-black'>{t('deployer.safety.lateral')}</p>
           </Divider>
           <div className='flex flex-col gap-4'>{renderDirection(lateralData)}</div>
           <Divider orientation='left'>
-            <p className='text-lg text-black'>{t('传感器控制')}</p>
+            <p className='text-lg text-black'>{t('deployer.safety.sensor')}</p>
           </Divider>
           <div className='flex flex-col gap-4'>{memoDeviceList}</div>
         </div>
@@ -193,7 +193,7 @@ const DrawerContent = ({ refresh }) => {
               });
             }}
           >
-            {t('修改')}
+            {t('common.modify')}
           </Button>
           <Button
             className='text-black'
@@ -203,7 +203,7 @@ const DrawerContent = ({ refresh }) => {
               api.destroy();
             }}
           >
-            {t('关闭')}
+            {t('common.close')}
           </Button>
         </div>
       </div>
