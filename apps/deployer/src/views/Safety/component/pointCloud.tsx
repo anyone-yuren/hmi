@@ -37,7 +37,7 @@ const PointCloud = () => {
   );
 
   return (
-    <Group>
+    <Group name='safetyCloud'>
       {typeof seniorPoints === 'object' &&
         seniorPoints?.map((item, index) => {
           // if (index % 5 === 0) {

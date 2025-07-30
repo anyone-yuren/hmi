@@ -1,5 +1,13 @@
+import pako from 'pako';
 import { useShallow } from 'zustand/react/shallow';
 import { useSafetyStore } from '../store/safety.store';
+
+function unzipText(str) {
+  return pako.ungzip(
+    Uint8Array.from(atob(str), (c) => c.charCodeAt(0)),
+    { to: 'string' },
+  );
+}
 
 export default function useHybirdWsExtend() {
   const { setObsInfo, setSeniorPoints, setGoodsInfo, setTurnRegionData } = useSafetyStore(
@@ -18,7 +26,10 @@ export default function useHybirdWsExtend() {
     },
     '/sirius/topics/compose_sensor_point': (data: any) => {
       // 避障点云
-      setSeniorPoints(data?.points ?? []);
+      if (data.points) {
+        const decompressedData = unzipText(data.points);
+        setSeniorPoints(JSON.parse(decompressedData) ?? []);
+      }
     },
     '/sirius/topics/goods_info': (data: any) => {
       // 货物信息
