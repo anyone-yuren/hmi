@@ -172,7 +172,7 @@ const SwiperPage = () => {
                 <SvgIcon name={'setting'} size={180} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
-                设置
+                {t('deployer.sliderPage.setting')}
               </Typography.Title>
             </div>
             <div className='flex flex-col items-center justify-center gap-2 invisible'>

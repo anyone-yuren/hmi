@@ -77,16 +77,12 @@ export const useNotification = () => {
           </div>
         ),
         className: ' bg-[#d90707]',
-        // button: {
-        //   label: t('common.obsError.view'),
-        //   onClick: () => {
-        //     console.log('查看通知');
-        //   },
-        // },
       });
     } else {
       // errorMsg.current?.close();
-      sonnerToast.dismiss(errorMsg.current);
+      if (errorMsg.current) {
+        sonnerToast.dismiss(errorMsg.current);
+      }
     }
   }, [errorMessage, i18n.language]);
 
@@ -95,6 +91,8 @@ export const useNotification = () => {
       if (obsMsg.current) {
         sonnerToast.dismiss(obsMsg.current);
       }
+      console.log(2);
+
       obsMsg.current = toast({
         title: t('common.obsError.title'),
         description: getObsMsg(obsInfo),
@@ -105,10 +103,20 @@ export const useNotification = () => {
           },
         },
       });
-    } else {
-      sonnerToast.dismiss(obsMsg.current);
     }
   }, [obsInfo, i18n.language]);
+
+  useEffect(() => {
+    if (readyState === 1) {
+      sendMessage(
+        JSON.stringify({
+          uri: 'subscribe',
+          topics: ['/sirius/topics/safety_obs_info', '/sirius/topics/error_description'],
+        }),
+      );
+    }
+  }, [readyState]);
+
   return {
     sendMessage,
     latestMessage,
