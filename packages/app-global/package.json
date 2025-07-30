@@ -33,7 +33,8 @@
     "react-router-dom": "catalog:",
     "gbeata": "workspace:*",
     "ui": "workspace:^",
-    "@loadable/component": "catalog:"
+    "@loadable/component": "catalog:",
+    "axios": "catalog:"
   },
   "devDependencies": {
     "@gbeata/eslint-config": "workspace:^",

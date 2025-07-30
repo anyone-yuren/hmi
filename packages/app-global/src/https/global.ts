@@ -1,4 +1,4 @@
-import { post } from '@/https';
+import { post } from './index';
 
 export const postLanguageType = (num: any) => {
   return post('/sirius/robot_config/language_type', {

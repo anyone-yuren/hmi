@@ -1,4 +1,6 @@
-import { get } from '@/https';
+import { https } from '@gbeata/app-global';
+
+const get = https.get;
 
 // 获取语言
 export const getLanguage = (params: any) => get('/sirius/robot_config/language_type', params);
