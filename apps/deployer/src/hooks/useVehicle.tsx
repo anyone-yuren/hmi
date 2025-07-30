@@ -38,10 +38,6 @@ export const useVehicle = () => {
           });
         }
       }
-      if (e?.data?.includes('/sirius/topics/compose_sensor_point')) {
-        const data = JSON.parse(e?.data);
-        setSeniorPoints(data?.points);
-      }
       if (e?.data?.includes('/sirius/topics/robot_status_isensor')) {
         const data = JSON.parse(e?.data);
 
@@ -65,7 +61,6 @@ export const useVehicle = () => {
           uri: 'subscribe',
           topics: [
             '/sirius/topics/robot_status_battery',
-            '/sirius/topics/compose_sensor_point',
             '/sirius/topics/robot_status_isensor',
             '/sirius/topics/charge_pile_status',
           ],
