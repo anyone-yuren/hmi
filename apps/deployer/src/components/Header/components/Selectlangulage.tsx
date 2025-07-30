@@ -2,7 +2,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { Button, Dropdown } from 'antd';
 import { useTranslation } from 'react-i18next';
 
-import { postLanguageType } from '@/https/global';
+import { commonServices } from '@gbeata/app-global';
 import type { MenuProps } from 'antd';
 import { setLanguage } from 'gbeata';
 import { useEffect } from 'react';
@@ -35,7 +35,7 @@ const Selectlangulage = () => {
     },
   ];
   const handleChange = async (key: string) => {
-    await postLanguageType(key.split('_')[0]);
+    await commonServices.postLanguageType(key.split('_')[0]);
     i18n.changeLanguage(key);
   };
   return (

@@ -1,4 +1,4 @@
-import { post } from '@/https';
+import { post } from '@gbeata/app-global';
 
 export const postFloorList = () => post('/navigation/floor_list', {}, '10001');
 

@@ -1,4 +1,4 @@
-import { get, post } from '@/https';
+import { get, post } from '@gbeata/app-global';
 import YAML from 'js-yaml';
 
 export const getCurrent = () => get('/vehicle/status/current_error', {}, '10020');
