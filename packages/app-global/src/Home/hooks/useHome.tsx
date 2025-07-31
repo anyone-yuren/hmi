@@ -17,16 +17,18 @@ const VEHICLE_URL_10001 =
     : `ws://${currentHost}:10001`; // 生产环境使用真实地址
 
 export const useHybrid = () => {
-  const { setTaskInfo, setControlStatus, setRobotCurrentStatus, setRobotIsensorStatus } = useHomeStore(
-    useShallow((state) => {
-      return {
-        setTaskInfo: state.setTaskInfo,
-        setControlStatus: state.setControlStatus,
-        setRobotCurrentStatus: state.setRobotCurrentStatus,
-        setRobotIsensorStatus: state.setRobotIsensorStatus,
-      };
-    }),
-  );
+  const { setTaskInfo, setControlStatus, setRobotCurrentStatus, setRobotIsensorStatus, setRobotGoodsStatus } =
+    useHomeStore(
+      useShallow((state) => {
+        return {
+          setTaskInfo: state.setTaskInfo,
+          setControlStatus: state.setControlStatus,
+          setRobotCurrentStatus: state.setRobotCurrentStatus,
+          setRobotIsensorStatus: state.setRobotIsensorStatus,
+          setRobotGoodsStatus: state.setRobotGoodsStatus,
+        };
+      }),
+    );
   const { sendMessage, latestMessage, readyState } = useWebSocket(VEHICLE_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
@@ -46,6 +48,10 @@ export const useHybrid = () => {
       if (data.uri == '/sirius/topics/robot_status_isensor') {
         const { timestamp, ...rest } = data;
         setRobotIsensorStatus(rest);
+      }
+      if (data.uri == '/sirius/topics/robot_status_goods') {
+        const { timestamp, ...rest } = data;
+        setRobotGoodsStatus(rest);
       }
     },
   });
@@ -84,7 +90,12 @@ export const useHybrid = () => {
       sendMessage(
         JSON.stringify({
           uri: 'subscribe',
-          topics: ['/sirius/topics/task_info', '/sirius/topics/control_status', '/sirius/topics/robot_status_isensor'],
+          topics: [
+            '/sirius/topics/task_info',
+            '/sirius/topics/control_status',
+            '/sirius/topics/robot_status_isensor',
+            '/sirius/topics/robot_status_goods',
+          ],
         }),
       );
     }

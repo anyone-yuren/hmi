@@ -1,4 +1,5 @@
-import { useVehicleStore } from '@gbeata/store';
+import { CheckCircle, HourglassEmptySharp } from '@mui/icons-material';
+
 import { Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
@@ -6,6 +7,7 @@ import { useMemo } from 'react';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import earth from '../../../assets/img/earth.png';
+import { useHomeStore } from '../../store';
 
 const useStyles = createStyles(({ token, css }) => ({
   customSwitch: css`
@@ -61,17 +63,20 @@ const useStyles = createStyles(({ token, css }) => ({
 const VehicleControl = () => {
   const { styles } = useStyles();
   const theme = useTheme();
-  const { auto_manual_status } = useVehicleStore(
+  const { robotIsensorStatus, robotGoodsStatus } = useHomeStore(
     useShallow((state) => {
       return {
-        auto_manual_status: state.auto_manual_status,
+        robotIsensorStatus: state.robotIsensorStatus,
+        robotGoodsStatus: state.robotGoodsStatus,
       };
     }),
   );
 
+  console.log('robotIsensorStatus', robotIsensorStatus);
+
   // 根据auto_manual_status值返回不同图标值
   const mamualStatusIcon = useMemo(() => {
-    switch (auto_manual_status) {
+    switch (robotIsensorStatus.auto_manual_status) {
       case 1:
         return 'handle';
       case 2:
@@ -79,9 +84,9 @@ const VehicleControl = () => {
       case 3:
         return 'semiAuto';
       default:
-        return '';
+        return '-';
     }
-  }, [auto_manual_status]);
+  }, [robotIsensorStatus.auto_manual_status]);
 
   return (
     <motion.div
@@ -102,7 +107,7 @@ const VehicleControl = () => {
                 unCheckedChildren='单机'
                 defaultChecked
               /> */}
-              100kg
+              {robotGoodsStatus.number} kg
             </Typography.Title>
             <Typography.Text className='opacity-50'>货物重量</Typography.Text>
           </div>
@@ -118,7 +123,17 @@ const VehicleControl = () => {
             <Typography.Text className='opacity-50'>控制模式</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
-            <Typography.Title level={4}>有</Typography.Title>
+            <Typography.Title level={4}>
+              {robotGoodsStatus.number ? (
+                <>
+                  <CheckCircle color='success' />
+                </>
+              ) : (
+                <>
+                  <HourglassEmptySharp color='info' />
+                </>
+              )}
+            </Typography.Title>
             <Typography.Text className='opacity-50'>是否有货</Typography.Text>
           </div>
         </div>
