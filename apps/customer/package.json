@@ -55,6 +55,7 @@
     "@gbeata/eslint-config": "workspace:^",
     "@gbeata/ts-config": "workspace:^",
     "@gbeata/utils": "workspace:^",
+    "@gbeata/app-global": "workspace:*",
     "@gbeata/vite-config": "workspace:^",
     "@iconify/react": "^4.1.1",
     "@types/lodash-es": "^4.17.11",

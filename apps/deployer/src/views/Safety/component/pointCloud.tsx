@@ -1,7 +1,7 @@
-import { useShallow } from "zustand/react/shallow";
-import { useSafetyStore } from "../store/safety.store";
-import { meterToPixel } from "../utils";
-import { Circle, Group } from "react-konva";
+import { Circle, Group } from 'react-konva';
+import { useShallow } from 'zustand/react/shallow';
+import { useSafetyStore } from '../store/safety.store';
+import { meterToPixel } from '../utils';
 
 // 根据距离计算颜色 (使用 HSL)
 const getColorByDistance = (distance: number) => {
@@ -10,7 +10,7 @@ const getColorByDistance = (distance: number) => {
 
   // 如果距离大于30米，则设置为红色
   if (distance > maxDistance) {
-    return "hsl(0, 100%, 50%)"; // 红色 (hue 0°, 饱和度 100%，亮度 50%)
+    return 'hsl(0, 100%, 50%)'; // 红色 (hue 0°, 饱和度 100%，亮度 50%)
   }
 
   // 根据距离计算 HSL 色值，色相 (H) 从紫色到红色
@@ -33,30 +33,31 @@ const PointCloud = () => {
       seniorPoints: store.seniorPoints,
       showPointCloud: store.showPointCloud,
       cloudCategory: store.cloudCategory,
-    }))
+    })),
   );
 
   return (
-    <Group>
-      {seniorPoints?.map((item, index) => {
-        // if (index % 5 === 0) {
-        if (cloudCategory?.includes(item.id)) {
-          const distance = Math.sqrt(item.x * item.x + item.y * item.y); // 计算距离
-          const color = getColorByDistance(distance); // 获取颜色
-          if (distance > 2 && index % 5 !== 0) return null;
+    <Group name='safetyCloud'>
+      {typeof seniorPoints === 'object' &&
+        seniorPoints?.map((item, index) => {
+          // if (index % 5 === 0) {
+          if (cloudCategory?.includes(item.id)) {
+            const distance = Math.sqrt(item.x * item.x + item.y * item.y); // 计算距离
+            const color = getColorByDistance(distance); // 获取颜色
+            if (distance > 2 && index % 5 !== 0) return null;
 
-          return (
-            <Circle
-              key={index}
-              x={meterToPixel(0 - item.y)}
-              y={meterToPixel(0 - item.x)}
-              radius={1}
-              fill={color}
-              listening={false}
-            />
-          );
-        }
-      })}
+            return (
+              <Circle
+                key={index}
+                x={meterToPixel(0 - item.y)}
+                y={meterToPixel(0 - item.x)}
+                radius={1}
+                fill={color}
+                listening={false}
+              />
+            );
+          }
+        })}
     </Group>
   );
 };

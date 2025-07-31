@@ -16,12 +16,64 @@
       "success": "充电完成",
       "waitting": "等待充电"
     },
+    "close": "关闭",
+    "errorMsg": {
+      "title": "异常消息"
+    },
+    "modify": "修改",
     "noPermission": "对不起，您没有权限访问此页面。",
     "notFound": "对不起，您访问的页面不存在。",
+    "obsError": {
+      "tip0": "安全控制器未启动",
+      "tip1": "避障未触发",
+      "tip10": "左避障雷达停止区触发",
+      "tip11": "右避障雷达停止区触发",
+      "tip12": "前避障雷达停止区触发",
+      "tip13": "顶部避障雷达停止区触发",
+      "tip14": "后避障雷达停止区触发",
+      "tip15": "后方有障碍物",
+      "tip16": "安全触边触发",
+      "tip17": "远程急停触发",
+      "tip18": "停车保护区域触发",
+      "tip19": "自旋方向有障碍物",
+      "tip2": "前方有障碍物",
+      "tip3": "左前方有障碍物",
+      "tip4": "右前方有障碍物",
+      "tip5": "尖部光电触发",
+      "tip6": "根部光电触发",
+      "tip7": "叉臂底部光电触发",
+      "tip8": "叉臂雷达触发",
+      "tip9": "系统错误触发",
+      "title": "避障消息",
+      "view": "查看"
+    },
     "pleaseInputNumber": "请输入正确的数字",
-    "serverError": "对不起，服务器发生错误。"
+    "serverError": "对不起，服务器发生错误。",
+    "setting": "设置"
   },
   "deployer": {
+    "safety": {
+      "backDistance": "后退距离",
+      "currentScheme": "当前避障方案",
+      "forwardDistance": "前进距离",
+      "goodsStatus": "货物状态",
+      "hasGoods": "有货",
+      "lateral": "侧方保护区域",
+      "left": "左侧",
+      "leftDistance": "左旋距离",
+      "navType": "避障类型",
+      "noGoods": "无货",
+      "obsAdjust": "避障方案调整",
+      "obsDistance": "避障停车距离",
+      "obsType": "避障类型",
+      "right": "右侧",
+      "rightDistance": "右旋距离",
+      "sensor": "传感器控制",
+      "sensorCloud": "传感器点云查看",
+      "status": "避障信息",
+      "title": "避障",
+      "vehicleStatus": "车辆状态"
+    },
     "setting": {
       "Jacking": "顶升",
       "Reach": "前移式",
@@ -67,7 +119,17 @@
       "status": "状态",
       "input": "输入",
       "port": "端口号",
-      "output": "输出"
+      "output": "输出",
+      "about": "车辆信息",
+      "cloud": "上传下载",
+      "diagnosis": "诊断",
+      "io": "I/O 信息",
+      "navigation": "导航",
+      "offset": "偏移表",
+      "safety": "安全",
+      "setting": "设置",
+      "task": "任务",
+      "vision": "视觉"
     }
   }
 }

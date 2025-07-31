@@ -1,4 +1,4 @@
-import { post } from '@/https';
+import { post } from '@gbeata/app-global';
 
 /**
  * 反光板构建

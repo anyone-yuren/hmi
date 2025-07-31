@@ -1,6 +1,6 @@
 import { useVehicleStore } from '@/store/vehicleStore';
 import { useWebSocket } from 'ahooks';
-import YAML from 'js-yaml';
+import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 // 动态获取当前 host
@@ -24,12 +24,13 @@ export const useVehicle = () => {
     reconnectLimit: 10,
     reconnectInterval: 5000,
     onMessage: (e) => {
+      if (e?.data?.includes('subscribe')) return;
       // if (!e?.data || !e?.data.includes('{')) return;
       // const data = JSON.parse(e.data);
       // if (data?.uri === '/navigation/robot_status_localizer_result') {
       // }
       if (e?.data?.includes('/sirius/topics/robot_status_battery')) {
-        const data = YAML.load(e?.data);
+        const data = JSON.parse(e?.data);
         if (data) {
           setPowerStatus({
             power: Math.round(data?.power),
@@ -37,12 +38,9 @@ export const useVehicle = () => {
           });
         }
       }
-      if (e?.data?.includes('/sirius/topics/compose_sensor_point')) {
-        const data = JSON.parse(e?.data);
-        setSeniorPoints(data?.points);
-      }
       if (e?.data?.includes('/sirius/topics/robot_status_isensor')) {
-        const data = YAML.load(e?.data);
+        const data = JSON.parse(e?.data);
+
         if (data) {
           setAutoManualStatus(data?.auto_manual_status);
         }
@@ -55,4 +53,19 @@ export const useVehicle = () => {
       }
     },
   });
+
+  useEffect(() => {
+    if (readyState === 1) {
+      sendMessage(
+        JSON.stringify({
+          uri: 'subscribe',
+          topics: [
+            '/sirius/topics/robot_status_battery',
+            '/sirius/topics/robot_status_isensor',
+            '/sirius/topics/charge_pile_status',
+          ],
+        }),
+      );
+    }
+  }, [readyState, sendMessage]);
 };

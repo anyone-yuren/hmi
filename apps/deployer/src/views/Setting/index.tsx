@@ -3,9 +3,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import ChassisParameters from './components/chasiss';
 import Peripheral from './components/peripheral';
-import TravelParameters from './components/travelParameters';
 export const SwiperWrapper = styled('div')(({ theme }) => ({
   width: '100%',
   height: '100%',
@@ -26,7 +24,7 @@ const Setting = () => {
         pagination={{ clickable: true }}
         modules={[Pagination]}
       >
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <div className='bg-[#445260] h-full rounded-2xl p-4 flex flex-col'>
             <TravelParameters />
           </div>
@@ -35,7 +33,7 @@ const Setting = () => {
           <div className='bg-[#445260] h-full rounded-2xl p-4 flex flex-col'>
             <ChassisParameters />
           </div>
-        </SwiperSlide>
+        </SwiperSlide> */}
         <SwiperSlide>
           <div className='bg-[#445260] h-full rounded-2xl p-4 flex flex-col'>
             <Peripheral />

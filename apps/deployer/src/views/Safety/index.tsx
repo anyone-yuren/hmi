@@ -177,7 +177,7 @@ const Safety = () => {
         }}
       >
         <Drawer
-          title={t('避障方案调整')}
+          title={t('deployer.safety.obsAdjust')}
           placement={'right'}
           zIndex={1203}
           closable={false}

@@ -1,11 +1,10 @@
 import x20 from '@/assets/img/X20-M_320-500.png';
 import { useGlobalStore } from '@/store/globalStore';
 import { UserOutlined } from '@ant-design/icons';
-import { Button, Layout, Segmented, Slider, Switch, Typography } from 'antd';
+import { Button, Layout, Slider, Switch, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import React from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import WsContainer from '../Home/components/wsContainer';
 const { Header, Content, Footer, Sider } = Layout;
 const useStyles = createStyles(({ css, token }) => ({
   customSlider: css`
@@ -122,33 +121,8 @@ const Setting = () => {
   ];
   return (
     <Layout className='h-full bg-transparent'>
-      <WsContainer />
-      {/* <Sider
-        breakpoint='lg'
-        collapsedWidth={0}
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
-      >
-        <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']} items={items} />
-      </Sider> */}
       <Content className='relative'>
         <div className='p-5 flex flex-col gap-8 w-2/3 h-full rounded-lg bg-gradient-to-r from-black to-purple-500/0'>
-          <div>
-            <Typography.Title level={5}>语言</Typography.Title>
-            <Segmented
-              size='large'
-              options={[
-                { label: '中文', value: 'zh-CN' },
-                { label: 'English', value: 'en-US' },
-                { label: '日本語', value: 'ja-JP' },
-                { label: '한국어', value: 'ko-KR' },
-              ]}
-            />
-          </div>
           <div className='flex gap-4 items-center'>
             <Switch defaultChecked className={styles.customSwitch} onChange={() => {}} />
             <Typography.Text>异常显示</Typography.Text>
@@ -196,18 +170,6 @@ const Setting = () => {
               切换到施工端
             </Button>
           </div>
-          {/* <div>
-            <Typography.Title level={5}>AGV位置</Typography.Title>
-            <div>
-              <Typography.Text>X轴：{agvPosition?.x}</Typography.Text>
-            </div>
-            <div>
-              <Typography.Text>Y轴：{agvPosition?.y}</Typography.Text>
-            </div>
-            <div>
-              <Typography.Text>角度：{agvPosition?.angel}</Typography.Text>
-            </div>
-          </div> */}
         </div>
         <div className='absolute top-10 right-10'>
           <img src={x20} className='rounded-lg  w-96' />

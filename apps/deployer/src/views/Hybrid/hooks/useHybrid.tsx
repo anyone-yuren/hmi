@@ -1,5 +1,6 @@
 import { useWebSocket } from 'ahooks';
 import YAML from 'js-yaml';
+import { useEffect } from 'react';
 import useHybirdWsExtend from '../service/wsExtend';
 // 动态获取当前 host
 const currentHost = window.location.hostname;
@@ -18,6 +19,9 @@ export const useHybrid = () => {
     reconnectLimit: 10,
     reconnectInterval: 5000,
     onMessage: (message) => {
+      if (message.data.includes('subscribe')) {
+        return;
+      }
       const uriRegex = /"uri":"([^"]+)"/;
       const uri = message.data.match(uriRegex);
       if (!uri?.[1]) {
@@ -48,6 +52,17 @@ export const useHybrid = () => {
       }
     },
   });
+
+  useEffect(() => {
+    if (readyState === 1) {
+      sendMessage(
+        JSON.stringify({
+          uri: 'subscribe',
+          topics: ['/navigation/scan_head'],
+        }),
+      );
+    }
+  }, [readyState]);
   return {
     sendMessage,
     latestMessage,
