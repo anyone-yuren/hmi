@@ -112,7 +112,16 @@
       "volumn": "Speaker volume"
     },
     "sliderPage": {
-      "task": "Task"
+      "about": "About",
+      "cloud": "Cloud",
+      "diagnosis": "Diagnosis",
+      "io": "IOSignal",
+      "navigation": "Navigate",
+      "offset": "Offset",
+      "safety": "Safe",
+      "setting": "Setting",
+      "task": "Task",
+      "vision": "Vision"
     },
     "io": {
       "tips": "Tip: Gray indicates not triggered, green indicates triggered",

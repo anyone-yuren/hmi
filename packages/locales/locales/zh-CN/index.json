@@ -112,7 +112,16 @@
       "volumn": "喇叭音量"
     },
     "sliderPage": {
-      "task": "任务"
+      "about": "车辆信息",
+      "cloud": "上传下载",
+      "diagnosis": "诊断",
+      "io": "I/O 信息",
+      "navigation": "导航",
+      "offset": "偏移表",
+      "safety": "安全",
+      "setting": "设置",
+      "task": "任务",
+      "vision": "视觉"
     },
     "io": {
       "tips": "提示：灰色为未触发，绿色为触发",

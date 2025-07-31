@@ -1,7 +1,6 @@
 import GlobalHeader from '@/components/Header';
 import LazyLoad from '@/components/LazyLoad';
 import PageException from '@/components/PageException';
-import { SingleTask } from '@gbeata/app-global';
 import { PdaLayout } from '@gbeata/layout-ui';
 import { lazy } from '@loadable/component';
 import { createHashRouter, Navigate } from 'react-router-dom';
@@ -59,7 +58,11 @@ const router = createHashRouter([
       },
       {
         path: 'singleTask',
-        element: <SingleTask />,
+        element: LazyLoad(lazy(() => import('@/views/SingleTask'))),
+      },
+      {
+        path: 'vision',
+        element: LazyLoad(lazy(() => import('@/views/Vision'))),
       },
       {
         path: 'setting',

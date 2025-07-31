@@ -1,0 +1,53 @@
+import { Tab, Tabs, useTheme } from '@mui/material';
+import { t } from 'i18next';
+import React, { memo } from 'react';
+import GlobalPanel from './components/GlobalPanel';
+import ModelPart from './components/modelPart/index';
+import SettingPart from './components/settingPart/index';
+
+const Vision = () => {
+  const theme = useTheme();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
+  const TabPanel = (props: any) => {
+    const { children, value, index, ...other } = props;
+    return (
+      <GlobalPanel
+        role='tabpanel'
+        className='h-full'
+        hidden={value !== index}
+        id={`full-minWidth-tabpanel-${index}`}
+        aria-labelledby={`full-minWidth-tab-${index}`}
+        {...other}
+      >
+        {value === index && <div className='h-full'>{children}</div>}
+      </GlobalPanel>
+    );
+  };
+  return (
+    <div className='flex gap-4 flex-col h-full p-[20px]'>
+      <div className='flex-1 overflow-auto'>
+        <TabPanel value={value} index={0} dir={theme.direction}>
+          <SettingPart />
+        </TabPanel>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+          <ModelPart />
+        </TabPanel>
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          {/* <CommonProblemPart /> */}
+        </TabPanel>
+      </div>
+      <Tabs variant='fullWidth' value={value} onChange={handleChange}>
+        <Tab sx={{ fontSize: 20 }} label={t('参数设置')} />
+        <Tab sx={{ fontSize: 20 }} label={t('模型库')} />
+        {/* <Tab sx={{ fontSize: 20 }} label={t("问题诊断")} {...allyProps(2)} /> */}
+      </Tabs>
+    </div>
+  );
+};
+
+export default memo(Vision);

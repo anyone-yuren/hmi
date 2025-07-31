@@ -1,0 +1,196 @@
+import { memo, useState, useEffect } from "react";
+
+import {
+  ListItemText,
+  MenuItem,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
+
+import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import TextUpdateSwitchRow from "../comp/textUpdateSwitchRow";
+import TextChangeRow from "../comp/textChangeRow";
+import LoadingButton from "../comp/loadingButton";
+import { useSetState, useRequest } from "ahooks";
+import {
+  getPlaceSpaceDetectRead as read,
+  postPlaceSpaceDetectSave as save,
+} from "../../../services/index";
+import PointCloudFilter from "../comp/pointCloudFilter";
+import TextUpdateRow from "../comp/textUpdateRow";
+import CustomSelect from "../comp/customSelect";
+import Illustration from "./illustration";
+import useVisionWebsocket from "@/components/https/visionWebSocket";
+import { getRequestUrl } from "@/components/WebSocketContainer/index";
+
+const LightTheme = (props: any) => {
+  return (
+    <ThemeProvider
+      theme={createTheme({
+        palette: {
+          mode: "light",
+          primary: {
+            main: "#00D1D1",
+          },
+        },
+        typography: {
+          fontSize: 20,
+        },
+      })}
+    >
+      {props.children}
+    </ThemeProvider>
+  );
+};
+
+const Setting = () => {
+  const { disconnect } = useVisionWebsocket({
+    url: `ws://${getRequestUrl()}:10010`,
+  });
+  const { t } = useTranslation();
+  const [originHashMap, setOriginHashMap] = useState<any>({});
+  const [updateHashMap, setUpdateHashMap] = useSetState<any>({
+    need_detect: false,
+    sensor_model: "",
+    sensor_model_list: [],
+    extra_heights: 0,
+    goods_total_width: 0,
+    goods_total_height: 0,
+    sku_gap: 0,
+  });
+
+  useRequest(read, {
+    onSuccess: (response: any) => {
+      const { data: hashMap } = response;
+      if (!hashMap || !Object.keys(hashMap)?.length) return;
+      const obj: any = {};
+      Object.keys(hashMap)?.forEach((key: any) => {
+        obj[key] = hashMap[key]?.value;
+      });
+      setUpdateHashMap(obj);
+      setOriginHashMap(hashMap); // 缓存接口的数据,提交的时候要合并
+    },
+  });
+
+  useEffect(() => {
+    return () => {
+      console.log("[视觉Websocket]:马上断开");
+      disconnect();
+    };
+  }, []);
+
+  const changeUpdateHashMap = (key: string, value: any) => {
+    setUpdateHashMap({
+      [key]: value,
+    });
+  };
+
+  const handleSave = async () => {
+    const sendState: any = {};
+    const numberAry = ["uint", "int"];
+    Object.keys(originHashMap).forEach((key) => {
+      sendState[key] =
+        updateHashMap[key] !== undefined
+          ? {
+              ...originHashMap[key],
+              value: numberAry.includes(originHashMap[key]?.type)
+                ? Number(updateHashMap[key])
+                : updateHashMap[key],
+            }
+          : originHashMap[key];
+    });
+    console.log(sendState, updateHashMap);
+    await save(sendState);
+    toast.success(t("操作成功"));
+  };
+
+  return (
+    <LightTheme>
+      <div className="text-black h-full flex gap-[10px] px-[40px]">
+        <div className="w-[350px] overflow-scroll">
+          <TextUpdateSwitchRow
+            title={t("是否启用")}
+            checked={updateHashMap["need_detect"]}
+            onChange={(checked: boolean) => {
+              changeUpdateHashMap("need_detect", checked);
+            }}
+          />
+          <TextUpdateRow>
+            <div>{t("传感器绑定")}</div>
+            <CustomSelect
+              variant="standard"
+              value={updateHashMap.sensor_model}
+              onChange={(event: any) => {
+                setUpdateHashMap({
+                  __isSubmit: true,
+                  sensor_model: event.target.value,
+                });
+              }}
+            >
+              {updateHashMap?.sensor_model_list?.map((name: any) => (
+                <MenuItem
+                  key={name}
+                  value={name}
+                  sx={{
+                    "&.Mui-selected": {
+                      backgroundColor: "#00d1d1ad", // 修改选中项的背景色
+                    },
+                    "&.Mui-selected:hover": {
+                      backgroundColor: "#00d1d1ad", // 修改选中项的背景色
+                    },
+                  }}
+                >
+                  <ListItemText primary={name} />
+                </MenuItem>
+              ))}
+            </CustomSelect>
+          </TextUpdateRow>
+          <PointCloudFilter
+            type={"place_space_detect"}
+            background={"white"}
+            titleColor={"black"}
+          ></PointCloudFilter>
+
+          {[
+            { title: t("额外提升叉臂"), key: "extra_height" },
+            { title: t("货物宽度"), key: "goods_total_width" },
+            { title: t("货物高度"), key: "goods_total_height" },
+            { title: t("货物左右间隙"), key: "sku_gap" },
+          ]?.map((item: any) => {
+            return (
+              <TextChangeRow
+                key={item?.key}
+                title={item.title}
+                value={updateHashMap?.[item.key]}
+                validateRange={[
+                  originHashMap?.[item.key]?.min,
+                  originHashMap?.[item.key]?.max,
+                ]}
+                onChange={(value: string) => {
+                  changeUpdateHashMap(item.key, value);
+                }}
+              >
+                <div>{updateHashMap?.[item.key] || 0}</div>
+              </TextChangeRow>
+            );
+          })}
+
+          <LoadingButton
+            fullWidth
+            variant="contained"
+            sx={{ color: "white", marginBottom: "80px" }}
+            onPress={handleSave}
+          >
+            {t("保存")}
+          </LoadingButton>
+        </div>
+        <div className="flex-1">
+          <Illustration />
+        </div>
+      </div>
+    </LightTheme>
+  );
+};
+
+export default memo(Setting);
