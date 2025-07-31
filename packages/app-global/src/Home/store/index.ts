@@ -1,0 +1,35 @@
+import { isEqual } from 'lodash';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
+interface State {
+  taskInfo: Record<any, any>;
+  setTaskInfo: (data: Record<any, any>) => void;
+  controlStatus: Record<any, any>;
+  setControlStatus: (data: Record<any, any>) => void;
+}
+
+export const useHomeStore = create<State>()(
+  persist(
+    (set, get) => ({
+      taskInfo: {},
+      setTaskInfo: (data) => {
+        // 使用lodash isEqual与对象比较
+        if (!isEqual(data, get().taskInfo)) {
+          set({ taskInfo: data });
+        }
+      },
+      controlStatus: {},
+      setControlStatus: (data) => {
+        // 使用lodash isEqual与对象比较
+        if (!isEqual(data, get().controlStatus)) {
+          set({ controlStatus: data });
+        }
+      },
+    }),
+    {
+      name: 'home-store',
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);

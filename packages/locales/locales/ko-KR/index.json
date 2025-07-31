@@ -20,6 +20,14 @@
     "errorMsg": {
       "title": "예외 메시지"
     },
+    "home": {
+      "actualSpeed": "실제 속도",
+      "plannedSpeed": "계획된 속도",
+      "task": "작업",
+      "taskId": "작업 번호",
+      "taskPoint": "작업 포인트",
+      "taskType": "작업 유형"
+    },
     "modify": "수정",
     "noPermission": "죄송합니다.이 페이지에 액세스 할 수있는 권한이 없습니다.",
     "notFound": "죄송합니다. 방문한 페이지는 존재하지 않습니다.",
@@ -48,7 +56,19 @@
     },
     "pleaseInputNumber": "올바른 번호를 입력하십시오",
     "serverError": "죄송합니다. 서버에서 오류가 발생했습니다.",
-    "setting": "설립"
+    "setting": "설립",
+    "success": "완성",
+    "taskState": {
+      "charging": "충전",
+      "moving": "이동하다",
+      "pickDown": "화물 드랍",
+      "pickUp": "찾다"
+    },
+    "taskStatus": {
+      "init": "초기화",
+      "running": "실행"
+    },
+    "unauthorized": "지도 데이터가 없습니다"
   },
   "deployer": {
     "safety": {

@@ -8,6 +8,9 @@ const { VITE_APP_API } = loadEnv(process.env.NODE_ENV as string, root);
 
 export default defineApplicationConfig({
   overrides: {
+    define: {
+      'import.meta.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'false'),
+    },
     optimizeDeps: {
       include: ['@iconify/react', 'lodash-es', 'echarts', 'echarts-for-react'],
     },

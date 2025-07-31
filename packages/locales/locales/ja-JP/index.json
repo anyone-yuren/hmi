@@ -20,6 +20,14 @@
     "errorMsg": {
       "title": "例外メッセージ"
     },
+    "home": {
+      "actualSpeed": "実際の速度",
+      "plannedSpeed": "計画速度",
+      "task": "タスク",
+      "taskId": "タスク番号",
+      "taskPoint": "クエストポイント",
+      "taskType": "タスクの種類"
+    },
     "modify": "修正",
     "noPermission": "申し訳ありませんが、このページにアクセスする許可はありません。",
     "notFound": "申し訳ありませんが、訪れたページは存在しません。",
@@ -49,7 +57,19 @@
     },
     "pleaseInputNumber": "正しい番号を入力してください",
     "serverError": "申し訳ありませんが、サーバーでエラーが発生しました。",
-    "setting": "並べる"
+    "setting": "並べる",
+    "success": "終える",
+    "taskState": {
+      "charging": "チャージ",
+      "moving": "動く",
+      "pickDown": "商品を発売する",
+      "pickUp": "選び出す"
+    },
+    "taskStatus": {
+      "init": "初期化する",
+      "running": "実行"
+    },
+    "unauthorized": "マップデータはありません"
   },
   "deployer": {
     "safety": {
