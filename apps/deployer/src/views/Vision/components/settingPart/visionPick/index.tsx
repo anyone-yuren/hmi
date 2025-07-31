@@ -50,7 +50,7 @@ const VisionPick = ({ signal, cancelAxios }: any) => {
     setSettingHashMap({ ...data });
     setUpdateHashMap({
       need_detect: data?.need_detect?.value,
-      sensor_model: data?.sensor_model?.value,
+      sensor_model: data?.sensor_model?.value || '',
       sensor_model_list: data?.sensor_model_list?.value,
     });
   }, [visionSetting]);

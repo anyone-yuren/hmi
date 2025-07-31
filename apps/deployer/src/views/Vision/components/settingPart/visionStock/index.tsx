@@ -58,7 +58,7 @@ const VisionStock = () => {
       need_detect_shelf: data?.need_detect_shelf?.value,
       need_detect_stack: data?.need_detect_stack?.value,
       need_detect_truck: data?.need_detect_truck?.value,
-      sensor_model: data?.sensor_model?.value,
+      sensor_model: data?.sensor_model?.value || '',
       sensor_model_list: data?.sensor_model_list?.value,
     });
   }, [visualPlace]);

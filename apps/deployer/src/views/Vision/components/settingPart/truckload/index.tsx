@@ -93,10 +93,10 @@ const TruckLoad = ({ signal, cancelAxios }: any) => {
     const data = truckLoad?.data;
     setUpdateHashMap({
       __isSubmit: false,
-      tail_vehicle_forward: data?.select_model?.tail_vehicle_forward?.value,
-      tail_unloading: data?.select_model?.tail_unloading?.value,
-      tail_loading: data?.select_model?.tail_loading?.value,
-      sensor_model_list: data?.sensor_model_list?.value,
+      tail_vehicle_forward: data?.select_model?.tail_vehicle_forward?.value || '',
+      tail_unloading: data?.select_model?.tail_unloading?.value || '',
+      tail_loading: data?.select_model?.tail_loading?.value || '',
+      sensor_model_list: data?.sensor_model_list?.value || [],
     });
   }, [truckLoad]);
 
