@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { useHybrid } from '../hooks/useHybrid';
+import { useHybrid } from '../hooks/useHome';
 const WsContainer = () => {
   const {} = useHybrid();
   // useEffect(() => {

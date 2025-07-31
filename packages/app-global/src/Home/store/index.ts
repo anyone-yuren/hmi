@@ -7,6 +7,11 @@ interface State {
   setTaskInfo: (data: Record<any, any>) => void;
   controlStatus: Record<any, any>;
   setControlStatus: (data: Record<any, any>) => void;
+  robotCurrentStatus: Record<any, any>;
+  setRobotCurrentStatus: (data: Record<any, any>) => void;
+  // 输入光电信号
+  robotIsensorStatus: Record<any, any>;
+  setRobotIsensorStatus: (data: Record<any, any>) => void;
 }
 
 export const useHomeStore = create<State>()(
@@ -24,6 +29,20 @@ export const useHomeStore = create<State>()(
         // 使用lodash isEqual与对象比较
         if (!isEqual(data, get().controlStatus)) {
           set({ controlStatus: data });
+        }
+      },
+      robotCurrentStatus: {},
+      setRobotCurrentStatus: (data) => {
+        // 使用lodash isEqual与对象比较
+        if (!isEqual(data, get().robotCurrentStatus)) {
+          set({ robotCurrentStatus: data });
+        }
+      },
+      robotIsensorStatus: {},
+      setRobotIsensorStatus: (data) => {
+        // 使用lodash isEqual与对象比较
+        if (!isEqual(data, get().robotIsensorStatus)) {
+          set({ robotIsensorStatus: data });
         }
       },
     }),
