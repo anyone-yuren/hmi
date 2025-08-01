@@ -2,13 +2,21 @@ import { useGlobalStore } from '@gbeata/store';
 import { Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
+import { useHomeStore } from '../../store';
 
 const VehicleFork = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const { showAnimate } = useGlobalStore(
     useShallow((state) => ({
       showAnimate: state.showAnimate,
+    })),
+  );
+  const { robotForkarmStatus } = useHomeStore(
+    useShallow((state) => ({
+      robotForkarmStatus: state.robotForkarmStatus,
     })),
   );
   return (
@@ -18,7 +26,7 @@ const VehicleFork = () => {
       transition={{ type: 'spring', stiffness: 200, damping: 15 }}
     >
       {/* 动态发光圈 */}
-      {showAnimate ? (
+      {true ? (
         <motion.div
           className='absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-teal-500 via-purple-500 to-blue-500 opacity-10 blur-3xl'
           animate={{
@@ -33,8 +41,8 @@ const VehicleFork = () => {
 
       {/* 内容 */}
       <div className='relative z-10 h-full text-white flex flex-col'>
-        <h2 className='text-lg font-bold mb-1'>货叉位置</h2>
-        {showAnimate ? (
+        <h2 className='text-lg font-bold mb-1'>{t('common.home.vehicleFork')}</h2>
+        {true ? (
           <motion.div
             initial={{ width: '40px', opacity: 0.2 }}
             animate={{
@@ -50,8 +58,8 @@ const VehicleFork = () => {
         ) : null}
         <div className='flex-1 grid grid-cols-3'>
           <div className='flex-1 flex flex-col justify-center items-center'>
-            <Typography.Title level={2}>1</Typography.Title>
-            <Typography.Text className='opacity-50'>左右</Typography.Text>
+            <Typography.Title level={2}>{robotForkarmStatus.y > -1 ? robotForkarmStatus.y : '-'}</Typography.Title>
+            <Typography.Text className='opacity-50'>{t('common.home.vehicleForkx')}</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
             <Typography.Title
@@ -62,13 +70,13 @@ const VehicleFork = () => {
               }
               level={2}
             >
-              2
+              {robotForkarmStatus.x > -1 ? robotForkarmStatus.x : '-'}
             </Typography.Title>
-            <Typography.Text className='opacity-50'>前后</Typography.Text>
+            <Typography.Text className='opacity-50'>{t('common.home.vehicleForky')}</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
-            <Typography.Title level={2}>0</Typography.Title>
-            <Typography.Text className='opacity-50'>上下</Typography.Text>
+            <Typography.Title level={2}>{robotForkarmStatus.z > -1 ? robotForkarmStatus.z : '-'}</Typography.Title>
+            <Typography.Text className='opacity-50'>{t('common.home.vehicleForkz')}</Typography.Text>
           </div>
         </div>
       </div>

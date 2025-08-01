@@ -16,6 +16,10 @@ interface State {
   // 车辆货物
   robotGoodsStatus: Record<any, any>;
   setRobotGoodsStatus: (data: Record<any, any>) => void;
+
+  // 货叉位置
+  robotForkarmStatus: Record<any, any>;
+  setRobotForkarmStatus: (data: Record<any, any>) => void;
 }
 
 export const useHomeStore = create<State>()(
@@ -54,6 +58,13 @@ export const useHomeStore = create<State>()(
         // 使用lodash isEqual与对象比较
         if (!isEqual(data, get().robotGoodsStatus)) {
           set({ robotGoodsStatus: data });
+        }
+      },
+      robotForkarmStatus: {},
+      setRobotForkarmStatus: (data) => {
+        // 使用lodash isEqual与对象比较
+        if (!isEqual(data, get().robotForkarmStatus)) {
+          set({ robotForkarmStatus: data });
         }
       },
     }),

@@ -26,7 +26,11 @@
       "task": "タスク",
       "taskId": "タスク番号",
       "taskPoint": "クエストポイント",
-      "taskType": "タスクの種類"
+      "taskType": "タスクの種類",
+      "vehicleFork": "フォークポジション",
+      "vehicleForkx": "頃",
+      "vehicleForky": "ビフォーアフター",
+      "vehicleForkz": "アップとダウン"
     },
     "modify": "修正",
     "noPermission": "申し訳ありませんが、このページにアクセスする許可はありません。",

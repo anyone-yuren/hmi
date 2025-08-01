@@ -9,7 +9,11 @@
       "task": "Tâche",
       "taskId": "Numéro de tâche",
       "taskPoint": "Point de tâche",
-      "taskType": "Type de tâche"
+      "taskType": "Type de tâche",
+      "vehicleFork": "Position de la fourche",
+      "vehicleForkx": "Gauche et droite",
+      "vehicleForky": "Avant et arrière",
+      "vehicleForkz": "Haut et bas"
     },
     "obsError": {
       "tip0": "Contrôleur de sécurité non démarré",

@@ -26,7 +26,11 @@
       "task": "작업",
       "taskId": "작업 번호",
       "taskPoint": "작업 포인트",
-      "taskType": "작업 유형"
+      "taskType": "작업 유형",
+      "vehicleFork": "포크 위치",
+      "vehicleForkx": "좌우",
+      "vehicleForky": "앞뒤",
+      "vehicleForkz": "위아래"
     },
     "modify": "수정",
     "noPermission": "죄송합니다.이 페이지에 액세스 할 수있는 권한이 없습니다.",

@@ -26,7 +26,11 @@
       "task": "Task",
       "taskId": "Task no.",
       "taskPoint": "Task point",
-      "taskType": "Task type"
+      "taskType": "Task type",
+      "vehicleFork": "Fork arm position",
+      "vehicleForkx": "Left and right",
+      "vehicleForky": "Front and back",
+      "vehicleForkz": "Up and down"
     },
     "modify": "Modify",
     "noPermission": "Sorry, you do not have permission to access this page.",

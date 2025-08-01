@@ -26,7 +26,11 @@
       "task": "任务",
       "taskId": "任务号",
       "taskPoint": "任务点",
-      "taskType": "任务类型"
+      "taskType": "任务类型",
+      "vehicleFork": "货叉位置",
+      "vehicleForkx": "左右",
+      "vehicleForky": "前后",
+      "vehicleForkz": "上下"
     },
     "modify": "修改",
     "noPermission": "对不起，您没有权限访问此页面。",
