@@ -7,6 +7,7 @@ import { useHttpCode } from '../../hooks/useHttpCode';
 import { useStageEvents } from '../../hooks/useStage';
 import { initalPose } from '../../service';
 import { useHybirdStore } from '../../store/hybird.store';
+import NewAgv from '../newAgv';
 const ChangePose = (props: { floor: number }) => {
   const { useErrorMessage } = useHttpCode();
   const { startTouch, vehiclePosition, beginPose, showAgv } = useHybirdStore(
@@ -41,7 +42,19 @@ const ChangePose = (props: { floor: number }) => {
   }, [showAgv, beginPose, vehiclePosition]);
   return (
     <Group name='pose-agv'>
-      {imageObj && beginPose && showAgv && (
+      {true && beginPose && showAgv && (
+        <NewAgv
+          stroke={'red'}
+          x={startTouch?.x}
+          y={startTouch?.y}
+          offsetX={10}
+          offsetY={10}
+          scaleX={1}
+          scaleY={1}
+          rotation={vehiclePosition.rotation}
+        />
+      )}
+      {false && imageObj && beginPose && showAgv && (
         <>
           <KonvaImage
             name='agv'

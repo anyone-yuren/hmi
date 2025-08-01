@@ -59,7 +59,7 @@ const GlobalHeader = () => {
         </div>
         <div
           onClick={() => {
-            navigate('/task');
+            navigate('/singleTask');
           }}
           className={'justify-center flex  flex-col items-center '}
         >

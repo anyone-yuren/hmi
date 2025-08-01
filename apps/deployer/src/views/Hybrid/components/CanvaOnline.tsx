@@ -8,6 +8,11 @@ import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { relocatePoint } from '../service';
 import { useHybirdStore } from '../store/hybird.store';
+import NewAgv from './newAgv';
+
+const translateAngel = (angel: number) => {
+  return 180 - (angel || 0) * (180 / Math.PI);
+};
 const DeviceList = () => {
   const { t } = useTranslation();
   const { onlineData } = useHybirdStore(
@@ -54,15 +59,28 @@ const DeviceList = () => {
         {onlineData?.point_list?.map((item) => {
           return (
             <>
-              <Circle
-                radius={4}
-                fill='#FF0000'
-                key={item.point_id}
-                id={item.point_id}
-                name='onlinePoint'
-                x={meterToPixel(item.pose_x)}
-                y={0 - meterToPixel(item.pose_y)}
-              ></Circle>
+              {false && (
+                <Circle
+                  radius={4}
+                  fill='#FF0000'
+                  key={item.point_id}
+                  id={item.point_id}
+                  name='onlinePoint'
+                  x={meterToPixel(item.pose_x)}
+                  y={0 - meterToPixel(item.pose_y)}
+                ></Circle>
+              )}
+              {true && (
+                <NewAgv
+                  key={item.point_id}
+                  id={item.point_id}
+                  radius={8}
+                  stroke={'black'}
+                  x={meterToPixel(item.pose_x)}
+                  y={0 - meterToPixel(item.pose_y)}
+                  rotation={translateAngel(item.pose_theta) + 270}
+                ></NewAgv>
+              )}
               <Text
                 x={meterToPixel(item.pose_x)}
                 y={0 - meterToPixel(item.pose_y)}

@@ -390,7 +390,7 @@ const SingleTask = () => {
               onClick={() => {
                 const { x, y } = stageRef?.current?.getVehiclePosition();
                 if (x != null && y != null) {
-                  stageRef?.current && stageRef?.current?.setStageScale(0.08);
+                  stageRef?.current && stageRef?.current?.setStageScale(1);
                   setMoveToTarget({ x: x / 50, y: -y / 50 } as any);
                 } else {
                   toast.error(t('没有数据'));
@@ -447,7 +447,7 @@ const SingleTask = () => {
                 lines,
                 lineVisible: true,
               }}
-              stageStyle={{ background: 'white' }}
+              // stageStyle={{ background: 'white' }}
               points={{
                 points: pointsDict?.points,
               }}

@@ -10,7 +10,7 @@ export const COMMON_POINT_COLOR = '#12d1d1';
 // export const COMMON_POINT_COLOR = '#12d1d1';
 // 普通点位对应的文字
 export const COMMON_POINT_TEXT_VISIBLE = true;
-export const COMMON_POINT_TEXT_COLOR = 'black';
+export const COMMON_POINT_TEXT_COLOR = 'white';
 
 // 库位点
 // fill='rgba(47.5, 48, 62.5, 0.8)'

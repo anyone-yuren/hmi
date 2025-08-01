@@ -32,21 +32,25 @@ export const useStageEvents = () => {
   const handleTouchStart = (e: Konva.KonvaEventObject<TouchEvent>) => {
     setShowAgv(true);
     // const touch = e.evt.touches[0];
-    const stage = e.target.getStage();
+    const stage: any = e.target.getStage();
     const pointer = stage?.getPointerPosition();
     const coordName = stage?.findOne('.coordinateSystem');
     const { x, y } = coordName?.getClientRect()!;
 
     const scalex = stage?.scaleX();
 
+    const scaleX = stage.scaleX();
+    const scaleY = stage.scaleY();
+
+    const stageX = stage.x();
+    const stageY = stage.y();
+
     const pos = {
-      x: (pointer!.x - x) / scalex!,
-      // 因为指针的长设置的100
-      y: (pointer!.y - y - 100) / scalex!,
+      x: (pointer.x - stageX) / scaleX,
+      y: (pointer.y - stageY) / scaleY,
     };
 
     startTouch.current = pos;
-
     setStartTouch(pos);
   };
 

@@ -1,6 +1,6 @@
 import { useWebSocket } from 'ahooks';
 import YAML from 'js-yaml';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // 动态获取当前 host
 const currentHost = window.location.hostname;
 // 使用相对路径，Vite 会自动处理代理
@@ -58,7 +58,8 @@ const createOnMessageHandler = (keys, YAML, onChange) => {
   };
 };
 
-export const useIo = ({ keys }) => {
+const keys = ['/sirius/topics/robot_status_isensor', '/sirius/topics/robot_status_osensor'];
+export const useIo = () => {
   const [input, setInput] = useState({});
   const [output, setOutput] = useState({});
 
@@ -80,6 +81,16 @@ export const useIo = ({ keys }) => {
     reconnectInterval: 5000,
     onMessage,
   });
+  useEffect(() => {
+    if (readyState === 1) {
+      sendMessage(
+        JSON.stringify({
+          uri: 'subscribe',
+          topics: keys,
+        }),
+      );
+    }
+  }, [readyState]);
   const ioWssResponse = React.useMemo(() => ({ io_input_config: input, io_output_config: output }), [input, output]);
   return { ioWssResponse, disconnect };
 };
