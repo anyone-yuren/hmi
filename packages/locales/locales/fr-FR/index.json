@@ -3,6 +3,14 @@
     "errorMsg": {
       "title": "Message d'exception"
     },
+    "home": {
+      "actualSpeed": "Vitesse réelle",
+      "plannedSpeed": "Vitesse planifiée",
+      "task": "Tâche",
+      "taskId": "Numéro de tâche",
+      "taskPoint": "Point de tâche",
+      "taskType": "Type de tâche"
+    },
     "obsError": {
       "tip0": "Contrôleur de sécurité non démarré",
       "tip1": "Évitement non déclenché",
@@ -26,7 +34,19 @@
       "tip9": "Déclenchement d'une erreur système",
       "title": "Nouvelles d'évitement des obstacles",
       "view": "Vérifier"
-    }
+    },
+    "success": "Terminé",
+    "taskState": {
+      "charging": "Recharge",
+      "moving": "se déplacer",
+      "pickDown": "Déposer la marchandise",
+      "pickUp": "Ramasser"
+    },
+    "taskStatus": {
+      "init": "Initialisation",
+      "running": "En cours d'exécution"
+    },
+    "unauthorized": "Pas de données de carte"
   },
   "deployer": {
     "safety": {

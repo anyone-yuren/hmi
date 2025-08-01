@@ -76,7 +76,8 @@
     "typescript": "^5.2.2",
     "unbuild": "^3.5.0",
     "vite-plugin-progress": "^0.0.7",
-    "vite-plugin-static-copy": "^3.0.0"
+    "vite-plugin-static-copy": "^3.0.0",
+    "@types/three": "catalog:"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
@@ -113,6 +114,8 @@
     "react-hook-form": "^7.51.4",
     "react-hook-form-mui": "^7.0.0",
     "sonner": "catalog:",
-    "use-image": "catalog:"
+    "use-image": "catalog:",
+    "three": "catalog:",
+    "@react-three/fiber": "catalog:"
   }
 }

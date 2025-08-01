@@ -58,7 +58,13 @@ export const useHybrid = () => {
       sendMessage(
         JSON.stringify({
           uri: 'subscribe',
-          topics: ['/navigation/scan_head'],
+          topics: [
+            '/navigation/scan_head',
+            '/navigation/robot_status_localizer_result',
+            '/navigation/type',
+            '/navigation/robot_current_status',
+            '/navigation/slam_extending_map',
+          ],
         }),
       );
     }

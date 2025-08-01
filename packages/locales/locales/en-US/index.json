@@ -20,6 +20,14 @@
     "errorMsg": {
       "title": " Abnormal message"
     },
+    "home": {
+      "actualSpeed": "V_actual",
+      "plannedSpeed": "V_plan",
+      "task": "Task",
+      "taskId": "Task no.",
+      "taskPoint": "Task point",
+      "taskType": "Task type"
+    },
     "modify": "Modify",
     "noPermission": "Sorry, you do not have permission to access this page.",
     "notFound": "Sorry, the page you visited does not exist.",
@@ -49,7 +57,20 @@
     },
     "pleaseInputNumber": "Please enter the correct number",
     "serverError": "Sorry, an error occurred on the server.",
-    "setting": "Setting"
+    "setting": "Setting",
+    "success": "Accomplish",
+    "taskState": {
+      "charging": "Charge",
+      "moving": "Move",
+      "pickDown": "Place",
+      "pickUp": "Pick up"
+    },
+    "taskStatus": {
+      "init": "Initialize",
+      "running": "Under execution",
+      "success": "Succe"
+    },
+    "unauthorized": "No map data"
   },
   "deployer": {
     "safety": {

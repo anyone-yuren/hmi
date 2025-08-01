@@ -20,6 +20,14 @@
     "errorMsg": {
       "title": "异常消息"
     },
+    "home": {
+      "actualSpeed": "实际速度",
+      "plannedSpeed": "规划速度",
+      "task": "任务",
+      "taskId": "任务号",
+      "taskPoint": "任务点",
+      "taskType": "任务类型"
+    },
     "modify": "修改",
     "noPermission": "对不起，您没有权限访问此页面。",
     "notFound": "对不起，您访问的页面不存在。",
@@ -49,7 +57,20 @@
     },
     "pleaseInputNumber": "请输入正确的数字",
     "serverError": "对不起，服务器发生错误。",
-    "setting": "设置"
+    "setting": "设置",
+    "success": "完成",
+    "taskState": {
+      "charging": "充电",
+      "moving": "移动",
+      "pickDown": "放货",
+      "pickUp": "取货"
+    },
+    "taskStatus": {
+      "init": "初始化",
+      "running": "执行中",
+      "success": "完成"
+    },
+    "unauthorized": "无地图数据"
   },
   "deployer": {
     "safety": {
