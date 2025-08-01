@@ -1,5 +1,11 @@
 {
   "common": {
+    "about": {
+      "date": "Date de production",
+      "logs": "Journal système",
+      "serial": "Numéro de série",
+      "vehicleType": "Modèle de voiture"
+    },
     "errorMsg": {
       "title": "Message d'exception"
     },

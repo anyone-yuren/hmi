@@ -1,5 +1,11 @@
 {
   "common": {
+    "about": {
+      "date": "出产日期",
+      "logs": "系统日志",
+      "serial": "序列号",
+      "vehicleType": "车型"
+    },
     "backToHome": "返回主页",
     "charging": {
       "Voltage": "电压/电流",
@@ -86,6 +92,23 @@
     "unauthorized": "无地图数据"
   },
   "deployer": {
+    "io": {
+      "about": "车辆信息",
+      "cloud": "上传下载",
+      "diagnosis": "诊断",
+      "input": "输入",
+      "io": "I/O 信息",
+      "navigation": "导航",
+      "offset": "偏移表",
+      "output": "输出",
+      "port": "端口号",
+      "safety": "安全",
+      "setting": "设置",
+      "status": "状态",
+      "task": "任务",
+      "tips": "提示：灰色为未触发，绿色为触发",
+      "vision": "视觉"
+    },
     "safety": {
       "backDistance": "后退距离",
       "currentScheme": "当前避障方案",
@@ -146,23 +169,6 @@
       "volumn": "喇叭音量"
     },
     "sliderPage": {
-      "about": "车辆信息",
-      "cloud": "上传下载",
-      "diagnosis": "诊断",
-      "io": "I/O 信息",
-      "navigation": "导航",
-      "offset": "偏移表",
-      "safety": "安全",
-      "setting": "设置",
-      "task": "任务",
-      "vision": "视觉"
-    },
-    "io": {
-      "tips": "提示：灰色为未触发，绿色为触发",
-      "status": "状态",
-      "input": "输入",
-      "port": "端口号",
-      "output": "输出",
       "about": "车辆信息",
       "cloud": "上传下载",
       "diagnosis": "诊断",

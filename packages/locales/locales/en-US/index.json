@@ -1,5 +1,11 @@
 {
   "common": {
+    "about": {
+      "date": "Date of production",
+      "logs": "System log",
+      "serial": "Serial number",
+      "vehicleType": "Vehicle model"
+    },
     "backToHome": "Back home",
     "charging": {
       "Voltage": "Voltage/Current",
@@ -86,6 +92,23 @@
     "unauthorized": "No map data"
   },
   "deployer": {
+    "io": {
+      "about": "About",
+      "cloud": "Cloud",
+      "diagnosis": "Diagnosis",
+      "input": "Input",
+      "io": "IOSignal",
+      "navigation": "Navigate",
+      "offset": "Offset",
+      "output": "Output",
+      "port": "Port",
+      "safety": "Safe",
+      "setting": "Setting",
+      "status": "Status",
+      "task": "Task",
+      "tips": "Tip: Gray indicates not triggered, green indicates triggered",
+      "vision": "Vision"
+    },
     "safety": {
       "backDistance": "Retreat distance",
       "currentScheme": "Current obstacle avoidance scheme",
@@ -146,23 +169,6 @@
       "volumn": "Speaker volume"
     },
     "sliderPage": {
-      "about": "About",
-      "cloud": "Cloud",
-      "diagnosis": "Diagnosis",
-      "io": "IOSignal",
-      "navigation": "Navigate",
-      "offset": "Offset",
-      "safety": "Safe",
-      "setting": "Setting",
-      "task": "Task",
-      "vision": "Vision"
-    },
-    "io": {
-      "tips": "Tip: Gray indicates not triggered, green indicates triggered",
-      "status": "Status",
-      "input": "Input",
-      "port": "Port",
-      "output": "Output",
       "about": "About",
       "cloud": "Cloud",
       "diagnosis": "Diagnosis",

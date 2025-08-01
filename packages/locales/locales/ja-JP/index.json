@@ -1,5 +1,11 @@
 {
   "common": {
+    "about": {
+      "date": "生産日",
+      "logs": "システムログ",
+      "serial": "シリアルナンバー",
+      "vehicleType": "車モデル"
+    },
     "backToHome": "ホームページに戻ります",
     "charging": {
       "Voltage": "電圧/電流",
