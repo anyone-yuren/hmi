@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -8,6 +9,10 @@ interface State {
   setRcsInfo: (info: any) => void;
   refreshTaskList: number;
   setRefreshTaskList: (num: number) => void;
+  cloudPoints: any;
+  setCloudPoints: (cloudPoints: any) => void;
+  robotCurrentStatus: any;
+  setRobotCurrentStatus: (robotCurrentStatus: any) => void;
 }
 
 const storageOptions = {
@@ -23,7 +28,9 @@ const localAndMapStore = (
 ) => ({
   agvPosition: {},
   setAgvPosition: (position: any) => {
-    set({ agvPosition: position });
+    if (!isEqual(position, get().agvPosition)) {
+      set({ agvPosition: position });
+    }
   },
 
   refreshTaskList: 0,
@@ -33,7 +40,22 @@ const localAndMapStore = (
 
   rcsInfo: {},
   setRcsInfo: (info: any) => {
-    set({ rcsInfo: info });
+    if (!isEqual(info, get().rcsInfo)) {
+      set({ rcsInfo: info });
+    }
+  },
+
+  cloudPoints: {},
+  setCloudPoints: (cloudPoints: any) => {
+    if (!isEqual(cloudPoints, get().cloudPoints)) {
+      set({ cloudPoints: cloudPoints });
+    }
+  },
+  robotCurrentStatus: {},
+  setRobotCurrentStatus: (robotCurrentStatus) => {
+    if (!isEqual(robotCurrentStatus, get().robotCurrentStatus)) {
+      set({ robotCurrentStatus });
+    }
   },
 });
 

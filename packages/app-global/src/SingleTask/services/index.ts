@@ -18,3 +18,12 @@ export const chargePolicy = (data) => post('/mwrobot/single_task/set_charge_poli
 export const getChargePolicy = () => get('/mwrobot/single_task/get_charge_policy', {}, '10009');
 
 export const config_agv_info = () => get('/robot_config/base_param/config_agv_info', {}, '10009');
+
+export const getFloorData = (floor) =>
+  post(
+    '/navigation/request_target_floor_map',
+    {
+      floor_number: floor,
+    },
+    '10001',
+  );

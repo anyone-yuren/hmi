@@ -1,110 +1,117 @@
 import { useWebSocket } from 'ahooks';
-import YAML from 'js-yaml';
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+import { useSingleTaskStore } from '../store/singleTask.store';
+
 // 动态获取当前 host
 const currentHost = window.location.hostname;
 // 使用相对路径，Vite 会自动处理代理
-const HYBRID_URL = import.meta.env.DEV
-  ? '/ws10009' // 开发环境使用代理
-  : `ws://${currentHost}:10009`; // 生产环境使用真实地址
+const VEHICLE_URL =
+  import.meta.env.NODE_ENV == 'development'
+    ? '/ws10009' // 开发环境使用代理
+    : `ws://${currentHost}:10009`; // 生产环境使用真实地址
+// 使用10001端口的websocket 连接
+const HYBRID_URL =
+  import.meta.env.NODE_ENV == 'development'
+    ? '/ws10001' // 开发环境使用代理
+    : `ws://${currentHost}:10001`; // 生产环境使用真实地址
 
-const createOnMessageHandler = ({
-  keys = [],
-  yaml = YAML,
-  onChange = () => {},
-  whiteList = [],
-  updateInterval = 200,
-}: any = {}) => {
-  const lastDataByKeys = {};
-
-  return (messageEvent) => {
-    const { data } = messageEvent;
-
-    keys.forEach((key) => {
-      if (data.includes(key)) {
-        const lastEntry = lastDataByKeys[key];
-        let currentYAMLData;
-        try {
-          currentYAMLData = yaml.load(data);
-        } catch (e) {
-          console.error(`YAML 解析失败 for key=${key}:`, data, e);
-          return;
-        }
-
-        const now = Date.now();
-
-        // 白名单 key 直接更新，不进行比较
-        if (whiteList.includes(key)) {
-          onChange?.(key, currentYAMLData, lastEntry?.parsed || null);
-          return;
-        }
-
-        // 首次匹配
-        if (!lastEntry) {
-          console.log(`首次匹配 key=${key}`, currentYAMLData);
-          lastDataByKeys[key] = {
-            raw: data,
-            parsed: currentYAMLData,
-            timestamp: now,
-          };
-          onChange?.(key, currentYAMLData, null);
-        } else if (data !== lastEntry.raw) {
-          const timeDiff = now - lastEntry.timestamp;
-
-          if (timeDiff < updateInterval) {
-            console.log(`key=${key} 更新间隔小于 ${updateInterval}ms，忽略更新`);
-            return;
-          }
-
-          console.log(`key=${key} 数据发生了变化`);
-          console.log('旧数据:', lastEntry.parsed);
-          console.log('新数据:', currentYAMLData);
-
-          // 更新数据和时间戳
-          lastDataByKeys[key] = {
-            raw: data,
-            parsed: currentYAMLData,
-            timestamp: now,
-          };
-
-          onChange?.(key, currentYAMLData, lastEntry.parsed);
-        } else {
-          // 数据未变化，不触发更新
-          // console.log(`key=${key} 数据没有变化`);
-        }
-      }
-    });
-  };
-};
-
-export const useIo = ({ keys }) => {
-  const fnHashMap = {
-    '/sirius/topics/rcs_info': (data) => {
-      // 判断车在不在线上
-    },
-    '/sirius/topics/test_task_info': (data) => {
-      // 刷新详情
-    },
-  };
-  const messageChange = (key, newData, oldData) => {
-    fnHashMap[key](newData);
-  };
-  const onMessage = React.useCallback(
-    createOnMessageHandler({
-      keys,
-      yaml: YAML,
-      onChange: messageChange,
-      whiteList: ['/sirius/topics/test_task_info'],
-      updateInterval: 200,
+export const useSingleTask = () => {
+  const [count, setCount] = useState(1);
+  const { setAgvPosition, setRcsInfo, setRefreshTaskList, setCloudPoints, setRobotCurrentStatus } = useSingleTaskStore(
+    useShallow((state) => {
+      return {
+        setAgvPosition: state.setAgvPosition,
+        setRcsInfo: state.setRcsInfo,
+        setRefreshTaskList: state.setRefreshTaskList,
+        setCloudPoints: state.setCloudPoints,
+        setRobotCurrentStatus: state.setRobotCurrentStatus,
+      };
     }),
-    [keys],
   );
-
-  const { sendMessage, latestMessage, readyState, disconnect } = useWebSocket(HYBRID_URL, {
+  const { sendMessage, latestMessage, readyState } = useWebSocket(VEHICLE_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
-    onMessage,
+    onMessage: (message) => {
+      if (message.data.includes('subscribe') || !message.data) {
+        return;
+      }
+      const data = JSON.parse(message.data);
+      if (data.uri == '/sirius/topics/test_task_info') {
+        setCount((origin) => {
+          return origin + 1;
+        });
+      }
+      if (data.uri == '/sirius/topics/rcs_info') {
+        const { timestamp, ...rest } = data;
+        setRcsInfo(rest);
+      }
+    },
   });
-  const singleTaskWssResponse = React.useMemo(() => ({}), []);
-  return { wssResponse: singleTaskWssResponse, disconnect };
+  const {
+    sendMessage: sendMessage10001,
+    latestMessage: latestMessage10001,
+    readyState: readyState10001,
+  } = useWebSocket(HYBRID_URL, {
+    reconnectLimit: 10,
+    reconnectInterval: 5000,
+    onMessage: (message) => {
+      if (message.data.includes('subscribe')) {
+        return;
+      }
+
+      const data = JSON.parse(message.data);
+      if (data.uri == '/navigation/robot_current_status') {
+        const { timestamp, ...rest } = data;
+        setRobotCurrentStatus(rest);
+      }
+      if (data.uri == '/navigation/scan_head') {
+        const { timestamp, ...rest } = data;
+        setCloudPoints(rest);
+      }
+      if (data.uri == '/navigation/robot_status_localizer_result') {
+        setAgvPosition({
+          angel: data.pose.theta,
+          x: data.pose.x,
+          y: data.pose.y,
+        });
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (readyState10001 === 1) {
+      sendMessage10001(
+        JSON.stringify({
+          uri: 'subscribe',
+          topics: [
+            '/navigation/robot_current_status',
+            '/navigation/scan_head',
+            '/navigation/robot_status_localizer_result',
+          ],
+        }),
+      );
+    }
+  }, [readyState10001]);
+
+  useEffect(() => {
+    if (readyState === 1) {
+      sendMessage(
+        JSON.stringify({
+          uri: 'subscribe',
+          topics: ['/sirius/topics/test_task_info', '/sirius/topics/rcs_info'],
+        }),
+      );
+    }
+  }, [readyState]);
+
+  useEffect(() => {
+    setRefreshTaskList(count);
+  }, [count]);
+
+  return {
+    sendMessage,
+    latestMessage,
+    readyState,
+  };
 };

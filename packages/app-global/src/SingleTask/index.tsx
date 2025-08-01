@@ -1,4 +1,3 @@
-import { InitStage } from '@gbeata/mapping';
 import { FileUpload } from '@mui/icons-material';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import {
@@ -17,7 +16,16 @@ import {
 } from '@mui/material';
 import { useSize } from 'ahooks';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { cancelTask, getPointList, getTaskMode, setTaskMode, uploadRcsMap } from './services';
+import {
+  cancelTask,
+  getFloorData,
+  getLineList,
+  getPointList,
+  getTaskMode,
+  setTaskMode,
+  uploadRcsMap,
+} from './services';
+import { InitStage } from './stage/index';
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
@@ -43,6 +51,7 @@ import MouseEvent from './components/MouseEvent';
 import SecondaryPage from './components/SecondaryPage';
 import TaskPanel from './components/TaskPanel';
 import TaskSetting from './components/TaskSetting';
+import WsContainer from './components/wsContainer';
 import './index.css';
 import { IMode, IPoint, ISubTaskItem, ITaskItem, IVehicle } from './index.d';
 import { useSingleTaskStore } from './store/singleTask.store';
@@ -81,13 +90,17 @@ const SingleTask = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const { data: pointsData, run: getPoints }: Record<string, any> = useRequest(getPointList, {
-    manual: true,
-  });
-  useEffect(() => {
-    getPoints();
-  }, []);
+  const { data: pointsData }: Record<string, any> = useRequest(getPointList, {});
+  const { data: linesList } = useRequest(() => getLineList(), {});
+
   const { data: taskMode, runAsync: getMapTaskMode }: Record<string, any> = useRequest(getTaskMode, {});
+
+  const { data: floorMapData, runAsync: getFloorMapData } = useRequest(
+    (floor) => {
+      return getFloorData(floor);
+    },
+    { manual: true },
+  );
 
   const ref = useRef<HTMLDivElement>(null);
   const taskPanelRef = useRef<any>(null);
@@ -100,15 +113,9 @@ const SingleTask = () => {
     return false;
   }, []);
 
-  // const { isMultiwayAgv } = useGlobaltore(
-  //   useShallow((store) => ({
-  //     isMultiwayAgv: store.isMultiwayAgv,
-  //   }))
-  // );
-
-  const { agvPosition } = useSingleTaskStore(
+  const { robotCurrentStatus } = useSingleTaskStore(
     useShallow((state) => ({
-      agvPosition: state.agvPosition,
+      robotCurrentStatus: state.robotCurrentStatus,
     })),
   );
   const modeHashMap: {
@@ -150,24 +157,55 @@ const SingleTask = () => {
       point.types.length &&
         (point.type = point.types[0] === 0 && point.types.length > 1 ? point.types[1] : point.types[0]);
       hashMap[point.id] = point;
-      points.push({ ...point, state: 0 });
+      points.push({
+        ...point,
+        x: (point.x / 1000) * 20,
+        y: (point.y / 1000) * 20,
+        state: 0,
+      });
+      // points.push({ ...point, state: 0 });
       point.type === 6 && charges.push(point);
       (point.type === 1 || point.type === 4) && locations.push(point);
     }
     return { hashMap, points, charges, locations };
   }, [pointsData]);
 
+  const lines = useMemo(() => {
+    const ary: any = [];
+    for (let index = 0; index < linesList?.data?.length; index++) {
+      const { id, end_point, start_point, control_points } = linesList?.data?.[index];
+      ary.push({
+        id,
+        type: 1,
+        start: start_point?.id,
+        end: end_point?.id,
+        length: 1,
+        controlPoint: control_points?.map((point: any, index: number) => {
+          return { x: point.x / 50, y: point.y / 50 };
+        }),
+        directionType: 1,
+      });
+    }
+    return ary;
+  }, [linesList]);
+
   useEffect(() => {
-    Object.keys(agvPosition).length &&
-      setVehicles([
-        {
-          x: agvPosition.x,
-          y: -agvPosition.y,
-          id: 'dream_car',
-          angle: translateAngel(agvPosition.angel),
-        },
-      ]);
-  }, [agvPosition]);
+    if (robotCurrentStatus?.floor_number) {
+      getFloorMapData(robotCurrentStatus?.floor_number);
+    }
+  }, [robotCurrentStatus]);
+
+  // useEffect(() => {
+  //   Object.keys(agvPosition).length &&
+  //     setVehicles([
+  //       {
+  //         x: agvPosition.x,
+  //         y: -agvPosition.y,
+  //         id: 'dream_car',
+  //         angle: translateAngel(agvPosition.angel),
+  //       },
+  //     ]);
+  // }, [agvPosition]);
 
   const handleMouse = (type: ISubTaskItem['task_type'], id: IPoint['id']) => {
     !taskVisible && setTaskVisible(true);
@@ -350,10 +388,10 @@ const SingleTask = () => {
 
             <IconStyleButton
               onClick={() => {
-                const { x, y } = agvPosition;
+                const { x, y } = stageRef?.current?.getVehiclePosition();
                 if (x != null && y != null) {
                   stageRef?.current && stageRef?.current?.setStageScale(0.08);
-                  setMoveToTarget({ x, y: -y } as any);
+                  setMoveToTarget({ x: x / 50, y: -y / 50 } as any);
                 } else {
                   toast.error(t('没有数据'));
                 }
@@ -405,11 +443,17 @@ const SingleTask = () => {
               boundary={{
                 boundaryVisible: false,
               }}
+              lines={{
+                lines,
+                lineVisible: true,
+              }}
+              stageStyle={{ background: 'white' }}
               points={{
                 points: pointsDict?.points,
               }}
               size={size}
-              vehicles={vehicles}
+              floorMapData={floorMapData?.grid_map}
+              // vehicles={vehicles}
               pointsValue={activePoints}
               onPointsSelect={(points: IPoint['id'][]) => {
                 const point = points[points.length - 1];
@@ -537,6 +581,7 @@ const SingleTask = () => {
           <TaskSetting></TaskSetting>
         </SecondaryPage>
       </MapContainer>
+      <WsContainer></WsContainer>
     </>
   );
 };

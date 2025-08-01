@@ -33,11 +33,11 @@ const TaskAction = forwardRef((props: any, ref) => {
 
   const [modal, contextHolder] = Modal.useModal();
   const { t } = useTranslation();
-  const rcs_info = useSingleTaskStore(useShallow((store: any) => store.rcs_info));
+  const rcsInfo = useSingleTaskStore(useShallow((store: any) => store.rcsInfo));
 
   const vehicleOnPoint = useMemo(() => {
-    return rcs_info?.is_on_node;
-  }, [rcs_info]);
+    return rcsInfo?.is_on_node;
+  }, [rcsInfo]);
 
   useImperativeHandle(
     ref,
