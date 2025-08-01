@@ -36,9 +36,22 @@ export default defineApplicationConfig({
           ws: true,
           rewrite: (path) => path.replace(/^\/tool/, ''),
         },
+        '/vision': {
+          target: 'http://192.168.2.223:10010',
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(/^\/vision/, ''),
+        },
         '/ws10001': {
           // 新增 WebSocket 代理
           target: 'ws://192.168.2.25:10001',
+          ws: true,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/ws/, ''),
+        },
+        '/ws10010': {
+          // 新增 WebSocket 代理
+          target: 'ws://192.168.2.223:10010',
           ws: true,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/ws/, ''),

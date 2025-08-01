@@ -50,7 +50,12 @@ const SwiperPage = () => {
       >
         <SwiperSlide>
           <div className='grid grid-cols-4 w-full justify-center'>
-            <div className='flex flex-col items-center justify-center gap-2'>
+            <div
+              className='flex flex-col items-center justify-center gap-2'
+              onClick={() => {
+                navigate('/singleTask');
+              }}
+            >
               <div className='flex justify-center items-center w-44 h-44 py-2 px-4 bg-gradient-to-b from-[#223d62] to-[#3b587e] rounded-3xl'>
                 <SvgIcon name={'task'} size={140} />
               </div>
@@ -97,7 +102,12 @@ const SwiperPage = () => {
                 {t('deployer.sliderPage.safety')}
               </Typography.Title>
             </div>
-            <div className='flex flex-col items-center justify-center gap-2'>
+            <div
+              className='flex flex-col items-center justify-center gap-2'
+              onClick={() => {
+                navigate('/vision');
+              }}
+            >
               <div className='flex justify-center items-center w-44 h-44 py-2 px-4 bg-gradient-to-b from-[#ff7e5f] to-red-600 rounded-3xl'>
                 <SvgIcon name={'vision'} size={140} />
               </div>
