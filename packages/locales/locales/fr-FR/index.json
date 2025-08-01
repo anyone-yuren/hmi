@@ -10,10 +10,19 @@
       "taskId": "Numéro de tâche",
       "taskPoint": "Point de tâche",
       "taskType": "Type de tâche",
+      "vehicleControl": "Statut de contrôle",
+      "vehicleControlMode": "Mode de contrôle",
+      "vehicleControlStatus": "Y a-t-il du stock",
+      "vehicleControlWeight": "Poids de fret (kg)",
       "vehicleFork": "Position de la fourche",
       "vehicleForkx": "Gauche et droite",
       "vehicleForky": "Avant et arrière",
-      "vehicleForkz": "Haut et bas"
+      "vehicleForkz": "Haut et bas",
+      "vehicleStatus": "Informations sur le véhicule",
+      "vehicleStatusNavigationStatus": "Statut de positionnement",
+      "vehicleStatusNavigationStatusLost": "Positionnement perdu",
+      "vehicleStatusNavigationStatusNormal": "Normal",
+      "vehicleStatusNavigationType": "Type de positionnement"
     },
     "obsError": {
       "tip0": "Contrôleur de sécurité non démarré",

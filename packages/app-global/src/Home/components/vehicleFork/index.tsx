@@ -41,7 +41,7 @@ const VehicleFork = () => {
 
       {/* 内容 */}
       <div className='relative z-10 h-full text-white flex flex-col'>
-        <h2 className='text-lg font-bold mb-1'>{t('common.home.vehicleFork')}</h2>
+        <h2 className='text-lg font-bold mb-1'>{t('common.home.vehicleFork')} (mm)</h2>
         {true ? (
           <motion.div
             initial={{ width: '40px', opacity: 0.2 }}
