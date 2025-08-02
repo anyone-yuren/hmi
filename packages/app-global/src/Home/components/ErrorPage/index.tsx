@@ -1,19 +1,20 @@
 import { Card, Result } from 'antd';
-import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { SvgIcon } from 'ui';
 
 import type { FC, ReactNode } from 'react';
-
-const subTitleMap = new Map([
-  [403, t('common.noPermission')],
-  [404, t('common.notFound')],
-  [500, t('common.serverError')],
-  [401, t('common.unauthorized')],
-]);
+import { useTranslation } from 'react-i18next';
 
 const PageException: FC<{ status: number; withCard?: boolean }> = (props) => {
+  const { t } = useTranslation();
+
+  const subTitleMap = new Map([
+    [403, t('common.noPermission')],
+    [404, t('common.notFound')],
+    [500, t('common.serverError')],
+    [401, t('common.unauthorized')],
+  ]);
   const navigate = useNavigate();
 
   const { status, withCard = false } = props;

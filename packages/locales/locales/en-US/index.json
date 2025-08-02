@@ -1,5 +1,14 @@
 {
   "common": {
+    "about": {
+      "cpu": "CPU",
+      "date": "Date of production",
+      "logs": "System log",
+      "memory": "Memory",
+      "nodes": "System node information",
+      "serial": "Serial number",
+      "vehicleType": "Vehicle model"
+    },
     "backToHome": "Back home",
     "charging": {
       "Voltage": "Voltage/Current",
@@ -26,7 +35,20 @@
       "task": "Task",
       "taskId": "Task no.",
       "taskPoint": "Task point",
-      "taskType": "Task type"
+      "taskType": "Task type",
+      "vehicleControl": "Control status",
+      "vehicleControlMode": "Control mode",
+      "vehicleControlStatus": "Is available",
+      "vehicleControlWeight": "Goods poids (KG)",
+      "vehicleFork": "Fork arm position",
+      "vehicleForkx": "Left and right",
+      "vehicleForky": "Front and back",
+      "vehicleForkz": "Up and down",
+      "vehicleStatus": "About",
+      "vehicleStatusNavigationStatus": "Positioning status",
+      "vehicleStatusNavigationStatusLost": "Location lost",
+      "vehicleStatusNavigationStatusNormal": "Normal",
+      "vehicleStatusNavigationType": "Positioning Type"
     },
     "modify": "Modify",
     "noPermission": "Sorry, you do not have permission to access this page.",
@@ -73,6 +95,23 @@
     "unauthorized": "No map data"
   },
   "deployer": {
+    "io": {
+      "about": "About",
+      "cloud": "Cloud",
+      "diagnosis": "Diagnosis",
+      "input": "Input",
+      "io": "IOSignal",
+      "navigation": "Navigate",
+      "offset": "Offset",
+      "output": "Output",
+      "port": "Port",
+      "safety": "Safe",
+      "setting": "Setting",
+      "status": "Status",
+      "task": "Task",
+      "tips": "Tip: Gray indicates not triggered, green indicates triggered",
+      "vision": "Vision"
+    },
     "safety": {
       "backDistance": "Retreat distance",
       "currentScheme": "Current obstacle avoidance scheme",
@@ -133,23 +172,6 @@
       "volumn": "Speaker volume"
     },
     "sliderPage": {
-      "about": "About",
-      "cloud": "Cloud",
-      "diagnosis": "Diagnosis",
-      "io": "IOSignal",
-      "navigation": "Navigate",
-      "offset": "Offset",
-      "safety": "Safe",
-      "setting": "Setting",
-      "task": "Task",
-      "vision": "Vision"
-    },
-    "io": {
-      "tips": "Tip: Gray indicates not triggered, green indicates triggered",
-      "status": "Status",
-      "input": "Input",
-      "port": "Port",
-      "output": "Output",
       "about": "About",
       "cloud": "Cloud",
       "diagnosis": "Diagnosis",

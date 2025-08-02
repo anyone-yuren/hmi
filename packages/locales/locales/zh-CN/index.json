@@ -1,5 +1,14 @@
 {
   "common": {
+    "about": {
+      "cpu": "CPU",
+      "date": "出产日期",
+      "logs": "系统日志",
+      "memory": "内存",
+      "nodes": "系统节点信息",
+      "serial": "序列号",
+      "vehicleType": "车型"
+    },
     "backToHome": "返回主页",
     "charging": {
       "Voltage": "电压/电流",
@@ -26,7 +35,20 @@
       "task": "任务",
       "taskId": "任务号",
       "taskPoint": "任务点",
-      "taskType": "任务类型"
+      "taskType": "任务类型",
+      "vehicleControl": "控制状态",
+      "vehicleControlMode": "控制模式",
+      "vehicleControlStatus": "是否有货",
+      "vehicleControlWeight": "货物重量（KG）",
+      "vehicleFork": "货叉位置",
+      "vehicleForkx": "左右",
+      "vehicleForky": "前后",
+      "vehicleForkz": "上下",
+      "vehicleStatus": "车辆信息",
+      "vehicleStatusNavigationStatus": "定位状态",
+      "vehicleStatusNavigationStatusLost": "定位丢失",
+      "vehicleStatusNavigationStatusNormal": "正常",
+      "vehicleStatusNavigationType": "定位类型"
     },
     "modify": "修改",
     "noPermission": "对不起，您没有权限访问此页面。",
@@ -73,6 +95,23 @@
     "unauthorized": "无地图数据"
   },
   "deployer": {
+    "io": {
+      "about": "车辆信息",
+      "cloud": "上传下载",
+      "diagnosis": "诊断",
+      "input": "输入",
+      "io": "I/O 信息",
+      "navigation": "导航",
+      "offset": "偏移表",
+      "output": "输出",
+      "port": "端口号",
+      "safety": "安全",
+      "setting": "设置",
+      "status": "状态",
+      "task": "任务",
+      "tips": "提示：灰色为未触发，绿色为触发",
+      "vision": "视觉"
+    },
     "safety": {
       "backDistance": "后退距离",
       "currentScheme": "当前避障方案",
@@ -133,23 +172,6 @@
       "volumn": "喇叭音量"
     },
     "sliderPage": {
-      "about": "车辆信息",
-      "cloud": "上传下载",
-      "diagnosis": "诊断",
-      "io": "I/O 信息",
-      "navigation": "导航",
-      "offset": "偏移表",
-      "safety": "安全",
-      "setting": "设置",
-      "task": "任务",
-      "vision": "视觉"
-    },
-    "io": {
-      "tips": "提示：灰色为未触发，绿色为触发",
-      "status": "状态",
-      "input": "输入",
-      "port": "端口号",
-      "output": "输出",
       "about": "车辆信息",
       "cloud": "上传下载",
       "diagnosis": "诊断",

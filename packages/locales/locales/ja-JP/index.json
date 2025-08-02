@@ -1,5 +1,14 @@
 {
   "common": {
+    "about": {
+      "cpu": "CPU",
+      "date": "生産日",
+      "logs": "システムログ",
+      "memory": "メモリ",
+      "nodes": "システムノード情報",
+      "serial": "シリアルナンバー",
+      "vehicleType": "車モデル"
+    },
     "backToHome": "ホームページに戻ります",
     "charging": {
       "Voltage": "電圧/電流",
@@ -26,7 +35,20 @@
       "task": "タスク",
       "taskId": "タスク番号",
       "taskPoint": "クエストポイント",
-      "taskType": "タスクの種類"
+      "taskType": "タスクの種類",
+      "vehicleControl": "制御ステータス",
+      "vehicleControlMode": "制御モード",
+      "vehicleControlStatus": "在庫はありますか",
+      "vehicleControlWeight": "貨物体重（kg）",
+      "vehicleFork": "フォークポジション",
+      "vehicleForkx": "頃",
+      "vehicleForky": "ビフォーアフター",
+      "vehicleForkz": "アップとダウン",
+      "vehicleStatus": "車両情報",
+      "vehicleStatusNavigationStatus": "ポジショニングステータス",
+      "vehicleStatusNavigationStatusLost": "ロストポジショニング",
+      "vehicleStatusNavigationStatusNormal": "正常",
+      "vehicleStatusNavigationType": "ポジショニングタイプ"
     },
     "modify": "修正",
     "noPermission": "申し訳ありませんが、このページにアクセスする許可はありません。",
