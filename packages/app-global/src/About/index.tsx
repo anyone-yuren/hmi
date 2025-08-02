@@ -259,7 +259,7 @@ const About = () => {
                 <List.Item actions={[<Button type='primary'>查看日志</Button>]}>
                   <List.Item.Meta
                     title={
-                      <div className='flex items-center justify-between'>
+                      <div className='flex items-center gap-2 justify-start'>
                         <div className='px-1 flex items-center gap-1'>
                           {item.status ? (
                             <Badge status='processing' className={styles.dot} color={theme.colorPrimary} />
