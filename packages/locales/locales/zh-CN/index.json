@@ -1,8 +1,11 @@
 {
   "common": {
     "about": {
+      "cpu": "CPU",
       "date": "出产日期",
       "logs": "系统日志",
+      "memory": "内存",
+      "nodes": "系统节点信息",
       "serial": "序列号",
       "vehicleType": "车型"
     },

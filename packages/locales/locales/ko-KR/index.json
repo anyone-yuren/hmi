@@ -1,8 +1,11 @@
 {
   "common": {
     "about": {
+      "cpu": "CPU",
       "date": "생산 날짜",
       "logs": "시스템 로그",
+      "memory": "메모리",
+      "nodes": "시스템 노드 정보",
       "serial": "일련 번호",
       "vehicleType": "자동차 모델"
     },

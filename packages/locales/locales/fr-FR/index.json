@@ -1,8 +1,11 @@
 {
   "common": {
     "about": {
+      "cpu": "CPU",
       "date": "Date de production",
       "logs": "Journal système",
+      "memory": "Mémoire",
+      "nodes": "Informations sur le nœud système",
       "serial": "Numéro de série",
       "vehicleType": "Modèle de voiture"
     },
