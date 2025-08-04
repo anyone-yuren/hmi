@@ -1,10 +1,6 @@
-import { FileUpload } from '@mui/icons-material';
-import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import {
   Box,
   Button,
-  Menu,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -12,48 +8,29 @@ import {
   TableHead,
   TableRow,
   ThemeProvider,
-  Tooltip,
 } from '@mui/material';
 import { useSize } from 'ahooks';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  cancelTask,
-  getFloorData,
-  getLineList,
-  getPointList,
-  getTaskMode,
-  setTaskMode,
-  uploadRcsMap,
-} from './services';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { cancelTask, getFloorData, getLineList, getPointList, getTaskMode, offsetTable } from './services';
 import { InitStage } from './stage/index';
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
-import SettingsIcon from '@mui/icons-material/Settings';
 import { createTheme } from '@mui/material/styles';
 import { useRequest } from 'ahooks';
-import { Upload, UploadProps } from 'antd';
-import { UploadChangeParam, UploadFile } from 'antd/es/upload';
 import _ from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
-import {
-  generateUniqueId,
-  IconStyleButton,
-  MapContainer,
-  MapTaskPanelEmptyContainer,
-  MapTaskPopup,
-  RenderItemRow,
-} from './Style';
+import { generateUniqueId, MapContainer, MapTaskPanelEmptyContainer, MapTaskPopup, RenderItemRow } from './Style';
 import EmptyBox from './components/Empty';
+import MapActionBar from './components/MapActionBar';
 import MouseEvent from './components/MouseEvent';
 import SecondaryPage from './components/SecondaryPage';
 import TaskPanel from './components/TaskPanel';
 import TaskSetting from './components/TaskSetting';
 import WsContainer from './components/wsContainer';
 import './index.css';
-import { IMode, IPoint, ISubTaskItem, ITaskItem, IVehicle } from './index.d';
+import { IMode, IPoint, ISubTaskItem, ITaskItem } from './index.d';
 import { useSingleTaskStore } from './store/singleTask.store';
 import useConstants from './useConstants';
 
@@ -73,27 +50,21 @@ const initTaskActionRow = {
   params2: 0,
 };
 
-const translateAngel = (angel: number) => {
-  return 180 - (angel || 0) * (180 / Math.PI);
-};
-
 const SingleTask = () => {
   const [activePoints, setActivePoints] = useState<IPoint['id'][]>([]);
   const [taskVisible, setTaskVisible] = useState(false);
   const [taskSettingVisible, setTaskSettingVisible] = useState(false);
-  const [vehicles, setVehicles] = useState<IVehicle[]>([]);
   const [preTaskList, setPreTaskList] = useState([_.cloneDeep(initTaskActionRow)]);
   const [subTask, setSubTask] = useState<ITaskItem>();
   const [activeKey, setActiveKey] = useState('task');
   const [PopUp, setPopUp] = useState(false);
   const [moveToTarget, setMoveToTarget] = useState({ x: null, y: null });
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
 
   const { data: pointsData }: Record<string, any> = useRequest(getPointList, {});
   const { data: linesList } = useRequest(() => getLineList(), {});
 
   const { data: taskMode, runAsync: getMapTaskMode }: Record<string, any> = useRequest(getTaskMode, {});
+  const { data: offsetList, runAsync: getOffsetList }: Record<string, any> = useRequest(offsetTable, {});
 
   const { data: floorMapData, runAsync: getFloorMapData } = useRequest(
     (floor) => {
@@ -109,10 +80,6 @@ const SingleTask = () => {
   const { t } = useTranslation();
   const { TaskStatusHashMap, TaskTypeHashMap } = useConstants();
 
-  const isMultiwayAgv = useMemo(() => {
-    return false;
-  }, []);
-
   const { robotCurrentStatus } = useSingleTaskStore(
     useShallow((state) => ({
       robotCurrentStatus: state.robotCurrentStatus,
@@ -123,12 +90,12 @@ const SingleTask = () => {
     showTaskPanel: Record<IMode, () => void> | any;
   } = {
     title: {
-      0: t('调度模式'),
-      3: t('单机模式'),
+      0: t('deployer.singleTask.rcsMode'),
+      3: t('deployer.singleTask.singleMode'),
     },
     showTaskPanel: {
       0: () => {
-        toast.error(t('当前模式不可操作,请切换模式'));
+        toast.error(t('deployer.singleTask.changeModeTips'));
       },
       3: () => {
         setTaskSettingVisible(false);
@@ -147,6 +114,7 @@ const SingleTask = () => {
   }, [taskMode]);
 
   const pointsDict = useMemo(() => {
+    console.log('offsetList', offsetList, 'pointsData', pointsData);
     let hashMap: any = {},
       points: any = [],
       charges: any = [],
@@ -163,12 +131,11 @@ const SingleTask = () => {
         y: (point.y / 1000) * 20,
         state: 0,
       });
-      // points.push({ ...point, state: 0 });
       point.type === 6 && charges.push(point);
       (point.type === 1 || point.type === 4) && locations.push(point);
     }
     return { hashMap, points, charges, locations };
-  }, [pointsData]);
+  }, [pointsData, offsetList]);
 
   const lines = useMemo(() => {
     const ary: any = [];
@@ -195,19 +162,17 @@ const SingleTask = () => {
     }
   }, [robotCurrentStatus]);
 
-  // useEffect(() => {
-  //   Object.keys(agvPosition).length &&
-  //     setVehicles([
-  //       {
-  //         x: agvPosition.x,
-  //         y: -agvPosition.y,
-  //         id: 'dream_car',
-  //         angle: translateAngel(agvPosition.angel),
-  //       },
-  //     ]);
-  // }, [agvPosition]);
+  const handleMouse = (type: any, id: IPoint['id']) => {
+    const taskActionAry = ['Pick', 'Place', 'Null', 'Charge'];
+    if (taskActionAry.includes(type)) {
+      taskAction(type, id);
+      return;
+    }
+    console.log('这里理论上不会执行了');
+    const ary = ['Offset', 'Info'];
+  };
 
-  const handleMouse = (type: ISubTaskItem['task_type'], id: IPoint['id']) => {
+  const taskAction = (type: ISubTaskItem['task_type'], id: IPoint['id']) => {
     !taskVisible && setTaskVisible(true);
     const list: any = [...preTaskList];
     const newList = list.filter((item: any) => item.task_point_id && item.task_type);
@@ -225,61 +190,8 @@ const SingleTask = () => {
     taskPanelRef?.current?.scrollToBottom();
   };
 
-  const changeMapTaskMode = async (task_mode: IMode) => {
-    const { code } = await setTaskMode({ task_mode });
-    if (code === 200) {
-      toast.success(t('修改成功'));
-      getMapTaskMode();
-      setAnchorEl(null);
-      setTaskVisible(false);
-    }
-  };
-
-  const uploadFile = useCallback((info: UploadChangeParam) => {
-    const { file } = info;
-    // 只在文件添加状态处理
-    if (file.status === 'uploading' || !file.originFileObj) {
-      const formData: any = {};
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        formData.data = reader.result;
-        formData.filename = file.name;
-
-        uploadRcsMap(formData)
-          .then(() => {
-            toast.success(t('上传成功'));
-            window.location.reload();
-          })
-          .catch((error) => {});
-      };
-
-      reader.onerror = (error) => {
-        console.error('FileReader 错误:', error);
-      };
-
-      reader.readAsDataURL(file.originFileObj);
-    }
-  }, []);
-
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-
-  const props: UploadProps = {
-    onRemove: (file) => {
-      const index = fileList.indexOf(file);
-      const newFileList = fileList.slice();
-      newFileList.splice(index, 1);
-      setFileList(newFileList);
-    },
-    fileList,
-  };
-
   return (
     <>
-      {(() => {
-        console.log('[SingleTask]: 单任务页面在渲染');
-        return null;
-      })()}
       {taskVisible && (
         <MapTaskPopup>
           <TaskPanel
@@ -310,108 +222,17 @@ const SingleTask = () => {
       )}
 
       <MapContainer>
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '10px',
-            left: '10px',
-            padding: '10px',
-            borderRadius: '10px',
-            zIndex: 1,
-          }}
-        >
-          <div>
-            {modeHashMap.title[mapTaskMode]}
-            {mapTaskMode === 0 ? `，${t('请从调度系统下发任务')}` : ''}
-          </div>
-          <div style={{ display: 'flex', gap: 10, marginTop: 5 }}>
-            <>
-              <IconStyleButton
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                  setAnchorEl(event.currentTarget);
-                }}
-              >
-                <Tooltip title={t('模式切换')}>
-                  <PublishedWithChangesIcon fontSize={'large'} />
-                </Tooltip>
-              </IconStyleButton>
+        {/* 底部操作栏的按钮 */}
+        <MapActionBar
+          setTaskSettingVisible={setTaskSettingVisible}
+          setTaskVisible={setTaskVisible}
+          stageRef={stageRef}
+          setMoveToTarget={setMoveToTarget}
+          taskMode={taskMode}
+          modeHashMap={modeHashMap}
+          getMapTaskMode={getMapTaskMode}
+        ></MapActionBar>
 
-              <ThemeProvider
-                theme={createTheme({
-                  palette: {
-                    mode: 'light',
-                    primary: {
-                      main: '#00D1D1',
-                    },
-                  },
-                  typography: {
-                    fontSize: 14,
-                  },
-                })}
-              >
-                <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={() => {
-                    setAnchorEl(null);
-                  }}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      changeMapTaskMode(0);
-                    }}
-                  >
-                    {t('调度模式')}
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      changeMapTaskMode(3);
-                    }}
-                  >
-                    {t('单机模式')}
-                  </MenuItem>
-                </Menu>
-              </ThemeProvider>
-            </>
-
-            <IconStyleButton
-              onClick={() => {
-                setTaskSettingVisible(true);
-                setTaskVisible(false);
-              }}
-            >
-              <Tooltip title={t('设置')} placement='bottom'>
-                <SettingsIcon fontSize={'large'} />
-                {/* <SettingIconWithoutLine fontSize={50} /> */}
-              </Tooltip>
-            </IconStyleButton>
-
-            <IconStyleButton
-              onClick={() => {
-                const { x, y } = stageRef?.current?.getVehiclePosition();
-                if (x != null && y != null) {
-                  stageRef?.current && stageRef?.current?.setStageScale(1);
-                  setMoveToTarget({ x: x / 50, y: -y / 50 } as any);
-                } else {
-                  toast.error(t('没有数据'));
-                }
-              }}
-            >
-              <Tooltip title={t('定位')}>
-                <GpsFixedIcon fontSize={'large'} />
-              </Tooltip>
-            </IconStyleButton>
-            {!isMultiwayAgv && (
-              <Upload {...props} onChange={uploadFile}>
-                <IconStyleButton>
-                  <Tooltip title={t('上传地图')}>
-                    <FileUpload fontSize={'large'} />
-                  </Tooltip>
-                </IconStyleButton>
-              </Upload>
-            )}
-          </div>
-        </div>
         {mapTaskMode !== 0 && (
           <div
             style={{
@@ -434,7 +255,7 @@ const SingleTask = () => {
           </div>
         )}
 
-        <Box ref={ref} flex={1} sx={{ width: '100%', height: '100%', minHeight: '300px' }}>
+        <div ref={ref} style={{ flex: 1, width: '100%', height: '100%', minHeight: '300px' }}>
           {pointsDict?.points.length ? (
             <InitStage
               ref={stageRef}
@@ -453,7 +274,6 @@ const SingleTask = () => {
               }}
               size={size}
               floorMapData={floorMapData?.grid_map}
-              // vehicles={vehicles}
               pointsValue={activePoints}
               onPointsSelect={(points: IPoint['id'][]) => {
                 const point = points[points.length - 1];
@@ -474,7 +294,7 @@ const SingleTask = () => {
               }}
             />
           ) : null}
-        </Box>
+        </div>
 
         <SecondaryPage open={PopUp as boolean} setOpen={setPopUp} fullScreen={false} sx={{ zIndex: 1213 }}>
           <Box
@@ -565,7 +385,11 @@ const SingleTask = () => {
                       ) : (
                         <MapTaskPanelEmptyContainer>
                           <div>
-                            <EmptyBox title={t('没有数据')} iconColor='#000' titleColor='#000'></EmptyBox>
+                            <EmptyBox
+                              title={t('deployer.singleTask.noData')}
+                              iconColor='#000'
+                              titleColor='#000'
+                            ></EmptyBox>
                           </div>
                         </MapTaskPanelEmptyContainer>
                       )}

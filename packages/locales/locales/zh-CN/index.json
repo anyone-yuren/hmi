@@ -70,7 +70,8 @@
       "running": "执行中",
       "success": "完成"
     },
-    "unauthorized": "无地图数据"
+    "unauthorized": "无地图数据",
+    "actionSuccess": "操作成功"
   },
   "deployer": {
     "safety": {
@@ -160,6 +161,24 @@
       "setting": "设置",
       "task": "任务",
       "vision": "视觉"
+    },
+    "singleTask": {
+      "info": "详情",
+      "offset": "偏移",
+      "offsetTable": "偏移表",
+      "modeTips": "请从调度系统下发任务",
+      "changeMode": "切换模式",
+      "changeModeTips": "当前模式不可操作,请切换模式",
+      "rcsMode": "调度模式",
+      "singleMode": "单机模式",
+      "setting": "设置",
+      "noData": "没有数据",
+      "location": "定位",
+      "uploadMap": "上传地图",
+      "pick": "取货",
+      "place": "放货",
+      "charge": "充电",
+      "move": "移动"
     }
   }
 }

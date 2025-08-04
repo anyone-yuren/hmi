@@ -27,3 +27,6 @@ export const getFloorData = (floor) =>
     },
     '10001',
   );
+
+export const offsetTable = () => get('/sirius/offset_table', {}, '10009');
+export const offsetTableSave = (data) => post('/sirius/offset_table_save', data, '10009');

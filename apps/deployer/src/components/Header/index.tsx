@@ -12,10 +12,28 @@ import { createStyles } from 'antd-style';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
 // 去除table hover央视
-const useStyles = createStyles(({ css, token }) => {
+const useStyles = createStyles(({ css }) => {
   return {
-    customerButton: css`
-      &:hover {
+    noHoverButton: css`
+      // 使用属性选择器增加优先级
+      &[class*='ant-btn']:hover {
+        background: inherit !important;
+        border-color: inherit !important;
+        color: inherit !important;
+        transform: none !important;
+        box-shadow: none !important;
+        transition: none !important;
+      }
+
+      // 精确匹配你提供的选择器
+      &:where(.ant-btn-variant-outlined):not(:disabled):not(.ant-btn-disabled):hover,
+      &:where(.ant-btn-variant-dashed):not(:disabled):not(.ant-btn-disabled):hover {
+        background: inherit !important;
+        border-color: inherit !important;
+        color: inherit !important;
+        transform: none !important;
+        box-shadow: none !important;
+        transition: none !important;
       }
     `,
   };
@@ -52,7 +70,7 @@ const GlobalHeader = () => {
             classNames={{
               icon: 'flex items-center justify-center',
             }}
-            className={`${styles.customerButton} border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#00E7E7] to-[#008787]`}
+            className={`${styles.noHoverButton} border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#00E7E7] to-[#008787]`}
             shape='circle'
             icon={<SvgIcon name='chache' size={responsive.xs ? 42 : 54} />}
           />

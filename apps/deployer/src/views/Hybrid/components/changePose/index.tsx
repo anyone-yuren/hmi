@@ -1,6 +1,6 @@
 // 智能重定位
 import { useRequest } from 'ahooks';
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import { Group, Image as KonvaImage, Text } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import { useHttpCode } from '../../hooks/useHttpCode';
@@ -18,6 +18,14 @@ const ChangePose = (props: { floor: number }) => {
       showAgv: store.showAgv,
     })),
   );
+
+  const renderAngleText = useMemo(() => {
+    if (vehiclePosition?.angle > 0) {
+      return Number((vehiclePosition?.angle || 0)?.toFixed(0));
+    } else {
+      return Number(((vehiclePosition?.angle || 0) + 360)?.toFixed(0));
+    }
+  }, [vehiclePosition]);
   const { runAsync: runInitPose } = useRequest(initalPose, {
     manual: true,
     onSuccess: (res: any) => {
@@ -35,11 +43,11 @@ const ChangePose = (props: { floor: number }) => {
         pose: {
           pose_x: vehiclePosition.x / 20,
           pose_y: 0 - vehiclePosition.y / 20,
-          pose_angle: vehiclePosition.angle,
+          pose_angle: renderAngleText,
         },
       });
     }
-  }, [showAgv, beginPose, vehiclePosition]);
+  }, [showAgv, beginPose, vehiclePosition, renderAngleText]);
   return (
     <Group name='pose-agv'>
       {true && beginPose && showAgv && (
@@ -51,7 +59,7 @@ const ChangePose = (props: { floor: number }) => {
           offsetY={10}
           scaleX={1}
           scaleY={1}
-          rotation={vehiclePosition.rotation}
+          rotation={vehiclePosition.rotation + 180}
         />
       )}
       {false && imageObj && beginPose && showAgv && (
@@ -66,7 +74,7 @@ const ChangePose = (props: { floor: number }) => {
             offsetY={10} // 偏移中心
           />
           <Text
-            text={vehiclePosition?.angle?.toFixed(0) + '°'}
+            text={renderAngleText + '°'}
             x={startTouch?.x}
             y={startTouch?.y}
             fontSize={12}

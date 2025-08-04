@@ -8,6 +8,8 @@ interface IMouseEvent {
   hashMap: Record<string, any>;
   handleAction: (type: ISubTaskItem['task_type']) => void;
 }
+
+const menuItemStyle = { fontSize: 15, textAlign: 'center' };
 function MouseEvent(props: IMouseEvent) {
   const { id, hashMap: _hashMap, handleAction } = props;
   const { t } = useTranslation();
@@ -36,22 +38,22 @@ function MouseEvent(props: IMouseEvent) {
               <MenuItem
                 dense
                 divider
-                sx={{ fontSize: 15, textAlign: 'center' }}
+                sx={menuItemStyle}
                 onClick={() => {
                   handleAction && handleAction('Pick');
                 }}
               >
-                {t('取货')}
+                {t('deployer.singleTask.pick')}
               </MenuItem>
               <MenuItem
                 dense
                 divider
-                sx={{ fontSize: 15, textAlign: 'center' }}
+                sx={menuItemStyle}
                 onClick={() => {
                   handleAction && handleAction('Place');
                 }}
               >
-                {t('放货')}
+                {t('deployer.singleTask.place')}
               </MenuItem>
             </>
           )}
@@ -59,23 +61,43 @@ function MouseEvent(props: IMouseEvent) {
             <MenuItem
               dense
               divider
-              sx={{ fontSize: 15, textAlign: 'center' }}
+              sx={menuItemStyle}
               onClick={() => {
                 handleAction && handleAction('Charge');
               }}
             >
-              {t('充电')}
+              {t('deployer.singleTask.charge')}
             </MenuItem>
           )}
           <MenuItem
             dense
             divider
-            sx={{ fontSize: 15, textAlign: 'center' }}
+            sx={menuItemStyle}
             onClick={() => {
               handleAction && handleAction('Null');
             }}
           >
-            {t('移动')}
+            {t('deployer.singleTask.move')}
+          </MenuItem>
+          <MenuItem
+            dense
+            divider
+            sx={menuItemStyle}
+            onClick={() => {
+              handleAction && handleAction('Offset');
+            }}
+          >
+            {t('deployer.singleTask.offset')}
+          </MenuItem>
+          <MenuItem
+            dense
+            divider
+            sx={menuItemStyle}
+            onClick={() => {
+              handleAction && handleAction('Info');
+            }}
+          >
+            {t('deployer.singleTask.info')}
           </MenuItem>
         </MenuList>
       </Paper>

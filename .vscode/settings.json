@@ -225,5 +225,6 @@
   "commentTranslate.hover.enabled": false,
   "commentTranslate.multiLineMerge": true,
   "vue.server.hybridMode": true,
-  "oxc.enable": false
+  "oxc.enable": false,
+  "i18n-ally.theme.annotation": "rgba(255,255,255)"
 }

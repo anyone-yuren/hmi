@@ -1,37 +1,29 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useEffect, useState } from 'react';
 
-import {
-  ListItemText,
-  MenuItem,
-  ThemeProvider,
-  createTheme,
-} from "@mui/material";
+import { ListItemText, MenuItem, ThemeProvider, createTheme } from '@mui/material';
 
-import { toast } from "sonner";
-import { useTranslation } from "react-i18next";
-import TextUpdateSwitchRow from "../comp/textUpdateSwitchRow";
-import TextChangeRow from "../comp/textChangeRow";
-import LoadingButton from "../comp/loadingButton";
-import { useSetState, useRequest } from "ahooks";
-import {
-  getPlaceSpaceDetectRead as read,
-  postPlaceSpaceDetectSave as save,
-} from "../../../services/index";
-import PointCloudFilter from "../comp/pointCloudFilter";
-import TextUpdateRow from "../comp/textUpdateRow";
-import CustomSelect from "../comp/customSelect";
-import Illustration from "./illustration";
-import useVisionWebsocket from "@/components/https/visionWebSocket";
-import { getRequestUrl } from "@/components/WebSocketContainer/index";
-
+import { useRequest, useSetState } from 'ahooks';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { getPlaceSpaceDetectRead as read, postPlaceSpaceDetectSave as save } from '../../../services/index';
+import CustomSelect from '../comp/customSelect';
+import LoadingButton from '../comp/loadingButton';
+import PointCloudFilter from '../comp/pointCloudFilter';
+import TextChangeRow from '../comp/textChangeRow';
+import TextUpdateRow from '../comp/textUpdateRow';
+import TextUpdateSwitchRow from '../comp/textUpdateSwitchRow';
+import Illustration from './illustration';
+// import useVisionWebsocket from "@/components/https/visionWebSocket";
+// import { getRequestUrl } from "@/components/WebSocketContainer/index";
+import useVision from '../../../hooks/useVision';
 const LightTheme = (props: any) => {
   return (
     <ThemeProvider
       theme={createTheme({
         palette: {
-          mode: "light",
+          mode: 'light',
           primary: {
-            main: "#00D1D1",
+            main: '#00D1D1',
           },
         },
         typography: {
@@ -45,14 +37,15 @@ const LightTheme = (props: any) => {
 };
 
 const Setting = () => {
-  const { disconnect } = useVisionWebsocket({
-    url: `ws://${getRequestUrl()}:10010`,
-  });
+  // const { disconnect } = useVisionWebsocket({
+  //   url: `ws://${getRequestUrl()}:10010`,
+  // });
+  const { disconnect } = useVision();
   const { t } = useTranslation();
   const [originHashMap, setOriginHashMap] = useState<any>({});
   const [updateHashMap, setUpdateHashMap] = useSetState<any>({
     need_detect: false,
-    sensor_model: "",
+    sensor_model: '',
     sensor_model_list: [],
     extra_heights: 0,
     goods_total_width: 0,
@@ -75,7 +68,7 @@ const Setting = () => {
 
   useEffect(() => {
     return () => {
-      console.log("[视觉Websocket]:马上断开");
+      console.log('[视觉Websocket]:马上断开');
       disconnect();
     };
   }, []);
@@ -88,38 +81,36 @@ const Setting = () => {
 
   const handleSave = async () => {
     const sendState: any = {};
-    const numberAry = ["uint", "int"];
+    const numberAry = ['uint', 'int'];
     Object.keys(originHashMap).forEach((key) => {
       sendState[key] =
         updateHashMap[key] !== undefined
           ? {
               ...originHashMap[key],
-              value: numberAry.includes(originHashMap[key]?.type)
-                ? Number(updateHashMap[key])
-                : updateHashMap[key],
+              value: numberAry.includes(originHashMap[key]?.type) ? Number(updateHashMap[key]) : updateHashMap[key],
             }
           : originHashMap[key];
     });
     console.log(sendState, updateHashMap);
     await save(sendState);
-    toast.success(t("操作成功"));
+    toast.success(t('操作成功'));
   };
 
   return (
     <LightTheme>
-      <div className="text-black h-full flex gap-[10px] px-[40px]">
-        <div className="w-[350px] overflow-scroll">
+      <div className='text-black h-full flex gap-[10px] px-[40px]'>
+        <div className='w-[350px] overflow-scroll'>
           <TextUpdateSwitchRow
-            title={t("是否启用")}
-            checked={updateHashMap["need_detect"]}
+            title={t('是否启用')}
+            checked={updateHashMap['need_detect']}
             onChange={(checked: boolean) => {
-              changeUpdateHashMap("need_detect", checked);
+              changeUpdateHashMap('need_detect', checked);
             }}
           />
           <TextUpdateRow>
-            <div>{t("传感器绑定")}</div>
+            <div>{t('传感器绑定')}</div>
             <CustomSelect
-              variant="standard"
+              variant='standard'
               value={updateHashMap.sensor_model}
               onChange={(event: any) => {
                 setUpdateHashMap({
@@ -133,11 +124,11 @@ const Setting = () => {
                   key={name}
                   value={name}
                   sx={{
-                    "&.Mui-selected": {
-                      backgroundColor: "#00d1d1ad", // 修改选中项的背景色
+                    '&.Mui-selected': {
+                      backgroundColor: '#00d1d1ad', // 修改选中项的背景色
                     },
-                    "&.Mui-selected:hover": {
-                      backgroundColor: "#00d1d1ad", // 修改选中项的背景色
+                    '&.Mui-selected:hover': {
+                      backgroundColor: '#00d1d1ad', // 修改选中项的背景色
                     },
                   }}
                 >
@@ -146,27 +137,20 @@ const Setting = () => {
               ))}
             </CustomSelect>
           </TextUpdateRow>
-          <PointCloudFilter
-            type={"place_space_detect"}
-            background={"white"}
-            titleColor={"black"}
-          ></PointCloudFilter>
+          <PointCloudFilter type={'place_space_detect'} background={'white'} titleColor={'black'}></PointCloudFilter>
 
           {[
-            { title: t("额外提升叉臂"), key: "extra_height" },
-            { title: t("货物宽度"), key: "goods_total_width" },
-            { title: t("货物高度"), key: "goods_total_height" },
-            { title: t("货物左右间隙"), key: "sku_gap" },
+            { title: t('额外提升叉臂'), key: 'extra_height' },
+            { title: t('货物宽度'), key: 'goods_total_width' },
+            { title: t('货物高度'), key: 'goods_total_height' },
+            { title: t('货物左右间隙'), key: 'sku_gap' },
           ]?.map((item: any) => {
             return (
               <TextChangeRow
                 key={item?.key}
                 title={item.title}
                 value={updateHashMap?.[item.key]}
-                validateRange={[
-                  originHashMap?.[item.key]?.min,
-                  originHashMap?.[item.key]?.max,
-                ]}
+                validateRange={[originHashMap?.[item.key]?.min, originHashMap?.[item.key]?.max]}
                 onChange={(value: string) => {
                   changeUpdateHashMap(item.key, value);
                 }}
@@ -178,14 +162,14 @@ const Setting = () => {
 
           <LoadingButton
             fullWidth
-            variant="contained"
-            sx={{ color: "white", marginBottom: "80px" }}
+            variant='contained'
+            sx={{ color: 'white', marginBottom: '80px' }}
             onPress={handleSave}
           >
-            {t("保存")}
+            {t('保存')}
           </LoadingButton>
         </div>
-        <div className="flex-1">
+        <div className='flex-1'>
           <Illustration />
         </div>
       </div>

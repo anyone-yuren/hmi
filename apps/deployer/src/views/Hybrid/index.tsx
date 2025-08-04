@@ -433,7 +433,6 @@ const Mapping = () => {
               }}
             >
               <InitStage size={size}>
-                <PointCloudV1 />
                 <Layer ref={layerRef} name='active-layer'>
                   {alignment === 'slam' && isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? <SlamLayer /> : null}
                   {alignment === 'reflector' && isShowNavigation(navigationType, 'REFLECTOR') ? (
@@ -452,6 +451,7 @@ const Mapping = () => {
                   </Group>
                   <CanvaOnline />
                 </Layer>
+                <PointCloudV1 />
                 {/* <PointsCloudDiagV1 /> */}
               </InitStage>
             </Box>

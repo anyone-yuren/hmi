@@ -508,6 +508,7 @@ const InputGroupText = (props: any) => {
             ></InputWidthKeyboard>
           ) : (
             <TextField
+              autoFocus
               fullWidth
               defaultValue={!value ? '' : value}
               onChange={(event) => {

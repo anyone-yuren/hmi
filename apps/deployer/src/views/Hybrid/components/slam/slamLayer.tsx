@@ -1,7 +1,7 @@
 import { useUpdateEffect } from 'ahooks';
 import Konva from 'konva';
 import { memo, useEffect, useRef, useState } from 'react';
-import { Group, Image as KonvaImage, Rect } from 'react-konva';
+import { Group, Image as KonvaImage } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import { useHybirdStore } from '../../store/hybird.store';
 const SlamLayer = () => {
@@ -188,7 +188,6 @@ const SlamLayer = () => {
           rotation={0 - (addSlamBuildingOrigin.theta * 180) / Math.PI}
         />
       )}
-      <Rect fill='red' width={20} height={20} x={0} y={0}></Rect>
     </Group>
   );
 };
