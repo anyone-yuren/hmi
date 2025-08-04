@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 interface State {
   showAnimate: boolean;
   setShowAnimate: (showAnimate: boolean) => void;
@@ -7,6 +7,8 @@ interface State {
   setCacheSave: (cacheSave: boolean) => void;
   showThree: boolean;
   setShowThree: (showThree: boolean) => void;
+  token: string;
+  setToken: (token: string) => void;
 }
 export const useGlobalStore = create<State>()(
   persist(
@@ -17,10 +19,12 @@ export const useGlobalStore = create<State>()(
       setCacheSave: (cacheSave: boolean) => set({ cacheSave }),
       showThree: false,
       setShowThree: (showThree: boolean) => set({ showThree }),
+      token: "",
+      setToken: (token: string) => set({ token }),
     }),
     {
-      name: 'global-store',
+      name: "global-store",
       storage: createJSONStorage(() => localStorage),
-    },
-  ),
+    }
+  )
 );

@@ -37,6 +37,12 @@ instance.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     // 这里可以统一携带 token
     const token = localStorage.getItem('token');
+    if (config.url?.includes('/login')) {
+      return config;
+    }
+    // if (!token) {
+    //   triggerLoginModal();
+    // }
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;

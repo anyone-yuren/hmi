@@ -1,4 +1,4 @@
-import { Button, Typography } from 'antd';
+import { Button } from 'antd';
 import { useResponsive } from 'antd-style';
 import { useNavigate } from 'react-router-dom';
 import { SvgIcon } from 'ui';
@@ -7,10 +7,12 @@ import ChargingAnimation from '../charging';
 import WsVehicleContainer from '../wsVehicleContainer';
 
 import { useVehicleStore } from '@/store/vehicleStore';
-import { GlobalNotification } from '@gbeata/app-global';
+import { GlobalNotification, LoginDialog, triggerLoginModal } from '@gbeata/app-global';
+import { useGlobalStore } from '@gbeata/store';
 import { createStyles } from 'antd-style';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
+
 // 去除table hover央视
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -32,11 +34,24 @@ const GlobalHeader = () => {
       };
     }),
   );
+  const { token } = useGlobalStore(
+    useShallow((state) => ({
+      token: state.token,
+    })),
+  );
+
   return (
     <div className='flex flex-col h-full items-center justify-between px-4 py-2 text-white '>
-      <Typography.Title className='' level={2}>
-        <span className='text-white'>HMI</span>
-      </Typography.Title>
+      <div
+        className='w-12 h-12 bg-[#445260] rounded-full flex items-center justify-center mt-2 mb-4'
+        onClick={() => {
+          if (!token) {
+            triggerLoginModal();
+          }
+        }}
+      >
+        {token ? <SvgIcon name='user' size={28} /> : <SvgIcon name='unknowUser' size={28} />}
+      </div>
       <div>
         <BarBattery level={40} height={24} />
       </div>
@@ -98,6 +113,7 @@ const GlobalHeader = () => {
       {[2, 3].includes(powerStatus.charge_status) && <ChargingAnimation />}
       <WsVehicleContainer />
       <GlobalNotification />
+      <LoginDialog />
     </div>
   );
 };
