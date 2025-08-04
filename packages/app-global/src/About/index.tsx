@@ -256,10 +256,15 @@ const About = () => {
               itemLayout='horizontal'
               dataSource={nodesData}
               renderItem={(item, index) => (
-                <List.Item actions={[<Button type='primary'>查看日志</Button>]}>
+                <List.Item
+                  classNames={{
+                    actions: '!ml-4',
+                  }}
+                  actions={[<Button type='primary'>查看日志</Button>]}
+                >
                   <List.Item.Meta
                     title={
-                      <div className='flex items-center gap-2 justify-start'>
+                      <div className='flex items-center gap-2 justify-between'>
                         <div className='px-1 flex items-center gap-1'>
                           {item.status ? (
                             <Badge status='processing' className={styles.dot} color={theme.colorPrimary} />
@@ -268,7 +273,7 @@ const About = () => {
                           )}
                           {item.title}
                         </div>
-                        <div className='flex items-center gap-2'>
+                        <div className='flex items-center justify-between min-w-32 gap-1'>
                           <span
                             style={{
                               color:
