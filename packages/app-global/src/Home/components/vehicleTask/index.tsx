@@ -68,7 +68,7 @@ const VehicleTask = () => {
       transition={{ type: 'spring', stiffness: 200, damping: 15 }}
     >
       {/* 动态发光圈 */}
-      {true ? (
+      {false ? (
         // {showAnimate ? (
         <motion.div
           className='absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-teal-500 via-purple-500 to-blue-500 opacity-10 blur-3xl'

@@ -228,8 +228,8 @@ const About = () => {
             <Button type='primary' onClick={() => setLogsOpen(true)}>
               系统日志
             </Button>
-            <Button type='primary' disabled>
-              占位
+            <Button color='yellow' variant='solid'>
+              客户端
             </Button>
           </div>
         </div>
