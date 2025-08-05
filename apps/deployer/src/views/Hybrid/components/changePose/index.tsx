@@ -8,6 +8,10 @@ import { useStageEvents } from '../../hooks/useStage';
 import { initalPose } from '../../service';
 import { useHybirdStore } from '../../store/hybird.store';
 import NewAgv from '../newAgv';
+
+function degreesToRadians(degrees: number) {
+  return degrees * (Math.PI / 180);
+}
 const ChangePose = (props: { floor: number }) => {
   const { useErrorMessage } = useHttpCode();
   const { startTouch, vehiclePosition, beginPose, showAgv } = useHybirdStore(
@@ -43,7 +47,7 @@ const ChangePose = (props: { floor: number }) => {
         pose: {
           pose_x: vehiclePosition.x / 20,
           pose_y: 0 - vehiclePosition.y / 20,
-          pose_angle: renderAngleText,
+          pose_angle: degreesToRadians(renderAngleText),
         },
       });
     }

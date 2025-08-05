@@ -71,7 +71,10 @@
       "success": "完成"
     },
     "unauthorized": "无地图数据",
-    "actionSuccess": "操作成功"
+    "actionSuccess": "操作成功",
+    "status": "状态",
+    "action": "操作",
+    "delete": "删除"
   },
   "deployer": {
     "safety": {
@@ -178,7 +181,11 @@
       "pick": "取货",
       "place": "放货",
       "charge": "充电",
-      "move": "移动"
+      "move": "移动",
+      "taskNo": "任务号",
+      "pointNo": "点号",
+      "taskType": "任务类型",
+      "restCount": "剩余次数"
     }
   }
 }

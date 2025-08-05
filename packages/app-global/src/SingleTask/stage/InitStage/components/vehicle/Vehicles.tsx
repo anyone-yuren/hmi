@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useImperativeHandle } from 'react';
+import { forwardRef, memo, useImperativeHandle } from 'react';
 // import vehicleImages from '../../../assets/vehicle/vector.svg';
 import { useShallow } from 'zustand/react/shallow';
 import { useSingleTaskStore } from '../../../../store/singleTask.store';
@@ -19,9 +19,6 @@ const Vehicles = forwardRef((props: any, ref) => {
     },
   }));
 
-  useEffect(() => {
-    console.log('agvPosition', agvPosition);
-  }, [agvPosition]);
   return (
     <>
       <Vehicle

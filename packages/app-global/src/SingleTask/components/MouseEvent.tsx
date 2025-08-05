@@ -6,7 +6,7 @@ import { ISubTaskItem } from '../index.d';
 interface IMouseEvent {
   id: string;
   hashMap: Record<string, any>;
-  handleAction: (type: ISubTaskItem['task_type']) => void;
+  handleAction: (type: ISubTaskItem['task_type'] | 'Offset' | 'Info') => void;
 }
 
 const menuItemStyle = { fontSize: 15, textAlign: 'center' };

@@ -220,11 +220,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
     setMapRationView(1 / scaleX);
   }, [currentScale, touchendSign]);
 
-  useEffect(() => {
-    console.log('currentScale', currentScale, commonPoints);
-    console.log('points', points);
-  }, [lineProps, currentScale, commonPoints, points]);
-
   return (
     <div className='relative'>
       {(() => {

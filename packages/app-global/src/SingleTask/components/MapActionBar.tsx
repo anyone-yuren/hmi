@@ -19,8 +19,16 @@ import { Upload, UploadProps } from 'antd';
 import { UploadChangeParam, UploadFile } from 'antd/es/upload';
 
 const MapActionBar = forwardRef((props: any, ref) => {
-  const { setTaskSettingVisible, setTaskVisible, stageRef, setMoveToTarget, taskMode, modeHashMap, getMapTaskMode } =
-    props;
+  const {
+    setTaskSettingVisible,
+    setTaskVisible,
+    stageRef,
+    setMoveToTarget,
+    taskMode,
+    modeHashMap,
+    getMapTaskMode,
+    setOffsetVisible,
+  } = props;
   const { t } = useTranslation();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -152,6 +160,7 @@ const MapActionBar = forwardRef((props: any, ref) => {
           onClick={() => {
             setTaskSettingVisible(true);
             setTaskVisible(false);
+            setOffsetVisible(false);
           }}
         >
           <Tooltip title={t('deployer.singleTask.setting')} placement='bottom'>
@@ -188,6 +197,7 @@ const MapActionBar = forwardRef((props: any, ref) => {
         <IconStyleButton
           onClick={() => {
             //
+            setOffsetVisible(true);
           }}
         >
           <Tooltip title={t('deployer.singleTask.offsetTable')}>

@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 // import vehicleImages from '../../../assets/vehicle/vector.svg';
 import { useTranslation } from 'react-i18next';
 import { Image as KonvaImage } from 'react-konva';
@@ -28,9 +28,10 @@ const CloudPoints = (props: any) => {
   const imagesRef = useRef<any>(null);
   const prevData = useRef<any>(null);
 
-  const { cloudPoints } = useSingleTaskStore(
+  const { cloudPoints, setCloudPoints } = useSingleTaskStore(
     useShallow((state) => ({
       cloudPoints: state.cloudPoints,
+      setCloudPoints: state.setCloudPoints,
     })),
   );
 
@@ -39,6 +40,12 @@ const CloudPoints = (props: any) => {
     imagesRef.current = image;
     prevData.current = cloudPoints;
   }
+
+  useEffect(() => {
+    setCloudPoints({});
+    prevData.current = null;
+    imagesRef.current = null;
+  }, []);
 
   return (
     <>

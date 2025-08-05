@@ -1,14 +1,4 @@
-import {
-  Box,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  ThemeProvider,
-} from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, ThemeProvider } from '@mui/material';
 import { useSize } from 'ahooks';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { cancelTask, getFloorData, getLineList, getPointList, getTaskMode, offsetTable } from './services';
@@ -25,6 +15,7 @@ import { generateUniqueId, MapContainer, MapTaskPanelEmptyContainer, MapTaskPopu
 import EmptyBox from './components/Empty';
 import MapActionBar from './components/MapActionBar';
 import MouseEvent from './components/MouseEvent';
+import OffsetPanel from './components/OffsetPanel';
 import SecondaryPage from './components/SecondaryPage';
 import TaskPanel from './components/TaskPanel';
 import TaskSetting from './components/TaskSetting';
@@ -54,6 +45,7 @@ const SingleTask = () => {
   const [activePoints, setActivePoints] = useState<IPoint['id'][]>([]);
   const [taskVisible, setTaskVisible] = useState(false);
   const [taskSettingVisible, setTaskSettingVisible] = useState(false);
+  const [offsetVisible, setOffsetVisible] = useState(false);
   const [preTaskList, setPreTaskList] = useState([_.cloneDeep(initTaskActionRow)]);
   const [subTask, setSubTask] = useState<ITaskItem>();
   const [activeKey, setActiveKey] = useState('task');
@@ -66,7 +58,7 @@ const SingleTask = () => {
   const { data: taskMode, runAsync: getMapTaskMode }: Record<string, any> = useRequest(getTaskMode, {});
   const { data: offsetList, runAsync: getOffsetList }: Record<string, any> = useRequest(offsetTable, {});
 
-  const { data: floorMapData, runAsync: getFloorMapData } = useRequest(
+  const { data: floorMapData, runAsync: getFloorMapData }: any = useRequest(
     (floor) => {
       return getFloorData(floor);
     },
@@ -113,8 +105,17 @@ const SingleTask = () => {
     return taskMode?.data?.task_mode ?? 100;
   }, [taskMode]);
 
+  const offsetHashMap = useMemo(() => {
+    if (!offsetList || !offsetList.length) return {};
+    let hashMap: any = {};
+    for (let index = 0; index < offsetList.length; index++) {
+      const element = offsetList[index];
+      hashMap[element.PointNumber] = element;
+    }
+    return hashMap;
+  }, [offsetList]);
+
   const pointsDict = useMemo(() => {
-    console.log('offsetList', offsetList, 'pointsData', pointsData);
     let hashMap: any = {},
       points: any = [],
       charges: any = [],
@@ -130,12 +131,14 @@ const SingleTask = () => {
         x: (point.x / 1000) * 20,
         y: (point.y / 1000) * 20,
         state: 0,
+        offsetX: offsetHashMap?.[point.id]?.X || null,
+        offsetY: offsetHashMap?.[point.id]?.Y || null,
       });
       point.type === 6 && charges.push(point);
       (point.type === 1 || point.type === 4) && locations.push(point);
     }
     return { hashMap, points, charges, locations };
-  }, [pointsData, offsetList]);
+  }, [pointsData, offsetHashMap]);
 
   const lines = useMemo(() => {
     const ary: any = [];
@@ -190,6 +193,15 @@ const SingleTask = () => {
     taskPanelRef?.current?.scrollToBottom();
   };
 
+  const updateTask = (tasks: ITaskItem[]) => {
+    if (tasks.length) {
+      const ary = tasks?.filter((item: ITaskItem) => item?.task_group_id === subTask?.task_group_id);
+      ary.length ? setSubTask(ary[0]) : setPopUp(false);
+    } else {
+      setPopUp(false);
+    }
+  };
+
   return (
     <>
       {taskVisible && (
@@ -203,14 +215,7 @@ const SingleTask = () => {
               initTaskActionRow,
             }}
             {..._.pick(pointsDict, ['points', 'charges', 'locations'])}
-            updateTask={(tasks: ITaskItem[]) => {
-              if (tasks.length) {
-                const ary = tasks?.filter((item: ITaskItem) => item?.task_group_id === subTask?.task_group_id);
-                ary.length ? setSubTask(ary[0]) : setPopUp(false);
-              } else {
-                setPopUp(false);
-              }
-            }}
+            updateTask={updateTask}
             handleTaskOption={(item: ITaskItem, key: 'task' | 'template') => {
               if (PopUp) return;
               setActiveKey(key);
@@ -218,6 +223,12 @@ const SingleTask = () => {
               setPopUp(true);
             }}
           ></TaskPanel>
+        </MapTaskPopup>
+      )}
+
+      {offsetVisible && (
+        <MapTaskPopup>
+          <OffsetPanel setOffsetVisible={setOffsetVisible} offsetList={offsetList}></OffsetPanel>
         </MapTaskPopup>
       )}
 
@@ -231,6 +242,7 @@ const SingleTask = () => {
           taskMode={taskMode}
           modeHashMap={modeHashMap}
           getMapTaskMode={getMapTaskMode}
+          setOffsetVisible={setOffsetVisible}
         ></MapActionBar>
 
         {mapTaskMode !== 0 && (
@@ -286,7 +298,7 @@ const SingleTask = () => {
                   <MouseEvent
                     id={id}
                     hashMap={pointsDict?.hashMap}
-                    handleAction={(type: ISubTaskItem['task_type']) => {
+                    handleAction={(type: any) => {
                       handleMouse(type, id);
                     }}
                   />
@@ -296,9 +308,14 @@ const SingleTask = () => {
           ) : null}
         </div>
 
-        <SecondaryPage open={PopUp as boolean} setOpen={setPopUp} fullScreen={false} sx={{ zIndex: 1213 }}>
-          <Box
-            sx={{
+        <SecondaryPage
+          open={PopUp as boolean}
+          setOpen={setPopUp}
+          fullScreen={false}
+          sx={{ zIndex: 1213, width: '800px!important' }}
+        >
+          <div
+            style={{
               borderBottom: 1,
               borderColor: 'divider',
               background: 'white',
@@ -322,12 +339,12 @@ const SingleTask = () => {
                   <Table size='medium' stickyHeader>
                     <TableHead>
                       <TableRow>
-                        {isTask && <TableCell align='center'>{t('任务号')}</TableCell>}
-                        <TableCell align='center'>{t('点号')}</TableCell>
-                        <TableCell align='center'>{t('任务类型')}</TableCell>
-                        {isTask && <TableCell align='center'>{t('剩余次数')}</TableCell>}
-                        {isTask && <TableCell align='center'>{t('状态')}</TableCell>}
-                        {isTask && <TableCell align='center'>{t('操作')}</TableCell>}
+                        {isTask && <TableCell align='center'>{t('deployer.singleTask.taskNo')}</TableCell>}
+                        <TableCell align='center'>{t('deployer.singleTask.pointNo')}</TableCell>
+                        <TableCell align='center'>{t('deployer.singleTask.taskType')}</TableCell>
+                        {isTask && <TableCell align='center'>{t('deployer.singleTask.restCount')}</TableCell>}
+                        {isTask && <TableCell align='center'>{t('common.status')}</TableCell>}
+                        {isTask && <TableCell align='center'>{t('common.action')}</TableCell>}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -376,7 +393,7 @@ const SingleTask = () => {
                                   }}
                                   color='error'
                                 >
-                                  {t('删除')}
+                                  {t('common.delete')}
                                 </Button>
                               </TableCell>
                             )}
@@ -398,7 +415,7 @@ const SingleTask = () => {
                 </TableContainer>
               </ThemeProvider>
             </RenderItemRow>
-          </Box>
+          </div>
         </SecondaryPage>
 
         <SecondaryPage open={taskSettingVisible} setOpen={setTaskSettingVisible} fullScreen={true}>

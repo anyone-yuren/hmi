@@ -180,6 +180,7 @@ export const MapContainer: any = styled(Box)(() => ({
   height: '100%',
   position: 'relative',
   flexDirection: 'column',
+  overflow: 'hidden',
 }));
 
 export const MapTaskPanel: any = styled('div')(() => ({
