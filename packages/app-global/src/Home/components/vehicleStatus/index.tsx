@@ -3,12 +3,14 @@ import { useRequest } from 'ahooks';
 import { Divider, Space, Tag, Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import diqiu from '../../../assets/img/diqiu.png';
 import { getAgvInfo, getVehicleIp, getVehicleTaskMode } from '../../services';
 import { useHomeStore } from '../../store/index';
 
 const VehicleInfo = () => {
+  const { t } = useTranslation();
   const { data: agv_info, loading } = useRequest(getAgvInfo);
   const { data: vehicle_ip, loading: loading_ip } = useRequest(getVehicleIp);
   const { data: task_mode, loading: loading_task_mode } = useRequest(getVehicleTaskMode);
@@ -44,7 +46,7 @@ const VehicleInfo = () => {
       <div className='relative z-10 text-white flex flex-col h-full'>
         {/* <SvgIcon name='slam' className='absolute -right-10 -bottom-10 scale-125 opacity-5' size={160} /> */}
         <img src={diqiu} className='w-60 absolute -right-10 -bottom-10 scale-125 opacity-15' />
-        <h2 className='text-lg font-bold mb-2'>车辆信息</h2>
+        <h2 className='text-lg font-bold mb-2'>{t('common.home.vehicleStatus')}</h2>
         <div className='flex-1 grid grid-cols-3 gap-2'>
           <div className='flex-1 col-span-3 flex flex-col'>
             <div className='text-[60px] md:text-[40px] flex items-start'>
@@ -75,20 +77,20 @@ const VehicleInfo = () => {
                 theta: {Math.round((agvPosition?.angel * 180) / Math.PI) || 0}°
               </Typography.Title> */}
               <Typography.Title level={5}>
-                定位类型:
+                {t('common.home.vehicleStatusNavigationType')}:
                 <Tag bordered={false} color='default' className='text-base ml-1'>
                   {getNavigationType(robotCurrentStatus?.navigation_type || 0)}
                 </Tag>
               </Typography.Title>
               <Typography.Title level={5}>
-                定位状态:
+                {t('common.home.vehicleStatusNavigationStatus')}:
                 {!robotCurrentStatus?.navi_status ? (
                   <Tag bordered={false} color='success' className='text-base ml-1'>
-                    正常
+                    {t('common.home.vehicleStatusNavigationStatusNormal')}
                   </Tag>
                 ) : (
                   <Tag bordered={false} color='error' className='text-base ml-1'>
-                    定位丢失
+                    {t('common.home.vehicleStatusNavigationStatusLost')}
                   </Tag>
                 )}
               </Typography.Title>

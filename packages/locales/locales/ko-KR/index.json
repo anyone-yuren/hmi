@@ -1,5 +1,14 @@
 {
   "common": {
+    "about": {
+      "cpu": "CPU",
+      "date": "생산 날짜",
+      "logs": "시스템 로그",
+      "memory": "메모리",
+      "nodes": "시스템 노드 정보",
+      "serial": "일련 번호",
+      "vehicleType": "자동차 모델"
+    },
     "backToHome": "홈페이지로 돌아갑니다",
     "charging": {
       "Voltage": "전압/전류",
@@ -26,7 +35,20 @@
       "task": "작업",
       "taskId": "작업 번호",
       "taskPoint": "작업 포인트",
-      "taskType": "작업 유형"
+      "taskType": "작업 유형",
+      "vehicleControl": "제어 상태",
+      "vehicleControlMode": "제어 모드",
+      "vehicleControlStatus": "주식이 있습니까?",
+      "vehicleControlWeight": "화물 체중 (kg)",
+      "vehicleFork": "포크 위치",
+      "vehicleForkx": "좌우",
+      "vehicleForky": "앞뒤",
+      "vehicleForkz": "위아래",
+      "vehicleStatus": "차량 정보",
+      "vehicleStatusNavigationStatus": "포지셔닝 상태",
+      "vehicleStatusNavigationStatusLost": "위치 손실",
+      "vehicleStatusNavigationStatusNormal": "보통",
+      "vehicleStatusNavigationType": "포지셔닝 유형"
     },
     "modify": "수정",
     "noPermission": "죄송합니다.이 페이지에 액세스 할 수있는 권한이 없습니다.",

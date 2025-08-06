@@ -17,18 +17,25 @@ const VEHICLE_URL_10001 =
     : `ws://${currentHost}:10001`; // 生产环境使用真实地址
 
 export const useHybrid = () => {
-  const { setTaskInfo, setControlStatus, setRobotCurrentStatus, setRobotIsensorStatus, setRobotGoodsStatus } =
-    useHomeStore(
-      useShallow((state) => {
-        return {
-          setTaskInfo: state.setTaskInfo,
-          setControlStatus: state.setControlStatus,
-          setRobotCurrentStatus: state.setRobotCurrentStatus,
-          setRobotIsensorStatus: state.setRobotIsensorStatus,
-          setRobotGoodsStatus: state.setRobotGoodsStatus,
-        };
-      }),
-    );
+  const {
+    setTaskInfo,
+    setControlStatus,
+    setRobotCurrentStatus,
+    setRobotIsensorStatus,
+    setRobotGoodsStatus,
+    setRobotForkarmStatus,
+  } = useHomeStore(
+    useShallow((state) => {
+      return {
+        setTaskInfo: state.setTaskInfo,
+        setControlStatus: state.setControlStatus,
+        setRobotCurrentStatus: state.setRobotCurrentStatus,
+        setRobotIsensorStatus: state.setRobotIsensorStatus,
+        setRobotGoodsStatus: state.setRobotGoodsStatus,
+        setRobotForkarmStatus: state.setRobotForkarmStatus,
+      };
+    }),
+  );
   const { sendMessage, latestMessage, readyState } = useWebSocket(VEHICLE_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
@@ -52,6 +59,10 @@ export const useHybrid = () => {
       if (data.uri == '/sirius/topics/robot_status_goods') {
         const { timestamp, ...rest } = data;
         setRobotGoodsStatus(rest);
+      }
+      if (data.uri == '/sirius/topics/robot_status_forkarm') {
+        const { timestamp, ...rest } = data;
+        setRobotForkarmStatus(rest);
       }
     },
   });
@@ -95,6 +106,7 @@ export const useHybrid = () => {
             '/sirius/topics/control_status',
             '/sirius/topics/robot_status_isensor',
             '/sirius/topics/robot_status_goods',
+            '/sirius/topics/robot_status_forkarm',
           ],
         }),
       );

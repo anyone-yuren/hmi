@@ -4,6 +4,7 @@ import { Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import earth from '../../../assets/img/earth.png';
@@ -61,6 +62,7 @@ const useStyles = createStyles(({ token, css }) => ({
 }));
 
 const VehicleControl = () => {
+  const { t } = useTranslation();
   const { styles } = useStyles();
   const theme = useTheme();
   const { robotIsensorStatus, robotGoodsStatus } = useHomeStore(
@@ -97,7 +99,7 @@ const VehicleControl = () => {
       <div className='relative z-10 text-white flex flex-col h-full'>
         {/* <SvgIcon name='slam' className='absolute -right-10 -bottom-10 scale-125 opacity-5' size={160} /> */}
         <img src={earth} className='w-60 absolute -right-10 top-0 scale-125 opacity-35' />
-        <h2 className='text-lg font-bold mb-2'>控制状态</h2>
+        <h2 className='text-lg font-bold mb-2'>{t('common.home.vehicleControl')}</h2>
         <div className='flex-1 grid grid-cols-3'>
           <div className='flex-1 flex flex-col justify-center items-center'>
             <Typography.Title level={4}>
@@ -107,9 +109,9 @@ const VehicleControl = () => {
                 unCheckedChildren='单机'
                 defaultChecked
               /> */}
-              {robotGoodsStatus.number} kg
+              {robotGoodsStatus.number} KG
             </Typography.Title>
-            <Typography.Text className='opacity-50'>货物重量</Typography.Text>
+            <Typography.Text className='opacity-50'>{t('common.home.vehicleControlWeight')}</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
             <Typography.Title
@@ -120,7 +122,7 @@ const VehicleControl = () => {
             >
               <SvgIcon name={mamualStatusIcon} size={24} />
             </Typography.Title>
-            <Typography.Text className='opacity-50'>控制模式</Typography.Text>
+            <Typography.Text className='opacity-50'>{t('common.home.vehicleControlMode')}</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
             <Typography.Title level={4}>
@@ -134,7 +136,7 @@ const VehicleControl = () => {
                 </>
               )}
             </Typography.Title>
-            <Typography.Text className='opacity-50'>是否有货</Typography.Text>
+            <Typography.Text className='opacity-50'>{t('common.home.vehicleControlStatus')}</Typography.Text>
           </div>
         </div>
       </div>
