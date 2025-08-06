@@ -43,8 +43,8 @@ const OffsetPanel = forwardRef((props: any, ref) => {
 
   const handleDeleteOffset = (point: any) => {
     MwConfirm.confirm({
-      title: t('deployer.sliderPage.deleteOffset'),
-      content: t('deployer.sliderPage.confirmDeleteOffsetTips'),
+      title: t('deployer.singleTask.deleteOffset'),
+      content: t('deployer.singleTask.confirmDeleteOffsetTips'),
 
       onOk: async () => {
         const params = {
