@@ -86,7 +86,7 @@ const VehicleControl = () => {
       case 3:
         return 'semiAuto';
       default:
-        return '-';
+        return '';
     }
   }, [robotIsensorStatus.auto_manual_status]);
 
@@ -99,7 +99,23 @@ const VehicleControl = () => {
       <div className='relative z-10 text-white flex flex-col h-full'>
         {/* <SvgIcon name='slam' className='absolute -right-10 -bottom-10 scale-125 opacity-5' size={160} /> */}
         <img src={earth} className='w-60 absolute -right-10 top-0 scale-125 opacity-35' />
-        <h2 className='text-lg font-bold mb-2'>{t('common.home.vehicleControl')}</h2>
+
+        <div className='w-full'>
+          <h2 className='text-lg font-bold mb-1'>{t('common.home.vehicleControl')}</h2>
+          <motion.div
+            className='!w-full h-px'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <div
+              className='w-full h-full'
+              style={{
+                background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)',
+              }}
+            />
+          </motion.div>
+        </div>
         <div className='flex-1 grid grid-cols-3'>
           <div className='flex-1 flex flex-col justify-center items-center'>
             <Typography.Title level={4}>
@@ -120,7 +136,7 @@ const VehicleControl = () => {
               }}
               level={4}
             >
-              <SvgIcon name={mamualStatusIcon} size={24} />
+              {mamualStatusIcon ? <SvgIcon name={mamualStatusIcon} size={24} /> : '-'}
             </Typography.Title>
             <Typography.Text className='opacity-50'>{t('common.home.vehicleControlMode')}</Typography.Text>
           </div>

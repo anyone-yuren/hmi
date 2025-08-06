@@ -9,6 +9,9 @@
       "serial": "Numéro de série",
       "vehicleType": "Modèle de voiture"
     },
+    "charging": {
+      "station": "Tas de charge"
+    },
     "errorMsg": {
       "title": "Message d'exception"
     },
@@ -74,6 +77,9 @@
     "safety": {
       "sensorCloud": "Visualisation du nuage de points du capteur",
       "title": "Évitez les obstacles"
+    },
+    "sliderPage": {
+      "charging": "Charge"
     }
   }
 }

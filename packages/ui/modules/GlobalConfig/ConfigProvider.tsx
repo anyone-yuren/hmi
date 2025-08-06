@@ -107,7 +107,7 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
           fontFamily:
             'Microsoft YaHei, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         },
-        algorithm: theme.defaultAlgorithm,
+        algorithm: theme.darkAlgorithm,
         components: {
           Table: {
             /* 这里是你的组件 token */

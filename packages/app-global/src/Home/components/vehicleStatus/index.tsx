@@ -46,12 +46,28 @@ const VehicleInfo = () => {
       <div className='relative z-10 text-white flex flex-col h-full'>
         {/* <SvgIcon name='slam' className='absolute -right-10 -bottom-10 scale-125 opacity-5' size={160} /> */}
         <img src={diqiu} className='w-60 absolute -right-10 -bottom-10 scale-125 opacity-15' />
-        <h2 className='text-lg font-bold mb-2'>{t('common.home.vehicleStatus')}</h2>
+        <div className='w-full'>
+          <h2 className='text-lg font-bold mb-1'>{t('common.home.vehicleStatus')}</h2>
+          <motion.div
+            className='!w-full h-px'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <div
+              className='w-full h-full'
+              style={{
+                background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)',
+              }}
+            />
+          </motion.div>
+        </div>
         <div className='flex-1 grid grid-cols-3 gap-2'>
           <div className='flex-1 col-span-3 flex flex-col'>
-            <div className='text-[60px] md:text-[40px] flex items-start'>
-              No.
-              <span>{loading ? <Skeleton variant='rounded' width={60} height={60} /> : agv_info?.agv_id || '-'}</span>
+            <div className='text-[60px] md:text-[40px] flex gap-2 items-baseline'>
+              <span>
+                No.{loading ? <Skeleton variant='rounded' width={60} height={60} /> : agv_info?.agv_id || '-'}
+              </span>
               <span
                 style={{
                   background: theme.colorPrimary,

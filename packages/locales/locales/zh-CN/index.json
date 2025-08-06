@@ -22,6 +22,7 @@
       "extend": "伸出",
       "fail": "充电失败",
       "readyCharging": "准备充电",
+      "station": "充电桩",
       "success": "充电完成",
       "waitting": "等待充电"
     },
@@ -168,6 +169,7 @@
     },
     "sliderPage": {
       "about": "车辆信息",
+      "charging": "充电",
       "cloud": "上传下载",
       "diagnosis": "诊断",
       "io": "I/O 信息",

@@ -26,7 +26,7 @@ const VehicleFork = () => {
       transition={{ type: 'spring', stiffness: 200, damping: 15 }}
     >
       {/* 动态发光圈 */}
-      {true ? (
+      {false ? (
         <motion.div
           className='absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-teal-500 via-purple-500 to-blue-500 opacity-10 blur-3xl'
           animate={{
@@ -41,21 +41,22 @@ const VehicleFork = () => {
 
       {/* 内容 */}
       <div className='relative z-10 h-full text-white flex flex-col'>
-        <h2 className='text-lg font-bold mb-1'>{t('common.home.vehicleFork')} (mm)</h2>
-        {true ? (
+        <div className='w-full'>
+          <h2 className='text-lg font-bold mb-1'>{t('common.home.vehicleFork')}</h2>
           <motion.div
-            initial={{ width: '40px', opacity: 0.2 }}
-            animate={{
-              width: '160px',
-              opacity: 1,
-            }}
-            transition={{
-              duration: 3,
-              ease: 'easeInOut',
-            }}
-            className='h-[1px] bg-gradient-to-r from-teal-500 to-purple-500/0 rounded-full'
-          />
-        ) : null}
+            className='!w-full h-px'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <div
+              className='w-full h-full'
+              style={{
+                background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)',
+              }}
+            />
+          </motion.div>
+        </div>
         <div className='flex-1 grid grid-cols-3'>
           <div className='flex-1 flex flex-col justify-center items-center'>
             <Typography.Title level={2}>{robotForkarmStatus.y > -1 ? robotForkarmStatus.y : '-'}</Typography.Title>

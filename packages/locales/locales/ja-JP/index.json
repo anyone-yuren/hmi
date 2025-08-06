@@ -22,6 +22,7 @@
       "extend": "延ばす",
       "fail": "充電失敗",
       "readyCharging": "充電準備",
+      "station": "充電パイル",
       "success": "充電完了",
       "waitting": "充電待ち"
     },
@@ -155,6 +156,7 @@
     },
     "sliderPage": {
       "about": "車両情報",
+      "charging": "充電",
       "cloud": "アップロードとダウンロード",
       "diagnosis": "診断",
       "io": "I/O情報",
