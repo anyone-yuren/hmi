@@ -205,6 +205,14 @@ const Charging = () => {
             {/* 充电桩电池电压 */}
             <div className='flex flex-col gap-4'>
               <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-[#22d3ee]/20 px-4 py-2'>
+                <div className='text-sm text-[#22d3ee] font-bold flex items-end gap-2'>IP地址</div>
+                <div className='text-sm font-bold'>192.168.1.1</div>
+              </div>
+              <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-[#22d3ee]/20 px-4 py-2'>
+                <div className='text-sm text-[#22d3ee] font-bold flex items-end gap-2'>状态</div>
+                <div className='text-sm font-bold'>{powerStatus.charge_status === 4 ? '充电中' : '未充电'}</div>
+              </div>
+              <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-[#22d3ee]/20 px-4 py-2'>
                 <div className='text-sm text-[#22d3ee] font-bold flex items-end gap-2'>
                   <SvgIcon name='volt' size={32} />
                   电压
