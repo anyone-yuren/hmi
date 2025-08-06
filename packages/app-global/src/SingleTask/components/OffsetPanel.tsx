@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Typography } from '@mui/material';
 import { Input } from 'antd';
-import { forwardRef, memo, useMemo } from 'react';
+import { forwardRef, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'swiper/css';
 import { MapTaskPanel, MapTaskPanelHeader, TaskItem } from '../Style';
@@ -12,12 +12,17 @@ import PointsAdd from './SvgIcon/PointsAdd';
 import { ThemeProvider } from 'antd-style';
 
 export type IActive = 'task' | 'template';
-const TaskPanel = forwardRef((props: any, ref) => {
+const OffsetPanel = forwardRef((props: any, ref) => {
   const { setOffsetVisible, offsetList } = props;
+  const [searchText, setSearchText] = useState('');
   const { t } = useTranslation();
   const renderOffsetList = useMemo(() => {
-    return offsetList ? offsetList : [];
-  }, [offsetList]);
+    const originList = offsetList ? offsetList : [];
+    const ary = originList?.filter((item: any) => {
+      return !searchText ? true : item.PointNumber && item.PointNumber.toString().indexOf(searchText) > -1;
+    });
+    return ary;
+  }, [offsetList, searchText]);
 
   return (
     <MapTaskPanel>
@@ -57,14 +62,23 @@ const TaskPanel = forwardRef((props: any, ref) => {
           },
         }}
       >
-        <Input.Search placeholder='请输入点号' variant='filled' />
+        <Input.Search
+          allowClear
+          placeholder={t('deployer.singleTask.plsInputPoint')}
+          variant='filled'
+          onSearch={(value: any) => {
+            setSearchText(value);
+          }}
+        />
       </ThemeProvider>
       <div className='flex flex-col'>
         {renderOffsetList?.map((point, index) => {
           return (
             <TaskItem>
               <div className='flex pt-[5px] justify-between items-center'>
-                <div className='text-[18px]'>点号: {point.PointNumber}</div>
+                <div className='text-[18px]'>
+                  {t('deployer.singleTask.point')}: {point.PointNumber}
+                </div>
                 <div className='w-[70px] flex items-center justify-center gap-[20px]'>
                   <EditIcon fontSize={20}></EditIcon>
                   <DeleteIcon fontSize={20} isActive onClick={() => {}}></DeleteIcon>
@@ -72,27 +86,17 @@ const TaskPanel = forwardRef((props: any, ref) => {
               </div>
               <div className='flex pb-[5px] pt-[3px] justify-between items-center text-[12px]'>
                 <div>
-                  <span className='w-[80px] inline-block'>偏移X: {point.X}</span>
-                  <span className='w-[80px] inline-block'>偏移Y: {point.Y}</span>
+                  <span className='w-[80px] inline-block'>
+                    {t('deployer.singleTask.offset')}X: {point.X}
+                  </span>
+                  <span className='w-[80px] inline-block'>
+                    {t('deployer.singleTask.offset')}Y: {point.Y}
+                  </span>
                 </div>
                 <div className='text-[#ccc]'>
                   <span>2025/01/01 12:00:00</span>
                 </div>
               </div>
-              {/* <div className='flex w-full'>
-                <div className='flex-1 py-[3px]'>
-                  <div className='text-[16px]'>点号: {point.PointNumber}</div>
-                  <div className='text-[12px]'>
-                    <span className='w-[80px] inline-block'>偏移X: {point.X}</span>
-                    <span className='w-[80px] inline-block'>偏移Y: {point.Y}</span>
-                  </div>
-                </div>
-
-                <div className='w-[70px] flex items-center justify-center gap-[20px]'>
-                  <EditIcon fontSize={20}></EditIcon>
-                  <DeleteIcon fontSize={20} isActive onClick={() => {}}></DeleteIcon>
-                </div>
-              </div> */}
             </TaskItem>
           );
         })}
@@ -101,4 +105,4 @@ const TaskPanel = forwardRef((props: any, ref) => {
   );
 });
 
-export default memo(TaskPanel);
+export default memo(OffsetPanel);

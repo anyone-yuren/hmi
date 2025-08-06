@@ -15,6 +15,7 @@ import { generateUniqueId, MapContainer, MapTaskPanelEmptyContainer, MapTaskPopu
 import EmptyBox from './components/Empty';
 import MapActionBar from './components/MapActionBar';
 import MouseEvent from './components/MouseEvent';
+import OffsetModal from './components/OffsetModal';
 import OffsetPanel from './components/OffsetPanel';
 import SecondaryPage from './components/SecondaryPage';
 import TaskPanel from './components/TaskPanel';
@@ -46,6 +47,8 @@ const SingleTask = () => {
   const [taskVisible, setTaskVisible] = useState(false);
   const [taskSettingVisible, setTaskSettingVisible] = useState(false);
   const [offsetVisible, setOffsetVisible] = useState(false);
+  const [offsetModalVisible, setOffsetModalVisible] = useState(false);
+  const [offsetModalConfig, setOffsetModalConfig] = useState({ type: '', point: {} });
   const [preTaskList, setPreTaskList] = useState([_.cloneDeep(initTaskActionRow)]);
   const [subTask, setSubTask] = useState<ITaskItem>();
   const [activeKey, setActiveKey] = useState('task');
@@ -68,6 +71,7 @@ const SingleTask = () => {
   const ref = useRef<HTMLDivElement>(null);
   const taskPanelRef = useRef<any>(null);
   const stageRef = useRef<any>(null);
+  const offsetModalRef = useRef<any>(null);
   const size = useSize(ref);
   const { t } = useTranslation();
   const { TaskStatusHashMap, TaskTypeHashMap } = useConstants();
@@ -77,6 +81,7 @@ const SingleTask = () => {
       robotCurrentStatus: state.robotCurrentStatus,
     })),
   );
+
   const modeHashMap: {
     title: Record<IMode, string>;
     showTaskPanel: Record<IMode, () => void> | any;
@@ -125,17 +130,20 @@ const SingleTask = () => {
       // 暂时先这么临时处理,后面看看有没有什么办法
       point.types.length &&
         (point.type = point.types[0] === 0 && point.types.length > 1 ? point.types[1] : point.types[0]);
-      hashMap[point.id] = point;
-      points.push({
+      const newPoint = {
         ...point,
         x: (point.x / 1000) * 20,
         y: (point.y / 1000) * 20,
-        state: 0,
+        origin_x: point.x,
+        origin_y: point.y,
+        // state: 0, // 暂时关掉这个状态看看
         offsetX: offsetHashMap?.[point.id]?.X || null,
         offsetY: offsetHashMap?.[point.id]?.Y || null,
-      });
-      point.type === 6 && charges.push(point);
-      (point.type === 1 || point.type === 4) && locations.push(point);
+      };
+      points.push(newPoint);
+      hashMap[point.id] = newPoint;
+      point.type === 6 && charges.push(newPoint);
+      (point.type === 1 || point.type === 4) && locations.push(newPoint);
     }
     return { hashMap, points, charges, locations };
   }, [pointsData, offsetHashMap]);
@@ -165,14 +173,21 @@ const SingleTask = () => {
     }
   }, [robotCurrentStatus]);
 
-  const handleMouse = (type: any, id: IPoint['id']) => {
+  const handleMouse = (type: any, point: any) => {
     const taskActionAry = ['Pick', 'Place', 'Null', 'Charge'];
     if (taskActionAry.includes(type)) {
-      taskAction(type, id);
+      taskAction(type, point.id);
       return;
     }
-    console.log('这里理论上不会执行了');
-    const ary = ['Offset', 'Info'];
+    const offsetAry = ['Offset', 'Info'];
+    if (offsetAry.includes(type)) {
+      setOffsetModalVisible(true);
+      setOffsetModalConfig({
+        type,
+        point,
+      });
+      setActivePoints([]);
+    }
   };
 
   const taskAction = (type: ISubTaskItem['task_type'], id: IPoint['id']) => {
@@ -248,26 +263,17 @@ const SingleTask = () => {
         {mapTaskMode !== 0 && (
           <div
             style={{
-              position: 'absolute',
-              background: '#00D1D1',
-              height: '80px',
-              width: '80px',
               borderRadius: '80px',
-              right: -40,
-              top: '50%',
               transform: 'translate(0%, -50%)',
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: 10,
-              zIndex: 1211,
             }}
+            className='absolute bg-[#00D1D1] w-[80px] h-[80px] pl-[10px] items-center right-[-40px] top-[50%] flex z-[1211]'
             onClick={modeHashMap.showTaskPanel[mapTaskMode]}
           >
             <ArrowBackIosNewIcon></ArrowBackIosNewIcon>
           </div>
         )}
 
-        <div ref={ref} style={{ flex: 1, width: '100%', height: '100%', minHeight: '300px' }}>
+        <div ref={ref} className='flex-1 w-full h-full min-h-[300px]'>
           {pointsDict?.points.length ? (
             <InitStage
               ref={stageRef}
@@ -299,7 +305,7 @@ const SingleTask = () => {
                     id={id}
                     hashMap={pointsDict?.hashMap}
                     handleAction={(type: any) => {
-                      handleMouse(type, id);
+                      handleMouse(type, pointsDict?.hashMap[id]);
                     }}
                   />
                 );
@@ -340,7 +346,7 @@ const SingleTask = () => {
                     <TableHead>
                       <TableRow>
                         {isTask && <TableCell align='center'>{t('deployer.singleTask.taskNo')}</TableCell>}
-                        <TableCell align='center'>{t('deployer.singleTask.pointNo')}</TableCell>
+                        <TableCell align='center'>{t('deployer.singleTask.point')}</TableCell>
                         <TableCell align='center'>{t('deployer.singleTask.taskType')}</TableCell>
                         {isTask && <TableCell align='center'>{t('deployer.singleTask.restCount')}</TableCell>}
                         {isTask && <TableCell align='center'>{t('common.status')}</TableCell>}
@@ -402,11 +408,7 @@ const SingleTask = () => {
                       ) : (
                         <MapTaskPanelEmptyContainer>
                           <div>
-                            <EmptyBox
-                              title={t('deployer.singleTask.noData')}
-                              iconColor='#000'
-                              titleColor='#000'
-                            ></EmptyBox>
+                            <EmptyBox title={t('common.noData')} iconColor='#000' titleColor='#000'></EmptyBox>
                           </div>
                         </MapTaskPanelEmptyContainer>
                       )}
@@ -420,6 +422,15 @@ const SingleTask = () => {
 
         <SecondaryPage open={taskSettingVisible} setOpen={setTaskSettingVisible} fullScreen={true}>
           <TaskSetting></TaskSetting>
+        </SecondaryPage>
+
+        <SecondaryPage
+          open={offsetModalVisible}
+          setOpen={setOffsetModalVisible}
+          fullScreen={false}
+          sx={{ zIndex: 1213, width: '600px!important' }}
+        >
+          <OffsetModal {...offsetModalConfig} setOffsetModalVisible={setOffsetModalVisible}></OffsetModal>
         </SecondaryPage>
       </MapContainer>
       <WsContainer></WsContainer>

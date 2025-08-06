@@ -119,7 +119,7 @@ const PointOrLineBox = (props: IPointOrLineBoxProps) => {
                 padding: '15px 0px',
               }}
             >
-              {t('暂无数据')}
+              {t('common.noData')}
             </MenuItem>
           )}
         </div>

@@ -86,7 +86,6 @@ const TaskPanel = forwardRef((props: any, ref) => {
   }, [active]);
 
   useAsyncEffect(async () => {
-    console.log('任务有更新', refreshTaskList);
     if (refreshTaskList) {
       const { data } = await getTaskList();
       updateTask(data || []);
@@ -96,7 +95,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
   const rightActions: Action[] = [
     {
       key: 'delete',
-      text: t('删除'),
+      text: t('common.delete'),
       color: 'danger',
       iconStyle: { width: '50px' },
       icon: (
@@ -111,7 +110,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
   const runActions: Action[] = [
     {
       key: 'start',
-      text: t('执行'),
+      text: t('deployer.singleTask.execute'),
       color: 'danger',
       iconStyle: { width: '50px' },
       icon: (
@@ -126,12 +125,12 @@ const TaskPanel = forwardRef((props: any, ref) => {
   const handleTaskDelete = async (mainTask: ITaskItem | any) => {
     const hashMap = {
       title: {
-        task: t('删除任务'),
-        template: t('删除模板'),
+        task: t('deployer.singleTask.deleteTask'),
+        template: t('deployer.singleTask.deleteTemplate'),
       },
       content: {
-        task: `[${mainTask?.task_group_id}]:` + t('确认要删除该任务吗?'),
-        template: `[${mainTask?.name}]:` + t('确认要删除该模板吗?'),
+        task: `[${mainTask?.task_group_id}]:` + t('deployer.singleTask.confirmDeleteTaskTips'),
+        template: `[${mainTask?.name}]:` + t('deployer.singleTask.confirmDeleteTemplateTips'),
       },
       onOk: {
         task: async () => {
@@ -162,14 +161,13 @@ const TaskPanel = forwardRef((props: any, ref) => {
     delete params.name;
     const { code } = await createTask(params);
     if (code === 200) {
-      toast.success(t('操作成功'));
+      toast.success(t('common.actionSuccess'));
       setActive('task');
     }
   };
 
   const onFinish = useCallback(
     (isTemplateFinish?: boolean) => {
-      console.log('isTask', isTask, isTemplateFinish);
       isTask ? (isTemplateFinish ? setActive('template') : getTaskList()) : getTemplateList();
       setPreTaskList([initTaskActionRow]);
     },
@@ -208,7 +206,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
                 <div className='title'>
                   <span>{taskItem?.task_group_id || '-'}</span>
                   <span style={{ fontSize: '12px' }}>
-                    {t('循环次数')}: {taskItem?.loop_count}
+                    {t('deployer.singleTask.loopCount')}: {taskItem?.loop_count}
                   </span>
                 </div>
                 <div className='content'>
@@ -221,7 +219,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
                   </span>
                   &nbsp;&nbsp;
                   <span style={{ fontSize: '12px' }}>
-                    {t('间隔时间')}: {taskItem?.task_interval}
+                    {t('deployer.singleTask.gapTime')}: {taskItem?.task_interval}
                   </span>
                 </div>
               </TaskItem>
@@ -253,10 +251,10 @@ const TaskPanel = forwardRef((props: any, ref) => {
                 <div className='title'>{template?.name || '-'}</div>
                 <div className='content' style={{ fontSize: 12 }}>
                   <span>
-                    {t('循环次数')}: {template?.loop_count}
+                    {t('deployer.singleTask.loopCount')}: {template?.loop_count}
                   </span>
                   <span>
-                    {t('间隔时间')}: {template?.task_interval}
+                    {t('deployer.singleTask.gapTime')}: {template?.task_interval}
                   </span>
                 </div>
               </TaskItem>
@@ -279,7 +277,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
           }}
         >
           <Typography sx={{ fontSize: '20px' }} variant='h5'>
-            {t('任务')}
+            {t('deployer.singleTask.task')}
           </Typography>
           <PointsAdd fontSize={18} onClick={handleAdd}></PointsAdd>
         </div>
@@ -315,15 +313,20 @@ const TaskPanel = forwardRef((props: any, ref) => {
             }}
             centered
           >
-            <Tab sx={{ fontSize: '18px' }} label={t('任务列表')} value={'task'} />
-            <Tab sx={{ fontSize: '18px' }} label={t('任务模板')} value={'template'} />
+            <Tab sx={{ fontSize: '18px' }} label={t('deployer.singleTask.taskList')} value={'task'} />
+            <Tab sx={{ fontSize: '18px' }} label={t('deployer.singleTask.taskTemplate')} value={'template'} />
           </Tabs>
         </MapTaskPanelListHeader>
         <div style={{ height: '10px' }}></div>
         {list.length ? (
           getMapTaskPanelListHashMap()[active](list)
         ) : (
-          <EmptyBox title={t('没有数据')} iconColor='white' titleColor='white' backgroundColor='transparent'></EmptyBox>
+          <EmptyBox
+            title={t('common.noData')}
+            iconColor='white'
+            titleColor='white'
+            backgroundColor='transparent'
+          ></EmptyBox>
         )}
       </MapTaskPanelList>
     </MapTaskPanel>

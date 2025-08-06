@@ -29,16 +29,16 @@ const TempTaskList: FC<PropsWithChildren<ITempTaskListProps>> = (props) => {
   const { data, onDelete } = props;
   const { t } = useTranslation();
   const columns: readonly Column[] = [
-    { id: 'name', label: t('名称'), minWidth: 100, align: 'center' },
+    { id: 'name', label: t('deployer.singleTask.name'), minWidth: 100, align: 'center' },
     {
       id: 'low_height',
-      label: t('进叉高度'),
+      label: t('deployer.singleTask.forkInHeight'),
       minWidth: 100,
       align: 'center',
     },
     {
       id: 'high_height',
-      label: t('出叉高度'),
+      label: t('deployer.singleTask.forkOutHeight'),
       minWidth: 100,
       align: 'center',
     },
@@ -90,7 +90,7 @@ const TempTaskList: FC<PropsWithChildren<ITempTaskListProps>> = (props) => {
                   fontSize: 20,
                 }}
               >
-                {t('操作')}
+                {t('common.action')}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -123,7 +123,7 @@ const TempTaskList: FC<PropsWithChildren<ITempTaskListProps>> = (props) => {
                         }}
                         color='error'
                       >
-                        {t('删除')}
+                        {t('common.delete')}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -137,7 +137,7 @@ const TempTaskList: FC<PropsWithChildren<ITempTaskListProps>> = (props) => {
                   position: 'absolute',
                 }}
               >
-                <EmptyBox title={t('没有任务数据')} iconColor='#000' titleColor='#000'></EmptyBox>
+                <EmptyBox title={t('common.noData')} iconColor='#000' titleColor='#000'></EmptyBox>
               </div>
             )}
           </TableBody>

@@ -143,13 +143,13 @@ const TaskAction = forwardRef((props: any, ref) => {
     if (!params.tasks.length) return;
     const isValidate = validateParams(params);
     if (!isValidate) {
-      toast.error(t('点的类型和点位必填'));
+      toast.error(t('deployer.singleTask.pointSelectTip'));
       return;
     }
     modal.confirm({
-      title: t('当前车辆不在点上,是否要继续下发任务') + '?',
-      okText: t('确认'),
-      cancelText: t('取消'),
+      title: t('deployer.singleTask.sendTaskConfirm') + '?',
+      okText: t('common.confirm'),
+      cancelText: t('common.cancel'),
       onOk: async () => {
         await handleSubmit();
       },
@@ -166,7 +166,7 @@ const TaskAction = forwardRef((props: any, ref) => {
     if (!params.tasks.length) return;
     const isValidate = validateParams(params);
     if (!isValidate) {
-      toast.error(t('点的类型和点位必填'));
+      toast.error(t('deployer.singleTask.pointSelectTip'));
       return;
     }
     setLoading(true);
@@ -178,7 +178,7 @@ const TaskAction = forwardRef((props: any, ref) => {
         setLoopTime(1);
         setIntervalTime(0);
         setTemplateName('');
-        toast.success(t('操作成功'));
+        toast.success(t('common.actionSuccess'));
         templateParams.name && saveTemplate(templateParams);
       }
     } catch (error) {
@@ -195,17 +195,17 @@ const TaskAction = forwardRef((props: any, ref) => {
     if (!params.tasks.length) return;
     const isValidate = validateParams(params);
     if (!isValidate) {
-      toast.error(t('点的类型和点位必填'));
+      toast.error(t('deployer.singleTask.pointSelectTip'));
       return;
     }
     const templateParams = { name: templateName, ..._.cloneDeep(params) };
     if (!templateParams.name) {
-      toast.error(t('模版名称必填'));
+      toast.error(t('deployer.singleTask.templateNameTips'));
       return;
     }
     try {
       await saveTemplate(templateParams);
-      toast.success(t('操作成功'));
+      toast.success(t('common.actionSuccess'));
       setLoopTime(1);
       setIntervalTime(0);
       setTemplateName('');
@@ -231,12 +231,12 @@ const TaskAction = forwardRef((props: any, ref) => {
                   <PointOrLineBox
                     key='left'
                     title={task.task_type}
-                    subTitle={t('请选择任务类型')}
+                    subTitle={t('deployer.singleTask.plsSelectTaskType')}
                     list={[
-                      { id: 'Pick', label: t('取货') },
-                      { id: 'Place', label: t('放货') },
-                      { id: 'Charge', label: t('充电') },
-                      { id: 'Null', label: t('移动') },
+                      { id: 'Pick', label: t('common.taskState.pickUp') },
+                      { id: 'Place', label: t('common.taskState.pickDown') },
+                      { id: 'Charge', label: t('common.taskState.charging') },
+                      { id: 'Null', label: t('common.taskState.moving') },
                     ]}
                     onChange={(type: any) => {
                       onValueChange('task_type', index, type);
@@ -248,7 +248,7 @@ const TaskAction = forwardRef((props: any, ref) => {
                   <PointOrLineBox
                     key='right'
                     title={task.task_point_id}
-                    subTitle={t('请选择点位')}
+                    subTitle={t('deployer.singleTask.plsSelectPoint')}
                     list={pointsHash?.[task.task_type] || []}
                     onChange={(id: any) => {
                       onValueChange('task_point_id', index, id);
@@ -316,20 +316,20 @@ const TaskAction = forwardRef((props: any, ref) => {
                             })
                           ) : (
                             <MenuItem value={'no-data'} disabled>
-                              {t('暂无数据')}
+                              {t('common.noData')}
                             </MenuItem>
                           )}
                         </MapTaskSelect>
                       </InputGroup>
                       <InputGroupText
-                        title={t('进叉高度')}
+                        title={t('deployer.singleTask.forkInHeight')}
                         value={task?.task_low_height}
                         onChange={(val: number) => {
                           onValueChange('task_low_height', index, val);
                         }}
                       ></InputGroupText>
                       <InputGroupText
-                        title={t('出叉高度')}
+                        title={t('deployer.singleTask.forkOutHeight')}
                         value={task?.task_high_height}
                         onChange={(val: number) => {
                           onValueChange('task_high_height', index, val);
@@ -354,7 +354,7 @@ const TaskAction = forwardRef((props: any, ref) => {
                       <div className='flex gap-[5px] pb-[5px]'>
                         {isKVehicle ? (
                           <InputGroup>
-                            <div className='title'>{t('叉臂方向')}</div>
+                            <div className='title'>{t('deployer.singleTask.forkDirection')}</div>
                             <MapTaskSelect
                               size={'small'}
                               variant={'outlined'}
@@ -365,14 +365,14 @@ const TaskAction = forwardRef((props: any, ref) => {
                                 onValueChange('fork_direction', index, name);
                               }}
                             >
-                              <MenuItem value={0}>{`${t('前')}`}</MenuItem>
-                              <MenuItem value={1}>{`${t('左')}`}</MenuItem>
-                              <MenuItem value={2}>{`${t('右')}`}</MenuItem>
+                              <MenuItem value={0}>{`${t('deployer.singleTask.front')}`}</MenuItem>
+                              <MenuItem value={1}>{`${t('deployer.singleTask.left')}`}</MenuItem>
+                              <MenuItem value={2}>{`${t('deployer.singleTask.right')}`}</MenuItem>
                             </MapTaskSelect>
                           </InputGroup>
                         ) : (
                           <InputGroupText
-                            title={t('扩展参数') + '1'}
+                            title={t('deployer.singleTask.extraParams') + '1'}
                             value={task?.params1}
                             onChange={(val: number) => {
                               onValueChange('params1', index, val);
@@ -380,7 +380,7 @@ const TaskAction = forwardRef((props: any, ref) => {
                           ></InputGroupText>
                         )}
                         <InputGroupText
-                          title={t('扩展参数') + '2'}
+                          title={t('deployer.singleTask.extraParams') + '2'}
                           value={task?.params2}
                           onChange={(val: number) => {
                             onValueChange('params2', index, val);
@@ -402,7 +402,7 @@ const TaskAction = forwardRef((props: any, ref) => {
                       }}
                     >
                       <InputGroup sx={{ flex: 1 }}>
-                        <div className='title'>{t('充电类型')}</div>
+                        <div className='title'>{t('deployer.singleTask.chargeType')}</div>
                         <MapTaskSelect
                           variant={'outlined'}
                           displayEmpty
@@ -411,12 +411,12 @@ const TaskAction = forwardRef((props: any, ref) => {
                             onValueChange('task_charge_type', index, event.target.value);
                           }}
                         >
-                          <MenuItem value={1}>{t('百分比')}</MenuItem>
-                          <MenuItem value={3}>{t('时间')}</MenuItem>
+                          <MenuItem value={1}>{t('deployer.singleTask.percentage')}</MenuItem>
+                          <MenuItem value={3}>{t('deployer.singleTask.time')}</MenuItem>
                         </MapTaskSelect>
                       </InputGroup>
                       <InputGroupText
-                        title={t('阈值') + (task.task_charge_type === 1 ? '(%)' : '(h)')}
+                        title={t('deployer.singleTask.threshold') + (task.task_charge_type === 1 ? '(%)' : '(h)')}
                         value={task?.threshold}
                         onChange={(val: number) => {
                           onValueChange('threshold', index, val);
@@ -435,21 +435,21 @@ const TaskAction = forwardRef((props: any, ref) => {
       <div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <InputGroupText
-            title={t('循环次数')}
+            title={t('deployer.singleTask.loopCount')}
             value={loopTime}
             onChange={(val: any) => {
               !Number(val) ? setLoopTime(1) : setLoopTime(Number(val));
             }}
           ></InputGroupText>
           <InputGroupText
-            title={t('间隔时间') + '(s)'}
+            title={t('deployer.singleTask.gapTime') + '(s)'}
             value={intervalTime}
             onChange={(val: any) => {
               !Number(val) ? setIntervalTime(0) : setIntervalTime(Number(val));
             }}
           ></InputGroupText>
           <InputGroupText
-            title={t('模板名称')}
+            title={t('deployer.singleTask.templateName')}
             value={templateName}
             mode={'default'}
             onChange={setTemplateName}
@@ -470,7 +470,7 @@ const TaskAction = forwardRef((props: any, ref) => {
             sx={{ marginTop: '5px', color: 'white', flex: 1 }}
             onClick={handleSaveTemplate}
           >
-            {t('保存为模版')}
+            {t('deployer.singleTask.saveAsTemplate')}
           </Button>
         </div>
       </div>
@@ -503,7 +503,7 @@ const InputGroupText = (props: any) => {
               setInput={(val: any) => {
                 onChange && onChange(val);
               }}
-              placeholder={`${t('请输入')} ${inputLabel || title}`}
+              placeholder={`${t('deployer.singleTask.plsInput')} ${inputLabel || title}`}
               mode={mode}
             ></InputWidthKeyboard>
           ) : (

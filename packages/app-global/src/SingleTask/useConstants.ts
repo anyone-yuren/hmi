@@ -1,41 +1,48 @@
-
-import { ISubTaskItem } from "./index.d"
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
+import { ISubTaskItem } from './index.d';
 const useConstants = () => {
   const { t } = useTranslation();
-  const TaskStatusHashMap: Record<
-    ISubTaskItem["task_state"],
-    { text: string; color: string }
-  > = {
+  const TaskStatusHashMap: Record<ISubTaskItem['task_state'], { text: string; color: string }> = {
     Init: {
-      text: t("未执行"),
-      color: "#aeaeae",
+      text: t('common.taskStatus.unexecuted'),
+      color: '#aeaeae',
     },
     Running: {
-      text: t("执行中"),
-      color: "#00D1D1",
+      text: t('common.taskStatus.running'),
+      color: '#00D1D1',
     },
     Completed: {
-      text: t("完成"),
-      color: "#009688",
+      text: t('common.taskStatus.success'),
+      color: '#009688',
     },
     Error: {
-      text: t("错误"),
-      color: "#f44336",
+      text: t('common.taskStatus.error'),
+      color: '#f44336',
     },
     Cancel: {
-      text: t("取消"),
-      color: "#ff9800",
+      text: t('common.taskStatus.cancel'),
+      color: '#ff9800',
     },
   };
 
-  const TaskTypeHashMap: Record<ISubTaskItem["task_type"], string> = {
-    Pick: t("取货"),
-    Null: t("移动"),
-    Charge: t("充电"),
-    Place: t("放货"),
+  const TaskTypeHashMap: Record<ISubTaskItem['task_type'], string> = {
+    Pick: t('common.taskState.pickUp'),
+    Null: t('common.taskState.moving'),
+    Charge: t('common.taskState.charging'),
+    Place: t('common.taskState.pickDown'),
   };
-  return { TaskStatusHashMap, TaskTypeHashMap }
-}
+
+  const vertexTypeHashMap: any = {
+    0: t('deployer.singleTask.commonPoint'),
+    1: t('deployer.singleTask.warehousePoint'),
+    2: t('deployer.singleTask.homePoint'),
+    3: t('deployer.singleTask.turnRoundPoint'),
+    4: t('deployer.singleTask.stereoWarehousePoint'),
+    5: t('deployer.singleTask.visionPoint'),
+    6: t('deployer.singleTask.chargePoint'),
+    7: t('deployer.singleTask.devicePoint'),
+  };
+  return { TaskStatusHashMap, TaskTypeHashMap, vertexTypeHashMap };
+};
 
 export default useConstants;

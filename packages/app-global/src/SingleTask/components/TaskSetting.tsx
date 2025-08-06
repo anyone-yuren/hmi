@@ -63,7 +63,7 @@ function TaskSetting() {
       auto_charge_enable: checked,
     });
     if (res) {
-      toast.success(t('提交成功'));
+      toast.success(t('common.actionSuccess'));
     }
   };
 
@@ -137,7 +137,9 @@ function TaskSetting() {
               overflow: 'scroll',
             }}
           >
-            <ListSubheader sx={{ paddingInline: 0, zIndex: 10 }}>{t('取货库位叉臂高度设置')}</ListSubheader>
+            <ListSubheader sx={{ paddingInline: 0, zIndex: 10 }}>
+              {t('deployer.singleTask.forkSettingTitle')}
+            </ListSubheader>
             <div className='h-[10px]'></div>
             <FormContainer
               formContext={form}
@@ -163,8 +165,8 @@ function TaskSetting() {
                 <Grid container flexDirection={'column'} gap={1}>
                   <TextFieldElement
                     name='name'
-                    label={t('名称')}
-                    placeholder={t('请输入') + t('名称')}
+                    label={t('deployer.singleTask.name')}
+                    placeholder={t('deployer.singleTask.plsInput') + t('deployer.singleTask.name')}
                     variant='outlined'
                     sx={{
                       width: '100%',
@@ -185,8 +187,8 @@ function TaskSetting() {
                   />
                   <TextFieldElement
                     name='low_height'
-                    label={t('进叉高度')}
-                    placeholder={t('请输入') + t('进叉高度')}
+                    label={t('deployer.singleTask.forkInHeight')}
+                    placeholder={t('deployer.singleTask.plsInput') + t('deployer.singleTask.forkInHeight')}
                     variant='outlined'
                     sx={{
                       width: '100%',
@@ -203,8 +205,8 @@ function TaskSetting() {
                   />
                   <TextFieldElement
                     name='high_height'
-                    label={t('出叉高度')}
-                    placeholder={t('请输入') + t('出叉高度')}
+                    label={t('deployer.singleTask.forkOutHeight')}
+                    placeholder={t('deployer.singleTask.plsInput') + t('deployer.singleTask.forkOutHeight')}
                     variant='outlined'
                     sx={{
                       width: '100%',
@@ -226,7 +228,7 @@ function TaskSetting() {
                       color: 'white',
                     }}
                   >
-                    {t('添加')}
+                    {t('deployer.singleTask.add')}
                   </Button>
                 </Grid>
               </ThemeProvider>
@@ -241,7 +243,7 @@ function TaskSetting() {
               onDelete={async (index) => {
                 const obj = tempTaskList[index];
                 await deleteHeightInfo({ name: obj.name });
-                toast.success(t('提交成功'));
+                toast.success(t('common.actionSuccess'));
                 await getList();
               }}
             />
@@ -260,35 +262,35 @@ function TaskSetting() {
                   bgcolor: 'background.paper',
                   color: 'black',
                 }}
-                subheader={<ListSubheader>{t('自动充电设置')}</ListSubheader>}
+                subheader={<ListSubheader>{t('deployer.singleTask.autoChargeSetting')}</ListSubheader>}
               >
                 <Switch checked={checked} onChange={handleChange} inputProps={{ 'aria-label': 'controlled' }} />
                 <div style={{ paddingInline: '16px' }}>
-                  <InputLabel htmlFor='standard-adornment-amount'>{t('最低电量')}</InputLabel>
+                  <InputLabel htmlFor='standard-adornment-amount'>{t('deployer.singleTask.minCharge')}</InputLabel>
                   <Flex justify='center' align='center' gap={2}>
                     <InputWidthKeyboard
                       style={{ flex: 1 }}
                       mode='numbers'
                       input={auto_charge_threshold + ''}
-                      placeholder={t('请输入')}
+                      placeholder={t('deployer.singleTask.plsInput')}
                       setInput={(e: any) => {
                         setLowPowerThreshold(Number(e));
                       }}
                     ></InputWidthKeyboard>
                     <div style={{ width: '40px' }}>%</div>
                   </Flex>
-                  <InputLabel htmlFor='standard-adornment-amount'>{t('空闲时间')}</InputLabel>
+                  <InputLabel htmlFor='standard-adornment-amount'>{t('deployer.singleTask.freeTime')}</InputLabel>
                   <Flex justify='center' align='center' gap={2}>
                     <InputWidthKeyboard
                       mode='numbers'
                       style={{ flex: 1 }}
                       input={auto_charge_idle_wait_time + ''}
-                      placeholder={t('请输入')}
+                      placeholder={t('deployer.singleTask.plsInput')}
                       setInput={(e) => {
                         setIdleWaitTime(Number(e));
                       }}
                     ></InputWidthKeyboard>
-                    <div style={{ width: '40px' }}>{t('秒')}</div>
+                    <div style={{ width: '40px' }}>{t('deployer.singleTask.second')}</div>
                   </Flex>
                 </div>
                 <Flex>
@@ -300,44 +302,11 @@ function TaskSetting() {
                     variant='contained'
                     onClick={postChargePolicy}
                   >
-                    {t('保存')}
+                    {t('common.save')}
                   </Button>
                 </Flex>
               </List>
               <Divider component='li' />
-              {/* <List
-                sx={{
-                  width: "100%",
-                  maxWidth: 360,
-                  bgcolor: "background.paper",
-                  color: "black",
-                }}
-                subheader={<ListSubheader>点位显示控制</ListSubheader>}
-              >
-                <ListItem>
-                  <ListItemText id="switch-list-label-wifi" primary="普通点" />
-                  <Switch
-                    edge="end"
-                    inputProps={{
-                      "aria-labelledby": "switch-list-label-wifi",
-                    }}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    id="switch-list-label-bluetooth"
-                    primary="待命点"
-                  />
-                  <Switch
-                    edge="end"
-                    // onChange={handleToggle("bluetooth")}
-                    // checked={checked.includes("bluetooth")}
-                    inputProps={{
-                      "aria-labelledby": "switch-list-label-bluetooth",
-                    }}
-                  />
-                </ListItem>
-              </List> */}
             </Grid>
           ) : null}
         </Grid>

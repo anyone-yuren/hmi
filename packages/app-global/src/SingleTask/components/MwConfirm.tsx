@@ -9,10 +9,6 @@ const MwModal = (props: any) => {
   const [open, setOpen] = React.useState(visible);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
   const handleClose = () => {
     onCancel && onCancel();
     setOpen(false);
@@ -72,7 +68,7 @@ const MwModal = (props: any) => {
       </DialogContent>
       <DialogActions style={{ borderTop: '1px solid rgba(0, 0, 0, 0.1)', display: 'flex' }}>
         <Button onClick={handleClose} style={{ flex: 1, fontSize: '18px', color: '#888888' }}>
-          {t('取消')}
+          {t('common.cancel')}
         </Button>
         <div
           style={{
@@ -86,7 +82,7 @@ const MwModal = (props: any) => {
           onClick={handleConfirm}
           style={{ flex: 1, color: '#00D1D1', fontSize: '18px' }}
         >
-          {confirmLoading ? null : t('确定')}
+          {confirmLoading ? null : t('common.confirm')}
         </LoadingButton>
       </DialogActions>
     </Dialog>

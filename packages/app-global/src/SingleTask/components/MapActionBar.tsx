@@ -177,7 +177,7 @@ const MapActionBar = forwardRef((props: any, ref) => {
               console.log('taskmode', x, y);
               setMoveToTarget({ x: x * 20, y: -y * 20 } as any);
             } else {
-              toast.error(t('deployer.singleTask.noData'));
+              toast.error(t('common.noData'));
             }
           }}
         >

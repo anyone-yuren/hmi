@@ -43,7 +43,7 @@ function MouseEvent(props: IMouseEvent) {
                   handleAction && handleAction('Pick');
                 }}
               >
-                {t('deployer.singleTask.pick')}
+                {t('common.taskState.pickUp')}
               </MenuItem>
               <MenuItem
                 dense
@@ -53,7 +53,7 @@ function MouseEvent(props: IMouseEvent) {
                   handleAction && handleAction('Place');
                 }}
               >
-                {t('deployer.singleTask.place')}
+                {t('common.taskState.pickDown')}
               </MenuItem>
             </>
           )}
@@ -66,7 +66,7 @@ function MouseEvent(props: IMouseEvent) {
                 handleAction && handleAction('Charge');
               }}
             >
-              {t('deployer.singleTask.charge')}
+              {t('common.taskState.charging')}
             </MenuItem>
           )}
           <MenuItem
@@ -77,7 +77,7 @@ function MouseEvent(props: IMouseEvent) {
               handleAction && handleAction('Null');
             }}
           >
-            {t('deployer.singleTask.move')}
+            {t('common.taskState.moving')}
           </MenuItem>
           <MenuItem
             dense
