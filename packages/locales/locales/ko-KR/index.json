@@ -22,6 +22,7 @@
       "extend": "펼치기",
       "fail": "충전 실패",
       "readyCharging": "충전 준비",
+      "station": "충전 더미",
       "success": "충전 완료",
       "waitting": "충전 대기 중"
     },
@@ -154,6 +155,7 @@
     },
     "sliderPage": {
       "about": "차량 정보",
+      "charging": "요금",
       "cloud": "업로드 및 다운로드",
       "diagnosis": "진단",
       "io": "I/O 정보",

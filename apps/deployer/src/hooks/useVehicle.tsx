@@ -1,4 +1,4 @@
-import { useVehicleStore } from '@/store/vehicleStore';
+import { useVehicleStore } from '@gbeata/store';
 import { useWebSocket } from 'ahooks';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';

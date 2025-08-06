@@ -49,7 +49,7 @@ const SwiperPage = () => {
         modules={[Pagination]}
       >
         <SwiperSlide>
-          <div className='grid grid-cols-4 w-full justify-center'>
+          <div className='grid grid-cols-4 gap-8 w-full h-full justify-center'>
             <div
               className='flex flex-col items-center justify-center gap-2'
               onClick={() => {
@@ -115,12 +115,25 @@ const SwiperPage = () => {
                 {t('deployer.sliderPage.vision')}
               </Typography.Title>
             </div>
-            <div className='flex flex-col items-center justify-center gap-2'>
+            {/* <div className='flex flex-col items-center justify-center gap-2'>
               <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
                 <SvgIcon name={'offset'} size={180} />
               </div>
               <Typography.Title className='!font-normal' level={3}>
                 {t('deployer.sliderPage.offset')}
+              </Typography.Title>
+            </div> */}
+            <div
+              className='flex flex-col items-center justify-center gap-2'
+              onClick={() => {
+                navigate('/charging');
+              }}
+            >
+              <div className='flex justify-center items-center w-44 h-44 py-2 px-4 bg-gradient-to-b from-[#8BC34A] to-[#4CAF50]  rounded-3xl'>
+                <SvgIcon name={'charging'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                {t('deployer.sliderPage.charging')}
               </Typography.Title>
             </div>
             <div

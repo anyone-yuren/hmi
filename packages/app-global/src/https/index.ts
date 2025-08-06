@@ -63,18 +63,17 @@ instance.interceptors.response.use(
       return data;
     }
 
-    const { code, message: msg, data: resData } = data;
+    const { code, msg, data: resData } = data;
 
     if (code === ResultEnum.SUCCESS) {
       return data;
     }
-
     // 登录超时
     if (code === ResultEnum.TIMEOUT) {
-      message.error('登录超时，请重新登录');
+      message.error(msg);
       // 可以跳转登录页或者清空 token
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      // window.location.href = '/login';
       return Promise.reject(msg);
     }
 

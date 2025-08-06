@@ -6,9 +6,8 @@ import BarBattery from '../battery';
 import ChargingAnimation from '../charging';
 import WsVehicleContainer from '../wsVehicleContainer';
 
-import { useVehicleStore } from '@/store/vehicleStore';
 import { GlobalNotification, LoginDialog, triggerLoginModal } from '@gbeata/app-global';
-import { useGlobalStore } from '@gbeata/store';
+import { useGlobalStore, useVehicleStore } from '@gbeata/store';
 import { createStyles } from 'antd-style';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
