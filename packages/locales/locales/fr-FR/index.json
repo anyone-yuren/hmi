@@ -22,9 +22,9 @@
       "extend": "Sortir",
       "fail": "Échec de la charge",
       "readyCharging": "Préparation à la charge",
+      "station": "Tas de charge",
       "success": "Charge terminée",
-      "waitting": "En attente de charge",
-      "station": "Tas de charge"
+      "waitting": "En attente de charge"
     },
     "close": "Fermer",
     "errorMsg": {
@@ -169,6 +169,7 @@
     },
     "sliderPage": {
       "about": "Informations sur le véhicule",
+      "charging": "Charge",
       "cloud": "Télécharger/Téléverser",
       "diagnosis": "Diagnostic",
       "io": "Informations E/S",
@@ -177,8 +178,7 @@
       "safety": "Sécurité",
       "setting": "Paramètres",
       "task": "Tâche",
-      "vision": "Visuel",
-      "charging": "Charge"
+      "vision": "Visuel"
     },
     "io": {
       "tips": "Indication : gris pour non déclenché, vert pour déclenché",
