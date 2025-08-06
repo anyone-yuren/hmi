@@ -173,7 +173,7 @@ const SwiperPage = () => {
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className='grid grid-cols-4 w-full'>
+          <div className='grid grid-cols-4 gap-8 w-full h-full justify-center'>
             <div className='flex flex-col items-center justify-center gap-2 '>
               <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
                 <SvgIcon name={'cloud'} size={180} />
