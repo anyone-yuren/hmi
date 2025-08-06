@@ -100,7 +100,7 @@ const Concentric = forwardRef((props: any, ref: any) => {
       onOk: async () => {
         const val: any = getInput();
         if (!/^\d+$/.test(val)) {
-          toast.error(t('请输入正整数'));
+          toast.error(t('deployer.vision.plsInputNumber'));
           return Promise.reject();
         }
         const isValidation = configHashMap.validation[key](val);

@@ -42,8 +42,8 @@ const Rect = forwardRef((props: IRectProps, ref) => {
   const handleSizeArea = (key: string) => {
     const configHashMap: any = {
       title: {
-        width: t('宽'),
-        height: t('高'),
+        width: t('deployer.vision.width'),
+        height: t('deployer.vision.height'),
       },
       value: {
         width,

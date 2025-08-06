@@ -235,11 +235,11 @@ const Truck = forwardRef((props: any, ref) => {
             {props.showMarks && (
               <>
                 <Tips>
-                  <div>{t('说明')}:</div>
+                  <div>{t('deployer.vision.explanation')}:</div>
                   <div>{t('货物高度不得大于（车厢高度-100）,货物左右间隙不得小于30mm')}</div>
                 </Tips>
                 <TextUpdateSwitchRow title={t('是否混装')} checked={isMinx} onChange={setIsMinx} />
-                <TextChangeRow title={t('货物列数')} value={goodsCols} onChange={setGoodsCols as any}>
+                <TextChangeRow title={t('deployer.vision.goodCols')} value={goodsCols} onChange={setGoodsCols as any}>
                   <div>{goodsCols}</div>
                 </TextChangeRow>
               </>
@@ -249,7 +249,7 @@ const Truck = forwardRef((props: any, ref) => {
             <div className='w-1/2 flex items-center justify-center'>
               <div className='w-1/2 h-1/2'>
                 <Square
-                  title={props.showMarks ? t('货物') + 'A' : null}
+                  title={props.showMarks ? t('deployer.vision.goods') + 'A' : null}
                   showMarks={props.showMarks}
                   updateKey={'goods_size/0'}
                   handleSizeArea={handleSizeArea}
@@ -263,7 +263,7 @@ const Truck = forwardRef((props: any, ref) => {
               <div className='w-1/2 flex items-center justify-center'>
                 <div className='w-1/2 h-1/2 '>
                   <Square
-                    title={props.showMarks ? t('货物') + 'B' : null}
+                    title={props.showMarks ? t('deployer.vision.goods') + 'B' : null}
                     showMarks={props.showMarks}
                     updateKey={'goods_size/1'}
                     handleSizeArea={handleSizeArea}
@@ -280,7 +280,7 @@ const Truck = forwardRef((props: any, ref) => {
         <div className='flex-1 flex items-center pl-[10%]'>
           <Cube
             width={(divSize?.width || 2) / 2}
-            title={props.showMarks ? t('货车模型') : null}
+            title={props.showMarks ? t('deployer.vision.truckModel') : null}
             showMarks={props.showMarks}
             updateKey={'truck_size'}
             handleSizeArea={handleSizeArea}

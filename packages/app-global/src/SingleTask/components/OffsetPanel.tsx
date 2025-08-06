@@ -1,19 +1,21 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Typography } from '@mui/material';
 import { Input } from 'antd';
+import { ThemeProvider } from 'antd-style';
 import { forwardRef, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import 'swiper/css';
+import MwConfirm from '../components/MwConfirm';
+import { deleteOffsetTable } from '../services/index';
 import { MapTaskPanel, MapTaskPanelHeader, TaskItem } from '../Style';
 import DeleteIcon from './SvgIcon/DeleteIcon';
 import EditIcon from './SvgIcon/EditIcon';
 import PointsAdd from './SvgIcon/PointsAdd';
 
-import { ThemeProvider } from 'antd-style';
-
 export type IActive = 'task' | 'template';
 const OffsetPanel = forwardRef((props: any, ref) => {
-  const { setOffsetVisible, offsetList } = props;
+  const { setOffsetVisible, offsetList, setOffsetModalVisible, setOffsetModalConfig, getOffsetList } = props;
   const [searchText, setSearchText] = useState('');
   const { t } = useTranslation();
   const renderOffsetList = useMemo(() => {
@@ -23,6 +25,39 @@ const OffsetPanel = forwardRef((props: any, ref) => {
     });
     return ary;
   }, [offsetList, searchText]);
+  const handleCreateOffset = () => {
+    setOffsetModalConfig({
+      type: 'Offset',
+      point: {},
+    });
+    setOffsetModalVisible(true);
+  };
+
+  const handleUpdateOffset = (point: any) => {
+    setOffsetModalConfig({
+      type: 'Offset',
+      point,
+    });
+    setOffsetModalVisible(true);
+  };
+
+  const handleDeleteOffset = (point: any) => {
+    MwConfirm.confirm({
+      title: t('deployer.sliderPage.deleteOffset'),
+      content: t('deployer.sliderPage.confirmDeleteOffsetTips'),
+
+      onOk: async () => {
+        const params = {
+          point_id: point.id,
+        };
+        const { code }: any = await deleteOffsetTable(params);
+        if (code === 200) {
+          toast.success(t('common.actionSuccess'));
+          getOffsetList();
+        }
+      },
+    });
+  };
 
   return (
     <MapTaskPanel>
@@ -38,12 +73,7 @@ const OffsetPanel = forwardRef((props: any, ref) => {
           <Typography sx={{ fontSize: '20px' }} variant='h5'>
             {t('deployer.singleTask.offsetTable')}
           </Typography>
-          <PointsAdd
-            fontSize={18}
-            onClick={() => {
-              console.log('handle add');
-            }}
-          ></PointsAdd>
+          <PointsAdd fontSize={18} onClick={handleCreateOffset}></PointsAdd>
         </div>
         <CloseIcon
           fontSize={'large'}
@@ -77,11 +107,24 @@ const OffsetPanel = forwardRef((props: any, ref) => {
             <TaskItem>
               <div className='flex pt-[5px] justify-between items-center'>
                 <div className='text-[18px]'>
-                  {t('deployer.singleTask.point')}: {point.PointNumber}
+                  {t('deployer.singleTask.point')}: {point.id}
                 </div>
                 <div className='w-[70px] flex items-center justify-center gap-[20px]'>
-                  <EditIcon fontSize={20}></EditIcon>
-                  <DeleteIcon fontSize={20} isActive onClick={() => {}}></DeleteIcon>
+                  <div
+                    onClick={() => {
+                      handleUpdateOffset(point);
+                    }}
+                  >
+                    <EditIcon fontSize={20}></EditIcon>
+                  </div>
+
+                  <DeleteIcon
+                    fontSize={20}
+                    isActive
+                    onClick={() => {
+                      handleDeleteOffset(point);
+                    }}
+                  ></DeleteIcon>
                 </div>
               </div>
               <div className='flex pb-[5px] pt-[3px] justify-between items-center text-[12px]'>

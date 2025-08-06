@@ -37,7 +37,7 @@ const NinePalletAnnotation = (props: any) => {
           return (
             <div
               key={'topLeg' + index}
-              className='line absolute text-[13px] text-center '
+              className='line absolute text-[13px] text-center'
               style={{
                 width: leg?.topWidth * props.scale,
                 height: '20px',
@@ -53,7 +53,7 @@ const NinePalletAnnotation = (props: any) => {
             >
               <span className='relative top-[-30px] whitespace-nowrap text-center flex items-center justify-center'>
                 <BorderColorIcon style={{ fontSize: '12px' }} />
-                {t('支腿上宽度')}:{leg?.topWidth}
+                {t('deployer.vision.legTopWidth')}:{leg?.topWidth}
               </span>
             </div>
           );
@@ -78,7 +78,7 @@ const NinePalletAnnotation = (props: any) => {
             >
               <span className='relative top-[40px] whitespace-nowrap text-center flex items-center justify-center'>
                 <BorderColorIcon style={{ fontSize: '12px' }} />
-                {t('支腿下宽度')}:{leg?.bottomWidth}
+                {t('deployer.vision.legBottomWidth')}:{leg?.bottomWidth}
               </span>
             </div>
           );
@@ -146,7 +146,7 @@ const NinePalletAnnotation = (props: any) => {
             }}
           >
             <span className='relative left-[-100%] whitespace-nowrap write-vertical-right'>
-              {t('支架高度')}: {props?.handlesMaxHeight}
+              {t('deployer.vision.handleHeight')}: {props?.handlesMaxHeight}
             </span>
           </div>
         )}

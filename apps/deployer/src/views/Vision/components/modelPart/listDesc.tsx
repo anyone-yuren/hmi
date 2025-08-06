@@ -33,7 +33,7 @@ const ListDesc = forwardRef((props: any, ref: any) => {
       <div className='flex flex-col'>
         {container?.diameter && container?.height && (
           <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
-            {t('deployer.vision.diameter')}/{t('高deployer.vision.height')}: {container?.diameter}/{container?.height}
+            {t('deployer.vision.diameter')}/{t('deployer.vision.height')}: {container?.diameter}/{container?.height}
           </Typography>
         )}
         {container?.maxDiameter && container?.minDiameter && (
