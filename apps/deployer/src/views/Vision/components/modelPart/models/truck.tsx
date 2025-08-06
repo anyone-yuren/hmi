@@ -195,7 +195,7 @@ const Truck = forwardRef((props: any, ref) => {
               setInput={(val: any) => {
                 setInput(val);
               }}
-              placeholder={`${t('请输入')}`}
+              placeholder={`${t('common.plsInput')}`}
               mode={'numbers'}
             ></InputWidthKeyboard>
           ) : (
@@ -214,7 +214,7 @@ const Truck = forwardRef((props: any, ref) => {
         const val: any = getInput();
         console.log('val', val);
         if (!/^\d+$/.test(val)) {
-          toast.error(t('请输入正整数'));
+          toast.error(t('deployer.vision.plsInputNumber'));
           return Promise.reject();
         }
         const { isValid, newObj } = validation(key, subKey, Number(val));

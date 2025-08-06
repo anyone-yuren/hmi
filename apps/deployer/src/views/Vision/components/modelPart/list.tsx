@@ -125,10 +125,10 @@ const ModelList = forwardRef((props: any, ref: any) => {
               {container?.type != 'tail_truck' ? (
                 <div className='pl-[20px]'>
                   <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14, margin: 0 }}>
-                    {t('额外深度补偿')}: {container?.extra_deep_compensation}
+                    {t('deployer.vision.extraDepthCompensation')}: {container?.extra_deep_compensation}
                   </Typography>
                   <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14, margin: 0 }}>
-                    {t('目标库位号')}: {container?.storage_list?.join(',') || '-'}
+                    {t('deployer.vision.targetStorage')}: {container?.storage_list?.join(',') || '-'}
                   </Typography>
                 </div>
               ) : (
@@ -141,10 +141,10 @@ const ModelList = forwardRef((props: any, ref: any) => {
                   variant={'outlined'}
                   onClick={() => {
                     MwConfirm.confirm({
-                      title: t('删除提示') as string,
+                      title: t('deployer.vision.deleteTips') as string,
                       content: (
                         <>
-                          <div style={{ textAlign: 'center' }}>{t('确认要删除该模型吗')}?</div>
+                          <div style={{ textAlign: 'center' }}>{t('deployer.vision.deleteTipsContent')}?</div>
                         </>
                       ),
                       onOk: async () => {
@@ -156,7 +156,7 @@ const ModelList = forwardRef((props: any, ref: any) => {
                     });
                   }}
                 >
-                  {t('删除')}
+                  {t('common.delete')}
                 </Button>
                 <Button
                   size='small'
@@ -166,7 +166,7 @@ const ModelList = forwardRef((props: any, ref: any) => {
                     props?.handleItems && props?.handleItems(container);
                   }}
                 >
-                  {t('编辑')}
+                  {t('common.edit')}
                 </Button>
               </Space>
             </CardActions>
@@ -175,7 +175,7 @@ const ModelList = forwardRef((props: any, ref: any) => {
       })}
     </div>
   ) : (
-    <div className='text-center'>{t('暂无数据')}</div>
+    <div className='text-center'>{t('common.noData')}</div>
   );
 });
 

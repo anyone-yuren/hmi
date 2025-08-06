@@ -133,7 +133,7 @@ const Pallet = forwardRef((props: any, ref: any) => {
               setInput={(val: any) => {
                 setInput(val);
               }}
-              placeholder={`${t('请输入')}`}
+              placeholder={`${t('common.plsInput')}`}
               mode={'numbers'}
             ></InputWidthKeyboard>
           ) : (
@@ -151,7 +151,7 @@ const Pallet = forwardRef((props: any, ref: any) => {
       onOk: async () => {
         const val: any = getInput();
         if (!/^\d+$/.test(val)) {
-          toast.error(t('请输入正整数'));
+          toast.error(t('deployer.vision.plsInputNumber'));
           return Promise.reject();
         }
         if ((!!index || index === 0) && indexKey) {

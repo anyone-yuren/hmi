@@ -157,7 +157,7 @@ const AddModel = (props: any) => {
     if (isUpdate) {
       await updateModel(newParams);
     }
-    toast.success(t('提交成功'));
+    toast.success(t('common.actionSuccess'));
     callback();
   };
 
@@ -179,7 +179,7 @@ const AddModel = (props: any) => {
         {isAdd && (
           <div className='flex-none'>
             {!containerTypeList.length ? (
-              <div className='text-center'>{t('暂无数据')}</div>
+              <div className='text-center'>{t('common.noData')}</div>
             ) : (
               <Tabs scrollButtons variant='scrollable' value={value} onChange={handleChange} className='bg-[#eae9e9]'>
                 {containerTypeList?.map((container: any) => {
@@ -206,7 +206,7 @@ const AddModel = (props: any) => {
 
         <div className='text-center flex gap-10 self-center'>
           <Button variant='contained' size='small' sx={{ color: 'white' }} onClick={handleSave}>
-            {t('保存')}
+            {t('common.save')}
           </Button>
         </div>
       </ThemeProvider>

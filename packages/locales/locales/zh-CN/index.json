@@ -104,7 +104,9 @@
     "confirm": "确定",
     "back": "返回",
     "noData": "暂无数据",
-    "save": "保存"
+    "save": "保存",
+    "edit": "编辑",
+    "plsInput": "请输入"
   },
   "deployer": {
     "safety": {
@@ -247,6 +249,32 @@
       "visionPoint": "视觉点",
       "chargePoint": "充电点",
       "devicePoint": "设备点"
+    },
+    "vision": {
+      "modelLibrary": "模型库",
+      "paramSetting": "参数设置",
+      "modelList": "模型列表",
+      "addNewModel": "添加新模型",
+      "extraDepthCompensation": "额外深度补偿",
+      "targetStorage": "目标库位号",
+      "deleteTips": "删除提示",
+      "deleteTipsContent": "确认要删除该模型吗",
+      "goodCount": "货物个数",
+      "goodWidth": "货物宽度",
+      "diameter": "直径",
+      "height": "高",
+      "outDiameter": "外直径",
+      "inDiameter": "内直径",
+      "width": "宽",
+      "legWidth": "支腿宽度",
+      "legHeight": "支腿高度",
+      "forkWidth": "进叉宽度",
+      "shelfWidth": "货架宽度",
+      "goodCols": "货物列数",
+      "truckListDesc": "车厢长/宽/高",
+      "plsInputNumber": "请输入正整数",
+      "palletWidth": "托盘宽度",
+      "palletHeight": "托盘高度"
     }
   }
 }

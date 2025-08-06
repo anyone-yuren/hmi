@@ -49,7 +49,7 @@ const ParamsSetting = (props: any) => {
       <div className='text-black flex gap-[10px] justify-center'>
         <TextChangeRow
           className={'w-[280px]'}
-          title={t('额外深度补偿')}
+          title={t('deployer.vision.extraDepthCompensation')}
           value={propsState?.['extra_deep_compensation']}
           onChange={(value: string) => {
             changeUpdateHashMap('extra_deep_compensation', value);
@@ -61,7 +61,7 @@ const ParamsSetting = (props: any) => {
         {propsState.type === 'warehouse_shelves' && (
           <TextChangeRow
             className={'w-[280px]'}
-            title={t('货物个数')}
+            title={t('deployer.vision.goodCount')}
             value={propsState?.['goods_nums']}
             validateRange={goodsValidateRange}
             onChange={(value: string) => {
@@ -74,7 +74,7 @@ const ParamsSetting = (props: any) => {
 
         <StorageListSelect
           className='w-[280px]'
-          title={t('目标库位号')}
+          title={t('deployer.vision.targetStorage')}
           value={propsState?.['storage_list']}
           onChange={(value: any) => {
             changeUpdateHashMap('storage_list', value);

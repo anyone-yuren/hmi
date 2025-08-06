@@ -88,7 +88,7 @@ const Shelf = forwardRef((props: any, ref) => {
               setInput={(val: any) => {
                 setInput(val);
               }}
-              placeholder={`${t('请输入')}`}
+              placeholder={`${t('common.plsInput')}`}
               mode={'numbers'}
             ></InputWidthKeyboard>
           ) : (
@@ -106,7 +106,7 @@ const Shelf = forwardRef((props: any, ref) => {
       onOk: async () => {
         const val: any = getInput();
         if (!/^\d+$/.test(val)) {
-          toast.error(t('请输入正整数'));
+          toast.error(t('deployer.vision.plsInputNumber'));
           return Promise.reject();
         }
         const isValidation = configHashMap.validation[key](val);
