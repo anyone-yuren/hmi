@@ -1,4 +1,4 @@
-import { useVehicleStore } from '@/store/vehicleStore';
+import { useVehicleStore } from '@gbeata/store';
 import { Icon } from '@iconify/react';
 import { Timeline } from 'antd';
 import { t } from 'i18next';

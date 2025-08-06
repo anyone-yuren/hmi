@@ -1,4 +1,4 @@
-import { Button, Typography } from 'antd';
+import { Button, Modal } from 'antd';
 import { useResponsive } from 'antd-style';
 import { useNavigate } from 'react-router-dom';
 import { SvgIcon } from 'ui';
@@ -6,11 +6,12 @@ import BarBattery from '../battery';
 import ChargingAnimation from '../charging';
 import WsVehicleContainer from '../wsVehicleContainer';
 
-import { useVehicleStore } from '@/store/vehicleStore';
-import { GlobalNotification } from '@gbeata/app-global';
+import { GlobalNotification, LoginDialog, triggerLoginModal } from '@gbeata/app-global';
+import { useGlobalStore, useVehicleStore } from '@gbeata/store';
 import { createStyles } from 'antd-style';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
+
 // 去除table hover央视
 const useStyles = createStyles(({ css }) => {
   return {
@@ -42,6 +43,7 @@ const useStyles = createStyles(({ css }) => {
 const GlobalHeader = () => {
   const navigate = useNavigate();
   const responsive = useResponsive();
+  const [modal, contextHolder] = Modal.useModal();
   const { styles } = useStyles();
   const { powerStatus } = useVehicleStore(
     useShallow((state) => {
@@ -50,11 +52,41 @@ const GlobalHeader = () => {
       };
     }),
   );
+  const { token, setToken } = useGlobalStore(
+    useShallow((state) => ({
+      token: state.token,
+      setToken: state.setToken,
+    })),
+  );
+
   return (
     <div className='flex flex-col h-full items-center justify-between px-4 py-2 text-white '>
-      <Typography.Title className='' level={2}>
-        <span className='text-white'>HMI</span>
-      </Typography.Title>
+      {contextHolder}
+      <div
+        className='w-12 h-12 rounded-full flex items-center justify-center mt-2 mb-4'
+        style={{
+          backgroundColor: token ? '#00D1D1' : '#445260',
+        }}
+        onClick={() => {
+          if (!token) {
+            triggerLoginModal();
+          } else {
+            modal.confirm({
+              title: '确认退出登录吗？',
+              onOk: () => {
+                setToken('');
+              },
+            });
+          }
+        }}
+      >
+        {/* {token ? <SvgIcon name='user' size={28} /> : <SvgIcon name='unknowUser' size={28} />} */}
+        {token ? (
+          <span className='font-bold text-4xl'>{token.charAt(0)}</span>
+        ) : (
+          <SvgIcon name='unknowUser' size={28} />
+        )}
+      </div>
       <div>
         <BarBattery level={40} height={24} />
       </div>
@@ -116,6 +148,7 @@ const GlobalHeader = () => {
       {[2, 3].includes(powerStatus.charge_status) && <ChargingAnimation />}
       <WsVehicleContainer />
       <GlobalNotification />
+      <LoginDialog />
     </div>
   );
 };

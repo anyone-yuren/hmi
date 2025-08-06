@@ -35,7 +35,7 @@ const Setting = () => {
           </div>
         </SwiperSlide> */}
         <SwiperSlide>
-          <div className='bg-[#445260] h-full rounded-2xl p-4 flex flex-col'>
+          <div className='bg-[#445260] h-full rounded-2xl p-4 flex flex-col w-full'>
             <Peripheral />
           </div>
         </SwiperSlide>

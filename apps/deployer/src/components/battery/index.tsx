@@ -1,7 +1,7 @@
 'use client';
 
 import { useGlobalStore } from '@/store/globalStore';
-import { useVehicleStore } from '@/store/vehicleStore';
+import { useVehicleStore } from '@gbeata/store';
 import { useTheme } from 'antd-style';
 import { motion, useAnimation } from 'framer-motion';
 import { useEffect } from 'react';

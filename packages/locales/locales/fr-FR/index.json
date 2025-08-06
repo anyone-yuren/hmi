@@ -23,7 +23,8 @@
       "fail": "Échec de la charge",
       "readyCharging": "Préparation à la charge",
       "success": "Charge terminée",
-      "waitting": "En attente de charge"
+      "waitting": "En attente de charge",
+      "station": "Tas de charge"
     },
     "close": "Fermer",
     "errorMsg": {
@@ -176,7 +177,8 @@
       "safety": "Sécurité",
       "setting": "Paramètres",
       "task": "Tâche",
-      "vision": "Visuel"
+      "vision": "Visuel",
+      "charging": "Charge"
     },
     "io": {
       "tips": "Indication : gris pour non déclenché, vert pour déclenché",
