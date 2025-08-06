@@ -174,14 +174,6 @@ const SwiperPage = () => {
         </SwiperSlide>
         <SwiperSlide>
           <div className='grid grid-cols-4 gap-8 w-full h-full justify-center'>
-            <div className='flex flex-col items-center justify-center gap-2 '>
-              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
-                <SvgIcon name={'cloud'} size={180} />
-              </div>
-              <Typography.Title className='!font-normal' level={3}>
-                {t('deployer.sliderPage.cloud')}
-              </Typography.Title>
-            </div>
             <div
               className='flex flex-col items-center justify-center gap-2'
               onClick={() => {
@@ -195,6 +187,16 @@ const SwiperPage = () => {
                 {t('deployer.sliderPage.setting')}
               </Typography.Title>
             </div>
+
+            <div className='flex flex-col items-center justify-center gap-2 invisible'>
+              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                <SvgIcon name={'cloud'} size={180} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                {t('deployer.sliderPage.cloud')}
+              </Typography.Title>
+            </div>
+
             <div className='flex flex-col items-center justify-center gap-2 invisible'>
               <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
                 <SvgIcon name={'setting'} size={180} />
