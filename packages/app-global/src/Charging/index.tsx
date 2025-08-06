@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
+import stationPng from '../assets/img/station-l.png';
 import x20l from '../assets/img/x20-l.png';
 
 const useStyles = createStyles(({ css }) => ({
@@ -40,7 +41,7 @@ const bubbleTransition = {
 
 const Bubble = ({ delay = 0, left = '50%', size = 'w-3 h-3' }) => (
   <motion.div
-    className={`absolute bottom-0 ${size} rounded-full bg-[#22d3ee]`}
+    className={`absolute bottom-0 ${size} rounded-full bg-yellow-200`}
     style={{ left }}
     variants={bubbleVariants}
     initial='initial'
@@ -50,10 +51,11 @@ const Bubble = ({ delay = 0, left = '50%', size = 'w-3 h-3' }) => (
 );
 
 const Charging = () => {
-  const { setPowerStatus } = useVehicleStore(
+  const { setPowerStatus, powerStatus } = useVehicleStore(
     useShallow((state) => {
       return {
         setPowerStatus: state.setPowerStatus,
+        powerStatus: state.powerStatus,
       };
     }),
   );
@@ -61,6 +63,7 @@ const Charging = () => {
   const { styles } = useStyles();
   const [isStation, setIsStation] = useState(false);
   const [isVehicle, setIsVehicle] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [processItems, setProcessItems] = useState([
     {
       children: (
@@ -165,6 +168,40 @@ const Charging = () => {
                 />
               </motion.div>
             </div>
+
+            {/* 充电桩图片 */}
+            <div className='w-1/2 absolute bottom-4 right-4'>
+              {isError && (
+                <motion.div
+                  initial={{ opacity: 0.7, scale: 1 }}
+                  animate={{ opacity: 1, scale: 1.1 }}
+                  transition={{ duration: 0.4, ease: 'easeInOut', repeatType: 'loop', repeat: Infinity }}
+                  className='absolute top-1/2 z-10 w-full flex items-center justify-center text-red-600'
+                >
+                  <SvgIcon name='error' size={80} />
+                  <div className='text-lg font-bold'>电压异常</div>
+                </motion.div>
+              )}
+              <motion.img
+                src={stationPng}
+                initial={{ filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }}
+                animate={
+                  powerStatus.charge_status === 4 || isError
+                    ? {
+                        filter: isError
+                          ? 'drop-shadow(0 10px 10px rgba(255,0,0,0.5))'
+                          : 'drop-shadow(0 10px 10px rgba(34,211,238,0.5))',
+                      }
+                    : { filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }
+                }
+                transition={
+                  powerStatus.charge_status === 4 || isError
+                    ? { duration: 1.6, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }
+                    : { duration: 0 }
+                }
+                className='w-full'
+              />
+            </div>
             {/* 充电桩电池电压 */}
             <div className='flex flex-col gap-4'>
               <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-[#22d3ee]/20 px-4 py-2'>
@@ -188,7 +225,7 @@ const Charging = () => {
                 </div>
                 <div className='text-sm font-bold'>22.8℃</div>
               </div>
-              <div className='flex justify-end'>
+              <div className='flex justify-end gap-4'>
                 <Button
                   variant='solid'
                   color='cyan'
@@ -198,6 +235,15 @@ const Charging = () => {
                   }}
                 >
                   发送信号
+                </Button>
+                <Button
+                  variant='solid'
+                  color='red'
+                  onClick={() => {
+                    setIsError(!isError);
+                  }}
+                >
+                  异常警告
                 </Button>
               </div>
             </div>
@@ -235,19 +281,29 @@ const Charging = () => {
             <motion.img
               src={x20l}
               initial={{ filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }}
-              animate={{ filter: 'drop-shadow(0 10px 10px rgba(34,211,238,0.5))' }}
-              transition={{ duration: 1.6, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }}
+              animate={
+                powerStatus.charge_status === 4
+                  ? { filter: 'drop-shadow(0 10px 10px rgba(255,255,0,0.5))' }
+                  : { filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }
+              }
+              transition={
+                powerStatus.charge_status === 4
+                  ? { duration: 1.6, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }
+                  : { duration: 0 }
+              }
               className='w-2/3 absolute bottom-4 left-4'
             />
-            <div className='w-full h-64  rounded-xl overflow-hidden '>
-              <Bubble delay={-0.8} left='5%' size='w-1 h-1' />
-              <Bubble delay={0} left='10%' size='w-4 h-4' />
-              <Bubble delay={0.2} left='20%' size='w-2 h-2' />
-              <Bubble delay={0.6} left='40%' size='w-3 h-3' />
-              <Bubble delay={1.2} left='60%' size='w-2.5 h-2.5' />
-              <Bubble delay={1.8} left='30%' size='w-1.5 h-1.5' />
-              <Bubble delay={2.4} left='50%' size='w-2 h-2' />
-            </div>
+            {powerStatus.charge_status === 4 && (
+              <div className='w-full h-64  rounded-xl overflow-hidden '>
+                <Bubble delay={-0.8} left='5%' size='w-1 h-1' />
+                <Bubble delay={0} left='10%' size='w-4 h-4' />
+                <Bubble delay={0.2} left='20%' size='w-2 h-2' />
+                <Bubble delay={0.6} left='40%' size='w-3 h-3' />
+                <Bubble delay={1.2} left='60%' size='w-2.5 h-2.5' />
+                <Bubble delay={1.8} left='30%' size='w-1.5 h-1.5' />
+                <Bubble delay={2.4} left='50%' size='w-2 h-2' />
+              </div>
+            )}
           </div>
 
           <div className='w-full'>
@@ -302,17 +358,31 @@ const Charging = () => {
               </Button>
               <Button
                 variant='solid'
-                color='yellow'
+                color='green'
                 onClick={() => {
                   setIsStation(false);
                   setIsVehicle(false);
                   setPowerStatus({
                     power: 50,
-                    charge_status: 1,
+                    charge_status: 4,
                   });
                 }}
               >
                 开始充电
+              </Button>
+              <Button
+                variant='solid'
+                color='red'
+                onClick={() => {
+                  setIsStation(false);
+                  setIsVehicle(false);
+                  setPowerStatus({
+                    power: 0,
+                    charge_status: 0,
+                  });
+                }}
+              >
+                停止充电
               </Button>
             </div>
           </div>
