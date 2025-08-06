@@ -88,10 +88,10 @@
       "pickUp": "取货"
     },
     "taskStatus": {
-      "unexecuted": "未执行",
       "init": "初始化",
       "running": "执行中",
       "success": "完成",
+      "unexecuted": "未执行",
       "error": "错误",
       "cancel": "取消"
     },
@@ -180,20 +180,9 @@
     },
     "io": {
       "tips": "提示：灰色为未触发，绿色为触发",
-      "status": "状态",
       "input": "输入",
       "port": "端口号",
-      "output": "输出",
-      "about": "车辆信息",
-      "cloud": "上传下载",
-      "diagnosis": "诊断",
-      "io": "I/O 信息",
-      "navigation": "导航",
-      "offset": "偏移表",
-      "safety": "安全",
-      "setting": "设置",
-      "task": "任务",
-      "vision": "视觉"
+      "output": "输出"
     },
     "singleTask": {
       "task": "任务",

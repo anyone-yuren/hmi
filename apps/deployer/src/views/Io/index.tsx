@@ -77,7 +77,7 @@ const Io = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align='center' className='min-w-[61px]'>
-                    {t('deployer.io.status')}
+                    {t('common.status')}
                   </TableCell>
                   <TableCell align='left' sx={{ color: '#FFE500!important' }}>
                     {titleHashMap[key]}
@@ -100,7 +100,7 @@ const Io = () => {
                   ))
                 ) : (
                   <EmptyBoxDiv>
-                    <EmptyBox title={t('没有数据')} backgroundColor='transparent'></EmptyBox>
+                    <EmptyBox title={t('common.noData')} backgroundColor='transparent'></EmptyBox>
                   </EmptyBoxDiv>
                 )}
               </TableBody>
