@@ -108,7 +108,8 @@
     "save": "保存",
     "edit": "编辑",
     "plsInput": "请输入",
-    "add": "添加"
+    "add": "添加",
+    "plsInputParams": "请填写参数"
   },
   "deployer": {
     "safety": {

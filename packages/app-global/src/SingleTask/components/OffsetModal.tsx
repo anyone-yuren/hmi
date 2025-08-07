@@ -66,6 +66,10 @@ const OffsetModal = forwardRef((props: any, ref) => {
     });
   }, [point.id, point.offsetX, point.offsetY]);
 
+  function isNumericString(str) {
+    const num = Number(str);
+    return !isNaN(num) && isFinite(num);
+  }
   const valueChange = (event, key) => {
     const value = event.target.value;
     setOffsetInput({
@@ -74,16 +78,17 @@ const OffsetModal = forwardRef((props: any, ref) => {
     });
   };
   const handleConfirm = async () => {
-    const params = { point_id: point.id, x: Number(offsetInput.offsetX), y: Number(offsetInput.offsetY) };
-    console.log('params', params);
-    if (!params.point_id || !params.x || !params.y) {
-      toast.error('请填写参数');
+    const params = { point_id: Number(offsetInput.id), x: Number(offsetInput.offsetX), y: Number(offsetInput.offsetY) };
+
+    if (!isNumericString(params.point_id) || !isNumericString(params.x) || !isNumericString(params.y)) {
+      toast.error(t('common.pleaseInputNumber'));
       return;
     }
     const { code }: any = await createOffsetTable(params);
     if (code === 200) {
       toast.success(t('common.actionSuccess'));
       getOffsetList();
+      setOffsetModalVisible(false);
     }
   };
   return (

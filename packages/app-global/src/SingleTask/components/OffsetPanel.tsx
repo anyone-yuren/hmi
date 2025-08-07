@@ -2,6 +2,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Typography } from '@mui/material';
 import { Input } from 'antd';
 import { ThemeProvider } from 'antd-style';
+import dayjs from 'dayjs';
 import { forwardRef, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -19,9 +20,9 @@ const OffsetPanel = forwardRef((props: any, ref) => {
   const [searchText, setSearchText] = useState('');
   const { t } = useTranslation();
   const renderOffsetList = useMemo(() => {
-    const originList = offsetList ? offsetList : [];
+    const originList = offsetList?.data ? offsetList.data : [];
     const ary = originList?.filter((item: any) => {
-      return !searchText ? true : item.PointNumber && item.PointNumber.toString().indexOf(searchText) > -1;
+      return !searchText ? true : item.point_id && item.point_id.toString().indexOf(searchText) > -1;
     });
     return ary;
   }, [offsetList, searchText]);
@@ -36,7 +37,11 @@ const OffsetPanel = forwardRef((props: any, ref) => {
   const handleUpdateOffset = (point: any) => {
     setOffsetModalConfig({
       type: 'Offset',
-      point,
+      point: {
+        id: point.point_id,
+        offsetX: point.x,
+        offsetY: point.y,
+      },
     });
     setOffsetModalVisible(true);
   };
@@ -48,8 +53,9 @@ const OffsetPanel = forwardRef((props: any, ref) => {
 
       onOk: async () => {
         const params = {
-          point_id: point.id,
+          point_id: point.point_id,
         };
+        console.log('params', params);
         const { code }: any = await deleteOffsetTable(params);
         if (code === 200) {
           toast.success(t('common.actionSuccess'));
@@ -107,7 +113,7 @@ const OffsetPanel = forwardRef((props: any, ref) => {
             <TaskItem>
               <div className='flex pt-[5px] justify-between items-center'>
                 <div className='text-[18px]'>
-                  {t('deployer.singleTask.point')}: {point.id}
+                  {t('deployer.singleTask.point')}: {point.point_id}
                 </div>
                 <div className='w-[70px] flex items-center justify-center gap-[20px]'>
                   <div
@@ -130,14 +136,14 @@ const OffsetPanel = forwardRef((props: any, ref) => {
               <div className='flex pb-[5px] pt-[3px] justify-between items-center text-[12px]'>
                 <div>
                   <span className='w-[80px] inline-block'>
-                    {t('deployer.singleTask.offset')}X: {point.X}
+                    {t('deployer.singleTask.offset')}X: {point.x}
                   </span>
                   <span className='w-[80px] inline-block'>
-                    {t('deployer.singleTask.offset')}Y: {point.Y}
+                    {t('deployer.singleTask.offset')}Y: {point.y}
                   </span>
                 </div>
                 <div className='text-[#ccc]'>
-                  <span>2025/01/01 12:00:00</span>
+                  <span>{point.update_time ? dayjs.unix(point.update_time).format('YYYY-MM-DD HH:mm:ss') : '-'}</span>
                 </div>
               </div>
             </TaskItem>

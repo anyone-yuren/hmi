@@ -138,7 +138,7 @@ const SingleTask = () => {
         origin_y: point.y,
         // state: 0, // 暂时关掉这个状态看看
         offsetX: offsetHashMap?.[point.id]?.x || null,
-        offsetY: offsetHashMap?.[point.id]?.x || null,
+        offsetY: offsetHashMap?.[point.id]?.y || null,
         offsetUpdateTime: offsetHashMap?.[point.id]?.update_time || null,
       };
       points.push(newPoint);

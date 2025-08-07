@@ -60,7 +60,7 @@ const Illustration = (props: any) => {
               imageStyle={{ transform: 'rotate(270deg)' }}
               tipsProps={{ bottom: '-25px', left: '-80px' }}
             >
-              {t('货物前方超托尺寸')}
+              {t('deployer.vision.goodsFrontOverPalletSize')}
             </ImagesWidthTips>
           </div>
           <div className='flex-1'>
@@ -90,7 +90,7 @@ const Illustration = (props: any) => {
               imageHeight={180}
               tipsProps={{ top: '-25px', left: 0 }}
             >
-              {t('货物前方超托尺寸')}
+              {t('deployer.vision.goodsFrontOverPalletSize')}
             </ImagesWidthTips>
           </div>
         </div>
