@@ -1,6 +1,6 @@
 import useCommonStyles from '@/utils/commonStyle';
 import { useRequest } from 'ahooks';
-import { Skeleton, Slider, Switch, Typography } from 'antd';
+import { Button, Skeleton, Slider, Switch, Typography } from 'antd';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getPeripheralControlParam, postPeripheralControlParam } from '../service';
@@ -27,7 +27,7 @@ const Peripheral = () => {
   }, []);
 
   return (
-    <div className='flex-1 overflow-auto'>
+    <div className='flex-1 overflow-auto relative'>
       <Typography.Title className='text-center' level={3}>
         {t('deployer.setting.peripheral')}
       </Typography.Title>
@@ -78,6 +78,18 @@ const Peripheral = () => {
                 }}
               />
             </div>
+          </div>
+          <div className='flex justify-end absolute bottom-0 right-0'>
+            <Button
+              variant='solid'
+              type='primary'
+              size='large'
+              onClick={() => {
+                window.open('/deployer');
+              }}
+            >
+              {t('common.constructionEnd')}
+            </Button>
           </div>
         </div>
       ) : (

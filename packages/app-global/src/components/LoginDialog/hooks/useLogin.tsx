@@ -4,6 +4,7 @@ import { useRequest } from 'ahooks';
 import { Form, Input, Modal } from 'antd';
 import { createStyles, ThemeProvider } from 'antd-style';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import { postLogin } from '../services';
 
@@ -30,6 +31,7 @@ const useStyles = createStyles(({ css, token }) => {
 });
 
 export default function LoginModalTrigger() {
+  const { t, i18n } = useTranslation();
   const { setToken } = useGlobalStore(
     useShallow((state) => ({
       setToken: state.setToken,
@@ -46,14 +48,22 @@ export default function LoginModalTrigger() {
 
   const showLoginModal = useCallback(() => {
     Modal.confirm({
-      title: '登录',
+      title: t('common.login'),
       content: (
         <ThemeProvider themeMode='dark'>
           <Form form={form} autoComplete='off' clearOnDestroy>
-            <Form.Item label='用户名' name='username' rules={[{ required: true, message: '请输入用户名' }]}>
+            <Form.Item
+              label={t('common.username')}
+              name='username'
+              rules={[{ required: true, message: t('common.pleaseUsername') }]}
+            >
               <Input />
             </Form.Item>
-            <Form.Item label='密码' name='password' rules={[{ required: true, message: '请输入密码' }]}>
+            <Form.Item
+              label={t('common.password')}
+              name='password'
+              rules={[{ required: true, message: t('common.pleasePassword') }]}
+            >
               <Input type='password' />
             </Form.Item>
           </Form>
@@ -69,7 +79,7 @@ export default function LoginModalTrigger() {
       },
       rootClassName: styles.loginModal,
     });
-  }, []);
+  }, [i18n.language]);
 
   showLoginModalExternal = showLoginModal;
 

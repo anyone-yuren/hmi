@@ -113,7 +113,8 @@ const VehicleInfo = () => {
             </Space>
             <div className='flex-1 col-span-1'>
               <Typography.Title level={4} className='!m-0 flex items-center gap-2'>
-                IP: {loading_ip ? <Skeleton variant='rounded' width={100} height={20} /> : vehicle_ip?.ip || '-'}
+                IP:
+                {loading_ip ? <Skeleton variant='rounded' width={100} height={20} /> : vehicle_ip?.wireless_ip || '-'}
               </Typography.Title>
             </div>
           </div>
