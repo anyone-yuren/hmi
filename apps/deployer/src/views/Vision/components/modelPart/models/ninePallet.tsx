@@ -168,19 +168,19 @@ const NinePallet = forwardRef((props: any, ref: any) => {
           }
           const newObj = reGetPosition(obj);
           if (newObj?.width > 5000 || newObj?.totalHeight > 1500) {
-            toast.error(t('高度不能超过1500且宽度不能超过5000'));
+            toast.error(t('deployer.vision.basicSizeValidateTips'));
             return Promise.reject();
           }
           setPropsState(newObj);
           return;
         }
         if (key === 'totalHeight' && Number(val) < propsState.legsMaxHeight) {
-          toast.error(t('高度要大于等于任意支腿高度'));
+          toast.error(t('deployer.vision.basicHeightValidateTips'));
           return Promise.reject();
         }
         const isValidation = configHashMap.validation[key](val);
         if (isValidation) {
-          toast.error(t('高度不能超过1500且宽度不能超过5000'));
+          toast.error(t('deployer.vision.basicSizeValidateTips'));
           return Promise.reject();
         }
         configHashMap.onChange[key] && configHashMap.onChange[key](val);

@@ -46,13 +46,13 @@ const Observe = () => {
           zIndex: 2,
         }}
       >
-        <Tab label={t('点位配置')} iconPosition='end' {...a11yProps(0)} />
-        <Tab label={t('装车')} iconPosition='end' {...a11yProps(1)} />
-        <Tab label={t('卸车')} iconPosition='end' {...a11yProps(2)} />
+        <Tab label={t('deployer.vision.pointSetting')} iconPosition='end' {...a11yProps(0)} />
+        <Tab label={t('deployer.vision.load')} iconPosition='end' {...a11yProps(1)} />
+        <Tab label={t('deployer.vision.unload')} iconPosition='end' {...a11yProps(2)} />
       </Tabs>
       <div className='h-[40px]'></div>
       <div className='text-black'>
-        <Suspense fallback={<span>loading from</span>}>{renderTemplate?.[key] || '-'}</Suspense>
+        <Suspense fallback={<span>loading...</span>}>{renderTemplate?.[key] || '-'}</Suspense>
       </div>
     </>
   );

@@ -92,7 +92,7 @@ const shelfAnnotation = (props: any) => {
         }}
       >
         <span className='relative top-[120%] h-[30px] whitespace-nowrap text-center flex items-center text-[12px] justify-center'>
-          {t('deployer.vision.goodGap')}:{gap.toFixed(2)}
+          {t('deployer.vision.goodsGap')}:{gap.toFixed(2)}
         </span>
       </div>
 
@@ -114,7 +114,7 @@ const shelfAnnotation = (props: any) => {
           }}
         >
           <BorderColorIcon style={{ fontSize: '12px' }} />
-          {t('deployer.vision.goodWidth')}:{goods_width}
+          {t('deployer.vision.goodsWidth')}:{goods_width}
         </span>
       </div>
     </>

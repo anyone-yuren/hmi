@@ -111,7 +111,7 @@ const Setting = (props: any) => {
   }, []);
 
   useUpdateEffect(() => {
-    toast.error(t('视觉配置文件已经改变,请检查最新参数'));
+    toast.error(t('deployer.vision.visionChangeWarning'));
     updatePickSetting({ data: visionPickSetting });
     setUpdateHashMap({ __isInit: false });
     // const newParams = { ...visionPickSetting };
@@ -166,9 +166,9 @@ const Setting = (props: any) => {
 
   const routeKeyOptions = useMemo(() => {
     const options = [
-      { title: t('车身回正时基准点到托盘的距离'), key: 'start_mid_dist' },
-      { title: t('停车后基准点到托盘前表面的距离'), key: 'end_mid_dist' },
-      { title: t('拍照时额外抬升叉臂'), key: 'extra_height' },
+      { title: t('deployer.vision.vehicleStartMidDist'), key: 'start_mid_dist' },
+      { title: t('deployer.vision.vehicleEndMidDist'), key: 'end_mid_dist' },
+      { title: t('deployer.vision.extraForkLift'), key: 'extra_height' },
     ];
     return vehicle?.isTrilateral
       ? []
@@ -178,7 +178,6 @@ const Setting = (props: any) => {
   }, [vehicle]);
 
   useEffect(() => {
-    console.log('propsState', propsState);
     if (!vehicleChassis || !propsState) {
       return;
     }
@@ -260,7 +259,7 @@ const Setting = (props: any) => {
       const min = propsState[obj.key].min;
       const max = propsState[obj.key].max;
       (validateParams > max || validateParams < min) && (isPass = false);
-      !isPass && toast.error(t('参数限制范围') + `[${min}-${max}]`);
+      !isPass && toast.error(t('deployer.vision.paramsValidateRange') + `[${min}-${max}]`);
       return isPass;
     };
 
@@ -292,7 +291,7 @@ const Setting = (props: any) => {
           const min = propsState['compensation']?.[obj.path]?.min;
           const max = propsState['compensation']?.[obj.path]?.max;
           (validateParams > max || validateParams < min) && (isPass = false);
-          !isPass && toast.error(t('参数限制范围') + `[${min}-${max}]`);
+          !isPass && toast.error(t('deployer.vision.paramsValidateRange') + `[${min}-${max}]`);
           return isPass;
         },
         start_mid_dist: commonValidateRule,
@@ -334,7 +333,7 @@ const Setting = (props: any) => {
           }
           hashMap.update[obj.key](Number(val));
         } catch (err) {
-          toast.error(t('参数限制范围') + '[0-0]');
+          toast.error(t('deployer.vision.paramsValidateRange') + '[0-0]');
           console.log(err);
         }
       },
@@ -368,53 +367,17 @@ const Setting = (props: any) => {
     params['select_model'] = selectModelObj;
 
     await saveVisionPickSetting(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
     props?.['__open'] && props?.['__open'](false);
   };
 
   return (
     <div>
-      {/* <div className="text-[black] flex">
-        <div className="flex-1 items-center justify-center">
-          <div className="flex gap-5 ">
-            {[
-              "PALLET",
-              "STACKER",
-              "FORWARD",
-              "BALANCE",
-              "TRILATERAL",
-              "OMNI_FORWARD",
-              "X20S",
-            ]?.map((item) => {
-              return (
-                <Button
-                  variant="contained"
-                  key={item}
-                  sx={{
-                    color:
-                      propsState?.executor_model?.value === item
-                        ? "red"
-                        : "white",
-                  }}
-                  onClick={() => {
-                    setTestVehicleChassis(item);
-                    // const newPickSetting = { ...pickSetting };
-                    // newPickSetting.data.executor_model.value = item;
-                    // updatePickSetting(newPickSetting);
-                  }}
-                >
-                  {item}
-                </Button>
-              );
-            })}
-          </div>
-        </div>
-      </div> */}
       <div className='text-black h-full flex gap-[10px]'>
         <LightTheme>
           <div className='w-[350px] '>
             <TextUpdateRow>
-              <div>{t('自动调参')}</div>
+              <div>{t('deployer.vision.autoSetting')}</div>
               <div>
                 <CustomSwitch
                   checked={updateHashMap['auto_para_tuning']}
@@ -535,11 +498,11 @@ const Setting = (props: any) => {
             )} */}
             {!vehicle?.isTrilateral ? (
               <>
-                <Title>{t('补偿参数')}</Title>
+                <Title>{t('deployer.vision.compensationParams')}</Title>
                 {[
-                  { title: t('左右补偿'), index: 0 },
-                  { title: t('前后补偿'), index: 2 },
-                  { title: t('角度补偿'), index: 3 },
+                  { title: t('deployer.vision.swayCompensation'), index: 0 },
+                  { title: t('deployer.vision.aroundCompensation'), index: 2 },
+                  { title: t('deployer.vision.angleCompensation'), index: 3 },
                 ].map((item: any) => {
                   return (
                     <TextUpdateRow
@@ -561,7 +524,7 @@ const Setting = (props: any) => {
 
                 {!vehicle?.isPallet && (
                   <TextUpdateRow>
-                    <div>{t('进叉高度识别')}</div>
+                    <div>{t('deployer.vision.inForkHeightDetect')}</div>
                     <div>
                       <CustomSwitch
                         checked={updateHashMap['need_detect_height']}
@@ -581,12 +544,12 @@ const Setting = (props: any) => {
                       handleValue({
                         key: 'compensation',
                         path: 'front',
-                        title: t('高度补偿'),
+                        title: t('deployer.vision.heightCompensation'),
                         index: 1,
                       });
                     }}
                   >
-                    <div>{t('高度补偿')}</div>
+                    <div>{t('deployer.vision.heightCompensation')}</div>
                     <div>{updateHashMap['compensation']?.['front']?.[1] || 0}</div>
                   </TextUpdateRow>
                 )}
@@ -594,15 +557,15 @@ const Setting = (props: any) => {
             ) : (
               <>
                 {[
-                  { title: t('左侧补偿参数'), key: 'left' },
-                  { title: t('右侧补偿参数'), key: 'right' },
+                  { title: t('deployer.vision.leftCompensation'), key: 'left' },
+                  { title: t('deployer.vision.rightCompensation'), key: 'right' },
                 ]?.map((row: any) => {
                   return (
                     <>
                       <Title>{row.title}</Title>
                       {[
-                        { title: t('前后挪车补偿'), index: 0 },
-                        { title: t('叉臂伸出距离补偿'), index: 2 },
+                        { title: t('deployer.vision.aroundVehicleCompensation'), index: 0 },
+                        { title: t('deployer.vision.forkExtendDistCompensation'), index: 2 },
                       ]?.map((item: any) => {
                         return (
                           <TextUpdateRow
@@ -626,7 +589,7 @@ const Setting = (props: any) => {
               </>
             )}
 
-            <Title>{t('路径规划')}</Title>
+            <Title>{t('deployer.vision.pathPlanning')}</Title>
             {routeKeyOptions.map((item: any) => {
               return (
                 <TextUpdateRow
@@ -645,7 +608,7 @@ const Setting = (props: any) => {
             })}
 
             <TextUpdateRow>
-              <div>{t('使用不同进叉深度叉取不同类型托盘')}</div>
+              <div>{t('deployer.vision.forkWidthPallet')}</div>
               <div>
                 <CustomSwitch
                   checked={updateHashMap['base_pallet_model_detect_dist']}
@@ -660,9 +623,9 @@ const Setting = (props: any) => {
 
             {updateHashMap['base_pallet_model_detect_dist'] && (
               <>
-                <Title>{t('前后偏移')}</Title>
+                <Title>{t('deployer.vision.aroundOffset')}</Title>
                 <TextUpdateRow>
-                  <div>{t('模型选择')}</div>
+                  <div>{t('deployer.vision.modelSelect')}</div>
                   <div>
                     <div className='relative'>
                       <CustomSelect
@@ -722,7 +685,7 @@ const Setting = (props: any) => {
                         ))}
                         {!updateHashMap?.['pallet_model_list']?.length && (
                           <MenuItem disabled key={'none'} value={'none'}>
-                            <ListItemText primary={t('请先选择模型')} />
+                            <ListItemText primary={t('deployer.vision.plsSelectModel')} />
                           </MenuItem>
                         )}
                       </CustomSelect>
@@ -771,14 +734,14 @@ const Setting = (props: any) => {
               })}
             {vehicle.isTrilateral && (
               <>
-                <Title>{t('最大挪车次数')}</Title>
+                <Title>{t('deployer.vision.maxMoveVehicleTime')}</Title>
                 {updateHashMap?.['vision_move_vehicle_range_list']?.map((item: any, index: number) => {
                   return (
                     <div key={'vision_move_vehicle_range_list' + index} className='flex'>
                       <div className='flex-1'>
                         <TextChangeRow
                           key={'vision_move_vehicle_range_list' + index}
-                          title={t('最小挪车阈值') + (index + 1)}
+                          title={t('deployer.vision.minMoveVehicleThreshold') + (index + 1)}
                           value={item}
                           onChange={(value: string) => {
                             const list = updateHashMap?.['vision_move_vehicle_range_list'];
@@ -818,13 +781,13 @@ const Setting = (props: any) => {
                     });
                   }}
                 >
-                  {t('添加')}
+                  {t('common.add')}
                 </Button>
               </>
             )}
 
             <Button fullWidth variant='contained' sx={{ color: 'white', marginBottom: '40px' }} onClick={handleSave}>
-              {t('保存')}
+              {t('common.save')}
             </Button>
           </div>
 

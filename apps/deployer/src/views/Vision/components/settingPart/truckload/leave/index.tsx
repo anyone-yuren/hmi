@@ -23,37 +23,33 @@ const Leave = () => {
   const { data: leaveResponse } = useRequest(read, {});
   const renderList = [
     {
-      title: t('左侧补偿参数'),
+      title: t('deployer.vision.leftCompensation'),
       key: 'left',
       children: [
         {
-          label: t('退出车厢左右补偿'),
+          label: t('deployer.vision.backTruckSideCompensation'),
           key: 'offset_y_left',
         },
       ],
     },
     {
-      title: t('右侧补偿参数'),
+      title: t('deployer.vision.rightCompensation'),
       key: 'right',
       children: [
         {
-          label: t('退出车厢左右补偿'),
+          label: t('deployer.vision.backTruckSideCompensation'),
           key: 'offset_y_right',
         },
       ],
     },
     {
-      title: t('补偿参数'),
+      title: t('deployer.vision.compensationParams'),
       key: 'font',
       children: [
         {
-          label: t('最终退出车厢前后补偿'),
+          label: t('deployer.vision.backTruckAroundCompensation'),
           key: 'offset_x',
         },
-        // {
-        //   label: t("车身摆正距离"),
-        //   key: "normal_dist",
-        // },
       ],
     },
   ];
@@ -84,7 +80,7 @@ const Leave = () => {
     const params = { ...(leaveResponse?.data || {}) };
     const missKeys = validateInitParams(params);
     if (missKeys.length) {
-      toast.error(t('缺少基础参数') + missKeys.join(','));
+      toast.error(t('deployer.vision.missParamsTips') + missKeys.join(','));
       return;
     }
     Object.keys(params)?.map((key: string) => {
@@ -92,7 +88,7 @@ const Leave = () => {
     });
     params.offset_y.value = [updateHashMap.offset_y_left, updateHashMap.offset_y_right];
     await save(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   };
   return (
     <>
@@ -121,7 +117,7 @@ const Leave = () => {
             );
           })}
           <LoadingButton fullWidth variant='contained' sx={{ color: 'white', marginBottom: '40px' }} onPress={handleOk}>
-            {t('保存')}
+            {t('common.save')}
           </LoadingButton>
         </div>
         <div className='flex-1'>

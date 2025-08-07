@@ -12,7 +12,7 @@ import Setting from './setting';
 
 import { translateStateToParams } from '../../../utils';
 
-const VisionPick = ({ signal, cancelAxios }: any) => {
+const VisionPick = () => {
   const { t } = useTranslation();
   const [settingHashMap, setSettingHashMap] = useState<any>({});
   const [updateHashMap, setUpdateHashMap] = useSetState<any>({
@@ -23,26 +23,7 @@ const VisionPick = ({ signal, cancelAxios }: any) => {
   });
   const [open, setOpen] = useState(false);
   // loading 用来判断没有加载数据的时候锁死卡牌
-  const {
-    data: visionSetting,
-    loading,
-    runAsync: getVisionSetting,
-  } = useRequest(
-    () =>
-      getVisionPickSetting(
-        {},
-        {
-          signal,
-        },
-      ),
-    {},
-  );
-
-  useEffect(() => {
-    return () => {
-      cancelAxios();
-    };
-  }, []);
+  const { data: visionSetting, loading, runAsync: getVisionSetting } = useRequest(() => getVisionPickSetting(), {});
 
   useEffect(() => {
     if (!visionSetting) return;
@@ -61,16 +42,16 @@ const VisionPick = ({ signal, cancelAxios }: any) => {
     }
     const params = translateStateToParams(settingHashMap, updateHashMap);
     await saveVisionPickSetting(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   }, [updateHashMap, settingHashMap]);
 
   return (
     <>
       <div className='flex flex-col items-center justify-center flex-1 basis-[45%] w-[50%] h-full overflow-hidden'>
         <div className='w-full bg-[#2c3645] rounded-[20px] p-[20px] overflow-hidden relative h-full overflow-y-auto'>
-          <div className='text-3xl'>{t('视觉取货')}</div>
+          <div className='text-3xl'>{t('deployer.vision.pick')}</div>
           <div className='my-3 p-4 bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-center justify-between text-lg'>
-            <div>{t('是否启用')}</div>
+            <div>{t('deployer.vision.isTurnOn')}</div>
             <div>
               <CustomSwitch
                 checked={updateHashMap.need_detect}
@@ -84,7 +65,7 @@ const VisionPick = ({ signal, cancelAxios }: any) => {
             </div>
           </div>
           <div className='my-3 p-4 bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-center justify-between text-lg'>
-            <div>{t('传感器绑定')}</div>
+            <div>{t('deployer.vision.sensorBind')}</div>
             <div>
               <CustomSelect
                 variant='standard'
@@ -108,11 +89,10 @@ const VisionPick = ({ signal, cancelAxios }: any) => {
             sx={{ color: 'white', float: 'right' }}
             variant='contained'
             onClick={async () => {
-              cancelAxios();
               setOpen(true);
             }}
           >
-            {t('参数设置')}
+            {t('deployer.vision.paramSetting')}
           </Button>
         </div>
       </div>

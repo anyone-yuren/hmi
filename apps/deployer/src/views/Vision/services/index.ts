@@ -12,7 +12,7 @@ export const updateModel = (data: any) => post('/cv_mwrobot/update_model', data,
 
 export const getVisionPickSetting = () => get('/cv_mwrobot/pick_pallet_position_detect/read', {}, '10010');
 
-export const saveVisionPickSetting = () => get('/cv_mwrobot/pick_pallet_position_detect/save', {}, '10010');
+export const saveVisionPickSetting = (data: any) => post('/cv_mwrobot/pick_pallet_position_detect/save', data, '10010');
 
 // 获取到点云筛选的配置&且会让点云开始推送
 export const getPointCloudMonitoringRead = (data: any) =>
@@ -77,7 +77,7 @@ export const getPlaceSpaceDetectRead = () => get('/cv_mwrobot/common_scenarios/p
 export const postPlaceSpaceDetectSave = (data: any) =>
   post('/cv_mwrobot/common_scenarios/place_space_detect/save', data, '10010');
 
-export const getTailTruckRead = (params: any, config: any) => get('/cv_mwrobot/tail_truck/read', params, '10010');
+export const getTailTruckRead = (params: any) => get('/cv_mwrobot/tail_truck/read', params, '10010');
 
 export const postTailTruckSave = (data: any) => post('/cv_mwrobot/tail_truck/save', data, '10010');
 

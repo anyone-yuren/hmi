@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useEffect } from 'react';
 import useVision from '../../hooks/useVision';
 import CargoState from './cargoState/index';
 import VisionPick from './visionPick/index';
@@ -12,7 +12,6 @@ import { useVisionStore } from '../../store/vision.store';
 import TruckLoad from './truckload/index';
 
 const SettingPart = () => {
-  const abortControllerRef = useRef(new AbortController());
   const { data: agvInfo, loading }: any = useRequest(() => config_agv_info(), {});
   const { disconnect, sendMessage, readyState } = useVision();
   const { t } = useTranslation();
@@ -35,7 +34,6 @@ const SettingPart = () => {
   }, [pointCloudParams, readyState]);
 
   useUpdateEffect(() => {
-    console.log('[Vision]:index=>开始发送点云心跳', readyState, pointsCloudHeart, pointsCloudKey);
     readyState === 1 &&
       pointsCloudHeart > 0 &&
       sendMessage(
@@ -48,23 +46,17 @@ const SettingPart = () => {
 
   useEffect(() => {
     return () => {
-      console.log('[视觉Websocket]:马上断开');
       disconnect();
     };
   }, []);
 
-  const cancelAxios = () => {
-    abortControllerRef.current.abort();
-    abortControllerRef.current = new AbortController();
-  };
-
   return (
     <>
       <div className='flex flex-wrap flex-col h-full w-full gap-[20px] pr-[20px]'>
-        <VisionPick cancelAxios={cancelAxios} signal={abortControllerRef.current.signal}></VisionPick>
+        <VisionPick></VisionPick>
         <CargoState></CargoState>
         <VisionStock></VisionStock>
-        <TruckLoad cancelAxios={cancelAxios} signal={abortControllerRef.current.signal}></TruckLoad>
+        <TruckLoad></TruckLoad>
       </div>
     </>
   );

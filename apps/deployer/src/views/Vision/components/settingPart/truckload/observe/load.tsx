@@ -21,15 +21,15 @@ const Load = () => {
   const { data: unloadResponse } = useRequest(read, {});
   const renderList = [
     {
-      label: t('左侧补偿参数'),
+      label: t('deployer.vision.leftCompensation'),
       key: 'offset_left',
     },
     {
-      label: t('右侧补偿参数'),
+      label: t('deployer.vision.rightCompensation'),
       key: 'offset_right',
     },
     {
-      label: t('角度补偿参数'),
+      label: t('deployer.vision.angelCompensationParam'),
       key: 'offset_angle',
     },
   ];
@@ -48,10 +48,8 @@ const Load = () => {
       !params.offset_angle && (params.offset_angle = {});
       params.offset_y.value = [updateHashMap.offset_left, updateHashMap.offset_right];
       params.offset_angle.value = updateHashMap.offset_angle;
-
-      console.log('params', params);
       await save(params);
-      toast.success(t('操作成功'));
+      toast.success(t('common.actionSuccess'));
     } catch (e) {
       console.log('e', e);
     }
@@ -61,7 +59,7 @@ const Load = () => {
       <div className='flex w-full text-black gap-[20px]'>
         <div className='w-[350px]'>
           <PointCloudFilter type={'tail_place_storage_detect'}></PointCloudFilter>
-          <Title>{t('补偿参数')}</Title>
+          <Title>{t('deployer.vision.compensationParams')}</Title>
           {renderList?.map((item) => {
             return (
               <TextChangeRow
@@ -77,7 +75,7 @@ const Load = () => {
             );
           })}
           <LoadingButton fullWidth variant='contained' sx={{ color: 'white', marginBottom: '40px' }} onPress={handleOk}>
-            {t('保存')}
+            {t('common.save')}
           </LoadingButton>
         </div>
         <div className='flex-1'>

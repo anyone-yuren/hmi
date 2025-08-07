@@ -13,16 +13,10 @@ import { getStackPlaceMoveVehicleRead, getStackPlacePalletPositionDetectRead } f
 const FlatWingSetting = () => {
   const { t } = useTranslation();
   const [value, setValue] = React.useState(0);
-  // const { isTrilateral } = useVisionStore(
-  //   useShallow((store: any) => ({
-  //     isTrilateral: store.isTrilateral,
-  //   }))
-  // );
 
   const { data: visionPlaceResponse } = useRequest(getStackPlacePalletPositionDetectRead);
   const { data: visionMoveResponse } = useRequest(getStackPlaceMoveVehicleRead);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log('handle', value);
     setValue(newValue);
   };
   function a11yProps(index: number) {
@@ -49,9 +43,6 @@ const FlatWingSetting = () => {
   return (
     <>
       <LightTheme>
-        {/* K车只有第二次视觉,其他车都有,堆叠场景没有K车。先把K车的注释拿掉，后面再看*/}
-        {/* {!isTrilateral() ? (
-          <> */}
         <Tabs
           value={value}
           onChange={handleChange}
@@ -65,13 +56,13 @@ const FlatWingSetting = () => {
           }}
         >
           <Tab
-            label={t('第一次视觉')}
+            label={t('deployer.vision.firstVision')}
             icon={<ChipComp isOnline={vision.isPlaceOnline}></ChipComp>}
             iconPosition='end'
             {...a11yProps(0)}
           />
           <Tab
-            label={t('第二次视觉')}
+            label={t('deployer.vision.secondVision')}
             icon={<ChipComp isOnline={vision.isMoveOnline}></ChipComp>}
             iconPosition='end'
             {...a11yProps(1)}
@@ -79,10 +70,6 @@ const FlatWingSetting = () => {
         </Tabs>
         <div className='h-[40px]'></div>
         {template?.[value] || '-'}
-        {/* </>
-        ) : (
-          <PlaceMove initState={vision.move} />
-        )} */}
       </LightTheme>
     </>
   );

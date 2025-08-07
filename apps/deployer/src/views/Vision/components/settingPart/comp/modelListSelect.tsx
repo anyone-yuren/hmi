@@ -29,7 +29,7 @@ const ModelListSelect = (props: IProps) => {
 
   return (
     <TextUpdateRow>
-      <div>{title || t('模型')}</div>
+      <div>{title || t('deployer.vision.model')}</div>
       <div className='relative'>
         <CustomSelect
           multiple

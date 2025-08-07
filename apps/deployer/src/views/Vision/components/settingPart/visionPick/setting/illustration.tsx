@@ -128,14 +128,12 @@ const Illustration = (props: any) => {
         <div className='flex-1 mt-[12px]'>
           <div>
             <Tips>
-              {t('假设每次取货都往一个方向偏，则可以调整左右补偿参数。')}
+              {t('deployer.vision.pickLegendTips1')}
               <br />
-              {t(
-                '如下图左右两侧间隙分别为50mm与10mm,则可以在左右补偿参数里面填写20，补偿之后的取货效果如右图，两侧居中取货。',
-              )}
-              {t('如果实际过程中往反方向偏，则减小参数。')}
+              {t('deployer.vision.pickLegendTips2')}
+              {t('deployer.vision.pickLegendTips3')}
               <br />
-              {t('补偿规则：数值增大则车辆往车头方向挪动。如下图为左侧取货，如果是右侧取货补偿规则也相同。')}
+              {t('deployer.vision.pickLegendTips4')}
             </Tips>
 
             <div className='flex justify-center items-center my-[30px]'>
@@ -146,11 +144,9 @@ const Illustration = (props: any) => {
               </div>
             </div>
             <Tips>
-              {t('假设每次取货都没有取到位，则可以调整前后补偿参数。')}
+              {t('deployer.vision.pickLegendTips5')}
               <br />
-              {t(
-                '图中托盘前表面到牙根的间隙为50mm,则可以在前后补偿参数内填写-40，补偿之后的取货效果如右图，叉臂则会多伸出40mm，如果实际过程中取太深怼托盘，则增大该参数。',
-              )}
+              {t('deployer.vision.pickLegendTips6')}
             </Tips>
             <div className='flex justify-center items-center my-[20px]'>
               <div className='h-[200px] relative'>
@@ -159,9 +155,9 @@ const Illustration = (props: any) => {
               </div>
             </div>
             <Tips>
-              {t('补偿规则')}:
+              {t('deployer.vision.compensationRule')}:
               <br />
-              {t('数值增大则车辆往车头方向挪动。如下图为左侧取货。')}
+              {t('deployer.vision.pickLegendTips7')}
             </Tips>
             <div className='flex justify-center items-center my-[30px]'>
               <div className='h-[200px] relative'>
@@ -171,9 +167,9 @@ const Illustration = (props: any) => {
               </div>
             </div>
             <Tips>
-              {t('补偿规则')}:
+              {t('deployer.vision.compensationRule')}:
               <br />
-              {t('数值增大则车辆往车头方向挪动。如下图为左侧取货。')}
+              {t('deployer.vision.pickLegendTips7')}
             </Tips>
             <div className='flex justify-center items-center my-[20px]'>
               <div className='h-[200px] relative'>
@@ -192,9 +188,9 @@ const Illustration = (props: any) => {
       <div className='flex-1 mt-[12px]'>
         <div>
           <Tips>
-            {t('假设所示每次取货都托盘在叉车上都有一个角度，则可以修改角度补偿参数。')}
+            {t('deployer.vision.pickLegendTips8')}
             <br />
-            {t('如下图偏了约1°，则在角度补偿参数内填写-1。补偿规则: 数值增大，则车辆逆时针旋转。')}
+            {t('deployer.vision.pickLegendTips9')}
           </Tips>
           <div className='flex h-[200px]'>
             <div className='flex-1'>
@@ -228,13 +224,11 @@ const Illustration = (props: any) => {
 
           <div className='h-[40px]'></div>
           <Tips>
-            {t('假设每次取货都往一个方向偏，则可以调整左右补偿参数。')}
+            {t('deployer.vision.pickLegendTips1')}
             <br />
-            {t(
-              '如下图左右两侧间隙分别为50mm与10mm,则可以在左右补偿参数里面填写20，补偿之后的取货效果如右图，两侧居中取货。',
-            )}
+            {t('deployer.vision.pickLegendTips2')}
             <br />
-            {t('如果实际过程中往反方向偏，则减小参数。')}
+            {t('deployer.vision.pickLegendTips3')}
           </Tips>
           <div className='flex h-[200px]'>
             <div className='flex-1 flex justify-center items-center'>
@@ -273,13 +267,11 @@ const Illustration = (props: any) => {
 
           <div className='h-[40px]'></div>
           <Tips>
-            {t('假设每次取货都没有取到位（约50mm之内)，则可以调整前后补偿参数。')}
+            {t('deployer.vision.pickLegendTips10')}
             <br />
-            {t(
-              '图中托盘前表面到牙根的间隙为50mm,则可以在前后补偿参数内填写-40，补偿之后的取货效果如右图，车辆会多走40mm，如果实际过程中会怼托盘，则增大该参数。',
-            )}
+            {t('deployer.vision.pickLegendTips11')}
             <br />
-            {t('注意如果前后取货偏差过大超过50mm，则建议修改停车后基准点到托盘前表面的距离参数。')}
+            {t('deployer.vision.pickLegendTips12')}
           </Tips>
           <div className='flex h-[200px]'>
             <div className='flex-1'>
@@ -318,7 +310,7 @@ const Illustration = (props: any) => {
 
           <ImagesWidthTips
             imageHeight={'100px'}
-            title={t('车身回正时基准点到托盘前表面的距离')}
+            title={t('deployer.vision.vehicleStartMidDist')}
             img={vehicleConfig[vehicleChassis]?.recenter}
             tipsProps={
               vehicleConfig[vehicleChassis]?.recenter_tips_props || {
@@ -327,11 +319,11 @@ const Illustration = (props: any) => {
               }
             }
           >
-            {t('车身回正时基准点到托盘前表面的距离')}
+            {t('deployer.vision.vehicleStartMidDist')}
           </ImagesWidthTips>
           <ImagesWidthTips
             img={vehicleConfig[vehicleChassis]?.stop}
-            title={t('停车后基准点到托盘前表面的距离')}
+            title={t('deployer.vision.vehicleEndMidDist')}
             tipsProps={
               vehicleConfig[vehicleChassis]?.stop_tips_props || {
                 left: '20px',
@@ -339,7 +331,7 @@ const Illustration = (props: any) => {
               }
             }
           >
-            {t('停车后基准点到托盘前表面的距离')}
+            {t('deployer.vision.vehicleEndMidDist')}
           </ImagesWidthTips>
         </div>
       </div>
@@ -407,8 +399,8 @@ const CompensationTips = () => {
   const { t } = useTranslation();
   return (
     <div className='flex relative top-[-25px]'>
-      <div className='flex-1 text-center'>{t('补偿前')}</div>
-      <div className='flex-1 text-center'>{t('补偿后')}</div>
+      <div className='flex-1 text-center'>{t('deployer.vision.beforeCompensation')}</div>
+      <div className='flex-1 text-center'>{t('deployer.vision.afterCompensation')}</div>
     </div>
   );
 };

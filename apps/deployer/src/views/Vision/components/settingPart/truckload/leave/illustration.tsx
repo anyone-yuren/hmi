@@ -23,9 +23,9 @@ const Illustration = () => {
   return (
     <div className='flex-1'>
       <Tips>
-        {t('参数说明')}:
+        {t('deployer.vision.paramExplanation')}:
         <br />
-        {t('假设退出车厢过程中车辆未能居中，左偏100mm，给定左侧补偿系数为100，车辆往右偏，保持车辆居中退出。')}
+        {t('deployer.vision.truckLeaveLegendTips1')}
       </Tips>
       <div className='flex gap-[10px] mt-[30px]'>
         <div className='flex-1 flex justify-center'>
@@ -36,7 +36,7 @@ const Illustration = () => {
         </div>
         <div className='flex items-center px-2'>
           <div>
-            <div className='text-[10px] w-[60px] whitespace-nowrap'>{t('X为左右，Y为前后')}</div>
+            <div className='text-[10px] w-[60px] whitespace-nowrap'>{t('deployer.vision.axisTips')}</div>
             <VehicleAxis />
             <img className='w-[60px]' src={Arrow} />
           </div>
@@ -48,16 +48,16 @@ const Illustration = () => {
         </div>
       </div>
       <div className='flex py-[10px]'>
-        <div className='flex-1 flex justify-center'>{t('补偿前')}</div>
+        <div className='flex-1 flex justify-center'>{t('deployer.vision.beforeCompensation')}</div>
         <div className='flex items-center px-2 w-[60px]'></div>
-        <div className='flex-1 flex justify-center'>{t('补偿后')}</div>
+        <div className='flex-1 flex justify-center'>{t('deployer.vision.afterCompensation')}</div>
       </div>
       <Tips>
-        {t('参数说明')}:
+        {t('deployer.vision.paramExplanation')}:
         <br />
-        {t('假设退出车厢后牙尖到车厢前表面的距离为600，如果想使得该距离增大，则增大该补偿系数。')}
+        {t('deployer.vision.truckLeaveLegendTips2')}
         <br />
-        {t('反之则减小。')}
+        {t('deployer.vision.truckLeaveLegendTips3')}
       </Tips>
       <div className='flex gap-[10px] mt-[30px]'>
         <div className='flex-1 flex justify-center'>
@@ -68,7 +68,7 @@ const Illustration = () => {
         </div>
         <div className='flex items-center px-2'>
           <div>
-            <div className='text-[10px] w-[60px] whitespace-nowrap'>{t('X为左右，Y为前后')}</div>
+            <div className='text-[10px] w-[60px] whitespace-nowrap'>{t('deployer.vision.axisTips')}</div>
             <VehicleAxis />
             <img className='w-[60px]' src={Arrow} />
           </div>
@@ -81,9 +81,9 @@ const Illustration = () => {
         </div>
       </div>
       <div className='flex py-[10px]'>
-        <div className='flex-1 flex justify-center'>{t('补偿前')}</div>
+        <div className='flex-1 flex justify-center'>{t('deployer.vision.beforeCompensation')}</div>
         <div className='flex items-center px-2 w-[60px]'></div>
-        <div className='flex-1 flex justify-center'>{t('补偿后')}</div>
+        <div className='flex-1 flex justify-center'>{t('deployer.vision.afterCompensation')}</div>
       </div>
     </div>
   );

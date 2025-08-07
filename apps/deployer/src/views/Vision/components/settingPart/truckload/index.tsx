@@ -9,7 +9,7 @@ import SecondaryPage, { SecondaryPaper } from '../../SecondaryPage';
 import CustomSelect from '../comp/customSelect';
 import LightTheme from '../comp/lightTheme';
 
-const TruckLoad = ({ signal, cancelAxios }: any) => {
+const TruckLoad = () => {
   const { t } = useTranslation();
   const [modalConfig, setModalConfig] = useState({
     open: false,
@@ -22,29 +22,20 @@ const TruckLoad = ({ signal, cancelAxios }: any) => {
     tail_unloading: '', // 卸车
     tail_vehicle_forward: '', // 退出车厢
   });
-  const { data: truckLoad, runAsync: getTruckLoad } = useRequest(
-    () =>
-      getTailTruckRead(
-        {},
-        {
-          signal,
-        },
-      ),
-    {},
-  );
+  const { data: truckLoad, runAsync: getTruckLoad } = useRequest(() => getTailTruckRead({}), {});
 
   const renderData = [
     [
       {
         key: 'observe',
-        label: t('观测任务'),
+        label: t('deployer.vision.observe'),
         sensorVisible: false,
         sensorKey: '',
         sensor: '',
       },
       {
         key: 'load',
-        label: t('装车'),
+        label: t('deployer.vision.load'),
         sensorVisible: true,
         sensorKey: 'tail_loading',
         sensor: '',
@@ -53,26 +44,20 @@ const TruckLoad = ({ signal, cancelAxios }: any) => {
     [
       {
         key: 'unload',
-        label: t('卸车'),
+        label: t('deployer.vision.unload'),
         sensorVisible: true,
         sensorKey: 'tail_unloading',
         sensor: '',
       },
       {
         key: 'leave',
-        label: t('退出车厢'),
+        label: t('deployer.vision.leave'),
         sensorVisible: true,
         sensorKey: 'tail_vehicle_forward',
         sensor: '',
       },
     ],
   ];
-
-  useEffect(() => {
-    return () => {
-      cancelAxios();
-    };
-  }, []);
 
   useAsyncEffect(async () => {
     if (!updateHashMap.__isSubmit) {
@@ -86,7 +71,7 @@ const TruckLoad = ({ signal, cancelAxios }: any) => {
       }
     }
     await postTailTruckSave(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   }, [updateHashMap, postTailTruckSave]);
 
   useEffect(() => {
@@ -161,7 +146,7 @@ const TruckLoad = ({ signal, cancelAxios }: any) => {
       >
         <div className='flex flex-col items-center justify-center flex-1 basis-[45%] w-[50%] h-full overflow-hidden'>
           <div className='w-full bg-[#2c3645] rounded-[20px] p-[20px] overflow-hidden relative h-full overflow-y-auto'>
-            <div className='text-3xl mb-[6px]'>{t('尾箱装卸')}</div>
+            <div className='text-3xl mb-[6px]'>{t('deployer.vision.truckload')}</div>
             {renderData?.map((row: any, index: number) => {
               return (
                 <div key={'row' + index} className='flex gap-[10px]'>
@@ -200,14 +185,13 @@ const TruckLoad = ({ signal, cancelAxios }: any) => {
                             sx={{ color: 'white', whiteSpace: 'nowrap' }}
                             variant='contained'
                             onClick={async () => {
-                              cancelAxios();
                               setModalConfig({
                                 open: true,
                                 key: item.key,
                               });
                             }}
                           >
-                            {t('参数设置')}
+                            {t('deployer.vision.paramSetting')}
                           </Button>
                         </div>
                       </div>
@@ -220,20 +204,19 @@ const TruckLoad = ({ signal, cancelAxios }: any) => {
             <div
               className={`my-[6px] px-2 py-3 w-full border-box bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-start justify-between text-lg`}
             >
-              <div>{t('车厢货物状态管理')}</div>
+              <div>{t('deployer.vision.truckGoodsManage')}</div>
               <Button
                 size='small'
                 sx={{ color: 'white', float: 'right', whiteSpace: 'nowrap' }}
                 variant='contained'
                 onClick={() => {
-                  cancelAxios();
                   setModalConfig({
                     open: true,
                     key: 'cargo',
                   });
                 }}
               >
-                {t('参数设置')}
+                {t('deployer.vision.paramSetting')}
               </Button>
             </div>
           </div>
@@ -251,7 +234,7 @@ const TruckLoad = ({ signal, cancelAxios }: any) => {
         >
           <SecondaryPaper>
             <LightTheme className='text-black'>
-              <Suspense fallback={<span>loading modal</span>}>{template?.[modalConfig?.key] || '-'}</Suspense>
+              <Suspense fallback={<span>loading modal...</span>}>{template?.[modalConfig?.key] || '-'}</Suspense>
             </LightTheme>
           </SecondaryPaper>
         </SecondaryPage>

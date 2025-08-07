@@ -61,7 +61,7 @@ const ParamsSetting = (props: any) => {
         {propsState.type === 'warehouse_shelves' && (
           <TextChangeRow
             className={'w-[280px]'}
-            title={t('deployer.vision.goodCount')}
+            title={t('deployer.vision.goodsCount')}
             value={propsState?.['goods_nums']}
             validateRange={goodsValidateRange}
             onChange={(value: string) => {

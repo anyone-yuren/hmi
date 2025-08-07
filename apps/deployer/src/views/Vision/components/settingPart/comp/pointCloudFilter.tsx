@@ -42,37 +42,37 @@ const PointCloudFilter = (props: IProps) => {
   });
   const [state, setState, getState] = useGetState<any>({
     front: {
-      label: t('前探测距离'),
+      label: t('deployer.vision.frontDetectDist'),
       value: 10,
       keyIndex: 0,
       index: 1,
     },
     back: {
-      label: t('后探测距离'),
+      label: t('deployer.vision.backDetectDist'),
       value: 130,
       keyIndex: 0,
       index: 0,
     },
     left: {
-      label: t('左探测距离'),
+      label: t('deployer.vision.leftDetectDist'),
       value: 450,
       keyIndex: 1,
       index: 0,
     },
     right: {
-      label: t('右探测距离'),
+      label: t('deployer.vision.rightDetectDist'),
       value: 260,
       keyIndex: 1,
       index: 1,
     },
     top: {
-      label: t('上探测距离'),
+      label: t('deployer.vision.topDetectDist'),
       value: 1000,
       keyIndex: 2,
       index: 1,
     },
     down: {
-      label: t('下探测距离'),
+      label: t('deployer.vision.bottomDetectDist'),
       value: -990,
       keyIndex: 2,
       index: 0,
@@ -90,10 +90,6 @@ const PointCloudFilter = (props: IProps) => {
   const isMultiwayAgv = useMemo(() => {
     return false;
   }, []);
-
-  // const clear = useInterval(() => {
-  //   setPointsCloudHeart(new Date().getTime());
-  // }, 2000);
 
   useEffect(() => {
     setPointsCloudKey(type);
@@ -178,7 +174,7 @@ const PointCloudFilter = (props: IProps) => {
 
   const validateParams = (params: any) => {
     if (!initParams?.select_dist) {
-      toast.error(t('初始化参数未获取'));
+      toast.error(t('deployer.vision.missParamsTips'));
       return Promise.reject();
     }
     const newParams = {
@@ -198,13 +194,13 @@ const PointCloudFilter = (props: IProps) => {
   const handleParamsWrite = async () => {
     const params = await validateParams(initParams);
     await postPointCloudMonitoringWrite(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   };
 
   const handleParamsSave = async () => {
     const params = await validateParams(initParams);
     await postPointCloudMonitoringSave(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   };
 
   const handleDelPress = useCallback(
@@ -213,7 +209,7 @@ const PointCloudFilter = (props: IProps) => {
       const origin = newState?.[key]?.value;
       const value = origin - 10;
       if (value < validateRange.min) {
-        toast.error(t('参数限制范围') + `[${validateRange.min}-${validateRange.max}]`);
+        toast.error(t('deployer.vision.paramsValidateRange') + `[${validateRange.min}-${validateRange.max}]`);
         handleMouseUp();
         return;
       }
@@ -233,7 +229,7 @@ const PointCloudFilter = (props: IProps) => {
       const origin = newState?.[key]?.value;
       const value = origin + 10;
       if (value > validateRange.max) {
-        toast.error(t('参数限制范围') + `[${validateRange.min}-${validateRange.max}]`);
+        toast.error(t('deployer.vision.paramsValidateRange') + `[${validateRange.min}-${validateRange.max}]`);
         handleMouseUp();
         return;
       }
@@ -251,7 +247,6 @@ const PointCloudFilter = (props: IProps) => {
   const handleDoubleClick = (params: any) => {
     const { key } = params;
     const newState = getState();
-    console.log('newState?.[key]?.value', newState?.[key]?.value);
     MwConfirm.confirm({
       title: newState?.[key]?.label,
       content: (
@@ -280,7 +275,7 @@ const PointCloudFilter = (props: IProps) => {
       onOk: async () => {
         const value = Number(getInputString());
         if (value < validateRange.min || value > validateRange.max) {
-          toast.error(t('参数限制范围') + `[${validateRange.min}-${validateRange.max}]`);
+          toast.error(t('deployer.vision.paramsValidateRange') + `[${validateRange.min}-${validateRange.max}]`);
           return Promise.reject();
         }
         setState({
@@ -311,7 +306,7 @@ const PointCloudFilter = (props: IProps) => {
           setOpen(true);
         }}
       >
-        {t('点云筛选')}
+        {t('deployer.vision.pointsCloud')}
       </Button>
       <SecondaryPage
         open={open}
@@ -394,7 +389,7 @@ const PointCloudFilter = (props: IProps) => {
                     );
                   })}
                   <TextUpdateRow>
-                    <div>{t('模式')}</div>
+                    <div>{t('deployer.vision.mode')}</div>
                     <div className='relative'>
                       <CustomSelect
                         size={'small'}
@@ -406,10 +401,10 @@ const PointCloudFilter = (props: IProps) => {
                         }}
                       >
                         <MenuItem value={0}>
-                          <ListItemText primary={t('背景去除')} />
+                          <ListItemText primary={t('deployer.vision.backgroundOff')} />
                         </MenuItem>
                         <MenuItem value={1}>
-                          <ListItemText primary={t('目标选定')} />
+                          <ListItemText primary={t('deployer.vision.targetSelect')} />
                         </MenuItem>
                       </CustomSelect>
                     </div>
@@ -420,7 +415,7 @@ const PointCloudFilter = (props: IProps) => {
                     sx={{ color: 'white', marginBottom: '10px' }}
                     onClick={handleParamsWrite}
                   >
-                    {t('参数写入')}
+                    {t('deployer.vision.paramsWrite')}
                   </Button>
                   <Button
                     fullWidth
@@ -428,7 +423,7 @@ const PointCloudFilter = (props: IProps) => {
                     sx={{ color: 'white', marginBottom: '20px' }}
                     onClick={handleParamsSave}
                   >
-                    {t('数据保存')}
+                    {t('deployer.vision.paramsSave')}
                   </Button>
                 </div>
                 <div className='flex-1 p-4 h-full'>

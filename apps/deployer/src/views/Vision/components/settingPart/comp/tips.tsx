@@ -19,10 +19,6 @@ export const ImagesWidthTips = memo(
 
       const loadUrl = `../../../../../assets/vision/${img}.png`;
 
-      // const loadImage = async (str: string) => {
-      //   const image = await import(str);
-      //   setImageSrc(image.default);
-      // };
       let imageFn = () => {};
       if (img.split('/')?.length === 1) {
         imageFn = visionImages[loadUrl];

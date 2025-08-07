@@ -7,7 +7,7 @@ import {
 import Button from '@mui/material/Button';
 import { useRequest } from 'ahooks';
 import { Dropdown } from 'antd';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 const mock = [
@@ -22,33 +22,11 @@ const mock = [
   [-5.43007, -0.686973, 0.0314617, 0],
   [-5.46608, 0.459077, 0.0314617, 0],
 ];
-// const goodsResponse = {
-//   code: 200,
-//   data: {
-//     goods_size: {
-//       value: null,
-//     },
-//     storage_location: {
-//       value: null,
-//     },
-//     truck_size: {
-//       value: null,
-//     },
-//   },
-//   msg: "OK",
-// };
+
 const Cargo = () => {
   const { t } = useTranslation();
   const [mode, setMode] = useState<'load' | 'unload'>('load');
   const { data: goodsResponse, runAsync: getLocation } = useRequest(read, {});
-  useEffect(() => {
-    console.log('goodsResponse', goodsResponse);
-  }, [goodsResponse]);
-
-  const mockXs = mock.map(([, y]) => y); // 把原来的 y 当作水平方向
-  const mockYs = mock.map(([x]) => x); // 把原来的 x 当作垂直方向
-
-  const width = 400 / mockXs.length;
 
   function findClosestToOrigin(points) {
     return points.reduce((closest, current) => {
@@ -59,7 +37,6 @@ const Cargo = () => {
   }
 
   const renderWidth = 150;
-  console.log('width', width);
   const locationAry: any = useMemo(() => {
     return goodsResponse?.data?.storage_location?.value;
   }, [goodsResponse]);
@@ -87,33 +64,26 @@ const Cargo = () => {
       2: 'red',
     },
     text: {
-      0: t('无货'),
-      1: t('有货'),
-      2: t('规划中'),
+      0: t('deployer.vision.noGoods'),
+      1: t('deployer.vision.hasGoods'),
+      2: t('deployer.vision.planning'),
     },
   };
   const scaledPoints = useMemo(() => {
     if (!locationAry) return [];
-    // ×1000，并交换 x/y 顺序 → [y, x]
-    return locationAry.slice(1).map((p) => [
-      p[1] * 1000, // y → 新的 x（水平方向）
-      p[0] * 1000, // x → 新的 y（垂直方向）
-      p[2], // z（保持不变）
-      p[3], // status（保持不变）
-    ]);
+    return locationAry.slice(1).map((p) => [p[1] * 1000, p[0] * 1000, p[2], p[3]]);
   }, [locationAry]);
   const topLeftPoint = useMemo(() => {
     if (!scaledPoints.length) return null;
     const [x, y] = findClosestToOrigin(scaledPoints);
-    // 找出离 (0, 0) 最近的点
     return { x, y };
   }, [scaledPoints]);
   const offsetPoints = useMemo(() => {
     if (!scaledPoints.length || !topLeftPoint) return [];
 
     return scaledPoints.map((point) => ({
-      x: point[0] - topLeftPoint.x, // 新的 x（原 y）
-      y: topLeftPoint.y - point[1], // 新的 y（原 x），反转 Y 轴
+      x: point[0] - topLeftPoint.x,
+      y: topLeftPoint.y - point[1],
       status: point[3],
       originX: point[0],
       originY: point[1],
@@ -163,7 +133,7 @@ const Cargo = () => {
       }
     });
     if (!isPass) {
-      toast.error(t('请选择操作上一个库位'));
+      toast.error(t('deployer.vision.truckStorageTips'));
     }
     return isPass;
   };
@@ -171,7 +141,7 @@ const Cargo = () => {
   const getItems = (index: number) => {
     return [
       {
-        label: t('设为有货'),
+        label: t('deployer.vision.setHasGoods'),
         key: 'hasGoods',
         onClick: async () => {
           let params = structuredClone(locationAry);
@@ -179,12 +149,12 @@ const Cargo = () => {
           if (!isPass) return;
           params[index + 1][3] = 1;
           await save({ storage_location: { value: params } });
-          toast.success(t('操作成功'));
+          toast.success(t('common.actionSuccess'));
           await getLocation();
         },
       },
       {
-        label: t('设为无货'),
+        label: t('deployer.vision.setNoGoods'),
         key: 'withoutGoods',
         onClick: async () => {
           let params = structuredClone(locationAry);
@@ -192,7 +162,7 @@ const Cargo = () => {
           if (!isPass) return;
           params[index + 1][3] = 0;
           await save({ storage_location: { value: params } });
-          toast.success(t('操作成功'));
+          toast.success(t('common.actionSuccess'));
           await getLocation();
         },
       },
@@ -201,11 +171,11 @@ const Cargo = () => {
 
   const handleChangeAllState = async (state: any) => {
     const titleHashMap: any = {
-      1: t('全部设为有货'),
-      0: t('全部设为无货'),
+      1: t('deployer.vision.setAllHasGoods'),
+      0: t('deployer.vision.setAllNoGoods'),
     };
     MwConfirm.confirm({
-      title: t('操作') as string,
+      title: t('common.action') as string,
       content: titleHashMap[state],
       onOk: async () => {
         const [axis, ...ary] = locationAry;
@@ -215,9 +185,9 @@ const Cargo = () => {
         try {
           await save({ storage_location: { value: [axis, ...ary] } });
           await getLocation();
-          toast.success(t('操作成功'));
+          toast.success(t('common.actionSuccess'));
         } catch (e) {
-          toast.error(t('操作失败'));
+          //
         }
       },
     });
@@ -225,12 +195,12 @@ const Cargo = () => {
 
   const modeHashMap = {
     title: {
-      load: t('装车模式'),
-      unload: t('卸车模式'),
+      load: t('deployer.vision.loadMode'),
+      unload: t('deployer.vision.unloadMode'),
     },
     tips: {
-      load: t('只能从最外面修改状态'),
-      unload: t('只能从最里面修改状态'),
+      load: t('deployer.vision.loadModeTips'),
+      unload: t('deployer.vision.unloadModeTips'),
     },
   };
 
@@ -275,15 +245,15 @@ const Cargo = () => {
           <div>
             <div className='flex items-center gap-2'>
               <span className='w-[20px] h-[20px] bg-[red] block'></span>
-              <span>{t('规划中')}</span>
+              <span>{t('deployer.vision.planning')}</span>
             </div>
             <div className='flex items-center gap-2'>
               <span className='w-[20px] h-[20px] bg-[yellow] block'></span>
-              <span>{t('有货')}</span>
+              <span>{t('deployer.vision.hasGoods')}</span>
             </div>
             <div className='flex items-center gap-2'>
               <span className='w-[20px] h-[20px] bg-[#00d1d1] block'></span>
-              <span>{t('无货')}</span>
+              <span>{t('deployer.vision.noGoods')}</span>
             </div>
             <div className='mt-[10px] flex gap-[20px]'>
               <Button
@@ -294,7 +264,7 @@ const Cargo = () => {
                   handleChangeAllState(1);
                 }}
               >
-                {t('全部设为有货')}
+                {t('deployer.vision.setAllHasGoods')}
               </Button>
               <Button
                 variant='outlined'
@@ -303,12 +273,12 @@ const Cargo = () => {
                   handleChangeAllState(0);
                 }}
               >
-                {t('全部设为无货')}
+                {t('deployer.vision.setAllNoGoods')}
               </Button>
             </div>
             <div className='mt-[20px]'>
               <div>
-                {modeHashMap.title[mode]}（{t('数字越大越靠近外面')}）
+                {modeHashMap.title[mode]}（{t('deployer.vision.truckModeTips')}）
               </div>
               <div>{modeHashMap.tips[mode]}</div>
               <div className='flex gap-[20px] mt-[5px]'>
@@ -320,7 +290,7 @@ const Cargo = () => {
                     setMode('load');
                   }}
                 >
-                  {t('设为装车')}
+                  {t('deployer.vision.setLoad')}
                 </Button>
                 <Button
                   variant='outlined'
@@ -329,7 +299,7 @@ const Cargo = () => {
                     setMode('unload');
                   }}
                 >
-                  {t('设为卸车')}
+                  {t('deployer.vision.setUnload')}
                 </Button>
               </div>
             </div>

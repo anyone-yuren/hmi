@@ -65,13 +65,13 @@ const ShelfSetting = () => {
               }}
             >
               <Tab
-                label={t('第一次视觉')}
+                label={t('deployer.vision.firstVision')}
                 icon={<ChipComp isOnline={vision.isPlaceOnline}></ChipComp>}
                 iconPosition='end'
                 {...a11yProps(0)}
               />
               <Tab
-                label={t('第二次视觉')}
+                label={t('deployer.vision.secondVision')}
                 icon={<ChipComp isOnline={vision.isMoveOnline}></ChipComp>}
                 iconPosition='end'
                 {...a11yProps(1)}

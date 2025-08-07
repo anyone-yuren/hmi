@@ -17,7 +17,6 @@ const Points = () => {
   const { data: pointConfig } = useRequest(read, {});
 
   useEffect(() => {
-    console.log('pointConfig', pointConfig);
     setUpdateHashMap({
       goods_points: pointConfig?.data?.goods_points?.value,
       vision_points: pointConfig?.data?.vision_points?.value,
@@ -35,28 +34,28 @@ const Points = () => {
       params[key].value = updateHashMap[key];
     });
     await save(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   };
   return (
     <>
       <div className='flex w-full text-black'>
         <div className='w-[350px]'>
           <StorageListSelect
-            title={t('观测点库位')}
+            title={t('deployer.vision.observeStorage')}
             value={updateHashMap['vision_points']}
             onChange={(value: any) => {
               changeUpdateHashMap('vision_points', value);
             }}
           ></StorageListSelect>
           <StorageListSelect
-            title={t('装卸车库位')}
+            title={t('deployer.vision.loadStorage')}
             value={updateHashMap['goods_points']}
             onChange={(value: any) => {
               changeUpdateHashMap('goods_points', value);
             }}
           ></StorageListSelect>
           <LoadingButton fullWidth variant='contained' sx={{ color: 'white', marginBottom: '40px' }} onPress={handleOk}>
-            {t('保存')}
+            {t('common.save')}
           </LoadingButton>
         </div>
         <div className='flex-1'></div>

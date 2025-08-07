@@ -97,7 +97,7 @@ const Cylinder = forwardRef((props: any, ref: any) => {
         }
         const isValidation = configHashMap.validation[key](val);
         if (isValidation) {
-          toast.error(t('高度不能超过1500且宽度不能超过5000'));
+          toast.error(t('deployer.vision.basicSizeValidateTips'));
           return Promise.reject();
         }
         configHashMap.onChange[key] && configHashMap.onChange[key](val);

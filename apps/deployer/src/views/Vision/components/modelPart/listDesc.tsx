@@ -70,12 +70,12 @@ const ListDesc = forwardRef((props: any, ref: any) => {
         ) : null}
         {container?.goods_nums && (
           <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
-            {t('deployer.vision.goodCount')}: {container?.goods_nums}
+            {t('deployer.vision.goodsCount')}: {container?.goods_nums}
           </Typography>
         )}
         {container?.goods_width && (
           <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
-            {t('deployer.vision.goodWidth')}: {container?.goods_width}
+            {t('deployer.vision.goodsWidth')}: {container?.goods_width}
           </Typography>
         )}
         {container?.storage_width && (
@@ -85,7 +85,7 @@ const ListDesc = forwardRef((props: any, ref: any) => {
         )}
         {container?.goods_cols && (
           <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
-            {t('deployer.vision.goodCols')}: {container?.goods_cols}
+            {t('deployer.vision.goodsCols')}: {container?.goods_cols}
           </Typography>
         )}
         {container?.truck_size && (

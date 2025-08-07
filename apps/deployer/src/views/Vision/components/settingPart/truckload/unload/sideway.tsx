@@ -21,31 +21,31 @@ const Sideway = () => {
   const { data: sidewayResponse } = useRequest(read, {});
   const renderList = [
     {
-      title: t('左侧补偿参数'),
+      title: t('deployer.vision.leftCompensation'),
       key: 'left',
       children: [
         {
-          label: t('取货叉臂横移补偿'),
+          label: t('deployer.vision.truckPickForkMovePoseDetect'),
           key: 'offset_left',
         },
       ],
     },
     {
-      title: t('右侧补偿参数'),
+      title: t('deployer.vision.rightCompensation'),
       key: 'right',
       children: [
         {
-          label: t('取货叉臂横移补偿'),
+          label: t('deployer.vision.truckPickForkMovePoseDetect'),
           key: 'offset_right',
         },
       ],
     },
     {
-      title: t('补偿参数'),
+      title: t('deployer.vision.compensationParams'),
       key: 'font',
       children: [
         {
-          label: t('最终取货前后补偿'),
+          label: t('deployer.vision.pickAroundCompensation'),
           key: 'offset_x',
         },
       ],
@@ -79,7 +79,7 @@ const Sideway = () => {
     const params = { ...(sidewayResponse?.data || {}) };
     const missKeys = validateInitParams(params);
     if (missKeys.length) {
-      toast.error(t('缺少基础参数') + missKeys.join(','));
+      toast.error(t('deployer.vision.missParamsTips') + missKeys.join(','));
       return;
     }
     Object.keys(params)?.map((key: string) => {
@@ -87,7 +87,7 @@ const Sideway = () => {
     });
     params.offset_y.value = [updateHashMap.offset_left, updateHashMap.offset_right];
     await save(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   };
   return (
     <>
@@ -116,7 +116,7 @@ const Sideway = () => {
             );
           })}
           <LoadingButton fullWidth variant='contained' sx={{ color: 'white', marginBottom: '40px' }} onPress={handleOk}>
-            {t('保存')}
+            {t('common.save')}
           </LoadingButton>
         </div>
         <div className='flex-1'>

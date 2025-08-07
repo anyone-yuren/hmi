@@ -105,7 +105,7 @@ const Concentric = forwardRef((props: any, ref: any) => {
         }
         const isValidation = configHashMap.validation[key](val);
         if (isValidation) {
-          toast.error(t('外直径不能超过5000且内直径不能超过4900'));
+          toast.error(t('deployer.vision.concentricValidateTips'));
           return Promise.reject();
         }
         configHashMap.onChange[key] && configHashMap.onChange[key](val);

@@ -1,6 +1,6 @@
 import { Chip } from '@mui/material';
 import { useRequest } from 'ahooks';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getPointList } from '../../../services/index';
@@ -29,18 +29,10 @@ const StorageListSelect = (props: IProps) => {
     });
   }, [pointList]);
 
-  useEffect(() => {
-    console.log('storages', storages);
-  }, [storages]);
-
-  useEffect(() => {
-    console.log('value', value);
-  }, [value]);
-
   return (
     <>
       <TextUpdateRow className={props.className}>
-        <div>{title || t('库位')}</div>
+        <div>{title || t('deployer.vision.storage')}</div>
         <div className='relative'>
           <div
             className='absolute w-full h-full top-0 left-0 z-10'

@@ -49,7 +49,7 @@ const VisionStock = () => {
     }
     console.log(params);
     await postVisualPlaceSave(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   }, [updateHashMap, postVisualPlaceSave]);
 
   useEffect(() => {
@@ -66,19 +66,19 @@ const VisionStock = () => {
   const options = [
     {
       value: 'need_detect_shelf',
-      label: t('货架库位'),
+      label: t('deployer.vision.shelfStorage'),
     },
     {
       value: 'need_detect_stack',
-      label: t('堆叠库位'),
+      label: t('deployer.vision.stackStorage'),
     },
     {
       value: 'need_detect_truck',
-      label: t('平板&飞翼门装卸车库位'),
+      label: t('deployer.vision.truckStorage'),
     },
     {
       value: 'tailBox',
-      label: t('尾厢装卸车库位'),
+      label: t('deployer.vision.tailStorage'),
     },
   ];
   const ShelfSetting = React.lazy(() => import('./shelf/index'));
@@ -94,7 +94,7 @@ const VisionStock = () => {
     <>
       <div className='flex flex-col items-center justify-center flex-1 basis-[45%] w-[50%] h-full overflow-hidden'>
         <div className='w-full bg-[#2c3645] rounded-[20px] p-[20px] overflow-hidden relative flex flex-col h-full overflow-y-auto'>
-          <div className='text-3xl '>{t('视觉放货')}</div>
+          <div className='text-3xl '>{t('deployer.vision.place')}</div>
           <div className='flex justify-between items-center w-full gap-[10px] mt-1'>
             {options?.slice(0, 2)?.map((option) => {
               return (
@@ -128,7 +128,7 @@ const VisionStock = () => {
                           });
                         }}
                       >
-                        {t('参数设置')}
+                        {t('deployer.vision.paramSetting')}
                       </Button>
                     </div>
                   </VisionBox>
@@ -162,14 +162,14 @@ const VisionStock = () => {
                     });
                   }}
                 >
-                  {t('参数设置')}
+                  {t('deployer.vision.paramSetting')}
                 </Button>
               </div>
             </VisionBox>
           </div>
 
           <div className='mt-2 p-[12px] bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-center justify-between text-lg'>
-            <div>{t('传感器绑定')}</div>
+            <div>{t('deployer.vision.sensorBind')}</div>
             <div>
               <CustomSelect
                 size='small'

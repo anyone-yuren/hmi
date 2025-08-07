@@ -68,7 +68,6 @@ const Setting = () => {
 
   useEffect(() => {
     return () => {
-      console.log('[视觉Websocket]:马上断开');
       disconnect();
     };
   }, []);
@@ -93,7 +92,7 @@ const Setting = () => {
     });
     console.log(sendState, updateHashMap);
     await save(sendState);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   };
 
   return (
@@ -101,14 +100,14 @@ const Setting = () => {
       <div className='text-black h-full flex gap-[10px] px-[40px]'>
         <div className='w-[350px] overflow-scroll'>
           <TextUpdateSwitchRow
-            title={t('是否启用')}
+            title={t('deployer.vision.isTurnOn')}
             checked={updateHashMap['need_detect']}
             onChange={(checked: boolean) => {
               changeUpdateHashMap('need_detect', checked);
             }}
           />
           <TextUpdateRow>
-            <div>{t('传感器绑定')}</div>
+            <div>{t('deployer.vision.sensorBind')}</div>
             <CustomSelect
               variant='standard'
               value={updateHashMap.sensor_model}
@@ -140,10 +139,10 @@ const Setting = () => {
           <PointCloudFilter type={'place_space_detect'} background={'white'} titleColor={'black'}></PointCloudFilter>
 
           {[
-            { title: t('额外提升叉臂'), key: 'extra_height' },
-            { title: t('货物宽度'), key: 'goods_total_width' },
-            { title: t('货物高度'), key: 'goods_total_height' },
-            { title: t('货物左右间隙'), key: 'sku_gap' },
+            { title: t('deployer.vision.extraForkLift'), key: 'extra_height' },
+            { title: t('deployer.vision.goodsWidth'), key: 'goods_total_width' },
+            { title: t('deployer.vision.goodsHeight'), key: 'goods_total_height' },
+            { title: t('deployer.vision.goodsSideGap'), key: 'sku_gap' },
           ]?.map((item: any) => {
             return (
               <TextChangeRow
@@ -166,7 +165,7 @@ const Setting = () => {
             sx={{ color: 'white', marginBottom: '80px' }}
             onPress={handleSave}
           >
-            {t('保存')}
+            {t('common.save')}
           </LoadingButton>
         </div>
         <div className='flex-1'>

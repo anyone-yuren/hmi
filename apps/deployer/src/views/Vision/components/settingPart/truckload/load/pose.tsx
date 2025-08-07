@@ -21,19 +21,19 @@ const Pose = () => {
   });
   const renderList = [
     {
-      label: t('行驶状态下车左侧装车体外轮廓到车厢侧面间隙'),
+      label: t('deployer.vision.truckRunningLeftGap'),
       key: 'offset_left',
     },
     {
-      label: t('行驶状态下车右侧装车体外轮廓到车厢侧面间隙'),
+      label: t('deployer.vision.truckRunningRightGap'),
       key: 'offset_right',
     },
     {
-      label: t('库位前停靠距离'),
+      label: t('deployer.vision.storageStopDist'),
       key: 'offset_x',
     },
     {
-      label: t('角度补偿'),
+      label: t('deployer.vision.angleCompensation'),
       key: 'offset_angle',
     },
   ];
@@ -66,7 +66,7 @@ const Pose = () => {
     const params = { ...(pickResponse?.data || {}) };
     const missKeys = validateInitParams(params);
     if (missKeys.length) {
-      toast.error(t('缺少基础参数') + missKeys.join(','));
+      toast.error(t('deployer.vision.missParamsTips') + missKeys.join(','));
       return;
     }
     Object.keys(params)?.map((key: string) => {
@@ -74,14 +74,14 @@ const Pose = () => {
     });
     params.offset_y.value = [updateHashMap.offset_left, updateHashMap.offset_right];
     await save(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   };
   return (
     <>
       <div className='flex w-full text-black gap-[20PX]'>
         <div className='w-[350px]'>
           <PointCloudFilter type={'tail_place_pallet_position_detect'}></PointCloudFilter>
-          <Title>{t('补偿参数')}</Title>
+          <Title>{t('deployer.vision.compensationParams')}</Title>
           {renderList?.map((item) => {
             return (
               <TextChangeRow
@@ -97,7 +97,7 @@ const Pose = () => {
             );
           })}
           <LoadingButton fullWidth variant='contained' sx={{ color: 'white', marginBottom: '40px' }} onPress={handleOk}>
-            {t('保存')}
+            {t('common.save')}
           </LoadingButton>
         </div>
         <div className='flex-1'>

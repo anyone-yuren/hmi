@@ -54,7 +54,7 @@ const CargoState = () => {
     params['need_detect'].value = updateHashMap.need_detect;
     params['sensor_model'].value = updateHashMap.sensor_model;
     await postGoodsStateDetectSave(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   }, [updateHashMap, settingHashMap]);
 
   useUpdateEffect(() => {
@@ -65,9 +65,9 @@ const CargoState = () => {
     <>
       <div className='flex flex-col items-center justify-center flex-1 basis-[45%] w-[50%] h-full overflow-hidden'>
         <div className='w-full bg-[#2c3645] rounded-[20px] p-[20px] overflow-hidden relative h-full overflow-y-auto'>
-          <div className='text-3xl'>{t('货物状态检测')}</div>
+          <div className='text-3xl'>{t('deployer.vision.goodsStatusCheck')}</div>
           <RowBox>
-            <div>{t('是否启用')}</div>
+            <div>{t('deployer.vision.isTurnOn')}</div>
             <div>
               <CustomSwitch
                 checked={updateHashMap.need_detect}
@@ -81,7 +81,7 @@ const CargoState = () => {
             </div>
           </RowBox>
           <RowBox>
-            <div>{t('传感器绑定')}</div>
+            <div>{t('deployer.vision.sensorBind')}</div>
             <div>
               <CustomSelect
                 variant='standard'
@@ -108,7 +108,7 @@ const CargoState = () => {
               setOpen(true);
             }}
           >
-            {t('参数设置')}
+            {t('deployer.vision.paramSetting')}
           </Button>
         </div>
       </div>

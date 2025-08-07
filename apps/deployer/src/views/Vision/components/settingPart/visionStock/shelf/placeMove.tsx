@@ -86,14 +86,14 @@ const PlaceMove = (props: IProps) => {
       <div className='flex'>
         <div className='w-[350px]'>
           <TextUpdateSwitchRow
-            title={t('自动调参')}
+            title={t('deployer.vision.autoSetting')}
             checked={updateHashMap['auto_para_tuning']}
             onChange={(checked: boolean) => {
               changeUpdateHashMap('auto_para_tuning', checked);
             }}
           />
           <TextUpdateSwitchRow
-            title={t('是否启用')}
+            title={t('deployer.vision.isTurnOn')}
             checked={updateHashMap['need_detect']}
             onChange={(checked: boolean) => {
               changeUpdateHashMap('need_detect', checked);
@@ -101,7 +101,7 @@ const PlaceMove = (props: IProps) => {
           />
 
           <StorageListSelect
-            title={t('地面接驳位')}
+            title={t('deployer.vision.groundTransferStorage')}
             value={updateHashMap?.['ground_transfer_points']}
             onChange={(value: any) => {
               changeUpdateHashMap('ground_transfer_points', value);
@@ -110,7 +110,7 @@ const PlaceMove = (props: IProps) => {
 
           <PointCloudFilter type={'shelf_place_move_vehicle'}></PointCloudFilter>
 
-          <Title>{t('模型')}</Title>
+          <Title>{t('deployer.vision.model')}</Title>
           <ModelListSelect
             value={updateHashMap?.pallet_model_list}
             onChange={(value: any) => {
@@ -122,19 +122,19 @@ const PlaceMove = (props: IProps) => {
             <>
               {[
                 {
-                  title: t('左侧补偿参数'),
+                  title: t('deployer.vision.leftCompensation'),
                   key: 'left',
                   children: [
-                    { title: t('左右补偿'), key: 'offset_x', index: 0 },
-                    { title: t('前后补偿'), key: 'offset_y', index: 0 },
+                    { title: t('deployer.vision.swayCompensation'), key: 'offset_x', index: 0 },
+                    { title: t('deployer.vision.aroundCompensation'), key: 'offset_y', index: 0 },
                   ],
                 },
                 {
-                  title: t('右侧补偿参数'),
+                  title: t('deployer.vision.rightCompensation'),
                   key: 'right',
                   children: [
-                    { title: t('左右补偿'), key: 'offset_x', index: 0 },
-                    { title: t('前后补偿'), key: 'offset_y', index: 0 },
+                    { title: t('deployer.vision.swayCompensation'), key: 'offset_x', index: 0 },
+                    { title: t('deployer.vision.aroundCompensation'), key: 'offset_y', index: 0 },
                   ],
                 },
               ].map((row: any) => {
@@ -175,10 +175,10 @@ const PlaceMove = (props: IProps) => {
             </>
           ) : (
             <>
-              <Title>{t('放货补偿参数')}</Title>
+              <Title>{t('deployer.vision.placeCompensation')}</Title>
               {[
-                { title: t('左右补偿'), key: 'offset_x', index: 0 },
-                { title: t('前后补偿'), key: 'offset_y', index: 0 },
+                { title: t('deployer.vision.swayCompensation'), key: 'offset_x', index: 0 },
+                { title: t('deployer.vision.aroundCompensation'), key: 'offset_y', index: 0 },
               ].map((item: any) => {
                 return (
                   <TextChangeRow
@@ -211,7 +211,7 @@ const PlaceMove = (props: IProps) => {
           )}
 
           <TextChangeRow
-            title={t('额外提升叉臂')}
+            title={t('deployer.vision.extraForkLift')}
             value={updateHashMap?.['extra_height']}
             onChange={(value: string) => {
               changeUpdateHashMap('extra_height', value);
@@ -221,14 +221,14 @@ const PlaceMove = (props: IProps) => {
           </TextChangeRow>
           {isTrilateral() && (
             <>
-              <Title>{t('最大挪车次数')}</Title>
+              <Title>{t('deployer.vision.maxMoveVehicleTime')}</Title>
               {updateHashMap?.['vision_move_vehicle_range_list']?.map((item: any, index: number) => {
                 return (
                   <div key={'vision_move_vehicle_range_list' + index} className='flex'>
                     <div className='flex-1'>
                       <TextChangeRow
                         key={'vision_move_vehicle_range_list' + index}
-                        title={t('最小挪车阈值') + (index + 1)}
+                        title={t('deployer.vision.minMoveVehicleThreshold') + (index + 1)}
                         value={item}
                         onChange={(value: string) => {
                           const list = updateHashMap?.['vision_move_vehicle_range_list'];
@@ -262,7 +262,7 @@ const PlaceMove = (props: IProps) => {
                   changeUpdateHashMap('vision_move_vehicle_range_list', list);
                 }}
               >
-                {t('添加')}
+                {t('common.add')}
               </LoadingButton>
             </>
           )}
@@ -314,10 +314,10 @@ const PlaceMove = (props: IProps) => {
                     };
               });
               await save(sendState);
-              toast.success(t('操作成功'));
+              toast.success(t('common.actionSuccess'));
             }}
           >
-            {t('保存')}
+            {t('common.save')}
           </LoadingButton>
         </div>
         <div className='flex-1'>

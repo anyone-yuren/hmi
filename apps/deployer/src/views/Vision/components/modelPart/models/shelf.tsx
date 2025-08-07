@@ -31,7 +31,7 @@ const Shelf = forwardRef((props: any, ref) => {
     const configHashMap: any = {
       title: {
         storage_width: t('deployer.vision.width'),
-        goods_width: t('deployer.vision.goodWidth'),
+        goods_width: t('deployer.vision.goodsWidth'),
       },
       value: {
         storage_width: propsState.storage_width,
@@ -56,7 +56,7 @@ const Shelf = forwardRef((props: any, ref) => {
           const { goods_nums, goods_width } = propsState;
           const gap = (Number(val) - goods_nums * goods_width) / (goods_nums + 1);
           if (gap <= 0) {
-            toast.error(t('货物宽度超出最大限制'));
+            toast.error(t('deployer.vision.goodsMaxWidthTips'));
             return true;
           }
           return false;
@@ -65,7 +65,7 @@ const Shelf = forwardRef((props: any, ref) => {
           const { storage_width, goods_nums } = propsState;
           const gap = (storage_width - goods_nums * Number(val)) / (goods_nums + 1);
           if (gap <= 0) {
-            toast.error(t('货物宽度超出最大限制'));
+            toast.error(t('deployer.vision.goodsMaxWidthTips'));
             return true;
           }
           return false;
@@ -107,7 +107,6 @@ const Shelf = forwardRef((props: any, ref) => {
         }
         const isValidation = configHashMap.validation[key](val);
         if (isValidation) {
-          // toast.error(t("高度不能超过1500且宽度不能超过5000"));
           return Promise.reject();
         }
         configHashMap.onChange[key] && configHashMap.onChange[key](val);

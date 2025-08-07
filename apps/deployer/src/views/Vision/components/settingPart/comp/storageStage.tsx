@@ -41,7 +41,7 @@ const StorageStage = (props: IProps) => {
   }, [pointsList]);
 
   const lines = useMemo(() => {
-    const ary = [];
+    const ar: any = [];
     for (let index = 0; index < linesList?.data?.length; index++) {
       const { id, end_point, start_point, control_points } = linesList?.data?.[index];
       ary.push({
@@ -58,27 +58,6 @@ const StorageStage = (props: IProps) => {
     }
     return ary;
   }, [linesList]);
-
-  // const lines = React.useMemo(() => {
-  //   const mapEdges: any = (isMock ? mockMapData?.data?.mapEdges : mapData?.mapEdges) || [];
-  //   const ary: any = [];
-  //   // // 不知道在哪里看的 用for循环会更快
-  //   for (let index = 0; mapEdges.length > index; index += 1) {
-  //     const { edgeId: id, start, type, end, controlPoint, directionType, length } = mapEdges[index];
-
-  //     // 只给单单向线
-  //     ary.push({
-  //       id,
-  //       type,
-  //       start,
-  //       end,
-  //       length,
-  //       controlPoint,
-  //       directionType,
-  //     });
-  //   }
-  //   return ary;
-  // }, [mockMapData, mapData]);
 
   const renderTemplateValue = useMemo(() => {
     return templateValue?.filter((point: any) => pointsMap?.hashMap[point]);
@@ -112,11 +91,11 @@ const StorageStage = (props: IProps) => {
       </div>
       <div className='w-full h-[30px] flex items-center'>
         <div className='flex-1'>
-          {t('已选择')}: {renderTemplateValue?.join('、')}
+          {t('deployer.vision.selected')}: {renderTemplateValue?.join('、')}
         </div>
         <div>
           <Button variant='contained' size={'small'} sx={{ color: 'white' }} onClick={handleClick}>
-            {t('提交')}
+            {t('common.save')}
           </Button>
         </div>
       </div>

@@ -31,42 +31,42 @@ const Space = () => {
   });
   const renderList = [
     {
-      title: t('左侧补偿参数'),
+      title: t('deployer.vision.leftCompensation'),
       key: 'left',
       children: [
         {
-          label: t('车厢叉臂横移补偿'),
+          label: t('deployer.vision.truckForkSidewayCompensation'),
           key: 'offset_y_left',
           type: 'number',
         },
         {
-          label: t('传感器绑定'),
+          label: t('deployer.vision.sensorBind'),
           key: 'left_place_gap_detect',
           type: 'sensor',
         },
         {
-          label: t('点云筛选'),
+          label: t('deployer.vision.pointsCloud'),
           key: 'tail_left_place_gap_detect',
           type: 'pointsCloud',
         },
       ],
     },
     {
-      title: t('右侧补偿参数'),
+      title: t('deployer.vision.rightCompensation'),
       key: 'right',
       children: [
         {
-          label: t('车厢叉臂横移补偿'),
+          label: t('deployer.vision.truckForkSidewayCompensation'),
           key: 'offset_y_right',
           type: 'number',
         },
         {
-          label: t('传感器绑定'),
+          label: t('deployer.vision.sensorBind'),
           key: 'right_place_gap_detect',
           type: 'sensor',
         },
         {
-          label: t('点云筛选'),
+          label: t('deployer.vision.pointsCloud'),
           key: 'tail_right_place_gap_detect',
           type: 'pointsCloud',
         },
@@ -75,7 +75,7 @@ const Space = () => {
   ];
 
   const { data: spaceResponse } = useRequest(read, {});
-  const { data: truckLoad } = useRequest(() => getTailTruckRead(), {});
+  const { data: truckLoad } = useRequest(() => getTailTruckRead({}), {});
 
   useEffect(() => {
     const params: any = { ...(spaceResponse?.data || {}) };
@@ -97,7 +97,7 @@ const Space = () => {
       }
     }
     await postTailTruckSave(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   }, [sensorHashMap, postTailTruckSave]);
 
   useEffect(() => {
@@ -124,12 +124,12 @@ const Space = () => {
     const params = { ...(spaceResponse?.data || {}) };
     const missKeys = validateInitParams(params);
     if (missKeys.length) {
-      toast.error(t('缺少基础参数') + missKeys.join(','));
+      toast.error(t('deployer.vision.missParamsTips') + missKeys.join(','));
       return;
     }
     params.offset_y.value = [updateHashMap.offset_y_left, updateHashMap.offset_y_right];
     await save(params);
-    toast.success(t('操作成功'));
+    toast.success(t('common.actionSuccess'));
   };
 
   const componentsHashMap: any = {
@@ -193,7 +193,7 @@ const Space = () => {
             );
           })}
           <LoadingButton fullWidth variant='contained' sx={{ color: 'white', marginBlock: '40px' }} onPress={handleOk}>
-            {t('保存')}
+            {t('common.save')}
           </LoadingButton>
         </div>
         <div className='flex-1'>

@@ -219,7 +219,7 @@ const Truck = forwardRef((props: any, ref) => {
         }
         const { isValid, newObj } = validation(key, subKey, Number(val));
         if (isValid) {
-          toast.error(t('货物高度不得大于（车厢高度-100）,货物左右间隙不得小于30mm'));
+          toast.error(t('deployer.vision.truckloadValidateTips'));
           return Promise.reject();
         }
         setPropsState(newObj);
@@ -236,10 +236,10 @@ const Truck = forwardRef((props: any, ref) => {
               <>
                 <Tips>
                   <div>{t('deployer.vision.explanation')}:</div>
-                  <div>{t('货物高度不得大于（车厢高度-100）,货物左右间隙不得小于30mm')}</div>
+                  <div>{t('deployer.vision.truckloadValidateTips')}</div>
                 </Tips>
-                <TextUpdateSwitchRow title={t('是否混装')} checked={isMinx} onChange={setIsMinx} />
-                <TextChangeRow title={t('deployer.vision.goodCols')} value={goodsCols} onChange={setGoodsCols as any}>
+                <TextUpdateSwitchRow title={t('deployer.vision.isMixing')} checked={isMinx} onChange={setIsMinx} />
+                <TextChangeRow title={t('deployer.vision.goodsCols')} value={goodsCols} onChange={setGoodsCols as any}>
                   <div>{goodsCols}</div>
                 </TextChangeRow>
               </>

@@ -109,7 +109,7 @@ const SlamHandles = (props: any) => {
         useErrorMessage(res.error_description, res.solution);
         return;
       }
-      toast.success(t('操作成功'));
+      toast.success(t('common.actionSuccess'));
       setCoverFloorData('grid_map', null);
     },
   });

@@ -23,13 +23,11 @@ const SpaceIllustration = (props: any) => {
   return (
     <div className='flex-1'>
       <Tips>
-        {t('参数说明')}:
+        {t('deployer.vision.paramExplanation')}:
         <br />
-        {t(
-          '以左侧间隙补偿为例，在到达库位点时，假设补偿前卡车车体左侧外轮廓距离货物侧10mm，给定左侧补偿系数为-10，可使货物到卡车的间隙为0，此时货物贴紧左侧车厢壁。',
-        )}
+        {t('deployer.vision.truckloadSpaceLegendTips1')}
         <br />
-        {t('右侧补偿系数同理，给定负的右侧补偿值能使叉车在右侧放货时靠近右侧车厢壁。')}
+        {t('deployer.vision.truckloadSpaceLegendTips2')}
       </Tips>
       <div className='flex gap-[10px] mt-[30px]'>
         <div className='flex-1 flex justify-center'>
@@ -40,7 +38,7 @@ const SpaceIllustration = (props: any) => {
         </div>
         <div className='flex items-center px-2'>
           <div>
-            <div className='text-[10px] w-[60px] whitespace-nowrap'>{t('X为左右，Y为前后')}</div>
+            <div className='text-[10px] w-[60px] whitespace-nowrap'>{t('deployer.vision.axisTips')}</div>
             <VehicleAxis />
             <img className='w-[60px]' src={Arrow} />
           </div>
@@ -52,9 +50,9 @@ const SpaceIllustration = (props: any) => {
         </div>
       </div>
       <div className='flex py-[10px]'>
-        <div className='flex-1 flex justify-center'>{t('补偿前')}</div>
+        <div className='flex-1 flex justify-center'>{t('deployer.vision.beforeCompensation')}</div>
         <div className='flex items-center px-2 w-[60px]'></div>
-        <div className='flex-1 flex justify-center'>{t('补偿后')}</div>
+        <div className='flex-1 flex justify-center'>{t('deployer.vision.afterCompensation')}</div>
       </div>
     </div>
   );

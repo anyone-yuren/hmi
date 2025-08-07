@@ -112,7 +112,7 @@ const Current = () => {
                   error_reason,
                 });
                 if (res.error_code == 0) {
-                  toast.success(t('操作成功'));
+                  toast.success(t('common.actionSuccess'));
                   getCurrentData();
                 }
               }}

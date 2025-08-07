@@ -313,7 +313,7 @@ const ReflectorHandles = (props: any) => {
               className='flex-1 flex  gap-1 items-center justify-center text-sm'
             >
               <Icon fontSize={24} icon='ix:success' />
-              {t('保存')}
+              {t('common.save')}
             </HandleButton>
             <Divider orientation='vertical' variant='middle' flexItem />
 

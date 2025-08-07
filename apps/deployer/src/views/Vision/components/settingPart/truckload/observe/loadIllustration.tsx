@@ -28,17 +28,17 @@ const LoadIllustration = (props: any) => {
   return (
     <div className='flex-1 '>
       <Tips>
-        {t('参数说明')}:
+        {t('deployer.vision.paramExplanation')}:
         <br />
-        {t('为了确保无人叉车在车厢内尽可能走直线，需要进行观测任务，计算出卡车位置偏差。')}
+        {t('deployer.vision.truckloadObserveLoadLegendTips1')}
         <br />
-        {t('以两列货物中的左侧为例，为例确保在装左侧货物过程中尽可能走直线驶入，需要对叉车进行偏移。')}
+        {t('deployer.vision.truckloadObserveLoadLegendTips2')}
         <br />
-        {t('该偏移量的方向参考地图坐标系，如图例所示需要左偏，则为-300。右侧同理。')}
+        {t('deployer.vision.truckloadObserveLoadLegendTips3')}
         <br />
-        {t('假设场景内有斜坡，则车体在停靠点时牙尖到坡底的距离建议设置400mm-1200mm。')}
+        {t('deployer.vision.truckloadObserveLoadLegendTips4')}
         <br />
-        {t('假设无斜坡，则车体在停靠点时牙尖到车厢门口距离大概为1000-1500mm。')}
+        {t('deployer.vision.truckloadObserveLoadLegendTips5')}
       </Tips>
       <div className='flex gap-[10px] mt-[30px]'>
         <div className='flex-1 flex justify-center'>
@@ -61,23 +61,23 @@ const LoadIllustration = (props: any) => {
         </div>
       </div>
       <div className='flex py-[10px]'>
-        <div className='flex-1 flex justify-center'>{t('补偿前')}</div>
+        <div className='flex-1 flex justify-center'>{t('deployer.vision.beforeCompensation')}</div>
         <div className='flex items-center px-2 w-[60px]'></div>
-        <div className='flex-1 flex justify-center'>{t('补偿后')}</div>
+        <div className='flex-1 flex justify-center'>{t('deployer.vision.afterCompensation')}</div>
       </div>
 
       <Tips>
-        {t('参数说明')}:
+        {t('deployer.vision.paramExplanation')}:
         <br />
-        {t('假设叉车停靠有角度偏差，在做观测任务过程中会自动计算偏差量，必要时需要人工微调。')}
+        {t('deployer.vision.truckloadObserveLoadLegendTips6')}
         <br />
-        {t('补偿规则如图')}:
+        {t('deployer.vision.compensationRuleSuchAs')}:
         <br />
-        {t('图中车辆逆时针偏移1°，可在角度补偿参数内填写-1，车辆将顺时针摆正。')}
+        {t('deployer.vision.truckloadObserveLoadLegendTips7')}
         <br />
-        {t('补偿规则')}:
+        {t('deployer.vision.compensationRule')}:
         <br />
-        {t('正的补偿，车辆逆时针旋转，负的补偿，车辆顺时针旋转。')}
+        {t('deployer.vision.truckPublicRotateTips1')}
       </Tips>
       <div className='flex gap-[10px] mt-[30px]'>
         <div className='flex-1 flex justify-center'>
@@ -99,9 +99,9 @@ const LoadIllustration = (props: any) => {
         </div>
       </div>
       <div className='flex py-[10px]'>
-        <div className='flex-1 flex justify-center'>{t('补偿前')}</div>
+        <div className='flex-1 flex justify-center'>{t('deployer.vision.beforeCompensation')}</div>
         <div className='flex items-center px-2 w-[60px]'></div>
-        <div className='flex-1 flex justify-center'>{t('补偿后')}</div>
+        <div className='flex-1 flex justify-center'>{t('deployer.vision.afterCompensation')}</div>
       </div>
     </div>
   );

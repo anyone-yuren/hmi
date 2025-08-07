@@ -3,8 +3,6 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
-import { useVisionStore } from '@/views/Vision/store/vision.store';
-import { useShallow } from 'zustand/react/shallow';
 import { postFlatPlaceMoveVehicleSave as save } from '../../../../services/index';
 import LoadingButton from '../../comp/loadingButton';
 import PointCloudFilter from '../../comp/pointCloudFilter';
@@ -41,12 +39,6 @@ const PlaceMove = (props: IProps) => {
   });
   const { t } = useTranslation();
 
-  const { isTrilateral } = useVisionStore(
-    useShallow((store: any) => ({
-      isTrilateral: store.isTrilateral,
-    })),
-  );
-
   const changeUpdateHashMap = (key: string, value: any) => {
     setUpdateHashMap({
       [key]: value,
@@ -54,7 +46,6 @@ const PlaceMove = (props: IProps) => {
   };
 
   useEffect(() => {
-    // 将参数转化为useState里面去
     if (!initState || !Object.keys(initState).length) return;
     const tempHashMap = { ...updateHashMap };
     const translateHashMap: any = {
@@ -77,7 +68,6 @@ const PlaceMove = (props: IProps) => {
         tempHashMap[key] = translateHashMap[key] ? translateHashMap[key](initState) : initState[key]?.value;
       }
     });
-    console.log('initState, tempHashMap', initState, tempHashMap);
     setUpdateHashMap(tempHashMap);
   }, [initState]);
 
@@ -86,21 +76,21 @@ const PlaceMove = (props: IProps) => {
       <div className='flex'>
         <div className='w-[350px]'>
           <TextUpdateSwitchRow
-            title={t('自动调参')}
+            title={t('deployer.vision.autoSetting')}
             checked={updateHashMap['auto_para_tuning']}
             onChange={(checked: boolean) => {
               changeUpdateHashMap('auto_para_tuning', checked);
             }}
           />
           <TextUpdateSwitchRow
-            title={t('是否启用')}
+            title={t('deployer.vision.isTurnOn')}
             checked={updateHashMap['need_detect']}
             onChange={(checked: boolean) => {
               changeUpdateHashMap('need_detect', checked);
             }}
           />
           <StorageListSelect
-            title={t('场景库位')}
+            title={t('deployer.vision.sceneStorage')}
             value={updateHashMap?.['scene_storage']}
             onChange={(value: any) => {
               changeUpdateHashMap('scene_storage', value);
@@ -111,19 +101,19 @@ const PlaceMove = (props: IProps) => {
 
           {[
             {
-              title: t('左侧补偿参数'),
+              title: t('deployer.vision.leftCompensation'),
               key: 'left',
               children: [
-                { title: t('左右补偿'), key: 'offset_x', index: 0 },
-                { title: t('前后补偿'), key: 'offset_y', index: 0 },
+                { title: t('deployer.vision.swayCompensation'), key: 'offset_x', index: 0 },
+                { title: t('deployer.vision.aroundCompensation'), key: 'offset_y', index: 0 },
               ],
             },
             {
-              title: t('右侧补偿参数'),
+              title: t('deployer.vision.rightCompensation'),
               key: 'right',
               children: [
-                { title: t('左右补偿'), key: 'offset_x', index: 0 },
-                { title: t('前后补偿'), key: 'offset_y', index: 0 },
+                { title: t('deployer.vision.swayCompensation'), key: 'offset_x', index: 0 },
+                { title: t('deployer.vision.aroundCompensation'), key: 'offset_y', index: 0 },
               ],
             },
           ].map((row: any) => {
@@ -163,7 +153,7 @@ const PlaceMove = (props: IProps) => {
           })}
 
           <TextChangeRow
-            title={t('额外提升叉臂')}
+            title={t('deployer.vision.extraForkLift')}
             value={updateHashMap?.['extra_height']}
             onChange={(value: string) => {
               changeUpdateHashMap('extra_height', value);
@@ -218,12 +208,11 @@ const PlaceMove = (props: IProps) => {
                       value: numberAry.includes(initState[key]?.type) ? Number(updateHashMap[key]) : updateHashMap[key],
                     };
               });
-              console.log('发送的数据', sendState);
               await save(sendState);
-              toast.success(t('操作成功'));
+              toast.success(t('common.actionSuccess'));
             }}
           >
-            {t('保存')}
+            {t('common.save')}
           </LoadingButton>
         </div>
         <div className='flex-1'>

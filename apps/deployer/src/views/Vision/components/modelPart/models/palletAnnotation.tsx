@@ -31,7 +31,7 @@ const PalletAnnotation = (props: any) => {
               paddingInline: 20,
             }}
             onClick={() => {
-              toast.error('托盘宽度不可手动改变,是支腿宽度和进叉宽度的累加');
+              toast.error('deployer.vision.palletWidthTips');
             }}
           >
             {t('deployer.vision.palletWidth')}: {props?.width}

@@ -18,21 +18,10 @@ const StorageRowSelect = (props: IProps) => {
   // const { data: pointList } = useRequest(() => getPointList({}), {});
   const { t } = useTranslation();
 
-  // const storages = useMemo(() => {
-  //   const ary = pointList?.data || [];
-  //   return ary.filter((item: any) => {
-  //     return item?.types.includes(1);
-  //   });
-  // }, [pointList]);
-
-  // useEffect(() => {
-  //   console.log("storages", storages);
-  // }, [storages]);
-
   return (
     <>
       <TextUpdateRow className={props.className}>
-        <div>{title || t('库位')}</div>
+        <div>{title || t('deployer.vision.storage')}</div>
         <div className='relative'>
           <div
             className='absolute w-full h-full top-0 left-0 z-10'
@@ -41,29 +30,13 @@ const StorageRowSelect = (props: IProps) => {
               setOpen(true);
             }}
           ></div>
-          <div>{value?.length ? value.join(',') : <span className='text-sm'>{t('点击选择库位')}</span>}</div>
-          {/* <CustomSelect
-            multiple
-            variant="standard"
-            value={value}
-            renderValue={(value: any) => {
-              return (
-                <div className="flex flex-wrap pr-[10px] items-center justify-start">
-                  {value?.map((item: any, index: number) => {
-                    return (
-                      <Chip
-                        key={item + (index + "")}
-                        className="mt-1 mr-1"
-                        // label={modelHashMap?.[item] || "-"}
-                        label={item}
-                        size="small"
-                      />
-                    );
-                  })}
-                </div>
-              );
-            }}
-          ></CustomSelect> */}
+          <div>
+            {value?.length ? (
+              value.join(',')
+            ) : (
+              <span className='text-sm'>{t('deployer.vision.clickSelectStorage')}</span>
+            )}
+          </div>
         </div>
       </TextUpdateRow>
       <SecondaryPage open={open} setOpen={setOpen} fullScreen={true} background={'#445260'} titleColor={'white'}>
