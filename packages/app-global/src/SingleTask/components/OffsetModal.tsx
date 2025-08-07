@@ -3,7 +3,9 @@ import { Button, ThemeProvider, createTheme } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { forwardRef, memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import 'swiper/css';
+import { createOffsetTable } from '../services/index';
 import useConstants from '../useConstants';
 const Info = (props) => {
   const { vertexTypeHashMap } = useConstants();
@@ -44,16 +46,16 @@ const Info = (props) => {
 };
 
 const OffsetModal = forwardRef((props: any, ref) => {
-  const { type, point, setOffsetModalVisible } = props;
+  const { type, point, setOffsetModalVisible, getOffsetList } = props;
   const { t } = useTranslation();
   if (!type) return;
   if (type === 'Info') {
     return <Info {...point} />;
   }
   const [offsetInput, setOffsetInput] = useState({
-    id: null,
-    offsetX: null,
-    offsetY: null,
+    id: '',
+    offsetX: '',
+    offsetY: '',
   });
 
   useEffect(() => {
@@ -70,6 +72,19 @@ const OffsetModal = forwardRef((props: any, ref) => {
       ...offsetInput,
       [key]: value,
     });
+  };
+  const handleConfirm = async () => {
+    const params = { point_id: point.id, x: Number(offsetInput.offsetX), y: Number(offsetInput.offsetY) };
+    console.log('params', params);
+    if (!params.point_id || !params.x || !params.y) {
+      toast.error('请填写参数');
+      return;
+    }
+    const { code }: any = await createOffsetTable(params);
+    if (code === 200) {
+      toast.success(t('common.actionSuccess'));
+      getOffsetList();
+    }
   };
   return (
     <ThemeProvider
@@ -126,7 +141,11 @@ const OffsetModal = forwardRef((props: any, ref) => {
               background: 'rgba(0, 0, 0, 0.1)',
             }}
           ></div>
-          <LoadingButton loading={false} onClick={() => {}} style={{ flex: 1, color: '#00D1D1', fontSize: '18px' }}>
+          <LoadingButton
+            loading={false}
+            onClick={handleConfirm}
+            style={{ flex: 1, color: '#00D1D1', fontSize: '18px' }}
+          >
             {t('common.confirm')}
           </LoadingButton>
         </div>

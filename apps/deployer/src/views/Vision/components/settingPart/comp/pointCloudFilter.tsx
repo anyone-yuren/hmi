@@ -262,7 +262,7 @@ const PointCloudFilter = (props: IProps) => {
               setInput={(val: any) => {
                 setInputString(val);
               }}
-              placeholder={`${t('请输入')}`}
+              placeholder={`${t('common.plsInput')}`}
               mode={'numbers'}
             ></InputWidthKeyboard>
           ) : (

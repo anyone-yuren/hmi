@@ -50,8 +50,8 @@ const Concentric = forwardRef((props: any, ref: any) => {
   const handleSizeArea = (key: string) => {
     const configHashMap: any = {
       title: {
-        maxDiameter: t('外直径'),
-        minDiameter: t('内直径'),
+        maxDiameter: t('deployer.vision.outDiameter'),
+        minDiameter: t('deployer.vision.inDiameter'),
       },
       value: {
         maxDiameter,
@@ -82,7 +82,7 @@ const Concentric = forwardRef((props: any, ref: any) => {
               setInput={(val: any) => {
                 setInput(val);
               }}
-              placeholder={`${t('请输入')}`}
+              placeholder={`${t('common.plsInput')}`}
               mode={'numbers'}
             ></InputWidthKeyboard>
           ) : (
@@ -100,7 +100,7 @@ const Concentric = forwardRef((props: any, ref: any) => {
       onOk: async () => {
         const val: any = getInput();
         if (!/^\d+$/.test(val)) {
-          toast.error(t('请输入正整数'));
+          toast.error(t('deployer.vision.plsInputNumber'));
           return Promise.reject();
         }
         const isValidation = configHashMap.validation[key](val);

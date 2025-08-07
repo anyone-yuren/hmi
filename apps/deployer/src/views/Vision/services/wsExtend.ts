@@ -14,7 +14,6 @@ export default function useVisionWsExtend() {
       setVisionPickSetting(data.data);
     },
     '/cv_mwrobot/point_cloud': (data: any) => {
-      // console.log("data", JSON.parse(data.data))
       if (data.data) {
         const ary = JSON.parse(data.data);
         setPointCloud(ary);

@@ -62,12 +62,12 @@ const NinePallet = forwardRef((props: any, ref: any) => {
 
   const configHashMap: any = {
     title: {
-      width: t('托盘宽度'),
-      totalHeight: t('托盘高度'),
-      legsMaxHeight: t('支腿高度'),
-      legs: t('支腿宽度'),
-      legForkInWidth: t('进叉宽度'),
-      handlesMaxHeight: t('支架高度'),
+      width: t('deployer.vision.palletWidth'),
+      totalHeight: t('deployer.vision.palletHeight'),
+      legsMaxHeight: t('deployer.vision.legHeight'),
+      legs: t('deployer.vision.legWidth'),
+      legForkInWidth: t('deployer.vision.forkWidth'),
+      handlesMaxHeight: t('deployer.vision.handleHeight'),
     },
     onChange: {
       totalHeight: (val: string) => {
@@ -130,7 +130,7 @@ const NinePallet = forwardRef((props: any, ref: any) => {
               setInput={(val: any) => {
                 setInput(val);
               }}
-              placeholder={`${t('请输入')}`}
+              placeholder={`${t('common.plsInput')}`}
               mode={'numbers'}
             ></InputWidthKeyboard>
           ) : (
@@ -148,7 +148,7 @@ const NinePallet = forwardRef((props: any, ref: any) => {
       onOk: async () => {
         const val: any = getInput();
         if (!/^\d+$/.test(val)) {
-          toast.error(t('请输入正整数'));
+          toast.error(t('deployer.vision.plsInputNumber'));
           return Promise.reject();
         }
         if ((!!index || index === 0) && indexKey) {

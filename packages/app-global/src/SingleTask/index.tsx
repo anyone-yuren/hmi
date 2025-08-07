@@ -111,11 +111,11 @@ const SingleTask = () => {
   }, [taskMode]);
 
   const offsetHashMap = useMemo(() => {
-    if (!offsetList || !offsetList.length) return {};
+    if (!offsetList || !offsetList?.data?.length) return {};
     let hashMap: any = {};
-    for (let index = 0; index < offsetList.length; index++) {
-      const element = offsetList[index];
-      hashMap[element.PointNumber] = element;
+    for (let index = 0; index < offsetList?.data?.length; index++) {
+      const element = offsetList?.data?.[index];
+      hashMap[element.point_id] = element;
     }
     return hashMap;
   }, [offsetList]);
@@ -137,8 +137,9 @@ const SingleTask = () => {
         origin_x: point.x,
         origin_y: point.y,
         // state: 0, // 暂时关掉这个状态看看
-        offsetX: offsetHashMap?.[point.id]?.X || null,
-        offsetY: offsetHashMap?.[point.id]?.Y || null,
+        offsetX: offsetHashMap?.[point.id]?.x || null,
+        offsetY: offsetHashMap?.[point.id]?.x || null,
+        offsetUpdateTime: offsetHashMap?.[point.id]?.update_time || null,
       };
       points.push(newPoint);
       hashMap[point.id] = newPoint;
@@ -243,7 +244,13 @@ const SingleTask = () => {
 
       {offsetVisible && (
         <MapTaskPopup>
-          <OffsetPanel setOffsetVisible={setOffsetVisible} offsetList={offsetList}></OffsetPanel>
+          <OffsetPanel
+            setOffsetVisible={setOffsetVisible}
+            offsetList={offsetList}
+            setOffsetModalVisible={setOffsetModalVisible}
+            setOffsetModalConfig={setOffsetModalConfig}
+            getOffsetList={getOffsetList}
+          ></OffsetPanel>
         </MapTaskPopup>
       )}
 
@@ -430,7 +437,11 @@ const SingleTask = () => {
           fullScreen={false}
           sx={{ zIndex: 1213, width: '600px!important' }}
         >
-          <OffsetModal {...offsetModalConfig} setOffsetModalVisible={setOffsetModalVisible}></OffsetModal>
+          <OffsetModal
+            {...offsetModalConfig}
+            setOffsetModalVisible={setOffsetModalVisible}
+            getOffsetList={getOffsetList}
+          ></OffsetModal>
         </SecondaryPage>
       </MapContainer>
       <WsContainer></WsContainer>

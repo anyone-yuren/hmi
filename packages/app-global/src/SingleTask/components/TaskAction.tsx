@@ -287,7 +287,7 @@ const TaskAction = forwardRef((props: any, ref) => {
                       }}
                     >
                       <InputGroup>
-                        <div className='title'>{t('名称')}</div>
+                        <div className='title'>{t('deployer.singleTask.name')}</div>
                         <MapTaskSelect
                           size={'small'}
                           variant={'outlined'}
@@ -467,7 +467,7 @@ const TaskAction = forwardRef((props: any, ref) => {
           <Button
             variant='contained'
             disableElevation
-            sx={{ marginTop: '5px', color: 'white', flex: 1 }}
+            sx={{ marginTop: '5px', color: 'white', minWidth: '120px', maxWidth: '220px' }}
             onClick={handleSaveTemplate}
           >
             {t('deployer.singleTask.saveAsTemplate')}

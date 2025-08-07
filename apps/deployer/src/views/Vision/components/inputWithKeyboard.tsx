@@ -1,14 +1,13 @@
-import { useTranslation } from "react-i18next";
-import { t } from "i18next";
-import * as React from "react";
-import { Box } from "@mui/material";
-import Keyboard from "react-simple-keyboard";
-import "react-simple-keyboard/build/css/index.css";
+import { Box } from '@mui/material';
+import { t } from 'i18next';
+import * as React from 'react';
+import Keyboard from 'react-simple-keyboard';
+import 'react-simple-keyboard/build/css/index.css';
 
 const InputWidthKeyboard = (props: any) => {
   const { input, setInput, placeholder, mode } = props;
   const [inputText, setInputText] = React.useState(input);
-  const [keyboardMode, setKeyboardMode] = React.useState(mode || "default");
+  const [keyboardMode, setKeyboardMode] = React.useState(mode || 'default');
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
   const [cursorPosition, setCursorPosition] = React.useState(0);
   const [isFocus, setIsFocus] = React.useState(true);
@@ -35,7 +34,7 @@ const InputWidthKeyboard = (props: any) => {
     if (index < 0 || index >= str.length) {
       return str; // 返回原始字符串，因为索引无效
     }
-    console.log("str", str);
+    console.log('str', str);
     // 使用 slice 截取字符串的两部分并拼接在一起
     return str?.slice(0, index) + str?.slice(index + 1);
   };
@@ -51,15 +50,15 @@ const InputWidthKeyboard = (props: any) => {
   };
 
   return (
-    <div style={{ position: "relative", ...props.style }}>
+    <div style={{ position: 'relative', ...props.style }}>
       <div
         ref={editableDivRef}
         style={{
-          border: "1px solid #000000",
+          border: '1px solid #000000',
           borderRadius: 5,
           padding: 10,
           marginTop: 5,
-          outline: "none",
+          outline: 'none',
         }}
         contentEditable
         suppressContentEditableWarning
@@ -74,19 +73,19 @@ const InputWidthKeyboard = (props: any) => {
           setKeyboardVisible(true);
         }}
       >
-        {inputText || (isFocus && (placeholder || t("请输入新的地图的名称")))}
+        {inputText || (isFocus && (placeholder || t('')))}
       </div>
       {keyboardVisible && (
-        <div style={{ position: "absolute", width: 500, left: -78, top: 60 }}>
+        <div style={{ position: 'absolute', width: 500, left: -78, top: 60 }}>
           <Box
             sx={{
-              position: "fixed",
+              position: 'fixed',
               width: 300,
               height: 150,
               zIndex: 1330,
-              "& .hg-button": {
-                width: "40px!important",
-                height: "auto",
+              '& .hg-button': {
+                width: '40px!important',
+                height: 'auto',
               },
             }}
           >
@@ -96,91 +95,78 @@ const InputWidthKeyboard = (props: any) => {
               layoutName={keyboardMode}
               layout={{
                 default: [
-                  "q w e r t y u i o p",
-                  "a s d f g h j k l",
-                  "{SHIFT} z x c v b n m {backspace}",
-                  "{numbers} {space} {ent}",
+                  'q w e r t y u i o p',
+                  'a s d f g h j k l',
+                  '{SHIFT} z x c v b n m {backspace}',
+                  '{numbers} {space} {ent}',
                 ],
 
                 shift: [
-                  "Q W E R T Y U I O P",
-                  "A S D F G H J K L",
-                  "{shift} Z X C V B N M {backspace}",
-                  "{numbers} {space} {ent}",
+                  'Q W E R T Y U I O P',
+                  'A S D F G H J K L',
+                  '{shift} Z X C V B N M {backspace}',
+                  '{numbers} {space} {ent}',
                 ],
 
-                numbers: [
-                  "1 2 3",
-                  "4 5 6",
-                  "7 8 9",
-                  "{abc} 0 {backspace}",
-                  "{-} . {ent}",
-                ],
+                numbers: ['1 2 3', '4 5 6', '7 8 9', '{abc} 0 {backspace}', '{-} . {ent}'],
               }}
               display={{
-                "{numbers}": "123",
-                "{ent}": t("确定"),
-                "{escape}": "esc ⎋",
-                "{tab}": "tab ⇥",
-                "{backspace}": "⌫",
-                "{capslock}": "caps lock ⇪",
-                "{SHIFT}": "⇧",
-                "{shift}": "⇧",
-                "{controlleft}": "ctrl ⌃",
-                "{controlright}": "ctrl ⌃",
-                "{altleft}": "alt ⌥",
-                "{altright}": "alt ⌥",
-                "{metaleft}": "cmd ⌘",
-                "{metaright}": "cmd ⌘",
-                "{abc}": "ABC",
-                "{-}": "-",
+                '{numbers}': '123',
+                '{ent}': t('common.confirm'),
+                '{escape}': 'esc ⎋',
+                '{tab}': 'tab ⇥',
+                '{backspace}': '⌫',
+                '{capslock}': 'caps lock ⇪',
+                '{SHIFT}': '⇧',
+                '{shift}': '⇧',
+                '{controlleft}': 'ctrl ⌃',
+                '{controlright}': 'ctrl ⌃',
+                '{altleft}': 'alt ⌥',
+                '{altright}': 'alt ⌥',
+                '{metaleft}': 'cmd ⌘',
+                '{metaright}': 'cmd ⌘',
+                '{abc}': 'ABC',
+                '{-}': '-',
               }}
               onKeyPress={(value, event) => {
                 const action: Record<string, () => void> = {
-                  "{backspace}": () => {
+                  '{backspace}': () => {
                     if (!inputText) return;
 
-                    const newInputText = removeChar(
-                      inputText,
-                      inputText.length - 1
-                    );
+                    const newInputText = removeChar(inputText, inputText.length - 1);
                     setInputText(newInputText);
                   },
-                  "{close}": () => {
+                  '{close}': () => {
                     // console.log("inputText", inputText);
                   },
-                  "{confirm}": async () => {},
-                  "{numbers}": () => {
-                    setKeyboardMode("numbers");
+                  '{confirm}': async () => {},
+                  '{numbers}': () => {
+                    setKeyboardMode('numbers');
                   },
-                  "{abc}": () => {
-                    setKeyboardMode("default");
+                  '{abc}': () => {
+                    setKeyboardMode('default');
                   },
-                  "{SHIFT}": () => {
-                    setKeyboardMode("shift");
+                  '{SHIFT}': () => {
+                    setKeyboardMode('shift');
                   },
-                  "{shift}": () => {
-                    setKeyboardMode("default");
+                  '{shift}': () => {
+                    setKeyboardMode('default');
                   },
-                  "{space}": () => {
-                    const newInputText = insertChar(
-                      inputText,
-                      ` `,
-                      inputText.length
-                    );
+                  '{space}': () => {
+                    const newInputText = insertChar(inputText, ` `, inputText.length);
                     setInputText(newInputText);
                   },
-                  "{ent}": () => {
+                  '{ent}': () => {
                     // 点击了确定
                     setKeyboardVisible(false);
                   },
-                  "{-}": () => {
-                    let newInput = "";
-                    if (inputText.indexOf("-") > -1) {
+                  '{-}': () => {
+                    let newInput = '';
+                    if (inputText.indexOf('-') > -1) {
                       // 去除-
-                      newInput = inputText.replace("-", "");
+                      newInput = inputText.replace('-', '');
                     } else {
-                      newInput = "-" + inputText;
+                      newInput = '-' + inputText;
                     }
                     setInputText(newInput);
                   },
@@ -188,8 +174,7 @@ const InputWidthKeyboard = (props: any) => {
                 action[value]
                   ? action[value]()
                   : (() => {
-                      const newInput =
-                        inputText === 0 ? value : inputText + value;
+                      const newInput = inputText === 0 ? value : inputText + value;
                       setInputText(newInput);
                     })();
               }}

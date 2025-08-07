@@ -102,7 +102,7 @@ const SecondaryPage = (props: Props) => {
           >
             <ArrowBackIosNewIcon />
           </IconButton>
-          {t('返回')}
+          {t('common.back')}
         </div>
         <div className={`w-full h-[20px]`} style={{ background }}></div>
         {children}

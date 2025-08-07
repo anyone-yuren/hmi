@@ -30,8 +30,8 @@ const Shelf = forwardRef((props: any, ref) => {
   const handleSizeArea = (key: string) => {
     const configHashMap: any = {
       title: {
-        storage_width: t('宽'),
-        goods_width: t('货物宽度'),
+        storage_width: t('deployer.vision.width'),
+        goods_width: t('deployer.vision.goodWidth'),
       },
       value: {
         storage_width: propsState.storage_width,
@@ -55,7 +55,6 @@ const Shelf = forwardRef((props: any, ref) => {
         storage_width: (val: string) => {
           const { goods_nums, goods_width } = propsState;
           const gap = (Number(val) - goods_nums * goods_width) / (goods_nums + 1);
-          console.log('🚀 ~ file: shelf.tsx:118 ~ handleSizeArea ~ gap:', gap);
           if (gap <= 0) {
             toast.error(t('货物宽度超出最大限制'));
             return true;
@@ -63,11 +62,8 @@ const Shelf = forwardRef((props: any, ref) => {
           return false;
         },
         goods_width: (val: string) => {
-          // 这个需要校验不要超出最大宽度
-
           const { storage_width, goods_nums } = propsState;
           const gap = (storage_width - goods_nums * Number(val)) / (goods_nums + 1);
-          console.log('🚀 ~ file: shelf.tsx:118 ~ handleSizeArea ~ gap:', gap);
           if (gap <= 0) {
             toast.error(t('货物宽度超出最大限制'));
             return true;
@@ -88,7 +84,7 @@ const Shelf = forwardRef((props: any, ref) => {
               setInput={(val: any) => {
                 setInput(val);
               }}
-              placeholder={`${t('请输入')}`}
+              placeholder={`${t('common.plsInput')}`}
               mode={'numbers'}
             ></InputWidthKeyboard>
           ) : (
@@ -106,7 +102,7 @@ const Shelf = forwardRef((props: any, ref) => {
       onOk: async () => {
         const val: any = getInput();
         if (!/^\d+$/.test(val)) {
-          toast.error(t('请输入正整数'));
+          toast.error(t('deployer.vision.plsInputNumber'));
           return Promise.reject();
         }
         const isValidation = configHashMap.validation[key](val);

@@ -42,8 +42,8 @@ const Rect = forwardRef((props: IRectProps, ref) => {
   const handleSizeArea = (key: string) => {
     const configHashMap: any = {
       title: {
-        width: t('宽'),
-        height: t('高'),
+        width: t('deployer.vision.width'),
+        height: t('deployer.vision.height'),
       },
       value: {
         width,
@@ -74,7 +74,7 @@ const Rect = forwardRef((props: IRectProps, ref) => {
               setInput={(val: any) => {
                 setInput(val);
               }}
-              placeholder={`${t('请输入')}`}
+              placeholder={`${t('common.plsInput')}`}
               mode={'numbers'}
             ></InputWidthKeyboard>
           ) : (
@@ -92,7 +92,7 @@ const Rect = forwardRef((props: IRectProps, ref) => {
       onOk: async () => {
         const val: any = getInput();
         if (!/^\d+$/.test(val)) {
-          toast.error(t('请输入正整数'));
+          toast.error(t('deployer.vision.plsInputNumber'));
           return Promise.reject();
         }
         const isValidation = configHashMap.validation[key](val);

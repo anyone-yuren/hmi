@@ -22,7 +22,7 @@ const ModelPart = () => {
     <>
       <div className='flex gap-4 flex-col h-full'>
         <div className='flex justify-between items-center'>
-          <span>{t('已有模型列表')}</span>
+          <span>{t('deployer.vision.modelList')}</span>
           <Button
             variant='contained'
             sx={{ color: 'white' }}
@@ -36,7 +36,7 @@ const ModelPart = () => {
               });
             }}
           >
-            {t('添加新模型')}
+            {t('deployer.vision.addNewModel')}
           </Button>
         </div>
         <div className='flex-1 overflow-auto'>

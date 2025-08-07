@@ -37,14 +37,10 @@ const Vision = () => {
         <TabPanel value={value} index={1} dir={theme.direction}>
           <ModelPart />
         </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          {/* <CommonProblemPart /> */}
-        </TabPanel>
       </div>
       <Tabs variant='fullWidth' value={value} onChange={handleChange}>
-        <Tab sx={{ fontSize: 20 }} label={t('参数设置')} />
-        <Tab sx={{ fontSize: 20 }} label={t('模型库')} />
-        {/* <Tab sx={{ fontSize: 20 }} label={t("问题诊断")} {...allyProps(2)} /> */}
+        <Tab sx={{ fontSize: 20 }} label={t('deployer.vision.paramSetting')} />
+        <Tab sx={{ fontSize: 20 }} label={t('deployer.vision.modelLibrary')} />
       </Tabs>
     </div>
   );

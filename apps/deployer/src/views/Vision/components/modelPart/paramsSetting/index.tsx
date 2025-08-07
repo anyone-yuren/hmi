@@ -58,7 +58,7 @@ const ParamsSetting = (props: any) => {
         <div className='w-[350px]'>
           <Title>{propsState.name}</Title>
           <TextChangeRow
-            title={t('额外深度补偿')}
+            title={t('deployer.vision.extraDepthCompensation')}
             value={updateHashMap?.['extra_deep_compensation']}
             onChange={(value: string) => {
               changeUpdateHashMap('extra_deep_compensation', value);
@@ -68,7 +68,7 @@ const ParamsSetting = (props: any) => {
           </TextChangeRow>
 
           <StorageListSelect
-            title={t('目标库位号')}
+            title={t('deployer.vision.targetStorage')}
             value={updateHashMap?.['storage_list']}
             onChange={(value: any) => {
               changeUpdateHashMap('storage_list', value);
@@ -85,10 +85,10 @@ const ParamsSetting = (props: any) => {
                 ...updateHashMap,
               };
               await updateModel(params);
-              toast.success(t('操作成功'));
+              toast.success(t('common.actionSuccess'));
             }}
           >
-            {t('保存')}
+            {t('common.save')}
           </LoadingButton>
         </div>
       </div>

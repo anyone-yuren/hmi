@@ -28,5 +28,14 @@ export const getFloorData = (floor) =>
     '10001',
   );
 
-export const offsetTable = () => get('/sirius/offset_table', {}, '10009');
-export const offsetTableSave = (data) => post('/sirius/offset_table_save', data, '10009');
+// 这两个偏移表的马上废弃了
+// export const offsetTable = () => get('/sirius/offset_table', {}, '10009');
+// export const offsetTableSave = (data) => post('/sirius/offset_table_save', data, '10009');
+
+// 新的偏移表接口
+export const offsetTable = () => get('/mwrobot/offset_table/query', {}, '10009');
+export const updateOffsetTable = (data) => post('/mwrobot/offset_table/update', data, '10009'); // 废弃，新增和修改都是同样的参数
+
+export const deleteOffsetTable = (data) => post('/mwrobot/offset_table/delete', data, '10009');
+
+export const createOffsetTable = (data) => post('/mwrobot/offset_table/insert', data, '10009');

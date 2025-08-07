@@ -1,6 +1,6 @@
-import { Typography } from "@mui/material";
-import { memo, forwardRef, useMemo } from "react";
-import { useTranslation } from "react-i18next";
+import { Typography } from '@mui/material';
+import { forwardRef, memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ListDesc = forwardRef((props: any, ref: any) => {
   const container = props;
@@ -11,7 +11,7 @@ const ListDesc = forwardRef((props: any, ref: any) => {
       Math?.max(
         ...container?.legs?.map((item: any) => {
           return item.height;
-        })
+        }),
       ) || 0
     );
   }, [container]);
@@ -21,115 +21,79 @@ const ListDesc = forwardRef((props: any, ref: any) => {
       Math?.max(
         ...container?.handles?.map((item: any) => {
           return item.height;
-        })
+        }),
       ) || 0
     );
   }, [container]);
   return (
-    <div className="flex-1 min-h-[100px] overflow-overflow">
-      <Typography variant="h6" component="div">
+    <div className='flex-1 min-h-[100px] overflow-overflow'>
+      <Typography variant='h6' component='div'>
         {container.name}
       </Typography>
-      <div className="flex flex-col">
+      <div className='flex flex-col'>
         {container?.diameter && container?.height && (
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {t("直径")}/{t("高")}: {container?.diameter}/{container?.height}
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.diameter')}/{t('deployer.vision.height')}: {container?.diameter}/{container?.height}
           </Typography>
         )}
         {container?.maxDiameter && container?.minDiameter && (
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {t("外直径")}/{t("内直径")}: {container?.maxDiameter}/
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.outDiameter')}/{t('deployer.vision.inDiameter')}: {container?.maxDiameter}/
             {container?.minDiameter}
           </Typography>
         )}
         {container?.width && container?.height && (
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {t("宽")}/{t("高")}: {container?.width}/
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.width')}/{t('deployer.vision.height')}: {container?.width}/
             {container?.height + maxLegsHeight + maxHandlesHeight}
           </Typography>
         )}
         {container?.legs?.length && (
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {t("支腿宽度")}:
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.legWidth')}:
             {container?.legs
               ?.map((leg: any) => {
-                return leg?.width ?? leg?.topWidth ?? "-";
+                return leg?.width ?? leg?.topWidth ?? '-';
               })
-              .join("/") ?? null}
+              .join('/') ?? null}
           </Typography>
         )}
         {container?.legForkInWidth?.length ? (
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {t("进叉宽度")}:{" "}
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.forkWidth')}:{' '}
             {container?.legForkInWidth
               ?.map((leg: any) => {
                 return leg?.width;
               })
-              .join("/")}
+              .join('/')}
           </Typography>
         ) : null}
         {container?.goods_nums && (
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {t("货物个数")}: {container?.goods_nums}
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.goodCount')}: {container?.goods_nums}
           </Typography>
         )}
         {container?.goods_width && (
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {t("货物宽度")}: {container?.goods_width}
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.goodWidth')}: {container?.goods_width}
           </Typography>
         )}
         {container?.storage_width && (
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {t("货架宽度")}: {container?.storage_width}
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.shelfWidth')}: {container?.storage_width}
           </Typography>
         )}
         {container?.goods_cols && (
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {t("货物列数")}: {container?.goods_cols}
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.goodCols')}: {container?.goods_cols}
           </Typography>
         )}
         {container?.truck_size && (
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {t("车厢长/宽/高")}: {container?.truck_size?.length}/
-            {container?.truck_size?.width}/{container?.truck_size?.height}
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.truckListDesc')}: {container?.truck_size?.length}/{container?.truck_size?.width}/
+            {container?.truck_size?.height}
           </Typography>
         )}
-        {/* <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
-          {t("额外深度补偿")}: {container?.extra_deep_compensation}
-        </Typography>
-        <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
-          {t("目标库位号")}: {container?.storage_list?.join(",") || "-"}
-        </Typography> */}
       </div>
     </div>
   );

@@ -42,8 +42,8 @@ const Cylinder = forwardRef((props: any, ref: any) => {
   const handleSizeArea = (key: string) => {
     const configHashMap: any = {
       title: {
-        diameter: t('直径'),
-        height: t('高'),
+        diameter: t('deployer.vision.diameter'),
+        height: t('deployer.vision.height'),
       },
       value: {
         diameter,
@@ -74,7 +74,7 @@ const Cylinder = forwardRef((props: any, ref: any) => {
               setInput={(val: any) => {
                 setInput(val);
               }}
-              placeholder={`${t('请输入')}`}
+              placeholder={`${t('common.plsInput')}`}
               mode={'numbers'}
             ></InputWidthKeyboard>
           ) : (
@@ -92,7 +92,7 @@ const Cylinder = forwardRef((props: any, ref: any) => {
       onOk: async () => {
         const val: any = getInput();
         if (!/^\d+$/.test(val)) {
-          toast.error(t('请输入正整数'));
+          toast.error(t('deployer.vision.plsInputNumber'));
           return Promise.reject();
         }
         const isValidation = configHashMap.validation[key](val);

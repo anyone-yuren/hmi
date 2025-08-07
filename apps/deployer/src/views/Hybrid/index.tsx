@@ -545,7 +545,7 @@ const Mapping = () => {
                         <InputWidthKeyboard
                           mode='numbers'
                           input={''}
-                          placeholder={t('请输入')}
+                          placeholder={t('common.plsInput')}
                           setInput={setNewFloor}
                         ></InputWidthKeyboard>
                       </>
