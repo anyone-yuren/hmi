@@ -1,5 +1,4 @@
 import LoginModalTrigger from './hooks/useLogin';
-
 const LoginDialog = () => {
   return <LoginModalTrigger />;
 };

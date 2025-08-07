@@ -1,4 +1,4 @@
-import { CheckCircle, HourglassEmptySharp } from '@mui/icons-material';
+import { CheckCircle, NotInterested } from '@mui/icons-material';
 
 import { Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
@@ -148,7 +148,7 @@ const VehicleControl = () => {
                 </>
               ) : (
                 <>
-                  <HourglassEmptySharp color='info' />
+                  <NotInterested color='info' />
                 </>
               )}
             </Typography.Title>

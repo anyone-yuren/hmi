@@ -1,4 +1,4 @@
-import { get, post } from '@/https';
+import { get, post } from '../../https';
 
 export const getTasks = () => get('/sirius/topics/test_task_info', {}, '10009');
 export const createTask = (data) => post('/sirius/topics/test_task_execution', data, '10009');
