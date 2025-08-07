@@ -21,7 +21,7 @@ const SafetyHome = () => {
     <div className='w-full h-full flex flex-col bg-white text-black !absolute left-0 top-0'>
       <Tabs value={value} onChange={handleChange} textColor='inherit'>
         <Tab label={t('deployer.safety.title')} value={1} />
-        <Tab label={t('放货空间检测')} value={2} />
+        <Tab label={t('deployer.singleTask.placeSpaceCheck')} value={2} />
       </Tabs>
       <div className='flex-1 relative h-full'>{template[value]}</div>
     </div>

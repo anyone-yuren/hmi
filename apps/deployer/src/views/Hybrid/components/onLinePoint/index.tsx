@@ -98,7 +98,7 @@ const OnlinePoint = () => {
               size='small'
               onClick={() => {
                 MwConfirm.confirm({
-                  title: t('删除') as string,
+                  title: t('common.delete') as string,
                   content: t('是否删除'),
                   onOk: async () => {
                     const res: any = await run({
@@ -115,7 +115,7 @@ const OnlinePoint = () => {
                 });
               }}
             >
-              {t('删除')}
+              {t('common.delete')}
             </Button>
           </Space>
         }

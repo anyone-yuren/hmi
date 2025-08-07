@@ -254,7 +254,8 @@
       "chargePoint": "充电点",
       "devicePoint": "设备点",
       "deleteOffset": "删除偏移点",
-      "confirmDeleteOffsetTips": "确认要删除该偏移点吗?"
+      "confirmDeleteOffsetTips": "确认要删除该偏移点吗?",
+      "placeSpaceCheck": "放货空间检测"
     },
     "vision": {
       "storage": "库位",

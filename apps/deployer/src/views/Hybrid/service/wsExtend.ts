@@ -3,7 +3,14 @@ import { useShallow } from 'zustand/react/shallow';
 import { useHybirdStore } from '../store/hybird.store';
 
 import { roundCoordinates } from '@/utils';
+import pako from 'pako';
 let agvPosition = { x: 0, y: 0 };
+function unzipText(str) {
+  return pako.ungzip(
+    Uint8Array.from(atob(str), (c) => c.charCodeAt(0)),
+    { to: 'string' },
+  );
+}
 
 export default function useHybirdWsExtend() {
   const {
@@ -94,11 +101,12 @@ export default function useHybirdWsExtend() {
       setNavigationType(data?.navigation_type || 0);
     },
     '/navigation/real_time_data/scan_head': (data: any) => {
-      setPointCloudV1Data(data?.point_cloud || []);
+      const ary = unzipText(data?.point_cloud);
+      setPointCloudV1Data(JSON.parse(ary) || []);
+      // setPointCloudV1Data(data?.point_cloud || []);
       // console.log(data.point_cloud.length, "点云数据长度");
     },
     '/navigation/current_qrcode_info': (data: any) => {
-      console.log(data, '当前二维码信息');
       setQrCodeData(data);
     },
     // 目前车的定位只看这个 10001上面的 10001是定位的

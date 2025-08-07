@@ -12,7 +12,6 @@ export default function PointsCloudV1() {
       pointCloudV1Data: state.pointCloudV1Data,
     })),
   );
-
   // 转换点数据为 Konva Line 接受的格式
   const points = pointCloudV1Data?.flatMap((point) => [point.x / 50, 0 - point.y / 50]) || [];
 

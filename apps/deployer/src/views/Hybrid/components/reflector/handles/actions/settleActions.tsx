@@ -99,7 +99,7 @@ const AddActions = () => {
         disabled={delay || addLoading || btnIndex === 0}
         {...(btnIndex === 0 || delay ? { sx: defaultBtnBg } : {})}
       >
-        {t('添加')}
+        {t('common.add')}
       </Button>
     </div>
   );

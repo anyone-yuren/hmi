@@ -51,15 +51,16 @@ import Konva from 'konva';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import CanvaOnline from './components/CanvaOnline';
-import MwConfirm from './components/MwConfirm';
-import WsContainer from './components/WsContainer';
 import ChangePose from './components/changePose';
 import InputWidthKeyboard from './components/inputWithKeyboard';
+import MwConfirm from './components/MwConfirm';
 import { NavigationRegion } from './components/navigationRegion';
 import OnlinePoint from './components/onLinePoint';
 import PointCloudV1 from './components/pointCloudV1';
+import PointsCloudDiagV1 from './components/PointsCloudDiagV1';
 import PositionView from './components/reflector/positionView';
 import { postDeleteTargetReflectors } from './components/reflector/services';
+import WsContainer from './components/WsContainer';
 import useMapFloorData from './hooks/mapFloorData';
 import { useHttpCode } from './hooks/useHttpCode';
 import { useHybirdStore } from './store/hybird.store';
@@ -229,8 +230,8 @@ const Mapping = () => {
         title: t('确认删除'),
         content: t('确认删除该反光板吗？'),
         zIndex: 2000,
-        okText: t('确认'),
-        cancelText: t('取消'),
+        okText: t('common.confirm'),
+        cancelText: t('common.cancel'),
 
         onOk: async () => {
           try {
@@ -265,7 +266,7 @@ const Mapping = () => {
   const rightActions = [
     {
       key: 'delete',
-      text: t('删除'),
+      text: t('common.delete'),
       icon: (
         <div style={{ display: 'flex' }}>
           <DeleteIcon fontSize={26} isActive></DeleteIcon>
@@ -310,8 +311,8 @@ const Mapping = () => {
                           title: t('确认切换'),
                           content: t('确认切换到该楼层吗？'),
                           zIndex: 2000,
-                          okText: t('确认'),
-                          cancelText: t('取消'),
+                          okText: t('common.confirm'),
+                          cancelText: t('common.cancel'),
                           onOk: async () => {
                             await postSwitchFloor(value);
                           },
@@ -327,8 +328,8 @@ const Mapping = () => {
                           title: t('确认删除'),
                           content: t('确认删除该楼层吗？'),
                           zIndex: 2000,
-                          okText: t('确认'),
-                          cancelText: t('取消'),
+                          okText: t('common.confirm'),
+                          cancelText: t('common.cancel'),
                           onOk: async () => {
                             await postDelFloor(value);
                           },
@@ -451,8 +452,8 @@ const Mapping = () => {
                   </Group>
                   <CanvaOnline />
                 </Layer>
-                <PointCloudV1 />
-                {/* <PointsCloudDiagV1 /> */}
+                {false && <PointCloudV1 />}
+                <PointsCloudDiagV1 />
               </InitStage>
             </Box>
           ) : (

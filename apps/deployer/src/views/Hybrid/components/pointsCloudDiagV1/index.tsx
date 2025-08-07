@@ -9,10 +9,11 @@ export default function PointsCloudDiag() {
   const [maxIntensity, setMaxIntensity] = useState(0);
 
   const layerRef = useRef<Konva.FastLayer>(null);
-  const { showPointCloudDiag, pointCloudV1Data } = useHybirdStore(
+  const { showPointCloudDiag, pointCloudV1Data, showPointCloud } = useHybirdStore(
     useShallow((state) => ({
       showPointCloudDiag: state.showPointCloudDiag,
       pointCloudV1Data: state.pointCloudV1Data,
+      showPointCloud: state.showPointCloud,
     })),
   );
   useEffect(() => {
@@ -34,31 +35,31 @@ export default function PointsCloudDiag() {
 
   return (
     <FastLayer ref={layerRef} gpuAcceleration hitGraphEnabled={false} draggable={false}>
-      {showPointCloudDiag &&
+      {showPointCloud &&
         pointCloudV1Data?.map((point, index) => {
-          if (index % 5 === 0 || point.intensity > 1000) {
-            return (
-              // <Rect
-              //   key={index}
-              //   x={point.x / 50} // 放大以适应画布
-              //   y={0 - point.y / 50}
-              //   width={2}
-              //   height={2}
-              //   fill={getColorFromIntensity(point.intensity)} // 设置亮度颜色
-              //   // shadowBlur={1}
-              //   listening={false}
-              //   draggable={false}
-              //   gpuAcceleration
-              // />
-              <Circle
-                key={index}
-                x={point.x / 50}
-                y={0 - point.y / 50}
-                radius={1}
-                fill={getColorFromIntensity(point.intensity)}
-              ></Circle>
-            );
-          }
+          // if (index % 5 === 0 || point.intensity > 1000) {
+          return (
+            // <Rect
+            //   key={index}
+            //   x={point.x / 50} // 放大以适应画布
+            //   y={0 - point.y / 50}
+            //   width={2}
+            //   height={2}
+            //   fill={getColorFromIntensity(point.intensity)} // 设置亮度颜色
+            //   // shadowBlur={1}
+            //   listening={false}
+            //   draggable={false}
+            //   gpuAcceleration
+            // />
+            <Circle
+              key={index}
+              x={point.x / 50}
+              y={0 - point.y / 50}
+              radius={1}
+              fill={getColorFromIntensity(point.intensity)}
+            ></Circle>
+          );
+          // }
         })}
     </FastLayer>
   );

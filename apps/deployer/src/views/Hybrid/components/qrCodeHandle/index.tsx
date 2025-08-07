@@ -63,7 +63,7 @@ const QrCodeHandle = () => {
             className='flex-1 flex  gap-1 items-center justify-center text-sm'
           >
             <Icon fontSize={24} icon='ix:success' />
-            {t('完成')}
+            {t('common.success')}
           </HandleButton>
           <Divider orientation='vertical' variant='middle' flexItem />
 
@@ -73,7 +73,7 @@ const QrCodeHandle = () => {
             className='flex-1 flex  gap-1 items-center justify-center text-sm'
           >
             <Icon fontSize={24} icon='material-symbols:cancel-outline' />
-            {t('取消')}
+            {t('common.cancel')}
           </HandleButton>
         </>
       );

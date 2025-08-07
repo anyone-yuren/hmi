@@ -119,8 +119,8 @@ const SlamHandles = (props: any) => {
       title: t('确认删除'),
       content: t('确认删除该地图吗？'),
       zIndex: 10000,
-      okText: t('确认'),
-      cancelText: t('取消'),
+      okText: t('common.confirm'),
+      cancelText: t('common.cancel'),
       onOk: async () => {
         await runDel({ floor_number: floor, map_type: 2 });
       },
@@ -209,7 +209,7 @@ const SlamHandles = (props: any) => {
       target: () => pointsRef.current,
     },
     {
-      title: t('删除'),
+      title: t('common.delete'),
       description: t('删除SLAM地图'),
       target: () => delRef.current,
     },
@@ -320,7 +320,7 @@ const SlamHandles = (props: any) => {
               className='flex-1 flex  gap-1 items-center justify-center text-sm'
             >
               <Icon fontSize={24} icon='material-symbols:cancel-outline' />
-              {t('取消')}
+              {t('common.cancel')}
             </HandleButton>
           </>
         ) : null}

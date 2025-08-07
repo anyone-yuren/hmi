@@ -160,8 +160,8 @@ const ReflectorHandles = (props: any) => {
             title: t('确认删除'),
             content: t('确认删除该地图吗？'),
             zIndex: 2000,
-            okText: t('确认'),
-            cancelText: t('取消'),
+            okText: t('common.confirm'),
+            cancelText: t('common.cancel'),
             onOk: async () => {
               try {
                 const { error_code, error_description } =
