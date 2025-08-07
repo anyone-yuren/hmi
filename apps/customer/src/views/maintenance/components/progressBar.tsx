@@ -1,6 +1,6 @@
 'use client';
 
-import { useGlobalStore } from '@/store/globalStore';
+import { useGlobalStore } from '@gbeata/store';
 import { useTheme } from 'antd-style';
 import { motion, useAnimation } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
