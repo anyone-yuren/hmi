@@ -33,6 +33,7 @@
     "close": "Fermer",
     "confirm": "Confirmer",
     "constructionEnd": "Fin de construction",
+    "constructionEndTip": "Veuillez vous connecter en premier",
     "delete": "Supprimer",
     "errorMsg": {
       "title": "Message d'exception"
@@ -59,6 +60,8 @@
       "vehicleStatusNavigationType": "Type de positionnement"
     },
     "login": "Se connecter",
+    "loginSuccessTip": "S'il n'y a pas d'opération dans les dix minutes, le système sortira automatiquement!",
+    "logoutTip": "Confirmer la connexion?",
     "modify": "Modifier",
     "noData": "Aucune donnée disponible",
     "noPermission": "Vous n'avez pas les droits d'accéder à cette page.",

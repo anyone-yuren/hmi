@@ -33,6 +33,7 @@
     "close": "닫기",
     "confirm": "확인",
     "constructionEnd": "건축 종료",
+    "constructionEndTip": "먼저 로그인하십시오",
     "delete": "삭제",
     "errorMsg": {
       "title": "예외 메시지"
@@ -59,6 +60,8 @@
       "vehicleStatusNavigationType": "포지셔닝 유형"
     },
     "login": "로그인",
+    "loginSuccessTip": "10 분 이내에 작동이 없으면 시스템이 자동으로 종료됩니다!",
+    "logoutTip": "로그 아웃을 확인 하시겠습니까?",
     "modify": "수정",
     "noData": "아직 데이터가 없습니다",
     "noPermission": "죄송합니다.이 페이지에 액세스 할 수있는 권한이 없습니다.",

@@ -1,13 +1,21 @@
 import useCommonStyles from '@/utils/commonStyle';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
-import { Button, Skeleton, Slider, Switch, Typography } from 'antd';
+import { Button, Skeleton, Slider, Switch, Tooltip, Typography } from 'antd';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useShallow } from 'zustand/react/shallow';
 import { getPeripheralControlParam, postPeripheralControlParam } from '../service';
 /**
  * 外设参数
  */
 const Peripheral = () => {
+  const { token } = useGlobalStore(
+    useShallow((state) => ({
+      token: state.token,
+    })),
+  );
   const { styles } = useCommonStyles();
   const { t } = useTranslation();
   const {
@@ -80,16 +88,20 @@ const Peripheral = () => {
             </div>
           </div>
           <div className='flex justify-end absolute bottom-0 right-0'>
-            <Button
-              variant='solid'
-              type='primary'
-              size='large'
-              onClick={() => {
-                window.open('/deployer');
-              }}
-            >
-              {t('common.constructionEnd')}
-            </Button>
+            <Tooltip title={t('common.constructionEndTip')}>
+              <Button
+                variant='solid'
+                type='primary'
+                size='large'
+                icon={<QuestionCircleOutlined />}
+                disabled={!token}
+                onClick={() => {
+                  window.open('/deployer');
+                }}
+              >
+                {t('common.constructionEnd')}
+              </Button>
+            </Tooltip>
           </div>
         </div>
       ) : (

@@ -5,6 +5,7 @@ import { Form, Input, Modal } from 'antd';
 import { createStyles, ThemeProvider } from 'antd-style';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { postLogin } from '../services';
 
@@ -41,6 +42,7 @@ export default function LoginModalTrigger() {
     manual: true,
     onSuccess: (data) => {
       setToken(data?.permission ?? 'admin');
+      toast.warning(t('common.loginSuccessTip'));
     },
   });
   const { styles } = useStyles();

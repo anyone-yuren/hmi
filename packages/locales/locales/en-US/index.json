@@ -33,6 +33,7 @@
     "close": "Close",
     "confirm": "OK",
     "constructionEnd": "Construction end",
+    "constructionEndTip": "Please log in first",
     "delete": "Delete",
     "errorMsg": {
       "title": "Abnormal message"
@@ -59,6 +60,8 @@
       "vehicleStatusNavigationType": "Positioning Type"
     },
     "login": "Log in",
+    "loginSuccessTip": "If there is no operation within ten minutes, the system will automatically exit!",
+    "logoutTip": "Confirm logging out?",
     "modify": "Modify",
     "noData": "No data",
     "noPermission": "Sorry, you do not have permission to access this page.",

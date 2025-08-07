@@ -33,6 +33,7 @@
     "close": "关闭",
     "confirm": "确定",
     "constructionEnd": "施工端",
+    "constructionEndTip": "请先登录",
     "delete": "删除",
     "edit": "编辑",
     "errorMsg": {
@@ -60,6 +61,8 @@
       "vehicleStatusNavigationType": "定位类型"
     },
     "login": "登录",
+    "loginSuccessTip": "若十分钟内无操作，系统将自动退出！",
+    "logoutTip": "确认退出登录吗？",
     "modify": "修改",
     "noData": "暂无数据",
     "noPermission": "对不起，您没有权限访问此页面。",

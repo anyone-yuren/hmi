@@ -33,6 +33,7 @@
     "close": "閉じる",
     "confirm": "確かですか",
     "constructionEnd": "建設の終わり",
+    "constructionEndTip": "最初にログインしてください",
     "delete": "削除",
     "errorMsg": {
       "title": "例外メッセージ"
@@ -59,6 +60,8 @@
       "vehicleStatusNavigationType": "ポジショニングタイプ"
     },
     "login": "ログイン",
+    "loginSuccessTip": "10分以内に操作がない場合、システムは自動的に終了します！",
+    "logoutTip": "ログアウトを確認しますか？",
     "modify": "修正",
     "noData": "データはまだありません",
     "noPermission": "申し訳ありませんが、このページにアクセスする許可はありません。",

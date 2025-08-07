@@ -9,6 +9,7 @@ import WsVehicleContainer from '../wsVehicleContainer';
 import { GlobalNotification, LoginDialog, triggerLoginModal } from '@gbeata/app-global';
 import { useGlobalStore, useVehicleStore } from '@gbeata/store';
 import { createStyles } from 'antd-style';
+import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
 
@@ -41,6 +42,7 @@ const useStyles = createStyles(({ css }) => {
 });
 
 const GlobalHeader = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const responsive = useResponsive();
   const [modal, contextHolder] = Modal.useModal();
@@ -72,7 +74,7 @@ const GlobalHeader = () => {
             triggerLoginModal();
           } else {
             modal.confirm({
-              title: '确认退出登录吗？',
+              title: t('common.logoutTip'),
               onOk: () => {
                 setToken('');
               },
