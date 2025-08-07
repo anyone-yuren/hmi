@@ -11,6 +11,7 @@ import { useGlobalStore, useVehicleStore } from '@gbeata/store';
 import { createStyles } from 'antd-style';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
+import Signal from './components/signal';
 
 // 去除table hover央视
 const useStyles = createStyles(({ css }) => {
@@ -87,8 +88,9 @@ const GlobalHeader = () => {
           <SvgIcon name='unknowUser' size={28} />
         )}
       </div>
-      <div>
+      <div className='flex flex-col items-center gap-2'>
         <BarBattery level={40} height={24} />
+        <Signal />
       </div>
       <Selectlangulage />
       <div className='flex flex-1 flex-col gap-8 items-center justify-center'>
