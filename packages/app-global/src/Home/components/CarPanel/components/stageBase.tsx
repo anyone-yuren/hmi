@@ -47,7 +47,7 @@ const StageBase = (props) => {
     sectionSize: 2,
     sectionThickness: 1, // 截面厚度
     sectionColor: '#808080',
-    fadeDistance: 10, // 视距，多大开始模糊
+    fadeDistance: 100, // 视距，多大开始模糊
     fadeStrength: 1,
   };
 
