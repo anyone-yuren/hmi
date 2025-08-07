@@ -42,7 +42,12 @@ export default function LoginModalTrigger() {
     manual: true,
     onSuccess: (data) => {
       setToken(data?.permission ?? 'admin');
-      toast.warning(t('common.loginSuccessTip'));
+      toast.warning(t('common.loginSuccessTip'), {
+        // duration: Infinity,
+        classNames: {
+          closeButton: '!p-0',
+        },
+      });
     },
   });
   const { styles } = useStyles();
