@@ -1,4 +1,5 @@
 import { DownloadOutlined } from '@ant-design/icons';
+import { useRequest } from 'ahooks';
 import { Badge, Button, Drawer, List, Tree, TreeDataNode, Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { DrawerClassNames } from 'antd/es/drawer/DrawerPanel';
@@ -6,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
+import { getNodeLogs } from './services';
 
 const useStyles = createStyles(({ css, token }) => ({
   tree: css`
@@ -78,6 +80,13 @@ const About = () => {
   };
 
   const [pdName, setPdName] = useState('X20.png');
+  // 在组件中添加状态管理当前加载的节点
+  const [loadingNode, setLoadingNode] = useState<string | null>(null);
+  const { run: getLogs, loading: logsLoading } = useRequest(getNodeLogs, {
+    manual: true,
+    onSuccess: () => setLoadingNode(null),
+    onError: () => setLoadingNode(null),
+  });
 
   const productImage = useCallback(() => {
     return getImage(`${pdName}`);
@@ -287,7 +296,18 @@ const About = () => {
                   classNames={{
                     actions: '!ml-4',
                   }}
-                  actions={[<Button type='primary'>查看日志</Button>]}
+                  actions={[
+                    <Button
+                      type='primary'
+                      loading={loadingNode === item.title}
+                      onClick={() => {
+                        setLoadingNode(item.title);
+                        getLogs({ node_name: item.title });
+                      }}
+                    >
+                      查看日志
+                    </Button>,
+                  ]}
                 >
                   <List.Item.Meta
                     title={
