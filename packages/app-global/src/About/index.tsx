@@ -3,7 +3,7 @@ import { Badge, Button, Drawer, List, Tree, TreeDataNode, Typography } from 'ant
 import { createStyles, useTheme } from 'antd-style';
 import { DrawerClassNames } from 'antd/es/drawer/DrawerPanel';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 
@@ -47,9 +47,20 @@ const useDrawerStyles = createStyles(({ token }) => ({
   },
 }));
 
+// Vite环境下获取assets/vehicles目录下的所有图片
+const imageModules = import.meta.glob('../assets/vehicles/*', { eager: true });
+
+// 提取文件名
+const imageNames = Object.keys(imageModules)
+  .map((path) => {
+    const match = path.match(/vehicles\/(.*)$/);
+    return match ? match[1] : '';
+  })
+  .filter(Boolean);
+
 // 获取图片函数
 const getImage = (imageName: string) => {
-  return new URL(`./images/${imageName}`, import.meta.url).href;
+  return new URL(`../assets/vehicles/${imageName}`, import.meta.url).href;
 };
 
 const About = () => {
@@ -65,6 +76,12 @@ const About = () => {
     footer: drawerStyles['my-drawer-footer'],
     content: drawerStyles['my-drawer-content'],
   };
+
+  const [pdName, setPdName] = useState('X20.png');
+
+  const productImage = useCallback(() => {
+    return getImage(`${pdName}`);
+  }, [pdName]);
 
   const treeData: TreeDataNode[] = [
     {
@@ -188,8 +205,8 @@ const About = () => {
           <div
             className='flex-1 flex flex-col gap-2  bg-no-repeat'
             style={{
-              backgroundImage: `url(${getImage('x20.png')})`,
-              backgroundSize: 'auto 60%',
+              backgroundImage: `url(${productImage()})`,
+              backgroundSize: '100% auto',
               backgroundPosition: 'center bottom',
             }}
           >
@@ -209,7 +226,17 @@ const About = () => {
               <Typography.Title level={5} className='!m-0'>
                 {t('common.about.vehicleType')}
               </Typography.Title>
-              <Typography.Text className='!m-0 opacity-70'>X20</Typography.Text>
+              <Typography.Text
+                onClick={() => {
+                  // 生成0到imageNames长度-1之间的随机整数
+                  const randomIndex = Math.floor(Math.random() * imageNames.length);
+                  // 设置随机选中的图片名称
+                  setPdName(imageNames[randomIndex]);
+                }}
+                className='!m-0 opacity-70'
+              >
+                {pdName}
+              </Typography.Text>
             </div>
             <div>
               <Typography.Title level={5} className='!m-0'>
