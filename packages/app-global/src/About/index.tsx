@@ -71,6 +71,7 @@ const About = () => {
   const { styles: drawerStyles } = useDrawerStyles();
   const theme = useTheme();
   const [openLogs, setLogsOpen] = useState(false);
+  const [openNodeLogs, setOpenNodeLogs] = useState(false);
   const classNames: DrawerClassNames = {
     body: drawerStyles['my-drawer-body'],
     mask: drawerStyles['my-drawer-mask'],
@@ -84,8 +85,10 @@ const About = () => {
   const [loadingNode, setLoadingNode] = useState<string | null>(null);
   const { run: getLogs, loading: logsLoading } = useRequest(getNodeLogs, {
     manual: true,
-    onSuccess: () => setLoadingNode(null),
-    onError: () => setLoadingNode(null),
+    onSuccess: () => {
+      setOpenNodeLogs(true);
+    },
+    onError: () => {},
   });
 
   const productImage = useCallback(() => {
@@ -269,7 +272,16 @@ const About = () => {
             </Button>
           </div>
         </div>
-        <div className='relative h-full p-4 rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm shadow-teal-500/40 overflow-hidden flex flex-col w-2/3 gap-4'>
+        <div
+          className='relative h-full p-4 rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm shadow-teal-500/40 overflow-hidden flex flex-col w-2/3 gap-4'
+          style={{
+            background: `
+      radial-gradient(circle at 60% 90%, #3f6fa1, #0000 60%), 
+      radial-gradient(circle at 20px 20px, #2e67a1cc, #0000 25%), 
+      #182336
+    `,
+          }}
+        >
           <div className='w-full'>
             <h2 className='text-lg font-bold mb-1'>{t('common.about.nodes')} </h2>
             <motion.div
@@ -299,8 +311,10 @@ const About = () => {
                   actions={[
                     <Button
                       type='primary'
-                      loading={loadingNode === item.title}
+                      loading={loadingNode === item.title && logsLoading}
                       onClick={() => {
+                        console.log(item.title);
+
                         setLoadingNode(item.title);
                         getLogs({ node_name: item.title });
                       }}
@@ -368,6 +382,17 @@ const About = () => {
           />
         </div>
       </Drawer>
+      <Drawer
+        closable
+        destroyOnHidden
+        title={<p>{loadingNode} 日志</p>}
+        placement='right'
+        open={openNodeLogs}
+        loading={false}
+        classNames={classNames}
+        width={'100%'}
+        onClose={() => setOpenNodeLogs(false)}
+      ></Drawer>
     </div>
   );
 };
