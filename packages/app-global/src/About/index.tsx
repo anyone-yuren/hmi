@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
+import NodeLogs from './components/nodeLogs';
 import { getNodeLogs } from './services';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -389,10 +390,15 @@ const About = () => {
         placement='right'
         open={openNodeLogs}
         loading={false}
-        classNames={classNames}
+        classNames={{
+          ...classNames,
+          body: '!p-0',
+        }}
         width={'100%'}
         onClose={() => setOpenNodeLogs(false)}
-      ></Drawer>
+      >
+        <NodeLogs />
+      </Drawer>
     </div>
   );
 };
