@@ -7,7 +7,7 @@ import { motion, useAnimation } from 'framer-motion';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
-const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
+const BarBattery = ({ level = 15, width = 60, height = 20 }) => {
   const { powerStatus } = useVehicleStore(
     useShallow((state) => {
       return {

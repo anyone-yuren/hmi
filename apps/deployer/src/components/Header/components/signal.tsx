@@ -1,7 +1,9 @@
 import { useVehicleStore } from '@gbeata/store';
-import WifiIcon from '@mui/icons-material/Wifi';
-import Wifi1BarIcon from '@mui/icons-material/Wifi1Bar';
-import Wifi2BarIcon from '@mui/icons-material/Wifi2Bar';
+
+import FiveGIcon from '@mui/icons-material/FiveG';
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
+import SignalCellularAlt1BarIcon from '@mui/icons-material/SignalCellularAlt1Bar';
+import SignalCellularAlt2BarIcon from '@mui/icons-material/SignalCellularAlt2Bar';
 import WifiOffIcon from '@mui/icons-material/WifiOff';
 import { useShallow } from 'zustand/react/shallow';
 const Signal = () => {
@@ -18,18 +20,19 @@ const Signal = () => {
       return <WifiOffIcon />;
     }
     if (signal <= 30) {
-      return <Wifi1BarIcon />;
+      return <SignalCellularAlt1BarIcon />;
     }
     if (signal <= 60) {
-      return <Wifi2BarIcon />;
+      return <SignalCellularAlt2BarIcon />;
     }
     if (signal <= 100) {
-      return <WifiIcon />;
+      return <SignalCellularAltIcon />;
     }
     return <WifiOffIcon />;
   };
   return (
     <div
+      className='flex items-center  text-lg'
       onClick={() => {
         if (signal >= 100) {
           setSignal(0);
@@ -38,6 +41,7 @@ const Signal = () => {
         }
       }}
     >
+      <FiveGIcon fontSize='large' />
       {signalIcon()}
     </div>
   );
