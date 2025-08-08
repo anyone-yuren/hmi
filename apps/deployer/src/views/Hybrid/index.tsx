@@ -57,7 +57,7 @@ import MwConfirm from './components/MwConfirm';
 import { NavigationRegion } from './components/navigationRegion';
 import OnlinePoint from './components/onLinePoint';
 import PointCloudV1 from './components/pointCloudV1';
-import PointsCloudDiagV1 from './components/PointsCloudDiagV1';
+import PointsCloudDiagV1 from './components/pointsCloudDiagV1';
 import PositionView from './components/reflector/positionView';
 import { postDeleteTargetReflectors } from './components/reflector/services';
 import WsContainer from './components/WsContainer';
@@ -137,7 +137,7 @@ const Mapping = () => {
     const newAlignment = event.target.value as string;
     if (!newAlignment) return;
     if (robot_current_status.system_status !== 0) {
-      toast.error(t('请先取消当前操作'));
+      toast.error(t('deployer.hybrid.plsCancelAction'));
       return;
     }
     setAlignment(newAlignment);
@@ -159,7 +159,7 @@ const Mapping = () => {
           useErrorMessage(res.error_description, res.solution);
           return;
         }
-        toast.success(t('新增成功'));
+        toast.success(t('common.actionSuccess'));
         await getFloors();
         setFloor(currentAddFloor.current);
       }
@@ -175,7 +175,7 @@ const Mapping = () => {
           useErrorMessage(res.error_description, res.solution);
           return;
         }
-        toast.success(t('删除成功'));
+        toast.success(t('common.actionSuccess'));
         getFloors();
       }
     },
@@ -190,7 +190,7 @@ const Mapping = () => {
           useErrorMessage(res.error_description, res.solution);
           return;
         }
-        toast.success(t('切换成功'));
+        toast.success(t('common.actionSuccess'));
         getFloors();
       }
     },
@@ -227,8 +227,8 @@ const Mapping = () => {
   const handleReflectorClick = useCallback(
     (id: number) => {
       modal.confirm({
-        title: t('确认删除'),
-        content: t('确认删除该反光板吗？'),
+        title: t('deployer.hybrid.confirmDelete'),
+        content: t('deployer.hybrid.confirmDeleteReflectorsTip'),
         zIndex: 2000,
         okText: t('common.confirm'),
         cancelText: t('common.cancel'),
@@ -242,7 +242,7 @@ const Mapping = () => {
                 reflectors_id,
               })) as any) ?? {};
             if (error_code === 10000) {
-              toast.success(t('删除成功'));
+              toast.success(t('common.actionSuccess'));
               getFloorMapData(floor);
               return Promise.resolve();
             }
@@ -296,7 +296,7 @@ const Mapping = () => {
                   status={floor === value ? 'processing' : null}
                 />
                 <ListItemText disableTypography sx={{ color: 'text.primary', fontSize: '14px' }}>
-                  {t('楼层') + ' ' + value}
+                  {t('deployer.hybrid.floor') + ' ' + value}
                 </ListItemText>
               </ListItemButton>
               <Dropdown
@@ -305,11 +305,11 @@ const Mapping = () => {
                     {
                       key: '1',
                       icon: <SwapHorizIcon fontSize='large' />,
-                      label: t('切换'),
+                      label: t('deployer.hybrid.switch'),
                       onClick: () => {
                         modal.confirm({
-                          title: t('确认切换'),
-                          content: t('确认切换到该楼层吗？'),
+                          title: t('deployer.hybrid.confirmSwitch'),
+                          content: t('deployer.hybrid.confirmSwitchFloorTip'),
                           zIndex: 2000,
                           okText: t('common.confirm'),
                           cancelText: t('common.cancel'),
@@ -322,11 +322,11 @@ const Mapping = () => {
                     {
                       key: '2',
                       icon: <DeleteSweepIcon fontSize='large' />,
-                      label: t('删除'),
+                      label: t('common.delete'),
                       onClick: () => {
                         modal.confirm({
-                          title: t('确认删除'),
-                          content: t('确认删除该楼层吗？'),
+                          title: t('deployer.hybrid.confirmDelete'),
+                          content: t('deployer.hybrid.confirmDeleteFloorTip'),
                           zIndex: 2000,
                           okText: t('common.confirm'),
                           cancelText: t('common.cancel'),
@@ -377,7 +377,7 @@ const Mapping = () => {
                     size='small'
                     value={alignment}
                     onChange={changeHybird}
-                    label={t('导航类型')}
+                    label={t('deployer.hybrid.navigationType')}
                     sx={{
                       '& .MuiSelect-select': {
                         color: 'black',
@@ -386,10 +386,10 @@ const Mapping = () => {
                     }}
                   >
                     {isShowNavigation(navigationType, 'REFLECTOR') ? (
-                      <MenuItem value='reflector'>{t('反光板导航')}</MenuItem>
+                      <MenuItem value='reflector'>{t('deployer.hybrid.reflectorsNavigation')}</MenuItem>
                     ) : null}
                     {isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? (
-                      <MenuItem value='slam'>{t('slam导航')}</MenuItem>
+                      <MenuItem value='slam'>{t('deployer.hybrid.slamNavigation')}</MenuItem>
                     ) : null}
                     {/* <MenuItem value="hybird">混合导航</MenuItem> */}
                   </Select>
@@ -419,7 +419,7 @@ const Mapping = () => {
             endIcon={<ExchangeIcon />}
             onClick={() => setShowFloor(true)}
           >
-            {t('楼层管理')}
+            {t('deployer.hybrid.floorManage')}
           </Button>
 
           {/* 根据楼层数据决定显示内容 */}
@@ -472,7 +472,7 @@ const Mapping = () => {
                 backgroundColor='transparent'
                 title={
                   <>
-                    <Typography>{t('暂无楼层数据，请添加')}</Typography>
+                    <Typography>{t('deployer.hybrid.noFloorData')}</Typography>
                   </>
                 }
               ></EmptyBox>
@@ -535,11 +535,11 @@ const Mapping = () => {
                 }}
                 onClick={async () => {
                   if (robot_current_status.system_status !== 0) {
-                    toast.error(t('请先取消当前操作'));
+                    toast.error(t('deployer.hybrid.plsCancelAction'));
                     return;
                   }
                   MwConfirm.confirm({
-                    title: t('楼层号'),
+                    title: t('deployer.hybrid.floorNo'),
                     content: (
                       <>
                         {/* <div style={{ textAlign: "center" }}>{t("楼层号")}</div> */}
@@ -579,7 +579,7 @@ const Mapping = () => {
                 backgroundColor='transparent'
                 title={
                   <>
-                    <Typography>{t('暂无楼层数据，请添加')}</Typography>
+                    <Typography>{t('deployer.hybrid.noFloorData')}</Typography>
                   </>
                 }
               ></EmptyBox>

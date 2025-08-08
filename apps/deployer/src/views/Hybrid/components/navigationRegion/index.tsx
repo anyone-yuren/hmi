@@ -10,12 +10,12 @@ export const NavigationRegion = () => {
   const { t } = useTranslation();
 
   const naviMapName: any = {
-    1: t('反光板'),
+    1: t('deployer.hybrid.reflectors'),
     2: t('SLAM'),
     3: t('3D SLAM'),
-    4: t('天空导航'),
-    5: t('二维码'),
-    6: t('磁钉'),
+    4: t('deployer.hybrid.skyNavigation'),
+    5: t('deployer.hybrid.qrCode'),
+    6: t('deployer.hybrid.magneticNail'),
   };
   const [naviRegion, setNaviRegion] = useState([]);
 
@@ -25,7 +25,7 @@ export const NavigationRegion = () => {
       if (res?.error_code == 10000) {
         setNaviRegion(res?.hybird_regions);
       } else {
-        toast.error(t('获取导航区域失败'));
+        toast.error(t('deployer.hybrid.getNavigationFail'));
       }
     },
   });

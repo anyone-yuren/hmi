@@ -5,13 +5,13 @@ import { useHybirdStore } from '../../store/hybird.store';
 const HybirdStatus = () => {
   const { t } = useTranslation();
   const navigationTypes = {
-    1: t('反光板'),
+    1: t('deployer.hybrid.reflectors'),
     2: t('SLAM'),
-    5: t('二维码'),
+    5: t('deployer.hybrid.qrCode'),
   };
   const naviStatus = {
-    0: t('正常'),
-    1: t('定位丢失'),
+    0: t('deployer.hybrid.normal'),
+    1: t('deployer.hybrid.losePosition'),
   };
 
   const { robot_current_status } = useHybirdStore(
@@ -35,23 +35,23 @@ const HybirdStatus = () => {
     <MenuList className='w-full'>
       <MenuItem sx={{ padding: '4px' }}>
         <ListItemText disableTypography sx={{ color: 'text.primary', fontSize: '14px', fontWeight: 'bold' }}>
-          {t('导航模式')}
+          {t('deployer.hybrid.navigationMode')}
         </ListItemText>
         <Typography variant='body2' sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
-          {navigationTypes[navigation_type] || t('未知')}
+          {navigationTypes[navigation_type] || t('unknown')}
         </Typography>
       </MenuItem>
       <MenuItem sx={{ padding: '8px' }}>
         <ListItemText disableTypography sx={{ color: 'text.primary', fontSize: '14px', fontWeight: 'bold' }}>
-          {t('状态')}
+          {t('common.status')}
         </ListItemText>
         <Typography variant='body2' color={navi_status === 0 ? 'primary' : 'error'} sx={{ fontWeight: 'bold' }}>
-          {system_status !== 0 ? t('建图中') : naviStatus[navi_status]}
+          {system_status !== 0 ? t('deployer.hybrid.createMapping') : naviStatus[navi_status]}
         </Typography>
       </MenuItem>
       <MenuItem sx={{ padding: '8px' }}>
         <ListItemText disableTypography sx={{ color: 'text.primary', fontSize: '14px', fontWeight: 'bold' }}>
-          {t('当前楼层')}
+          {t('deployer.hybrid.currentFloor')}
         </ListItemText>
         <Typography variant='body2' sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
           {floor_number || ''}

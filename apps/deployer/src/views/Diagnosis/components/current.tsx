@@ -29,17 +29,16 @@ const Current = () => {
     manual: true,
     onSuccess: (res: any) => {
       if (res?.error_code !== 0) {
-        toast.error(res?.error_description || t('当前错误不支持诊断'));
+        toast.error(res?.error_description || t('deployer.diagnosis.notSupportDiagnosis'));
       }
     },
   });
-  // 这个方法看之前的是废弃了，一直都是返回false
   const isMultiwayAgv = useMemo(() => {
     return false;
   }, []);
   const columns: any[] = [
     {
-      title: t('时间'),
+      title: t('deployer.diagnosis.time'),
       dataIndex: 'generate_time',
       key: 'generate_time',
       minWidth: 150,
@@ -47,21 +46,21 @@ const Current = () => {
       render: (text: any) => dayjs.unix(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: t('错误码'),
+      title: t('deployer.diagnosis.errorCode'),
       dataIndex: 'error_code',
       key: 'error_code',
       minWidth: 100,
       align: 'left',
     },
     {
-      title: t('故障描述'),
+      title: t('deployer.diagnosis.errorDesc'),
       dataIndex: 'description',
       key: 'description',
       minWidth: 200,
       align: 'left',
     },
     {
-      title: t('级别'),
+      title: t('deployer.diagnosis.level'),
       dataIndex: 'level',
       key: 'level',
       minWidth: 100,
@@ -69,14 +68,14 @@ const Current = () => {
       render: (text: any) => <Tag color={LevelColor[text]}>{LevelEnum[text]}</Tag>,
     },
     {
-      title: t('产生原因'),
+      title: t('deployer.diagnosis.reason'),
       dataIndex: 'reason',
       key: 'reason',
       minWidth: 200,
       align: 'left',
     },
     {
-      title: t('解决措施'),
+      title: t('deployer.diagnosis.solution'),
       dataIndex: 'diagnosis_result',
       key: 'resolve',
       minWidth: 200,
@@ -84,14 +83,14 @@ const Current = () => {
     },
 
     {
-      title: t('车辆位置'),
+      title: t('deployer.diagnosis.vehiclePosition'),
       dataIndex: 'vehicle_position',
       key: 'vehicle_position',
       minWidth: 100,
       align: 'left',
     },
     {
-      title: t('操作'),
+      title: t('common.action'),
       dataIndex: 'status',
       key: 'status',
       minWidth: 100,
@@ -117,7 +116,7 @@ const Current = () => {
                 }
               }}
             >
-              {record?.diagnosis_result ? t('已诊断') : t('诊断')}
+              {record?.diagnosis_result ? t('deployer.diagnosis.diagnosed') : t('deployer.diagnosis.diagnosis')}
             </Button>
             {!isMultiwayAgv && (
               <Button
@@ -130,7 +129,7 @@ const Current = () => {
                   // window.open(getDownloadUrl() + data);
                 }}
               >
-                {t('下载日志')}
+                {t('deployer.diagnosis.downloadLog')}
               </Button>
             )}
           </Space>

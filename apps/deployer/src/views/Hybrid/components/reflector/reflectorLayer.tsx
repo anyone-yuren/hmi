@@ -31,13 +31,10 @@ const Reflector = ({ onReflectorClick }: { onReflectorClick: (id: number) => voi
     useShallow((state) => ({
       reflectorMap: state.floorData?.reflector_map,
       systemStatus: state.robot_current_status?.system_status ?? 0,
-
       // 当前反光板地图
       currentReflectors: state.currentReflectors,
-
       // 当前匹配成功的反光板
       matchedReflectors: state.matchedReflectors,
-
       // 当前未匹配成功的反光板
       mismatchedReflectors: state.mismatchedReflectors,
       hybirdStage: state.hybirdStage,
@@ -67,17 +64,6 @@ const Reflector = ({ onReflectorClick }: { onReflectorClick: (id: number) => voi
 
   const matchedList = useMemo(() => {
     return formatPosition(matchedReflectors);
-    // .map((item => {
-    //   const { id } = item
-    //   const currentItem = currentList.find((item: any) => item.id === id)
-    //   if (currentItem) {
-    //     return {
-    //       ...currentItem,
-    //       id,
-    //     }
-    //   }
-    //   return item
-    // }))
   }, [matchedReflectors]);
 
   const misMatchedList = useMemo(() => {
@@ -98,14 +84,7 @@ const Reflector = ({ onReflectorClick }: { onReflectorClick: (id: number) => voi
           />
         ))}
         {matchedList.map((item: any) => (
-          <Circle
-            key={item.id}
-            {...item}
-            radius={4}
-            // fill="#52c41a"
-            fill='#50fc2e'
-            listening={false}
-          />
+          <Circle key={item.id} {...item} radius={4} fill='#50fc2e' listening={false} />
         ))}
         {misMatchedList.map((item: any) => (
           <Circle key={item.id} {...item} radius={4} fill='#d9363e' listening={false} />

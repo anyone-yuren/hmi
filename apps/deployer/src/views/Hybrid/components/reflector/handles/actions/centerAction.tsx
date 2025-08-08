@@ -26,14 +26,11 @@ const CenterActions = () => {
       reflectorMap: state.floorData?.reflector_map,
       hybirdStage: state.hybirdStage,
       systemStatus: state.robot_current_status?.system_status ?? 0,
-
       // 当前反光板地图
       currentReflectors: state.currentReflectors,
       setCurrentReflectors: state.setCurrentReflectors,
-
       // 当前匹配成功的反光板
       matchedReflectors: state.matchedReflectors,
-
       // 当前未匹配成功的反光板
       mismatchedReflectors: state.mismatchedReflectors,
       setStagePos: state.setStagePos,
@@ -61,9 +58,7 @@ const CenterActions = () => {
 
   const handleClick = useCallback(() => {
     debugger;
-    // console.log("CenterActions handleClick = ", reflectorMap, currentReflectors)
     if (hybirdStage?.attrs && (currentList?.length || matchedList?.length || misMatchedList?.length)) {
-      // console.log("Reflector currentList = ", currentList)
       setLocation(true);
       const list = [...currentList, ...matchedList, ...misMatchedList];
 
@@ -83,17 +78,14 @@ const CenterActions = () => {
         y: -y1 - 50,
         duration: 0.5,
         onFinish: () => {
-          // 使用Konva.Tween进行动画
           const tween = new Konva.Tween({
             node: hybirdStage,
-            duration: 0.3, // 缓慢缩放的持续时间
-            scaleX: scale * 0.8, // 新的横向缩放比例
-            scaleY: scale * 0.8, // 新的纵向缩放比例
-            easing: Konva.Easings.EaseInOut, // 缓动效果
+            duration: 0.3,
+            scaleX: scale * 0.8,
+            scaleY: scale * 0.8,
+            easing: Konva.Easings.EaseInOut,
             onFinish: () => {
-              // console.log('缩放动画完成');
               setLocation(false);
-
               tween.destroy();
               setStagePos({ x: 0, y: 0 });
             },
@@ -105,7 +97,7 @@ const CenterActions = () => {
       return;
     }
 
-    toast.warning(t('暂无反光板数据，无法定位'));
+    toast.warning(t('deployer.hybrid.noReflectorData'));
   }, [currentList, misMatchedList, hybirdStage]);
 
   return (

@@ -38,7 +38,7 @@ const QrCodeHandle = () => {
           onClick={() => {}}
           className='flex-1 flex  gap-1 items-center justify-center text-sm'
         >
-          {t('补码')}
+          {t('deployer.hybrid.createCode')}
         </HandleButton>
         <Divider orientation='vertical' variant='middle' flexItem />
       </>

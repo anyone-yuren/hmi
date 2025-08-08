@@ -34,7 +34,6 @@ const Diagnosis = () => {
           ...item,
           children: (
             <div>
-              {/* 这里可以根据返回的数据更新内容 */}
               <div className='text-xl'>{response?.data?.diagnosis_result}</div>
             </div>
           ),

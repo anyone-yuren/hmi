@@ -130,7 +130,7 @@ const OnlinePoint = () => {
 
   const addPoint = async () => {
     MwConfirm.confirm({
-      title: t('上线点Id') as string,
+      title: t('deployer.hybrid.onlineId') as string,
       content: (
         <>
           <InputWidthKeyboard
@@ -149,10 +149,10 @@ const OnlinePoint = () => {
           point_id: addFloorNumber,
         });
         if (res.error_code === 10000) {
-          toast.success(t('添加成功'));
+          toast.success(t('common.actionSuccess'));
           getLinePoint();
         } else {
-          toast.error(t('添加失败'));
+          toast.error(t('deployer.hybrid.addFail'));
         }
       },
     });
@@ -161,7 +161,7 @@ const OnlinePoint = () => {
     <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
       <div className='w-full'>
         <Typography variant='subtitle2' component={'div'} sx={{ mt: 2 }} className='flex justify-between items-center'>
-          {t('上线点列表')}
+          {t('deployer.hybrid.onlineList')}
           <Add onClick={addPoint}></Add>
         </Typography>
         {loading ? (

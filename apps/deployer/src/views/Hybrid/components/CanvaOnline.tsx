@@ -35,19 +35,19 @@ const DeviceList = () => {
     const id = target.attrs.id;
     if (targetName === 'Circle' || targetName === 'Text') {
       Modal.confirm({
-        title: '提示',
-        content: '是否确认上线?',
-        okText: '确认',
-        cancelText: '取消',
+        title: t('common.tips'),
+        content: t('deployer.hybrid.confirmOnlineTips'),
+        okText: t('common.confirm'),
+        cancelText: t('common.cancel'),
         onOk: async () => {
           const res: any = await run({
             cmd_type: 3,
             point_id: id,
           });
           if (res?.error_code === 10000) {
-            toast.success(t('上线成功'));
+            toast.success(t('deployer.hybrid.onlineSuccess'));
           } else {
-            toast.error(t('上线失败'));
+            toast.error(t('deployer.hybrid.onlineFail'));
           }
         },
       });

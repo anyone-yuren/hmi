@@ -9,10 +9,6 @@ const MwModal = (props: any) => {
   const [open, setOpen] = React.useState(visible);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
   const handleClose = () => {
     onCancel && onCancel();
     setOpen(false);

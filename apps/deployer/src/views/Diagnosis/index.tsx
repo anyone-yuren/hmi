@@ -41,9 +41,9 @@ const Diagnosis = () => {
         </div>
         <div>
           <Tabs variant='fullWidth' value={compKey} onChange={onChange} className='w-full'>
-            <Tab value='current' label='车辆当前故障' />
-            <Tab value='history' label='车辆历史故障' />
-            <Tab value='diagnosis' label='常见问题诊断' />
+            <Tab value='current' label={t('deployer.diagnosis.currentFault')} />
+            <Tab value='history' label={t('deployer.diagnosis.historyFault')} />
+            <Tab value='diagnosis' label={t('deployer.diagnosis.commonProblemDiagnosis')} />
           </Tabs>
         </div>
       </div>

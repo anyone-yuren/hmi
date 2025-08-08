@@ -13,9 +13,7 @@ import { addSlamMap, delFloorMap, extendMapping } from '../../../service';
 import { useHybirdStore } from '../../../store/hybird.store';
 
 import { MyLocationOutlined } from '@mui/icons-material';
-import type { TourProps } from 'antd';
 import { useHttpCode } from '../../../hooks/useHttpCode';
-// import { QrCodeHandleButton, QrCodeHandleBuilding } from "../../qrCodeHandle";
 
 interface HandleButtonProps extends ButtonBaseProps {
   selected?: boolean;
@@ -97,7 +95,6 @@ const SlamHandles = (props: any) => {
         return;
       }
       setMapLoading(false);
-      // setRefreshFloorData();
       setCoverFloorData('grid_map', res?.grid_map || floorData?.grid_map);
     },
   });
@@ -116,8 +113,8 @@ const SlamHandles = (props: any) => {
 
   const delSlamMap = async () => {
     modal.confirm({
-      title: t('确认删除'),
-      content: t('确认删除该地图吗？'),
+      title: t('deployer.hybrid.confirmDelete'),
+      content: t('deployer.hybrid.confirmDeleteMap'),
       zIndex: 10000,
       okText: t('common.confirm'),
       cancelText: t('common.cancel'),
@@ -128,7 +125,7 @@ const SlamHandles = (props: any) => {
   };
 
   const handleButtonClick = async (buttonName: string) => {
-    setSelectedButton(buttonName);
+    // setSelectedButton(buttonName);
     if (buttonName === 'add') {
       await runAdd({ floor_number: floor, cmd_type: 1 });
       setAddSlamMappingData({});
@@ -150,7 +147,6 @@ const SlamHandles = (props: any) => {
     }
     if (buttonName === 'hybird') {
       setBeginPose(beginPose ? false : true);
-      // await runInitPose({ floor_number: floor });
     }
     if (buttonName === 'radar') {
       if (showPointCloud) {
@@ -169,7 +165,6 @@ const SlamHandles = (props: any) => {
         await runExtendMapping({ floor_number: floor, cmd_type: 2 });
       }
       setAddSlamMappingData({});
-      // setRefreshFloorData();
     }
     // 扩展地图
     if (buttonName === 'slamExtend') {
@@ -187,55 +182,52 @@ const SlamHandles = (props: any) => {
   const pointsRef = React.useRef(null);
   const delRef = React.useRef(null);
 
-  const handleAddTour: TourProps['steps'] = [
-    {
-      title: t('新增'),
-      description: t('触发新增地图后，留意定位的操作状态变化'),
-      target: () => addRef.current,
-    },
-    {
-      title: t('扩展'),
-      description: t('当楼层无SLAM地图时，触发扩展置灰并且不可操作'),
-      target: () => extendsRef.current,
-    },
-    {
-      title: t('重定位'),
-      description: t('点击后，在地图上点击需要重新定位的位置，可按住手势旋转角度'),
-      target: () => hybirdRef.current,
-    },
-    {
-      title: t('点云诊断'),
-      description: t('点击可开启和关闭，根据点云精准匹配反光板位置'),
-      target: () => pointsRef.current,
-    },
-    {
-      title: t('common.delete'),
-      description: t('删除SLAM地图'),
-      target: () => delRef.current,
-    },
-  ];
+  // 引导页面 看代码不启用，先注释，观察没问题再删除
+  // const handleAddTour: TourProps['steps'] = [
+  //   {
+  //     title: t('新增'),
+  //     description: t('触发新增地图后，留意定位的操作状态变化'),
+  //     target: () => addRef.current,
+  //   },
+  //   {
+  //     title: t('扩展'),
+  //     description: t('当楼层无SLAM地图时，触发扩展置灰并且不可操作'),
+  //     target: () => extendsRef.current,
+  //   },
+  //   {
+  //     title: t('重定位'),
+  //     description: t('点击后，在地图上点击需要重新定位的位置，可按住手势旋转角度'),
+  //     target: () => hybirdRef.current,
+  //   },
+  //   {
+  //     title: t('点云诊断'),
+  //     description: t('点击可开启和关闭，根据点云精准匹配反光板位置'),
+  //     target: () => pointsRef.current,
+  //   },
+  //   {
+  //     title: t('common.delete'),
+  //     description: t('删除SLAM地图'),
+  //     target: () => delRef.current,
+  //   },
+  // ];
   React.useEffect(() => {
-    setOpenTour(true);
+    // setOpenTour(true);
   }, []);
 
   const handleClick = () => {
     hybirdStage.to({
       x: 0 - agvPosition?.x / 50 + hybirdStage.width()! / 2,
       y: agvPosition?.y / 50 + hybirdStage.height()! / 2,
-      // y: hybirdStage.height()! / 2,
       duration: 1,
       onFinish: () => {
-        // 使用Konva.Tween进行动画
         const tween = new Konva.Tween({
           node: hybirdStage,
-          duration: 0.3, // 缓慢缩放的持续时间
-          scaleX: 1 * 1, // 新的横向缩放比例
-          scaleY: 1 * 1, // 新的纵向缩放比例
-          easing: Konva.Easings.EaseInOut, // 缓动效果
+          duration: 0.3,
+          scaleX: 1 * 1,
+          scaleY: 1 * 1,
+          easing: Konva.Easings.EaseInOut,
           onFinish: () => {
-            // console.log('缩放动画完成');
             tween.destroy();
-            // 处理画线不完整问题
             setStagePos({ x: 0, y: 0 });
           },
         });
@@ -251,36 +243,27 @@ const SlamHandles = (props: any) => {
         {contextHolder}
         {system_status === 0 || hide ? (
           <>
-            <IconButton
-              className='!mr-2 flex items-center'
-              // disabled={location}
-              onClick={handleClick}
-            >
+            <IconButton className='!mr-2 flex items-center' onClick={handleClick}>
               <MyLocationOutlined fontSize='medium' style={{ color: '#000' }} />
             </IconButton>
             {grid_map ? (
               <HandleButton
                 variant='contained'
                 ref={extendsRef}
-                // selected={system_status === 2}
-                // disabled={[1].includes(system_status) || !grid_map || hide}
                 onClick={() => handleButtonClick('slamExtend')}
                 className='flex-1 flex  gap-1 items-center justify-center text-sm'
               >
                 {/* <Icon fontSize={24} icon="icon-park-outline:extend" /> */}
-                {t('扩展地图')}
+                {t('deployer.hybrid.extendMap')}
               </HandleButton>
             ) : (
               <HandleButton
                 variant='contained'
                 ref={addRef}
-                // selected={system_status === 1}
-                // disabled={[2].includes(system_status) || grid_map || hide}
                 onClick={() => handleButtonClick('add')}
                 className='flex-1 flex gap-1 items-center justify-center text-sm'
               >
-                {/* <Icon fontSize={24} icon="gg:add" /> */}
-                {t('新建地图')}
+                {t('deployer.hybrid.createMap')}
               </HandleButton>
             )}
             <Divider orientation='vertical' variant='middle' flexItem />
@@ -290,11 +273,10 @@ const SlamHandles = (props: any) => {
               onClick={() => {
                 delSlamMap();
               }}
-              // disabled={!grid_map || [1, 2].includes(system_status) || hide}
               className='flex-1 flex  gap-1 items-center justify-center text-sm'
             >
               {/* <Icon fontSize={24} icon="mdi:delete-circle-outline"></Icon> */}
-              {t('删除地图')}
+              {t('deployer.hybrid.deleteMap')}
             </HandleButton>
           </>
         ) : null}
@@ -302,20 +284,16 @@ const SlamHandles = (props: any) => {
           <>
             <HandleButton
               variant='contained'
-              // selected={selectedButton === "success"}
-              // disabled={}
               onClick={() => handleButtonClick('success')}
               className='flex-1 flex  gap-1 items-center justify-center text-sm'
             >
               <Icon fontSize={24} icon='ix:success' />
-              {t('完成')}
+              {t('common.success')}
             </HandleButton>
             <Divider orientation='vertical' variant='middle' flexItem />
 
             <HandleButton
               variant='contained'
-              // selected={selectedButton === "cancel"}
-              // disabled={system_status === 0 || hide}
               onClick={() => handleButtonClick('cancel')}
               className='flex-1 flex  gap-1 items-center justify-center text-sm'
             >
@@ -324,42 +302,16 @@ const SlamHandles = (props: any) => {
             </HandleButton>
           </>
         ) : null}
-
-        {/* <QrCodeHandleBuilding /> */}
       </div>
       {system_status === 0 || hide ? (
         <>
           <div className={`absolute bottom-2 ${showFloor ? 'right-[190px]' : 'right-2'} p-2 flex flex-col`}>
-            {/* <QrCodeHandleButton /> */}
-            {/* <HandleButton
-              variant="contained"
-              ref={hybirdRef}
-              // disabled={[1, 2].includes(system_status) || hide || !grid_map}
-              selected={beginPose}
-              onClick={() => handleButtonClick("hybird")}
-              className="flex-1 flex  gap-1 items-center justify-center text-sm"
-            >
-              <Icon fontSize={24} icon="pepicons-print:pinpoint" />
-              {t("智能重定位")}
-            </HandleButton> */}
-            {/* <HandleButton
-              variant="contained"
-              ref={pointsRef}
-              disabled={hide}
-              selected={showPointCloud}
-              onClick={() => handleButtonClick("radar")}
-              className="flex-1 flex  gap-1 items-center justify-center text-sm"
-            >
-              <Icon fontSize={24} icon="game-icons:radar-cross-section"></Icon>
-              {t("点云诊断")}
-            </HandleButton> */}
-
             <div className='rounded-sm shadow-md bg-white px-2 !text-right' style={{ textAlign: 'right' }}>
               {floorData?.grid_map ? (
                 <FormControlLabel
                   value='end'
                   control={<Switch color='primary' />}
-                  label={t('智能重定位')}
+                  label={t('deployer.hybrid.autoReLocation')}
                   onChange={(e) => {
                     handleButtonClick('hybird');
                   }}
@@ -383,7 +335,7 @@ const SlamHandles = (props: any) => {
               <FormControlLabel
                 value='end'
                 control={<Switch color='primary' />}
-                label={t('点云诊断')}
+                label={t('deployer.hybrid.pointCloudCheck')}
                 disabled={hide}
                 checked={showPointCloud}
                 onChange={(e) => {

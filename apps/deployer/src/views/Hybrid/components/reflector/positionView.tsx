@@ -5,14 +5,10 @@ import { useShallow } from 'zustand/react/shallow';
 
 const PositionViewStyled = styled('div')(() => {
   return {
-    // background: "white",
-    // position: "absolute",
-    // top: 90,
     fontSize: 12,
     fontWeight: 600,
     overflow: 'hidden',
     zIndex: 100,
-    // position: "absolute",
   };
 });
 

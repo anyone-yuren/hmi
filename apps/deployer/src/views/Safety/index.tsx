@@ -190,7 +190,7 @@ const Safety = () => {
                   size='small'
                   value={value}
                   onChange={handleChange}
-                  label={t('导航类型')}
+                  label={t('deployer.hybrid.navigationType')}
                   MenuProps={{
                     container: () => document.body,
                   }}

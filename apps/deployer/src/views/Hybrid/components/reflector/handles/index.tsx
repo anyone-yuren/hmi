@@ -89,10 +89,6 @@ const ReflectorHandles = (props: any) => {
 
   const { getCodeMsg } = useHttpCode();
 
-  useEffect(() => {
-    console.log('systemStatus = ', systemStatus);
-  }, [systemStatus]);
-
   // 新建
   const { runAsync: runAdd } = useRequest(postReflectorMapping, {
     manual: true,
@@ -157,8 +153,8 @@ const ReflectorHandles = (props: any) => {
           break;
         case ActionsEnum['delete']: // 删除地图
           modal.confirm({
-            title: t('确认删除'),
-            content: t('确认删除该地图吗？'),
+            title: t('deployer.hybrid.confirmDelete'),
+            content: t('deployer.hybrid.confirmDeleteMap'),
             zIndex: 2000,
             okText: t('common.confirm'),
             cancelText: t('common.cancel'),
@@ -171,7 +167,7 @@ const ReflectorHandles = (props: any) => {
                   })) as any) ?? {};
                 if (error_code === 10000) {
                   setReflectorType('');
-                  toast.success(error_description || t('删除成功'));
+                  toast.success(error_description || t('common.actionSuccess'));
                   setRefreshFloorData();
                   return Promise.resolve();
                 }
@@ -275,20 +271,18 @@ const ReflectorHandles = (props: any) => {
             {reflectorMapData?.length ? (
               <HandleButton
                 variant='contained'
-                // selected={reflectorType === ActionsEnum["expand"]}
                 onClick={() => handleButtonClick(ActionsEnum['expand'])}
                 className='flex-1 flex  gap-1 items-center justify-center text-sm'
               >
-                {t('扩展地图')}
+                {t('deployer.hybrid.extendMap')}
               </HandleButton>
             ) : (
               <HandleButton
                 variant='contained'
-                // selected={reflectorType === ActionsEnum["add"]}
                 onClick={() => handleButtonClick(ActionsEnum['add'])}
                 className='flex-1 flex  gap-1 items-center justify-center text-sm'
               >
-                {t('新建地图')}
+                {t('deployer.hybrid.createMap')}
               </HandleButton>
             )}
 
@@ -296,11 +290,10 @@ const ReflectorHandles = (props: any) => {
 
             <HandleButton
               variant='contained'
-              // selected={reflectorType === ActionsEnum["delete"]}
               onClick={() => handleButtonClick(ActionsEnum['delete'])}
               className='flex-1 flex  gap-1 items-center justify-center text-sm'
             >
-              {t('删除地图')}
+              {t('deployer.hybrid.deleteMap')}
             </HandleButton>
           </>
         ) : (
@@ -309,7 +302,6 @@ const ReflectorHandles = (props: any) => {
               variant='contained'
               selected={reflectorType === ActionsEnum['success']}
               onClick={() => handleButtonClick(ActionsEnum['success'])}
-              // disabled={![5, 6].includes(systemStatus) || hide}
               className='flex-1 flex  gap-1 items-center justify-center text-sm'
             >
               <Icon fontSize={24} icon='ix:success' />
@@ -319,13 +311,11 @@ const ReflectorHandles = (props: any) => {
 
             <HandleButton
               variant='contained'
-              // selected={reflectorType === ActionsEnum["cancel"]}
               onClick={() => handleButtonClick(ActionsEnum['cancel'])}
-              // disabled={![5, 6].includes(systemStatus) || hide}
               className='flex-1 flex  gap-1 items-center justify-center text-sm'
             >
               <Icon fontSize={24} icon='material-symbols:cancel-outline' />
-              {t('退出')}
+              {t('common.exit')}
             </HandleButton>
           </>
         )}
@@ -338,7 +328,7 @@ const ReflectorHandles = (props: any) => {
             <FormControlLabel
               value='end'
               control={<Switch color='primary' />}
-              label={t('智能重定位')}
+              label={t('deployer.hybrid.autoReLocation')}
               onChange={(e) => {
                 handleButtonClick(ActionsEnum['relocation']);
               }}
@@ -361,15 +351,12 @@ const ReflectorHandles = (props: any) => {
             <FormControlLabel
               value='end'
               control={<Switch color='primary' />}
-              label={t('点云诊断')}
+              label={t('deployer.hybrid.pointCloudCheck')}
               onChange={(e) => {
                 handleButtonClick(ActionsEnum['radar']);
               }}
               checked={showPointCloudDiag}
               sx={{
-                // "& .MuiFormControlLabel-root": {
-                //   marginRight: 0,
-                // },
                 '& .MuiFormControlLabel-label': {
                   color: '#333', // 修改标签的颜色
                   fontSize: '0.875rem',

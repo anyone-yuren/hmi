@@ -47,20 +47,17 @@ const SlamLayer = () => {
       !data?.height ||
       !mapRef.current
     ) {
-      console.log('⏳ 等待资源加载完成...');
       return;
     }
     const stage = mapRef.current.getStage();
     const scale = mapRef.current && stage?.scaleX();
     if (!scale || scale <= 0) {
-      console.warn('❌ scaleX 无效:', scale);
       return;
     }
 
     const x = stage.width() / 2 - (data.width * scale) / 2 - map_to_cad.x * 20 * scale;
     const y = stage.height() / 2 - (data.height * scale) / 2 + data.height * scale + map_to_cad.y * 20 * scale;
 
-    console.log('🎯 执行定位:', { x, y, scale });
     if (!stage || !stage?.attrs || !map_to_cad || !scale) return;
     stage &&
       stage.to &&
@@ -159,7 +156,7 @@ const SlamLayer = () => {
           rotation={0 - (slamFrozenDataToCad.theta * 180) / Math.PI}
         />
       )}
-      {/* 渲染data中的pic图片 当systenm_status为2的时候不渲染,表示在扩展 */}
+      {/* 渲染data中的pic图片 当system_status为2的时候不渲染,表示在扩展 */}
       {image && system_status !== 2 && (
         <KonvaImage
           image={image}
