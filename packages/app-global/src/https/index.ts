@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-
+import { t } from 'i18next';
 // 统一的响应枚举
 export enum ResultEnum {
   SUCCESS = 200,
@@ -78,34 +78,34 @@ instance.interceptors.response.use(
     }
 
     // 其他错误
-    message.error(msg || '接口请求异常');
-    return Promise.reject(msg || '接口请求异常');
+    message.error(msg || t('common.http.error'));
+    return Promise.reject(msg || t('common.http.error'));
   },
   (error) => {
     // 处理 HTTP 错误状态码
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          message.error('未授权，请重新登录');
+          message.error(t('common.http.withoutAuth'));
           localStorage.removeItem('token');
           window.location.href = '/login';
           break;
         case 403:
-          message.error('拒绝访问');
+          message.error(t('common.http.refused'));
           break;
         case 404:
-          message.error('请求资源不存在');
+          message.error(t('common.http.notFound'));
           break;
         case 500:
-          message.error('服务器错误');
+          message.error(t('common.http.serverError'));
           break;
         default:
-          message.error(error.response.data.message || '请求失败');
+          message.error(error.response.data.message || t('common.http.fail'));
       }
     } else if (error.request) {
-      message.error('请求超时，请检查网络连接');
+      message.error(t('common.http.timeout'));
     } else {
-      message.error('请求失败');
+      message.error(t('common.http.fail'));
     }
     return Promise.reject(error);
   },

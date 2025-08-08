@@ -41,7 +41,7 @@ i18n
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
-    debug: false,
+    debug: true,
     lng: defaultLng, // localstorage -> i18nextLng: en_US
     fallbackLng: LocalEnum.en_US,
     interpolation: {

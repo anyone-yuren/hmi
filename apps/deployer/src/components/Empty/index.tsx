@@ -40,7 +40,7 @@ const EmptyBox = (props: IEmptyProps) => {
           marginTop: '10px',
         }}
       >
-        {title || t('暂无数据')}
+        {title || t('common.noData')}
       </span>
     </StyleBox>
   );
