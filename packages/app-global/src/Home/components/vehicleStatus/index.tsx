@@ -27,13 +27,13 @@ const VehicleInfo = () => {
   const getNavigationType = (type: number) => {
     switch (type) {
       case 1:
-        return '反光板';
+        return t('deployer.hybrid.reflectors');
       case 2:
         return 'SLAM';
       case 5:
-        return '二维码';
+        return t('deployer.hybrid.qrCode');
       default:
-        return '未知';
+        return t('deployer.hybrid.unknown');
     }
   };
 

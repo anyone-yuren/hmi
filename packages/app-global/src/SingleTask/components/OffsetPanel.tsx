@@ -1,9 +1,11 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Typography } from '@mui/material';
+import { useSize } from 'ahooks';
 import { Input } from 'antd';
 import { ThemeProvider } from 'antd-style';
 import dayjs from 'dayjs';
-import { forwardRef, memo, useMemo, useState } from 'react';
+import List from 'rc-virtual-list';
+import { forwardRef, memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import 'swiper/css';
@@ -19,6 +21,9 @@ const OffsetPanel = forwardRef((props: any, ref) => {
   const { setOffsetVisible, offsetList, setOffsetModalVisible, setOffsetModalConfig, getOffsetList } = props;
   const [searchText, setSearchText] = useState('');
   const { t } = useTranslation();
+  const virtualListRef = useRef<any>(null);
+  const size = useSize(virtualListRef);
+
   const renderOffsetList = useMemo(() => {
     const originList = offsetList?.data ? offsetList.data : [];
     const ary = originList?.filter((item: any) => {
@@ -26,6 +31,7 @@ const OffsetPanel = forwardRef((props: any, ref) => {
     });
     return ary;
   }, [offsetList, searchText]);
+
   const handleCreateOffset = () => {
     setOffsetModalConfig({
       type: 'Offset',
@@ -107,48 +113,55 @@ const OffsetPanel = forwardRef((props: any, ref) => {
           }}
         />
       </ThemeProvider>
-      <div className='flex flex-col'>
-        {renderOffsetList?.map((point, index) => {
-          return (
-            <TaskItem>
-              <div className='flex pt-[5px] justify-between items-center'>
-                <div className='text-[18px]'>
-                  {t('deployer.singleTask.point')}: {point.point_id}
-                </div>
-                <div className='w-[70px] flex items-center justify-center gap-[20px]'>
-                  <div
-                    onClick={() => {
-                      handleUpdateOffset(point);
-                    }}
-                  >
-                    <EditIcon fontSize={20}></EditIcon>
+      <div ref={virtualListRef} className='flex flex-col overflow-hidden'>
+        <List data={renderOffsetList} height={size?.height} itemHeight={10} itemKey={'point_id'}>
+          {(point, index) => {
+            return (
+              <TaskItem>
+                <div className='flex pt-[5px] justify-between items-center'>
+                  <div className='text-[18px]'>
+                    {t('deployer.singleTask.point')}: {point.point_id}
                   </div>
+                  <div className='w-[70px] flex items-center justify-center gap-[20px]'>
+                    <div
+                      onClick={() => {
+                        handleUpdateOffset(point);
+                      }}
+                    >
+                      <EditIcon fontSize={20}></EditIcon>
+                    </div>
 
-                  <DeleteIcon
-                    fontSize={20}
-                    isActive
-                    onClick={() => {
-                      handleDeleteOffset(point);
-                    }}
-                  ></DeleteIcon>
+                    <DeleteIcon
+                      fontSize={20}
+                      isActive
+                      onClick={() => {
+                        handleDeleteOffset(point);
+                      }}
+                    ></DeleteIcon>
+                  </div>
                 </div>
-              </div>
-              <div className='flex pb-[5px] pt-[3px] justify-between items-center text-[12px]'>
-                <div>
-                  <span className='w-[80px] inline-block'>
-                    {t('deployer.singleTask.offset')}X: {point.x}
-                  </span>
-                  <span className='w-[80px] inline-block'>
-                    {t('deployer.singleTask.offset')}Y: {point.y}
-                  </span>
+                <div className='flex pb-[5px] pt-[3px] justify-between items-center text-[12px]'>
+                  <div>
+                    <span className='w-[80px] inline-block'>
+                      {t('deployer.singleTask.offset')}X: {point.x}
+                    </span>
+                    <span className='w-[80px] inline-block'>
+                      {t('deployer.singleTask.offset')}Y: {point.y}
+                    </span>
+                  </div>
+                  <div className='text-[#ccc]'>
+                    <span>{point.update_time ? dayjs.unix(point.update_time).format('YYYY-MM-DD HH:mm:ss') : '-'}</span>
+                  </div>
                 </div>
-                <div className='text-[#ccc]'>
-                  <span>{point.update_time ? dayjs.unix(point.update_time).format('YYYY-MM-DD HH:mm:ss') : '-'}</span>
-                </div>
-              </div>
-            </TaskItem>
-          );
-        })}
+              </TaskItem>
+            );
+          }}
+          {/* {renderOffsetList?.map((point, index) => {
+            return (
+              
+            );
+          })} */}
+        </List>
       </div>
     </MapTaskPanel>
   );
