@@ -11,8 +11,8 @@ export const NavigationRegion = () => {
 
   const naviMapName: any = {
     1: t('deployer.hybrid.reflectors'),
-    2: t('SLAM'),
-    3: t('3D SLAM'),
+    2: 'SLAM',
+    3: '3D SLAM',
     4: t('deployer.hybrid.skyNavigation'),
     5: t('deployer.hybrid.qrCode'),
     6: t('deployer.hybrid.magneticNail'),

@@ -6,7 +6,7 @@ const HybirdStatus = () => {
   const { t } = useTranslation();
   const navigationTypes = {
     1: t('deployer.hybrid.reflectors'),
-    2: t('SLAM'),
+    2: 'SLAM',
     5: t('deployer.hybrid.qrCode'),
   };
   const naviStatus = {
