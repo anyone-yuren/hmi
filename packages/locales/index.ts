@@ -28,7 +28,7 @@ function translateJaJPWithOrigin(jaJP: any, origin: Record<string, string>): any
   return replaceChineseValuesWithJapanese(jaJP, origin);
 }
 
-const translatedJaJP = translateJaJPWithOrigin(jaJP, origin);
+const translatedJaJP = translateJaJPWithOrigin(frFR, origin);
 
 console.log('[locales]', JSON.stringify(translatedJaJP));
 
