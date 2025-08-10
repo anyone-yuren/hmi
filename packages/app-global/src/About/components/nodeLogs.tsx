@@ -121,53 +121,81 @@ const NodeLogs = () => {
                       </Radio.Button>
                     </Radio.Group>
                   </div>
-                  <div className='bg-black/80 rounded-lg w-full h-full p-6 overflow-y-auto flex-1'>
-                    <Paragraph>[2025-08-02 19:35:22.140466] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:35:32.141429] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:35:42.142385] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:35:52.143405] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:36:02.144383] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>
+                  <div className='bg-black/80 rounded-lg w-full h-full p-2 overflow-y-auto flex-1'>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:35:22.140466] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph type='warning' className='!mb-2'>
+                      [2025-08-02 19:35:32.141429] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:35:42.142385] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:35:52.143405] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:36:02.144383] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2'>
                       [2025-08-02 19:36:05.627674] [INFO] [运行信息]任务号:0, 任务状态:初始化, 半自动模式, 不在点上,
                       货物状态:无货, 电量:46, 急停:0, 避障:1, 错误码:0x00000000, 车号:25, 剩余路线数量:0
                     </Paragraph>
-                    <Paragraph>[2025-08-02 19:36:12.145327] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='danger'>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:36:12.145327] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2' type='danger'>
                       [2025-08-08 16:00:16.200668] [ERROR] Time synchronization successful motion data count is too few
                       4
                     </Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:36:22.146250] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:36:32.147161] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:36:42.148088] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:36:52.148989] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:37:02.149868] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:37:12.150771] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:37:22.151673] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:37:32.152575] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:37:42.153477] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:35:22.140466] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:35:32.141429] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:35:42.142385] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:35:52.143405] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:36:02.144383] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:36:22.146250] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:36:32.147161] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:36:42.148088] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:36:52.148989] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:37:02.149868] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:37:12.150771] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:37:22.151673] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:37:32.152575] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:37:42.153477] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:35:22.140466] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:35:32.141429] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:35:42.142385] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:35:52.143405] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:36:02.144383] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2'>
                       [2025-08-02 19:36:05.627674] [INFO] [运行信息]任务号:0, 任务状态:初始化, 半自动模式, 不在点上,
                       货物状态:无货, 电量:46, 急停:0, 避障:1, 错误码:0x00000000, 车号:25, 剩余路线数量:0
                     </Paragraph>
-                    <Paragraph>[2025-08-02 19:36:12.145327] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='danger'>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:36:12.145327] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2' type='danger'>
                       [2025-08-08 16:00:16.200668] [ERROR] Time synchronization successful motion data count is too few
                       4
                     </Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:36:22.146250] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:36:32.147161] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:36:42.148088] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:36:52.148989] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning'>[2025-08-02 19:37:02.149868] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:37:12.150771] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:37:22.151673] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:37:32.152575] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph>[2025-08-02 19:37:42.153477] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:36:22.146250] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:36:32.147161] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:36:42.148088] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:36:52.148989] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2' type='warning'>
+                      [2025-08-02 19:37:02.149868] [WARN] 车体已连续15天未充满电
+                    </Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:37:12.150771] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:37:22.151673] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:37:32.152575] [WARN] 车体已连续15天未充满电</Paragraph>
+                    <Paragraph className='!mb-2'>[2025-08-02 19:37:42.153477] [WARN] 车体已连续15天未充满电</Paragraph>
                   </div>
                 </div>
               ))}
