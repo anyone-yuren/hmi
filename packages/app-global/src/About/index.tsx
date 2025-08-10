@@ -89,7 +89,9 @@ const About = () => {
     onSuccess: () => {
       setOpenNodeLogs(true);
     },
-    onError: () => {},
+    onError: () => {
+      setOpenNodeLogs(true);
+    },
   });
 
   const productImage = useCallback(() => {
