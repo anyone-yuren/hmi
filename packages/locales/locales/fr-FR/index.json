@@ -35,6 +35,7 @@
     "constructionEnd": "Fin de construction",
     "constructionEndTip": "Veuillez vous connecter en premier",
     "delete": "Supprimer",
+    "edit": "Modifier",
     "errorMsg": {
       "title": "Message d'exception"
     },
@@ -94,6 +95,7 @@
     "pleaseInputNumber": "Veuillez saisir le bon numéro",
     "pleasePassword": "Veuillez saisir votre mot de passe",
     "pleaseUsername": "Veuillez saisir votre nom d'utilisateur",
+    "plsInput": "Veuillez entrer",
     "save": "Enregistrer",
     "serverError": "Désolé, une erreur s'est produite sur le serveur.",
     "setting": "Paramètres",
@@ -160,8 +162,10 @@
       "chargePoint": "Point de charge",
       "chargeType": "Type de charge",
       "commonPoint": "Point ordinaire",
+      "confirmDeleteOffsetTips": "Confirmer voulez - vous supprimer ce point de décalage?",
       "confirmDeleteTaskTips": "Confirmez-vous la suppression de cette tâche ?",
       "confirmDeleteTemplateTips": "Confirmez-vous la suppression de ce modèle ?",
+      "deleteOffset": "Supprimer un point de décalage",
       "deleteTask": "Supprimer la tâche",
       "deleteTemplate": "Supprimer le modèle",
       "devicePoint": "Point d'équipement",
