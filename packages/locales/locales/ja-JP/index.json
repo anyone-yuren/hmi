@@ -151,6 +151,7 @@
       "noGoods": "在庫なし",
       "obsAdjust": "障害物回避方式の調整",
       "obsDistance": "障害物回避駐車距離",
+      "obsScheme": "ナビゲーションタイプ",
       "obsType": "障害物回避タイプ",
       "right": "右",
       "rightDistance": "右利きの距離",

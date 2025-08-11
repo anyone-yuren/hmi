@@ -5,10 +5,13 @@ import { SvgIcon } from 'ui';
 import BarBattery from '../battery';
 import ChargingAnimation from '../charging';
 import WsVehicleContainer from '../wsVehicleContainer';
+import { config_agv_info } from './service';
 
 import { GlobalNotification, LoginDialog, triggerLoginModal } from '@gbeata/app-global';
 import { useGlobalStore, useVehicleStore } from '@gbeata/store';
+import { useRequest } from 'ahooks';
 import { createStyles } from 'antd-style';
+import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
 import Signal from './components/signal';
@@ -53,12 +56,21 @@ const GlobalHeader = () => {
       };
     }),
   );
-  const { token, setToken } = useGlobalStore(
+  const { token, setToken, setAvgType } = useGlobalStore(
     useShallow((state) => ({
       token: state.token,
       setToken: state.setToken,
+      setAvgType: state.setAvgType,
     })),
   );
+
+  const { data } = useRequest(config_agv_info);
+
+  useEffect(() => {
+    if (data) {
+      data?.agv_type && setAvgType(data?.agv_type);
+    }
+  }, [data]);
 
   return (
     <div className='flex flex-col h-full items-center justify-between px-4 py-2 text-white '>
