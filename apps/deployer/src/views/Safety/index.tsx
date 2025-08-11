@@ -1,7 +1,7 @@
 import InitStage from '@/components/InitStage';
 import SafetyCoordinate from '@/components/InitStage/components/safetyCoordinate';
 import { useSize } from 'ahooks';
-import { ConfigProvider, Drawer, Space, theme } from 'antd';
+import { ConfigProvider, Drawer, Result, Space, theme } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { Layer } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
@@ -14,10 +14,13 @@ import Car from './component/Car';
 import StatusPanel from './component/status';
 import TurnRegion from './component/TurmRegion';
 
+import useObsError from '@/components/NotificationGlobal/obsError';
 import { useRequest } from 'ahooks';
+import { useResponsive } from 'antd-style';
 import Konva from 'konva';
 import { find, mapValues } from 'lodash';
 import { useTranslation } from 'react-i18next';
+import { SvgIcon } from 'ui';
 import CenterAction from './component/centerAction';
 import PointCloud from './component/pointCloud';
 import WsContainer from './component/WsContainer';
@@ -25,7 +28,8 @@ import { postSubscription, postUnSubscription, safetyConfig } from './service';
 const Safety = () => {
   const { t } = useTranslation();
   const [scale, setScale] = useState(1);
-
+  const { xl } = useResponsive();
+  const { getObsMsg } = useObsError();
   // 获取避障方案列表
   const { data: obstacleData, loading: obstacleDataLoading, run: refreshObstacleData } = useRequest(safetyConfig);
 
@@ -102,7 +106,28 @@ const Safety = () => {
   return (
     <div className='w-full h-full flex flex-col !absolute left-0 top-0'>
       <div className=''>
-        <StatusPanel obstacleData={obstacleData} obstacleIndex={value} handleChange={handleChange} />
+        {!value ? (
+          <ConfigProvider
+            theme={{
+              algorithm: theme.defaultAlgorithm,
+            }}
+          >
+            <div
+              style={{
+                width: xl ? '280px' : '240px',
+              }}
+              className={`flex items-center flex-col justify-center absolute  z-[9999] text-black p-2 left-2 top-2 bg-white shadow-md`}
+            >
+              <Result
+                className='p-0'
+                icon={<SvgIcon name='errorData' size={180}></SvgIcon>}
+                subTitle={<div className='text-black'>{getObsMsg(obsInfo.type)}</div>}
+              ></Result>
+            </div>
+          </ConfigProvider>
+        ) : (
+          <StatusPanel obstacleData={obstacleData} obstacleIndex={value} handleChange={handleChange} />
+        )}
       </div>
       <div className='flex-1 bg-white' ref={ref}>
         <InitStage
@@ -190,7 +215,7 @@ const Safety = () => {
                   size='small'
                   value={value}
                   onChange={handleChange}
-                  label={t('导航类型')}
+                  label={t('deployer.safety.obsScheme')}
                   MenuProps={{
                     container: () => document.body,
                   }}
