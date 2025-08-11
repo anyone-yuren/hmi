@@ -35,6 +35,7 @@
     "constructionEnd": "Construction end",
     "constructionEndTip": "Please log in first",
     "delete": "Delete",
+    "edit": "Edit",
     "errorMsg": {
       "title": "Abnormal message"
     },
@@ -94,6 +95,7 @@
     "pleaseInputNumber": "Please enter the correct number",
     "pleasePassword": "Please enter your password",
     "pleaseUsername": "Please enter your username",
+    "plsInput": "Please input",
     "save": "Save",
     "serverError": "Sorry, an error occurred on the server.",
     "setting": "Setting",
@@ -160,8 +162,10 @@
       "chargePoint": "Charging point",
       "chargeType": "Charge type",
       "commonPoint": "Common point",
+      "confirmDeleteOffsetTips": "Are you sure you want to delete this offset point?",
       "confirmDeleteTaskTips": "Confirm delete task?",
       "confirmDeleteTemplateTips": "Confirm delete template?",
+      "deleteOffset": "Delete offset point",
       "deleteTask": "Delete task",
       "deleteTemplate": "Delete template",
       "devicePoint": "Device point",

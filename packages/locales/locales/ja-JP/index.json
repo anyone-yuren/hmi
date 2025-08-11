@@ -35,6 +35,7 @@
     "constructionEnd": "建設の終わり",
     "constructionEndTip": "最初にログインしてください",
     "delete": "削除",
+    "edit": "編集",
     "errorMsg": {
       "title": "例外メッセージ"
     },
@@ -94,6 +95,7 @@
     "pleaseInputNumber": "正しい番号を入力してください",
     "pleasePassword": "パスワードを入力してください",
     "pleaseUsername": "ユーザー名を入力してください",
+    "plsInput": "入力してください",
     "save": "セーブ",
     "serverError": "申し訳ありませんが、サーバーでエラーが発生しました。",
     "setting": "並べる",
@@ -160,8 +162,10 @@
       "chargePoint": "充電ポイント",
       "chargeType": "充電タイプ",
       "commonPoint": "ふつうてん",
+      "confirmDeleteOffsetTips": "オフセットポイントを削除しますか？?",
       "confirmDeleteTaskTips": "タスクを削除してもよろしいですか?",
       "confirmDeleteTemplateTips": "テンプレートを削除してもよろしいですか?",
+      "deleteOffset": "オフセット点の削除",
       "deleteTask": "タスクを削除する",
       "deleteTemplate": "テンプレートを削除する",
       "devicePoint": "設備ポイント",
