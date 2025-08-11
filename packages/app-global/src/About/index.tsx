@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
+import { useAgvType } from '../hooks/useAgvType';
 import NodeLogs from './components/nodeLogs';
 import { getNodeLogs } from './services';
 
@@ -81,7 +82,9 @@ const About = () => {
     content: drawerStyles['my-drawer-content'],
   };
 
-  const [pdName, setPdName] = useState('X20.png');
+  const agvType = useAgvType();
+
+  const [pdName, setPdName] = useState(`MW_${agvType}.png`);
   // 在组件中添加状态管理当前加载的节点
   const [loadingNode, setLoadingNode] = useState<string | null>(null);
   const { run: getLogs, loading: logsLoading } = useRequest(getNodeLogs, {
@@ -250,7 +253,7 @@ const About = () => {
                 }}
                 className='!m-0 opacity-70'
               >
-                {pdName}
+                {agvType}
               </Typography.Text>
             </div>
             <div>

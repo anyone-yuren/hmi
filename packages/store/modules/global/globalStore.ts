@@ -12,6 +12,10 @@ interface State {
   sessionTimeout: number;
   timer: any | null; // 存储定时器引用
   resetSessionTimeout: () => void;
+
+  // 车辆类型
+  avgType: string;
+  setAvgType: (avgType: string) => void;
 }
 export const useGlobalStore = create<State>()(
   persist(
@@ -54,6 +58,9 @@ export const useGlobalStore = create<State>()(
             set({ timer: newTimer });
           }
         },
+        // 车辆类型
+        avgType: "",
+        setAvgType: (avgType: string) => set({ avgType }),
       };
     },
     {
