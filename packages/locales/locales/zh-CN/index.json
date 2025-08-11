@@ -9,7 +9,11 @@
       "serial": "序列号",
       "vehicleType": "车型"
     },
+    "action": "操作",
+    "actionSuccess": "操作成功",
+    "back": "返回",
     "backToHome": "返回主页",
+    "cancel": "取消",
     "charging": {
       "Voltage": "电压/电流",
       "battery": "车辆电池",
@@ -27,6 +31,11 @@
       "waitting": "等待充电"
     },
     "close": "关闭",
+    "confirm": "确定",
+    "constructionEnd": "施工端",
+    "constructionEndTip": "请先登录",
+    "delete": "删除",
+    "edit": "编辑",
     "errorMsg": {
       "title": "异常消息"
     },
@@ -51,7 +60,11 @@
       "vehicleStatusNavigationStatusNormal": "正常",
       "vehicleStatusNavigationType": "定位类型"
     },
+    "login": "登录",
+    "loginSuccessTip": "若十分钟内无操作，系统将自动退出！",
+    "logoutTip": "确认退出登录吗？",
     "modify": "修改",
+    "noData": "暂无数据",
     "noPermission": "对不起，您没有权限访问此页面。",
     "notFound": "对不起，您访问的页面不存在。",
     "obsError": {
@@ -78,9 +91,15 @@
       "title": "避障消息",
       "view": "查看"
     },
+    "password": "密码",
     "pleaseInputNumber": "请输入正确的数字",
+    "pleasePassword": "请输入密码",
+    "pleaseUsername": "请输入用户名",
+    "plsInput": "请输入",
+    "save": "保存",
     "serverError": "对不起，服务器发生错误。",
     "setting": "设置",
+    "status": "状态",
     "success": "完成",
     "taskState": {
       "charging": "充电",
@@ -89,25 +108,15 @@
       "pickUp": "取货"
     },
     "taskStatus": {
+      "cancel": "取消",
+      "error": "错误",
       "init": "初始化",
       "running": "执行中",
       "success": "完成",
-      "unexecuted": "未执行",
-      "error": "错误",
-      "cancel": "取消"
+      "unexecuted": "未执行"
     },
     "unauthorized": "无地图数据",
-    "actionSuccess": "操作成功",
-    "status": "状态",
-    "action": "操作",
-    "delete": "删除",
-    "cancel": "取消",
-    "confirm": "确定",
-    "back": "返回",
-    "noData": "暂无数据",
-    "save": "保存",
-    "edit": "编辑",
-    "plsInput": "请输入",
+    "username": "用户名",
     "add": "添加",
     "plsInputParams": "请填写参数",
     "tips": "提示",
@@ -123,6 +132,12 @@
     }
   },
   "deployer": {
+    "io": {
+      "input": "输入",
+      "output": "输出",
+      "port": "端口号",
+      "tips": "提示：灰色为未触发，绿色为触发"
+    },
     "safety": {
       "backDistance": "后退距离",
       "currentScheme": "当前避障方案",
@@ -146,40 +161,9 @@
       "vehicleStatus": "车辆状态"
     },
     "setting": {
-      "Jacking": "顶升",
-      "Reach": "前移式",
-      "Roller": "滚筒",
-      "SideInsert": "侧插",
-      "chassis": "底盘参数",
-      "clamp": "夹抱",
-      "composite": "复合式机器人",
-      "counterbalanced": "平衡重",
-      "diff": "行走参数（差分）",
-      "diffx_correction_backward": "后退停车纵向精度补偿值",
-      "diffx_correction_forward": "前进停车纵向精度补偿值",
-      "double": "行走参数（双舵）",
-      "fullWay": "全向车前移",
-      "lift_fork_vel_max": "叉臂抬升速度最大值",
-      "lift_fork_vel_max_rev": "叉臂下降速度最大值",
-      "lift_fork_vel_min": "叉臂抬升速度最小值",
-      "lift_fork_vel_min_rev": "叉臂下降速度最小值",
       "lowPower": "电量报警阈值",
-      "micromorphic": "α2",
-      "pallet": "托盘车",
       "peripheral": "外设参数",
-      "rotational": "旋转顶升",
       "runMusic": "行走音乐",
-      "single": "行走参数（单舵）",
-      "speed_backward_straight_max": "直线后退最大速度",
-      "speed_backward_turning_max": "后退转弯最大速度",
-      "speed_forward_straight_max": "直线前进最大速度",
-      "speed_forward_turning_max": "前进转弯最大速度",
-      "speed_omega_rotation": "自旋角速度",
-      "speed_rotation_max": "自旋速度最大值",
-      "speed_turning_min": "转弯速度最小值",
-      "stacking": "堆高车",
-      "telescopic": "伸缩叉",
-      "threeWay": "三向叉",
       "volumn": "喇叭音量"
     },
     "sliderPage": {
@@ -194,12 +178,6 @@
       "setting": "设置",
       "task": "任务",
       "vision": "视觉"
-    },
-    "io": {
-      "tips": "提示：灰色为未触发，绿色为触发",
-      "input": "输入",
-      "port": "端口号",
-      "output": "输出"
     },
     "singleTask": {
       "task": "任务",

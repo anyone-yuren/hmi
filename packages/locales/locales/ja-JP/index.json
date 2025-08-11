@@ -9,7 +9,11 @@
       "serial": "シリアルナンバー",
       "vehicleType": "車モデル"
     },
+    "action": "動く",
+    "actionSuccess": "操作は成功しました",
+    "back": "帰る",
     "backToHome": "ホームページに戻ります",
+    "cancel": "キャンセル",
     "charging": {
       "Voltage": "電圧/電流",
       "battery": "車両バッテリー",
@@ -27,6 +31,11 @@
       "waitting": "充電待ち"
     },
     "close": "閉じる",
+    "confirm": "確かですか",
+    "constructionEnd": "建設の終わり",
+    "constructionEndTip": "最初にログインしてください",
+    "delete": "削除",
+    "edit": "編集",
     "errorMsg": {
       "title": "例外メッセージ"
     },
@@ -51,7 +60,11 @@
       "vehicleStatusNavigationStatusNormal": "正常",
       "vehicleStatusNavigationType": "ポジショニングタイプ"
     },
+    "login": "ログイン",
+    "loginSuccessTip": "10分以内に操作がない場合、システムは自動的に終了します！",
+    "logoutTip": "ログアウトを確認しますか？",
     "modify": "修正",
+    "noData": "データはまだありません",
     "noPermission": "申し訳ありませんが、このページにアクセスする許可はありません。",
     "notFound": "申し訳ありませんが、訪れたページは存在しません。",
     "obsError": {
@@ -78,9 +91,15 @@
       "title": "障害物回避ニュース",
       "view": "チェック"
     },
+    "password": "パスワード",
     "pleaseInputNumber": "正しい番号を入力してください",
+    "pleasePassword": "パスワードを入力してください",
+    "pleaseUsername": "ユーザー名を入力してください",
+    "plsInput": "入力してください",
+    "save": "セーブ",
     "serverError": "申し訳ありませんが、サーバーでエラーが発生しました。",
     "setting": "並べる",
+    "status": "状態",
     "success": "終える",
     "taskState": {
       "charging": "チャージ",
@@ -89,25 +108,15 @@
       "pickUp": "選び出す"
     },
     "taskStatus": {
+      "cancel": "キャンセル",
+      "error": "間違い",
       "init": "初期化する",
       "running": "実行",
       "success": "終える",
-      "unexecuted": "未実行",
-      "error": "間違い",
-      "cancel": "キャンセル"
+      "unexecuted": "未実行"
     },
     "unauthorized": "マップデータはありません",
-    "actionSuccess": "操作は成功しました",
-    "status": "状態",
-    "action": "動く",
-    "delete": "削除",
-    "cancel": "キャンセル",
-    "confirm": "確かですか",
-    "back": "帰る",
-    "noData": "データはまだありません",
-    "save": "セーブ",
-    "edit": "編集",
-    "plsInput": "ご入力ください",
+    "username": "ユーザー名",
     "add": "增",
     "plsInputParams": "パラメータを入力してください",
     "tips": "ヒント",
@@ -123,6 +132,12 @@
     }
   },
   "deployer": {
+    "io": {
+      "input": "インプット",
+      "output": "アウトプット",
+      "port": "ポート番号",
+      "tips": "ヒント：グレーはトリガーされておらず、緑はトリガーされています"
+    },
     "safety": {
       "backDistance": "後退距離",
       "currentScheme": "現在の障害物回避スキーム",
@@ -146,40 +161,9 @@
       "vehicleStatus": "車両状況"
     },
     "setting": {
-      "Jacking": "ジャッキアップ",
-      "Reach": "フォワード",
-      "Roller": "ローラー",
-      "SideInsert": "サイド プラグ",
-      "chassis": "シャーシパラメータ",
-      "clamp": "クランプ",
-      "composite": "ハイブリッドロボット",
-      "counterbalanced": "カウンターウェイト",
-      "diff": "トラベルパラメータ(差）",
-      "diffx_correction_backward": "後方駐車の縦方向精度の補正値",
-      "diffx_correction_forward": "前方駐車縦方向精度補正値",
-      "double": "トラベルパラメータ(ツインラダー)",
-      "fullWay": "全方向フォワード",
-      "lift_fork_vel_max": "ウィッシュボーンリフト最大速度",
-      "lift_fork_vel_max_rev": "ウィッシュボーン降下速度の最大値",
-      "lift_fork_vel_min": "ウィッシュボーンの最低リフト速度",
-      "lift_fork_vel_min_rev": "ウィッシュボーン 降下速度 最小",
       "lowPower": "バッテリー低下アラームしきい値",
-      "micromorphic": "α2",
-      "pallet": "パレットトラック",
       "peripheral": "ペリフェラルパラメータ",
-      "rotational": "ロータリージャッキ",
       "runMusic": "運動しながら流れる音楽",
-      "single": "トラベルパラメータ(シングルラダー)",
-      "speed_backward_straight_max": "ストレートバック最高速度",
-      "speed_backward_turning_max": "リバースターン最大速度",
-      "speed_forward_straight_max": "ストレートフォワード最高速度",
-      "speed_forward_turning_max": "前進旋回最大速度",
-      "speed_omega_rotation": "スピン角速度",
-      "speed_rotation_max": "最大スピン速度",
-      "speed_turning_min": "最低回転速度",
-      "stacking": "スタッカー",
-      "telescopic": "テレスコピックフォーク",
-      "threeWay": "3ウェイフォーク",
       "volumn": "スピーカーの音量"
     },
     "sliderPage": {
@@ -194,12 +178,6 @@
       "setting": "並べる",
       "task": "タスク",
       "vision": "視覚"
-    },
-    "io": {
-      "tips": "ヒント：グレーはトリガーされておらず、緑はトリガーされています",
-      "input": "インプット",
-      "port": "ポート番号",
-      "output": "アウトプット"
     },
     "singleTask": {
       "task": "タスク",

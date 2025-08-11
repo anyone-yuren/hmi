@@ -7,7 +7,7 @@ import { motion, useAnimation } from 'framer-motion';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
-const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
+const BarBattery = ({ level = 15, width = 60, height = 20 }) => {
   const { powerStatus } = useVehicleStore(
     useShallow((state) => {
       return {
@@ -63,16 +63,16 @@ const BarBattery = ({ level = 15, width = 80, height = 20 }) => {
         <rect
           x='0'
           y='0'
-          width={width - 4}
+          width={width - 6}
           height={height}
           rx='6'
           ry='6'
-          stroke='rgba(255,255,255,0.2)'
+          stroke='rgba(255,255,255,1)'
           strokeWidth='2'
           fill='transparent'
         />
         {/* 电池头 */}
-        <rect x={width - 4} y={height * 0.25} width='4' height={height * 0.5} rx='1' fill='rgba(255,255,255,0.2)' />
+        <rect x={width - 4} y={height * 0.25} width='4' height={height * 0.5} ry='1' fill='rgba(255,255,255,1)' />
         {/* 电量值条 */}
         <motion.rect
           x='2'

@@ -13,7 +13,6 @@ import StageBase from './components/stageBase';
 const CarStage = () => {
   const { data: routeLinesData, loading: routeLinesLoading } = useRequest(getSegmentsInfo);
   const { data: vehicleShapeData, loading: vehicleShapeLoading } = useRequest(getVehicleShape);
-
   return (
     <Suspense fallback={<Spin />}>
       {routeLinesLoading ? (
@@ -37,7 +36,7 @@ const CarStage = () => {
           <CameraControls
             makeDefault
             minDistance={2}
-            maxDistance={100}
+            maxDistance={30}
             // maxPolarAngle={Math.PI / 4}
             minAzimuthAngle={0}
             maxAzimuthAngle={Math.PI}

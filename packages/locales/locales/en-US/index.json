@@ -9,7 +9,11 @@
       "serial": "Serial number",
       "vehicleType": "Vehicle model"
     },
+    "action": "Operate",
+    "actionSuccess": "Success",
+    "back": "Back",
     "backToHome": "Back home",
+    "cancel": "Cancel",
     "charging": {
       "Voltage": "Voltage/Current",
       "battery": "Vehicle battery",
@@ -27,6 +31,11 @@
       "waitting": "Waiting for charging"
     },
     "close": "Close",
+    "confirm": "OK",
+    "constructionEnd": "Construction end",
+    "constructionEndTip": "Please log in first",
+    "delete": "Delete",
+    "edit": "Edit",
     "errorMsg": {
       "title": "Abnormal message"
     },
@@ -51,7 +60,11 @@
       "vehicleStatusNavigationStatusNormal": "Normal",
       "vehicleStatusNavigationType": "Positioning Type"
     },
+    "login": "Log in",
+    "loginSuccessTip": "If there is no operation within ten minutes, the system will automatically exit!",
+    "logoutTip": "Confirm logging out?",
     "modify": "Modify",
+    "noData": "No data",
     "noPermission": "Sorry, you do not have permission to access this page.",
     "notFound": "Sorry, the page you visited does not exist.",
     "obsError": {
@@ -78,9 +91,15 @@
       "title": "Obstacle avoidance information",
       "view": "View"
     },
+    "password": "Password",
     "pleaseInputNumber": "Please enter the correct number",
+    "pleasePassword": "Please enter your password",
+    "pleaseUsername": "Please enter your username",
+    "plsInput": "Please input",
+    "save": "Save",
     "serverError": "Sorry, an error occurred on the server.",
     "setting": "Setting",
+    "status": "State",
     "success": "Accomplish",
     "taskState": {
       "charging": "Charge",
@@ -89,25 +108,15 @@
       "pickUp": "Pick up"
     },
     "taskStatus": {
+      "cancel": "Cancel",
+      "error": "Error",
       "init": "Initialize",
       "running": "Under execution",
       "success": "Success",
-      "unexecuted": "Not executed",
-      "error": "Error",
-      "cancel": "Cancel"
+      "unexecuted": "Not executed"
     },
     "unauthorized": "No map data",
-    "actionSuccess": "Success",
-    "status": "State",
-    "action": "Operate",
-    "delete": "Delete",
-    "cancel": "Cancel",
-    "confirm": "OK",
-    "back": "Back",
-    "noData": "No data",
-    "save": "Save",
-    "edit": "Update",
-    "plsInput": "Please enter",
+    "username": "Username",
     "add": "Add",
     "plsInputParams": "Please input parameters",
     "tips": "Tips",
@@ -123,6 +132,12 @@
     }
   },
   "deployer": {
+    "io": {
+      "input": "Input",
+      "output": "Output",
+      "port": "Port no",
+      "tips": "Tip: Gray means not triggered, green means triggered"
+    },
     "safety": {
       "backDistance": "Retreat distance",
       "currentScheme": "Current obstacle avoidance scheme",
@@ -146,40 +161,9 @@
       "vehicleStatus": "Vehicle status"
     },
     "setting": {
-      "Jacking": "Jacking",
-      "Reach": "Reach truck",
-      "Roller": "Roller",
-      "SideInsert": "Side insertion",
-      "chassis": "Chassis parameters",
-      "clamp": "Clamp",
-      "composite": "Composite robot",
-      "counterbalanced": "Counterbalanced",
-      "diff": "Travel parameters (Differential）",
-      "diffx_correction_backward": "Longitudinal precision compensation value for backward stop",
-      "diffx_correction_forward": "Longitudinal precision compensation value for forward stop",
-      "double": "Travel parameters (Twin rudder)",
-      "fullWay": "Forward omnidirectional vehicle",
-      "lift_fork_vel_max": "Max forkarm lifting speed",
-      "lift_fork_vel_max_rev": "Max forkarm lowering speed",
-      "lift_fork_vel_min": "Min forkarm lifting speed",
-      "lift_fork_vel_min_rev": "Min forkarm lowering speed",
       "lowPower": "Low battery level alarm threshold",
-      "micromorphic": "α2",
-      "pallet": "Pallet truck",
       "peripheral": "Peripheral parameters",
-      "rotational": "Rotating jacking",
       "runMusic": "Music for motion",
-      "single": "Travel parameters (Single rudder)",
-      "speed_backward_straight_max": "Max speed for straight backward",
-      "speed_backward_turning_max": "Max speed for backward turning",
-      "speed_forward_straight_max": "Max speed for straight forward",
-      "speed_forward_turning_max": "Max speed for forward turning",
-      "speed_omega_rotation": "Spin angle speed",
-      "speed_rotation_max": "Max spin speed",
-      "speed_turning_min": "Min turning speed",
-      "stacking": "Stacking stacker",
-      "telescopic": "Telescopic fork",
-      "threeWay": "Three way fork",
       "volumn": "Speaker volume"
     },
     "sliderPage": {
@@ -194,12 +178,6 @@
       "setting": "Setting",
       "task": "Task",
       "vision": "Vision"
-    },
-    "io": {
-      "tips": "Tip: Gray means not triggered, green means triggered",
-      "input": "Input",
-      "port": "Port no",
-      "output": "Output"
     },
     "singleTask": {
       "task": "Task",

@@ -9,7 +9,11 @@
       "serial": "일련 번호",
       "vehicleType": "자동차 모델"
     },
+    "action": "조작",
+    "actionSuccess": "조작 성공",
+    "back": "돌아오다",
     "backToHome": "홈페이지로 돌아갑니다",
+    "cancel": "취소",
     "charging": {
       "Voltage": "전압/전류",
       "battery": "차량 배터리",
@@ -27,6 +31,11 @@
       "waitting": "충전 대기 중"
     },
     "close": "닫기",
+    "confirm": "확인",
+    "constructionEnd": "건축 종료",
+    "constructionEndTip": "먼저 로그인하십시오",
+    "delete": "삭제",
+    "edit": "편집",
     "errorMsg": {
       "title": "예외 메시지"
     },
@@ -51,7 +60,11 @@
       "vehicleStatusNavigationStatusNormal": "보통",
       "vehicleStatusNavigationType": "포지셔닝 유형"
     },
+    "login": "로그인",
+    "loginSuccessTip": "10 분 이내에 작동이 없으면 시스템이 자동으로 종료됩니다!",
+    "logoutTip": "로그 아웃을 확인 하시겠습니까?",
     "modify": "수정",
+    "noData": "아직 데이터가 없습니다",
     "noPermission": "죄송합니다.이 페이지에 액세스 할 수있는 권한이 없습니다.",
     "notFound": "죄송합니다. 방문한 페이지는 존재하지 않습니다.",
     "obsError": {
@@ -78,9 +91,15 @@
       "title": "장애물 회피 뉴스",
       "view": "확인하다"
     },
+    "password": "비밀번호",
     "pleaseInputNumber": "올바른 번호를 입력하십시오",
+    "pleasePassword": "비밀번호를 입력하십시오",
+    "pleaseUsername": "사용자 이름을 입력하십시오",
+    "plsInput": "입력하십시오.",
+    "save": "저장",
     "serverError": "죄송합니다. 서버에서 오류가 발생했습니다.",
     "setting": "설립",
+    "status": "상태",
     "success": "완성",
     "taskState": {
       "charging": "충전",
@@ -89,25 +108,15 @@
       "pickUp": "찾다"
     },
     "taskStatus": {
+      "cancel": "취소",
+      "error": "오류",
       "init": "초기화",
       "running": "실행",
       "success": "완성",
-      "unexecuted": "실행되지 않음",
-      "error": "오류",
-      "cancel": "취소"
+      "unexecuted": "실행되지 않음"
     },
     "unauthorized": "지도 데이터가 없습니다",
-    "actionSuccess": "조작 성공",
-    "status": "상태",
-    "action": "조작",
-    "delete": "삭제",
-    "cancel": "취소",
-    "confirm": "확인",
-    "back": "돌아오다",
-    "noData": "아직 데이터가 없습니다",
-    "save": "저장",
-    "edit": "편집하다",
-    "plsInput": "입력해 주세요",
+    "username": "사용자 이름",
     "add": "추가",
     "plsInputParams": "파라미터를 입력해주세요",
     "tips": "팁",
@@ -123,6 +132,12 @@
     }
   },
   "deployer": {
+    "io": {
+      "input": "입력",
+      "output": "출력",
+      "port": "포트 번호",
+      "tips": "팁: 회색은 트리거되지 않았고, 녹색은 트리거되었습니다."
+    },
     "safety": {
       "backDistance": "후진 거리",
       "currentScheme": "현재 장애물 회피 방안",
@@ -146,40 +161,9 @@
       "vehicleStatus": "차량 상태"
     },
     "setting": {
-      "Jacking": "상승",
-      "Reach": "앞으로",
-      "Roller": "롤러",
-      "SideInsert": "측면 포크",
-      "chassis": "섀시 파라미터",
-      "clamp": "클램핑",
-      "composite": "하이브리드 로봇",
-      "counterbalanced": "카운터 웨이트",
-      "diff": "주행 파라미터(차속)",
-      "diffx_correction_backward": "후진 주차의 방향 정확도에 대한 보상 값",
-      "diffx_correction_forward": "전방 주차 종방향 정확도 보상값",
-      "double": "주행 파라미터(트윈 제어)",
-      "fullWay": "전방향",
-      "lift_fork_vel_max": "포크 리프트 최대 속도",
-      "lift_fork_vel_max_rev": "포크 하강 속도의 최대값",
-      "lift_fork_vel_min": "포크 리프트 최소 속도",
-      "lift_fork_vel_min_rev": "포크 하강 속도 최소",
       "lowPower": "배터리 부족 경보 임계값",
-      "micromorphic": "α2",
-      "pallet": "팔레트 트럭",
       "peripheral": "주변 장치 파라미터",
-      "rotational": "로터리 잭킹",
       "runMusic": "주행하는 동안 재생되는 음악",
-      "single": "주행 파라미터(단일 제어)",
-      "speed_backward_straight_max": "직선 후진 최대 속도",
-      "speed_backward_turning_max": "후진 회전 최대 속도",
-      "speed_forward_straight_max": "직선 전진 최대 속도",
-      "speed_forward_turning_max": "전진 회전 최대 속도",
-      "speed_omega_rotation": "스핀 각속도",
-      "speed_rotation_max": "최대 스핀 속도",
-      "speed_turning_min": "최소 회전 속도",
-      "stacking": "하이 스태커",
-      "telescopic": "텔레스코픽 포크",
-      "threeWay": "3방향 포크",
       "volumn": "스피커 볼륨"
     },
     "sliderPage": {
@@ -194,12 +178,6 @@
       "setting": "설립",
       "task": "일",
       "vision": "비전"
-    },
-    "io": {
-      "tips": "팁: 회색은 트리거되지 않았고, 녹색은 트리거되었습니다.",
-      "input": "입력",
-      "port": "포트 번호",
-      "output": "출력"
     },
     "singleTask": {
       "task": "작업",

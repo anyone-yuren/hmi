@@ -1,3 +1,4 @@
+import { useGlobalStore } from '@gbeata/store';
 import { message } from 'antd';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { t } from 'i18next';
@@ -35,6 +36,8 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   (config: AxiosRequestConfig) => {
+    const { resetSessionTimeout } = useGlobalStore.getState();
+    resetSessionTimeout();
     // 这里可以统一携带 token
     const token = localStorage.getItem('token');
     if (config.url?.includes('/login')) {

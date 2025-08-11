@@ -1,7 +1,7 @@
-import { isEqual } from 'lodash-es';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import { useGlobalStore } from './globalStore';
+import { isEqual } from "lodash-es";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { useGlobalStore } from "./globalStore";
 type CHARGE_PILE_STATUS = {
   charge_status: number; //充电状态
   brush_board_status: number; //充电刷板收回状态，0:伸出，1：收回
@@ -16,7 +16,10 @@ interface State {
     power: number;
     charge_status: number;
   };
-  setPowerStatus: (powerStatus: { power: number; charge_status: number }) => any;
+  setPowerStatus: (powerStatus: {
+    power: number;
+    charge_status: number;
+  }) => any;
   seniorPoints: any[];
   setSeniorPoints: (seniorPoints: any[]) => void;
   auto_manual_status: number;
@@ -24,6 +27,10 @@ interface State {
   // 电池
   charge_pile_status: CHARGE_PILE_STATUS;
   setChargePileStatus: (charge_pile_status: CHARGE_PILE_STATUS) => void;
+
+  // 信号强度
+  signal: number;
+  setSignal: (signal: number) => void;
 }
 export const useVehicleStore = create<State>()(
   persist(
@@ -47,7 +54,10 @@ export const useVehicleStore = create<State>()(
         power: 0,
         charge_status: 0,
       },
-      setPowerStatus: (powerStatus: { power: number; charge_status: number }) => {
+      setPowerStatus: (powerStatus: {
+        power: number;
+        charge_status: number;
+      }) => {
         const { cacheSave } = useGlobalStore.getState();
         if (cacheSave) {
           set({ powerStatus });
@@ -63,14 +73,25 @@ export const useVehicleStore = create<State>()(
       auto_manual_status: 0,
       setAutoManualStatus: (auto_manual_status: number) => {
         const { cacheSave } = useGlobalStore.getState();
-        if (cacheSave && !isEqual(auto_manual_status, get().auto_manual_status)) {
+        if (
+          cacheSave &&
+          !isEqual(auto_manual_status, get().auto_manual_status)
+        ) {
           set({ auto_manual_status });
+        }
+      },
+      // 信号强度
+      signal: 0,
+      setSignal: (signal: number) => {
+        const { cacheSave } = useGlobalStore.getState();
+        if (cacheSave) {
+          set({ signal });
         }
       },
     }),
     {
-      name: 'vehicle-store',
+      name: "vehicle-store",
       storage: createJSONStorage(() => localStorage),
-    },
-  ),
+    }
+  )
 );

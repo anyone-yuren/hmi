@@ -1,11 +1,14 @@
 import { DownloadOutlined } from '@ant-design/icons';
+import { useRequest } from 'ahooks';
 import { Badge, Button, Drawer, List, Tree, TreeDataNode, Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { DrawerClassNames } from 'antd/es/drawer/DrawerPanel';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
+import NodeLogs from './components/nodeLogs';
+import { getNodeLogs } from './services';
 
 const useStyles = createStyles(({ css, token }) => ({
   tree: css`
@@ -47,9 +50,20 @@ const useDrawerStyles = createStyles(({ token }) => ({
   },
 }));
 
+// Vite环境下获取assets/vehicles目录下的所有图片
+const imageModules = import.meta.glob('../assets/vehicles/*', { eager: true });
+
+// 提取文件名
+const imageNames = Object.keys(imageModules)
+  .map((path) => {
+    const match = path.match(/vehicles\/(.*)$/);
+    return match ? match[1] : '';
+  })
+  .filter(Boolean);
+
 // 获取图片函数
 const getImage = (imageName: string) => {
-  return new URL(`./images/${imageName}`, import.meta.url).href;
+  return new URL(`../assets/vehicles/${imageName}`, import.meta.url).href;
 };
 
 const About = () => {
@@ -58,6 +72,7 @@ const About = () => {
   const { styles: drawerStyles } = useDrawerStyles();
   const theme = useTheme();
   const [openLogs, setLogsOpen] = useState(false);
+  const [openNodeLogs, setOpenNodeLogs] = useState(false);
   const classNames: DrawerClassNames = {
     body: drawerStyles['my-drawer-body'],
     mask: drawerStyles['my-drawer-mask'],
@@ -65,6 +80,21 @@ const About = () => {
     footer: drawerStyles['my-drawer-footer'],
     content: drawerStyles['my-drawer-content'],
   };
+
+  const [pdName, setPdName] = useState('X20.png');
+  // 在组件中添加状态管理当前加载的节点
+  const [loadingNode, setLoadingNode] = useState<string | null>(null);
+  const { run: getLogs, loading: logsLoading } = useRequest(getNodeLogs, {
+    manual: true,
+    onSuccess: () => {
+      setOpenNodeLogs(true);
+    },
+    onError: () => {},
+  });
+
+  const productImage = useCallback(() => {
+    return getImage(`${pdName}`);
+  }, [pdName]);
 
   const treeData: TreeDataNode[] = [
     {
@@ -188,8 +218,8 @@ const About = () => {
           <div
             className='flex-1 flex flex-col gap-2  bg-no-repeat'
             style={{
-              backgroundImage: `url(${getImage('x20.png')})`,
-              backgroundSize: 'auto 60%',
+              backgroundImage: `url(${productImage()})`,
+              backgroundSize: '100% auto',
               backgroundPosition: 'center bottom',
             }}
           >
@@ -209,7 +239,17 @@ const About = () => {
               <Typography.Title level={5} className='!m-0'>
                 {t('common.about.vehicleType')}
               </Typography.Title>
-              <Typography.Text className='!m-0 opacity-70'>X20</Typography.Text>
+              <Typography.Text
+                onClick={() => {
+                  // 生成0到imageNames长度-1之间的随机整数
+                  const randomIndex = Math.floor(Math.random() * imageNames.length);
+                  // 设置随机选中的图片名称
+                  setPdName(imageNames[randomIndex]);
+                }}
+                className='!m-0 opacity-70'
+              >
+                {pdName}
+              </Typography.Text>
             </div>
             <div>
               <Typography.Title level={5} className='!m-0'>
@@ -233,7 +273,16 @@ const About = () => {
             </Button>
           </div>
         </div>
-        <div className='relative h-full p-4 rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm shadow-teal-500/40 overflow-hidden flex flex-col w-2/3 gap-4'>
+        <div
+          className='relative h-full p-4 rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm shadow-teal-500/40 overflow-hidden flex flex-col w-2/3 gap-4'
+          style={{
+            background: `
+      radial-gradient(circle at 60% 90%, #3f6fa1, #0000 60%), 
+      radial-gradient(circle at 20px 20px, #2e67a1cc, #0000 25%), 
+      #182336
+    `,
+          }}
+        >
           <div className='w-full'>
             <h2 className='text-lg font-bold mb-1'>{t('common.about.nodes')} </h2>
             <motion.div
@@ -260,7 +309,20 @@ const About = () => {
                   classNames={{
                     actions: '!ml-4',
                   }}
-                  actions={[<Button type='primary'>查看日志</Button>]}
+                  actions={[
+                    <Button
+                      type='primary'
+                      loading={loadingNode === item.title && logsLoading}
+                      onClick={() => {
+                        console.log(item.title);
+
+                        setLoadingNode(item.title);
+                        getLogs({ node_name: item.title });
+                      }}
+                    >
+                      查看日志
+                    </Button>,
+                  ]}
                 >
                   <List.Item.Meta
                     title={
@@ -320,6 +382,22 @@ const About = () => {
             treeData={treeData}
           />
         </div>
+      </Drawer>
+      <Drawer
+        closable
+        destroyOnHidden
+        title={<p>{loadingNode} 日志</p>}
+        placement='right'
+        open={openNodeLogs}
+        loading={false}
+        classNames={{
+          ...classNames,
+          body: '!p-0',
+        }}
+        width={'100%'}
+        onClose={() => setOpenNodeLogs(false)}
+      >
+        <NodeLogs />
       </Drawer>
     </div>
   );

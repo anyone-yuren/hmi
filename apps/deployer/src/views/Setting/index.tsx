@@ -24,16 +24,6 @@ const Setting = () => {
         pagination={{ clickable: true }}
         modules={[Pagination]}
       >
-        {/* <SwiperSlide>
-          <div className='bg-[#445260] h-full rounded-2xl p-4 flex flex-col'>
-            <TravelParameters />
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className='bg-[#445260] h-full rounded-2xl p-4 flex flex-col'>
-            <ChassisParameters />
-          </div>
-        </SwiperSlide> */}
         <SwiperSlide>
           <div className='bg-[#445260] h-full rounded-2xl p-4 flex flex-col w-full'>
             <Peripheral />
