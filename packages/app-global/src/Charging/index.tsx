@@ -1,23 +1,23 @@
 import {
   AppstoreOutlined,
-  CheckCircleOutlined,
   ClockCircleOutlined,
   ColumnWidthOutlined,
   DotChartOutlined,
   SnippetsOutlined,
 } from '@ant-design/icons';
 import { useVehicleStore } from '@gbeata/store';
+import { Divider, Stack } from '@mui/material';
 import { useRequest } from 'ahooks';
-import { Button, Modal, Result, Slider, Switch, Timeline, Typography } from 'antd';
+import { Button, Modal, Result, Slider, Switch, Typography } from 'antd';
 import { createStyles, ThemeProvider } from 'antd-style';
 import { motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
-import stationPng from '../assets/img/station-l.png';
-import x20l from '../assets/img/x20-l.png';
 import { useAgvType } from '../hooks/useAgvType';
+import AnimateBrush from './components/animateBrush';
+import AnimateCharging from './components/animateCharging';
 import { getPeripheralControlParam, postPeripheralControlParam } from './services';
 const useStyles = createStyles(({ css }) => ({
   line: css`
@@ -27,177 +27,13 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const bubbleVariants = {
-  initial: {
-    y: 0,
-    opacity: 0,
-    scale: 1,
-  },
-  animate: {
-    y: -200,
-    opacity: [0, 1, 0],
-    scale: 1.5,
-  },
-};
-
-const bubbleTransition = {
-  duration: 3,
-  ease: 'easeInOut',
-  repeat: Infinity,
-  repeatType: 'loop' as const,
-  times: [0, 0.8, 1],
-};
-
-const Bubble = ({ delay = 0, left = '50%', size = 'w-3 h-3' }) => (
-  <motion.div
-    className={`absolute bottom-0 ${size} rounded-full bg-yellow-200`}
-    style={{ left }}
-    variants={bubbleVariants}
-    initial='initial'
-    animate='animate'
-    transition={{ ...bubbleTransition, delay }}
-  />
-);
-
 // Vite环境下获取assets/vehicles目录下的所有图片
 const imageModules = import.meta.glob('../assets/vehicles/*', { eager: true });
-
-// 提取文件名
-const imageNames = Object.keys(imageModules)
-  .map((path) => {
-    const match = path.match(/vehicles\/(.*)$/);
-    return match ? match[1] : '';
-  })
-  .filter(Boolean);
 
 // 获取图片函数
 const getImage = (imageName: string) => {
   return new URL(`../assets/vehicles/${imageName}`, import.meta.url).href;
 };
-
-const bigVehicleInitData = [
-  {
-    children: (
-      <div className='shadow-custom-box bg-yellow-200/40 p-2 rounded-md shadow-yellow-200/40'>
-        <div className='text-sm'>车辆已经发送光电</div>
-        <div className='text-xs '>2025-09-01 10:00:00</div>
-      </div>
-    ),
-    dot: <CheckCircleOutlined className='text-yellow-200' />,
-  },
-  {
-    children: (
-      <div className='shadow-custom-box bg-yellow-200/40 p-2 rounded-md shadow-yellow-200/40'>
-        <div className='text-sm'>等待充电桩伸出</div>
-        <div className='text-xs '>2025-09-01 10:00:00</div>
-      </div>
-    ),
-    dot: <CheckCircleOutlined className='text-yellow-200' />,
-  },
-  {
-    children: (
-      <div className='shadow-custom-box bg-[#22d3ee]/40 p-2 rounded-md shadow-[#22d3ee]/40'>
-        <div className='text-sm'>充电桩已成功伸出</div>
-        <div className='text-sm'>2025-09-01 10:00:00</div>
-      </div>
-    ),
-    dot: <CheckCircleOutlined className='text-[#22d3ee]' />,
-  },
-  {
-    children: (
-      <motion.div
-        className='shadow-custom-box bg-[#22d3ee]/80 p-2 rounded-md shadow-[#22d3ee]/40 relative overflow-hidden'
-        animate={{
-          boxShadow: [
-            '0 0 0px rgba(34,211,238, 0.3)',
-            '0 0 30px rgba(34,211,238, 0.5)',
-            '0 0 0px rgba(34,211,238, 0.3)',
-          ],
-        }}
-        transition={{
-          duration: 1.6,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      >
-        <div className='text-sm'>等待充电桩发光</div>
-        <div className='text-sm'>2025-09-01 10:00:00</div>
-      </motion.div>
-    ),
-    dot: <ClockCircleOutlined style={{ fontSize: '16px', color: '#22d3ee' }} />,
-  },
-  {
-    children: (
-      <motion.div
-        className='shadow-custom-box bg-yellow-200/80 p-2 rounded-md shadow-yellow-200/40 relative overflow-hidden'
-        animate={{
-          boxShadow: [
-            '0 0 0px rgba(254,240,138, 0.3)',
-            '0 0 30px rgba(254,240,138, 0.5)',
-            '0 0 0px rgba(254,240,138, 0.3)',
-          ],
-        }}
-        transition={{
-          duration: 1.6,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      >
-        <div className='text-sm'>准备充电信号</div>
-        <div className='text-sm'>2025-09-01 10:00:00</div>
-      </motion.div>
-    ),
-    dot: <ClockCircleOutlined style={{ fontSize: '16px', color: '#fef08a' }} />,
-  },
-];
-const smallVehicleInitData = [
-  {
-    children: (
-      <div className='shadow-custom-box bg-yellow-200/40 p-2 rounded-md shadow-yellow-200/40'>
-        <div className='text-sm'>车辆已连接充电桩</div>
-        <div className='text-xs '>2025-09-01 10:00:00</div>
-      </div>
-    ),
-    dot: <CheckCircleOutlined className='text-yellow-200' />,
-  },
-  {
-    children: (
-      <div className='shadow-custom-box bg-yellow-200/40 p-2 rounded-md shadow-yellow-200/40'>
-        <div className='text-sm'>等待充电确认信号</div>
-        <div className='text-xs '>2025-09-01 10:00:00</div>
-      </div>
-    ),
-    dot: <CheckCircleOutlined className='text-yellow-200' />,
-  },
-  {
-    children: (
-      <div className='shadow-custom-box bg-yellow-200/40 p-2 rounded-md shadow-yellow-200/40'>
-        <div className='text-sm'>已收到充电确认信号</div>
-        <div className='text-xs '>2025-09-01 10:00:00</div>
-      </div>
-    ),
-    dot: <CheckCircleOutlined className='text-yellow-200' />,
-  },
-
-  {
-    children: (
-      <div className='shadow-custom-box bg-yellow-200/40 p-2 rounded-md shadow-yellow-200/40'>
-        <div className='text-sm'>正常充电中</div>
-        <div className='text-xs '>2025-09-01 10:00:00</div>
-      </div>
-    ),
-    dot: <CheckCircleOutlined className='text-yellow-200' />,
-  },
-  {
-    children: (
-      <div className='shadow-custom-box bg-yellow-200/40 p-2 rounded-md shadow-yellow-200/40'>
-        <div className='text-sm'>充电完成</div>
-        <div className='text-xs '>2025-09-01 10:00:00</div>
-      </div>
-    ),
-    dot: <CheckCircleOutlined className='text-yellow-200' />,
-  },
-];
 
 const Charging = () => {
   const [modal, contextHolder] = Modal.useModal();
@@ -211,11 +47,6 @@ const Charging = () => {
     }),
   );
   const { t } = useTranslation();
-  const { styles } = useStyles();
-  const [isStation, setIsStation] = useState(false);
-  const [isVehicle, setIsVehicle] = useState(false);
-  const [isError, setIsError] = useState(false);
-
   const {
     run,
     loading,
@@ -229,7 +60,6 @@ const Charging = () => {
   });
   // 有无任务
   const [hasTask, setHasTask] = useState(false);
-  const [processItems, setProcessItems] = useState(bigVehicleInitData);
   const stationItems = () => {
     return {
       children: (
@@ -290,27 +120,7 @@ const Charging = () => {
     <div className='flex flex-row gap-4 p-4 h-full'>
       {/* 小车模块 */}
       <div className='relative h-full rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm flex flex-col w-1/3 gap-4'>
-        <motion.div
-          className='w-full h-full rounded-2xl backdrop-blur-2xl p-4 flex flex-col'
-          animate={
-            isVehicle
-              ? {
-                  boxShadow: [
-                    '0 0 0px rgba(254,240,138, 0.3)',
-                    '0 0 30px rgba(254,240,138, 0.5)',
-                    '0 0 0px rgba(254,240,138, 0.3)',
-                  ],
-                }
-              : {
-                  boxShadow: '0 0 0px rgba(254,240,138, 0)', // 关闭动画，静止状态
-                }
-          }
-          transition={{
-            duration: 1.6,
-            repeat: isVehicle ? Infinity : 0,
-            ease: 'easeInOut',
-          }}
-        >
+        <motion.div className='w-full h-full rounded-2xl backdrop-blur-2xl p-4 flex flex-col'>
           <div className='flex-1 relative'>
             <div className='w-full'>
               <h2 className='text-lg font-bold mb-1'>车辆电池</h2>
@@ -430,17 +240,7 @@ const Charging = () => {
                 }
                 className='w-full absolute bottom-4 '
               />
-              {powerStatus.charge_status === 4 && (
-                <div className='w-full h-64  rounded-xl overflow-hidden '>
-                  <Bubble delay={-0.8} left='5%' size='w-1 h-1' />
-                  <Bubble delay={0} left='10%' size='w-4 h-4' />
-                  <Bubble delay={0.2} left='20%' size='w-2 h-2' />
-                  <Bubble delay={0.6} left='40%' size='w-3 h-3' />
-                  <Bubble delay={1.2} left='60%' size='w-2.5 h-2.5' />
-                  <Bubble delay={1.8} left='30%' size='w-1.5 h-1.5' />
-                  <Bubble delay={2.4} left='50%' size='w-2 h-2' />
-                </div>
-              )}
+              {powerStatus.charge_status === 4 && <AnimateCharging />}
             </div>
           </div>
           <div className='flex justify-end gap-2'>
@@ -455,8 +255,8 @@ const Charging = () => {
       </div>
       {/* 电池模块 */}
       <div className='flex gap-4 items-center flex-1 '>
-        <div className='p-[2px] w-full h-full rounded-2xl bg-white/10 relative flex flex-col gap-2'>
-          {!hasTask ? (
+        {!hasTask ? (
+          <div className='p-[2px] w-full h-full rounded-2xl bg-white/10 relative flex flex-col gap-2'>
             <div className='flex h-full items-center justify-between p-2  shadow-sm rounded-2xl'>
               <Result
                 className='w-full flex flex-col items-center justify-center'
@@ -491,446 +291,111 @@ const Charging = () => {
                 }
               />
             </div>
-          ) : (
-            <div className='p-4 h-full flex flex-col gap-4'>
-              {/* 充电任务 */}
-              <div className='flex items-center justify-between p-2 bg-white/20  shadow-sm rounded-2xl'>
-                <div className='flex flex-col items-center'>
-                  <div className='text-sm font-bold flex gap-1 items-center'>
-                    <SnippetsOutlined />
-                    任务号
-                  </div>
-                  <div className='text-sm opacity-70'>10002912</div>
-                </div>
-                <div className='flex flex-col items-center'>
-                  <div className='text-sm font-bold flex gap-1 items-center'>
-                    <ColumnWidthOutlined />
-                    位置偏差
-                  </div>
-                  <div className='text-sm opacity-70'>2300mm</div>
-                </div>
-                <div className='flex flex-col items-center'>
-                  <div className='text-sm font-bold flex gap-1 items-center'>
-                    <AppstoreOutlined />
-                    充电类型
-                  </div>
-                  <div className='text-sm opacity-70'>自动充电</div>
-                </div>
-                <div className='flex flex-col items-center'>
-                  <div className='text-sm font-bold flex gap-1 items-center'>
-                    <DotChartOutlined />
-                    目标电量
-                  </div>
-                  <div className='text-sm opacity-70'>99%</div>
-                </div>
-              </div>
-              <div className='flex flex-1 gap-4 rounded-2xl bg-white/10'>
-                <div className='flex flex-col  h-full relative p-4 pr-0'>
-                  <Timeline className={styles.line} items={processItems} />
-                </div>
-                <div className='flex-1 p-4 pl-0 flex flex-col gap-4'>
-                  <h2 className='text-lg font-bold mb-0'>充电桩信息</h2>
-                  <div className='flex flex-row gap-4'>
-                    <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
-                      <SvgIcon name='volt' size={32} />
-                      <div className=''>22.8V</div>
-                    </div>
-                    <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
-                      <SvgIcon name='ampere' size={32} />
-                      <div className=''>22.8A</div>
-                    </div>
-                    <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
-                      <SvgIcon name='celsius' size={32} />
-                      <div className=''>22.8℃</div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className='bg-white/10 p-2 flex justify-between rounded-md'>
-                      <Typography.Text className='!m-0 font-bold '>IP地址</Typography.Text>
-                      <Typography.Text className='!m-0 opacity-70'>192.168.1.1</Typography.Text>
-                    </div>
-                  </div>
-                  <div>
-                    <div className='bg-white/10 p-2 flex justify-between rounded-md'>
-                      <Typography.Text className='!m-0 font-bold '>状态</Typography.Text>
-                      <Typography.Text className='!m-0 opacity-70'>
-                        {powerStatus.charge_status === 4 ? '充电中' : '未充电'}
-                      </Typography.Text>
-                    </div>
-                    <span className='text-xs text-white/50'>总充电次数包含已充满次数和异常次数</span>
-                  </div>
-                  <div className='flex gap-2'>
-                    <Button
-                      type='primary'
-                      onClick={() => {
-                        setIsStation(false);
-                        setIsVehicle(false);
-                        setPowerStatus({
-                          power: 50,
-                          charge_status: 4,
-                        });
-                      }}
-                    >
-                      测试充电
-                    </Button>
-                    <Button
-                      variant='solid'
-                      color='red'
-                      onClick={() => {
-                        setIsStation(false);
-                        setIsVehicle(false);
-                        setPowerStatus({
-                          power: 0,
-                          charge_status: 0,
-                        });
-                      }}
-                    >
-                      测试停止
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-      {contextHolder}
-    </div>
-  );
-  return (
-    <div className='flex flex-col p-4 h-full'>
-      {hasTask ? (
-        <>
-          <div className='p-4 w-full rounded-2xl bg-white/10 flex justify-between'>
-            <div>任务号: 10002912</div>
-            <div>位置偏差: 2300</div>
-            <div>充电类型: 自动充电</div>
-            <div>目标电量: 99%</div>
           </div>
-          <div className='flex-1 flex flex-row h-full mt-4  gap-4 w-full'>
-            <div className='flex gap-4 items-center flex-1 '>
-              <motion.div
-                className='w-full h-full rounded-xl backdrop-blur-2xl'
-                animate={
-                  isStation
-                    ? {
-                        boxShadow: [
-                          '0 0 0px rgba(34,211,238, 0.3)',
-                          '0 0 30px rgba(34,211,238, 0.5)',
-                          '0 0 0px rgba(34,211,238, 0.3)',
-                        ],
-                      }
-                    : {
-                        boxShadow: '0 0 0px rgba(34,211,238, 0)', // 关闭动画，静止状态
-                      }
-                }
-                transition={{
-                  duration: 1.6,
-                  repeat: isStation ? Infinity : 0,
-                  ease: 'easeInOut',
-                }}
-              >
-                <div className='flex flex-1 flex-col gap-4 h-full relative p-4 rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm shadow-teal-500/40 overflow-hidden'>
-                  <div className='w-full'>
-                    <h2 className='text-lg font-bold mb-1'>{t('common.charging.station')} </h2>
-                    <motion.div
-                      className='!w-full h-px'
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 1 }}
-                    >
-                      <div
-                        className='w-full h-full'
-                        style={{
-                          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)',
-                        }}
-                      />
-                    </motion.div>
-                  </div>
-
-                  {/* 充电桩图片 */}
-                  <div className='w-1/3 absolute bottom-4 right-4'>
-                    {isError && (
-                      <motion.div
-                        initial={{ opacity: 0.7, scale: 1 }}
-                        animate={{ opacity: 1, scale: 1.1 }}
-                        transition={{ duration: 0.4, ease: 'easeInOut', repeatType: 'loop', repeat: Infinity }}
-                        className='absolute top-1/2 z-10 w-full flex items-center justify-center text-red-600'
-                      >
-                        <SvgIcon name='error' size={80} />
-                        <div className='text-lg font-bold'>电压异常</div>
-                      </motion.div>
-                    )}
-                    <motion.img
-                      src={stationPng}
-                      initial={{ filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }}
-                      animate={
-                        powerStatus.charge_status === 4 || isError
-                          ? {
-                              filter: isError
-                                ? 'drop-shadow(0 10px 10px rgba(255,0,0,0.5))'
-                                : 'drop-shadow(0 10px 10px rgba(34,211,238,0.5))',
-                            }
-                          : { filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }
-                      }
-                      transition={
-                        powerStatus.charge_status === 4 || isError
-                          ? { duration: 1.6, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }
-                          : { duration: 0 }
-                      }
-                      className='w-full'
-                    />
-                  </div>
-                  {/* 充电桩电池电压 */}
-                  <div className='flex flex-col gap-4'>
-                    <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-[#22d3ee]/20 px-4 py-2'>
-                      <div className='text-sm text-[#22d3ee] font-bold flex items-end gap-2'>IP地址</div>
-                      <div className='text-sm font-bold'>192.168.1.1</div>
-                    </div>
-                    <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-[#22d3ee]/20 px-4 py-2'>
-                      <div className='text-sm text-[#22d3ee] font-bold flex items-end gap-2'>状态</div>
-                      <div className='text-sm font-bold'>{powerStatus.charge_status === 4 ? '充电中' : '未充电'}</div>
-                    </div>
-                    <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-[#22d3ee]/20 px-4 py-2'>
-                      <div className='text-sm text-[#22d3ee] font-bold flex items-end gap-2'>
-                        <SvgIcon name='volt' size={32} />
-                        电压
-                      </div>
-                      <div className='text-sm font-bold'>22.8V</div>
-                    </div>
-                    <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-[#22d3ee]/20 px-4 py-2'>
-                      <div className='text-sm text-[#22d3ee] font-bold flex items-end gap-2'>
-                        <SvgIcon name='ampere' size={32} />
-                        电流
-                      </div>
-                      <div className='text-sm font-bold'>22.8A</div>
-                    </div>
-                    <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-[#22d3ee]/20 px-4 py-2'>
-                      <div className='text-sm text-[#22d3ee] font-bold flex items-end gap-2'>
-                        <SvgIcon name='celsius' size={32} />
-                        温度
-                      </div>
-                      <div className='text-sm font-bold'>22.8℃</div>
-                    </div>
-                    <div className='flex justify-end gap-4'>
-                      <Button
-                        variant='solid'
-                        color='cyan'
-                        onClick={() => {
-                          setIsStation(true);
-                          setProcessItems([...processItems, stationItems()]);
-                        }}
-                      >
-                        发送信号
-                      </Button>
-                      <Button
-                        variant='solid'
-                        color='red'
-                        onClick={() => {
-                          setIsError(!isError);
-                        }}
-                      >
-                        异常警告
-                      </Button>
-                    </div>
-                  </div>
+        ) : (
+          <div className='h-full w-full flex flex-col gap-4'>
+            <div className='p-4 flex flex-col gap-4 bg-white/10 rounded-2xl'>
+              <h2 className='text-lg font-bold mb-0'>充电桩信息</h2>
+              <div className='flex flex-row gap-4'>
+                <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
+                  <SvgIcon name='volt' size={32} />
+                  <div className=''>22.8V</div>
                 </div>
-              </motion.div>
-            </div>
-            <div className='flex gap-4 flex-col items-center  overflow-y-auto'>
+                <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
+                  <SvgIcon name='ampere' size={32} />
+                  <div className=''>22.8A</div>
+                </div>
+                <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
+                  <SvgIcon name='celsius' size={32} />
+                  <div className=''>22.8℃</div>
+                </div>
+              </div>
+              <div>
+                <div className='bg-white/10 p-2 flex justify-between rounded-md'>
+                  <Typography.Text className='!m-0 font-bold '>IP地址</Typography.Text>
+                  <Typography.Text className='!m-0 opacity-70'>192.168.1.1</Typography.Text>
+                </div>
+              </div>
+              <div>
+                <div className='bg-white/10 p-2 flex justify-between rounded-md'>
+                  <Typography.Text className='!m-0 font-bold '>状态</Typography.Text>
+                  <Typography.Text className='!m-0 opacity-70'>
+                    {powerStatus.charge_status === 4 ? '充电中' : '未充电'}
+                  </Typography.Text>
+                </div>
+                <span className='text-xs text-white/50'>总充电次数包含已充满次数和异常次数</span>
+              </div>
               <div className='flex gap-2'>
                 <Button
-                  variant='solid'
-                  color='cyan'
+                  type='primary'
                   onClick={() => {
-                    setProcessItems(bigVehicleInitData);
+                    setPowerStatus({
+                      power: 50,
+                      charge_status: 4,
+                    });
                   }}
                 >
-                  大车状态
+                  测试充电
                 </Button>
                 <Button
                   variant='solid'
-                  color='cyan'
+                  color='red'
                   onClick={() => {
-                    setProcessItems(smallVehicleInitData);
+                    setPowerStatus({
+                      power: 0,
+                      charge_status: 0,
+                    });
                   }}
                 >
-                  小车状态
+                  测试停止
                 </Button>
               </div>
-              <div className='flex flex-col w-full h-full relative p-4'>
-                <Timeline className={styles.line} items={processItems} />
-              </div>
             </div>
-            <div className='relative h-full rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm flex flex-col flex-1 gap-4'>
-              <motion.div
-                className='w-full h-full rounded-xl backdrop-blur-2xl p-4'
-                animate={
-                  isVehicle
-                    ? {
-                        boxShadow: [
-                          '0 0 0px rgba(254,240,138, 0.3)',
-                          '0 0 30px rgba(254,240,138, 0.5)',
-                          '0 0 0px rgba(254,240,138, 0.3)',
-                        ],
-                      }
-                    : {
-                        boxShadow: '0 0 0px rgba(254,240,138, 0)', // 关闭动画，静止状态
-                      }
-                }
-                transition={{
-                  duration: 1.6,
-                  repeat: isVehicle ? Infinity : 0,
-                  ease: 'easeInOut',
-                }}
-              >
-                <div className='absolute bottom-0 left-0 w-full'>
-                  <motion.img
-                    src={x20l}
-                    initial={{ filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }}
-                    animate={
-                      powerStatus.charge_status === 4
-                        ? { filter: 'drop-shadow(0 10px 10px rgba(255,255,0,0.5))' }
-                        : { filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }
-                    }
-                    transition={
-                      powerStatus.charge_status === 4
-                        ? { duration: 1.6, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }
-                        : { duration: 0 }
-                    }
-                    className='w-1/2 absolute bottom-4 left-4'
-                  />
-                  {powerStatus.charge_status === 4 && (
-                    <div className='w-full h-64  rounded-xl overflow-hidden '>
-                      <Bubble delay={-0.8} left='5%' size='w-1 h-1' />
-                      <Bubble delay={0} left='10%' size='w-4 h-4' />
-                      <Bubble delay={0.2} left='20%' size='w-2 h-2' />
-                      <Bubble delay={0.6} left='40%' size='w-3 h-3' />
-                      <Bubble delay={1.2} left='60%' size='w-2.5 h-2.5' />
-                      <Bubble delay={1.8} left='30%' size='w-1.5 h-1.5' />
-                      <Bubble delay={2.4} left='50%' size='w-2 h-2' />
+            {/* 充电任务 */}
+            <div className='flex flex-1  rounded-2xl bg-white/10 flex-col'>
+              <div className='w-full'>
+                <Stack
+                  className='flex p-4 flex-1 items-center justify-between'
+                  direction='row'
+                  gap={4}
+                  divider={<Divider orientation='vertical' flexItem />}
+                >
+                  <div className='flex flex-col items-center justify-center relative'>
+                    <div className='text-sm font-bold flex gap-1 items-center '>
+                      <SnippetsOutlined />
+                      任务号
                     </div>
-                  )}
-                </div>
-
-                <div className='w-full'>
-                  <h2 className='text-lg font-bold mb-1'>车辆电池</h2>
-                  <motion.div
-                    className='!w-full h-px'
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                  >
-                    <div
-                      className='w-full h-full'
-                      style={{
-                        background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)',
-                      }}
-                    />
-                  </motion.div>
-                </div>
-                {/* 车辆电池电压 */}
-                <div className='flex flex-col gap-4 mt-4'>
-                  <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-yellow-400/20 px-4 py-2'>
-                    <div className='text-sm text-yellow-400 font-bold flex items-end gap-2'>
-                      <SvgIcon name='volt' size={32} />
-                      电压
+                    <div className='text-sm opacity-70'>10002912</div>
+                  </div>
+                  <div className='flex flex-col items-center justify-center relative'>
+                    <div className='text-sm font-bold flex gap-1 items-center'>
+                      <ColumnWidthOutlined />
+                      位置偏差(mm)
                     </div>
-                    <div className='text-sm font-bold'>22.8V</div>
+                    <div className='text-sm opacity-70'>x:2300 y:2300 </div>
                   </div>
-                  <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-yellow-400/20 px-4 py-2'>
-                    <div className='text-sm text-yellow-400 font-bold flex items-end gap-2'>
-                      <SvgIcon name='ampere' size={32} />
-                      电流
+                  <div className='flex flex-col items-center justify-center relative'>
+                    <div className='text-sm font-bold flex gap-1 items-center'>
+                      <AppstoreOutlined />
+                      充电类型
                     </div>
-                    <div className='text-sm font-bold'>22.8A</div>
+                    <div className='text-sm opacity-70'>自动充电</div>
                   </div>
-                  <div className='w-full h-12  rounded-md flex items-end justify-between shadow-md shadow-yellow-400/20 px-4 py-2'>
-                    <div className='text-sm text-yellow-400 font-bold flex items-end gap-2'>
-                      <SvgIcon name='celsius' size={32} />
-                      温度
+                  <div className='flex flex-col items-center justify-center relative'>
+                    <div className='text-sm font-bold flex gap-1 items-center'>
+                      <DotChartOutlined />
+                      目标电量
                     </div>
-                    <div className='text-sm font-bold'>22.8℃</div>
+                    <div className='text-sm opacity-70'>99%</div>
                   </div>
-                  <div className='flex items-center gap-4'>
-                    <Button
-                      variant='solid'
-                      color='yellow'
-                      onClick={() => {
-                        setIsVehicle(true);
-                        setProcessItems([...processItems, vehicleItems()]);
-                      }}
-                    >
-                      发送信号
-                    </Button>
-                    <Button
-                      variant='solid'
-                      color='green'
-                      onClick={() => {
-                        setIsStation(false);
-                        setIsVehicle(false);
-                        setPowerStatus({
-                          power: 50,
-                          charge_status: 4,
-                        });
-                      }}
-                    >
-                      开始充电
-                    </Button>
-                    <Button
-                      variant='solid'
-                      color='red'
-                      onClick={() => {
-                        setIsStation(false);
-                        setIsVehicle(false);
-                        setPowerStatus({
-                          power: 0,
-                          charge_status: 0,
-                        });
-                      }}
-                    >
-                      停止充电
-                    </Button>
-                  </div>
-                </div>
-              </motion.div>
+                </Stack>
+              </div>
+              {/* 刷版动画 */}
+              <AnimateBrush />
             </div>
           </div>
-        </>
-      ) : (
-        <Result
-          className='w-full flex flex-col items-center justify-center'
-          status='success'
-          title='没有充电任务'
-          subTitle='是否立刻下发充电任务？'
-          icon={<SvgIcon name='stationNodata' size={380} />}
-          extra={
-            <Button
-              type='primary'
-              onClick={() => {
-                modal.confirm({
-                  content: (
-                    <div>
-                      <div>1.请确认AGV已经移动到充电桩。</div>
-                      <div>2.请确认充电桩已经上电。</div>
-                    </div>
-                  ),
-                  okText: '确定',
-                  cancelText: '取消',
-                  onOk() {
-                    setHasTask(true);
-                  },
-                  onCancel() {
-                    console.log('Cancel');
-                  },
-                });
-              }}
-            >
-              立即充电
-            </Button>
-          }
-        />
-      )}
+        )}
+      </div>
       {contextHolder}
     </div>
   );
