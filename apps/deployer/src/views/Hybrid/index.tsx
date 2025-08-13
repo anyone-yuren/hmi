@@ -367,7 +367,7 @@ const Mapping = () => {
               },
             })}
           >
-            <Paper className='flex items-baseline flex-col justify-between absolute  w-[220px] z-[9999] text-black p-2 left-2 top-2'>
+            <Paper className='flex items-baseline flex-col justify-between absolute  w-[220px] z-[999] text-black p-2 left-2 top-2'>
               <HybirdStatus />
               <PositionView />
               <>
@@ -382,6 +382,11 @@ const Mapping = () => {
                       '& .MuiSelect-select': {
                         color: 'black',
                         fontSize: '14px',
+                        // position: 'relative',
+                        // zIndex: 1000,
+                      },
+                      '& .MuiPaper-root': {
+                        zIndex: 1000,
                       },
                     }}
                   >
@@ -406,7 +411,7 @@ const Mapping = () => {
                     <ToggleButton value="slam">slam导航</ToggleButton>
                   </ToggleButtonGroup> */}
               </>
-              <OnlinePoint />
+              {<OnlinePoint />}
             </Paper>
           </ThemeProvider>
           <Button
