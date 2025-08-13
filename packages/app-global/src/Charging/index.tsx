@@ -18,6 +18,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useAgvType } from '../hooks/useAgvType';
 import AnimateBrush from './components/animateBrush';
 import AnimateCharging from './components/animateCharging';
+import ChargingHistory from './components/chargingHistory';
 import { getPeripheralControlParam, postPeripheralControlParam } from './services';
 const useStyles = createStyles(({ css }) => ({
   line: css`
@@ -38,6 +39,7 @@ const getImage = (imageName: string) => {
 const Charging = () => {
   const [modal, contextHolder] = Modal.useModal();
   const [lowPower, setLowPower] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const { setPowerStatus, powerStatus } = useVehicleStore(
     useShallow((state) => {
       return {
@@ -171,12 +173,12 @@ const Charging = () => {
                   <Typography.Text className='!m-0 opacity-70'>23421 (min)</Typography.Text>
                 </div>
               </div>
-              {/* <div>
+              <div>
                 <div className='bg-white/10 p-2 flex justify-between rounded-md'>
-                  <Typography.Text className='!m-0 font-bold '>行驶里程</Typography.Text>
-                  <Typography.Text className='!m-0 opacity-70'>24 (km)</Typography.Text>
+                  <Typography.Text className='!m-0 font-bold '>累计充电度数</Typography.Text>
+                  <Typography.Text className='!m-0 opacity-70'>24 (kWh)</Typography.Text>
                 </div>
-              </div> */}
+              </div>
               <div className='bg-white/10 rounded-md'>
                 <div className=' p-2 flex justify-between '>
                   <Typography.Text className='!m-0 font-bold '>低电量报警</Typography.Text>
@@ -244,12 +246,23 @@ const Charging = () => {
             </div>
           </div>
           <div className='flex justify-end gap-2'>
-            <Button type='primary' onClick={() => {}}>
+            <Button
+              type='primary'
+              onClick={() => {
+                setShowHistory(true);
+              }}
+            >
               充电记录
             </Button>
             <Button color='yellow' variant='solid'>
               异常记录
             </Button>
+            <ChargingHistory
+              open={showHistory}
+              onClose={() => {
+                setShowHistory(false);
+              }}
+            />
           </div>
         </motion.div>
       </div>
@@ -347,7 +360,7 @@ const Charging = () => {
                       <ColumnWidthOutlined />
                       位置偏差(mm)
                     </div>
-                    <div className='text-sm opacity-70'>x:2300 y:2300 </div>
+                    <div className='text-sm opacity-70'>x:2300 y:2300 4°</div>
                   </div>
                   <div className='flex flex-col items-center justify-center relative'>
                     <div className='text-sm font-bold flex gap-1 items-center'>

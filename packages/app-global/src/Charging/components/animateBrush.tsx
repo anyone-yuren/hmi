@@ -137,6 +137,23 @@ const AnimateBrush = (props) => {
         >
           测试停止
         </Button>
+        <Button
+          variant='solid'
+          color='yellow'
+          size='small'
+          onClick={() => {
+            setVehicleChargingData([
+              ...vehicleChargingData,
+              {
+                key: '3',
+                message: '车辆发送光电',
+                time: '2023-01-01 12:00:00',
+              },
+            ]);
+          }}
+        >
+          加数据
+        </Button>
       </div>
       {/* 小车 */}
       <div className='flex-1 relative'>
