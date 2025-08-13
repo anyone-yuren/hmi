@@ -255,7 +255,7 @@ const Charging = () => {
       </div>
       {/* 电池模块 */}
       <div className='flex gap-4 items-center flex-1 '>
-        {!hasTask ? (
+        {hasTask ? (
           <div className='p-[2px] w-full h-full rounded-2xl bg-white/10 relative flex flex-col gap-2'>
             <div className='flex h-full items-center justify-between p-2  shadow-sm rounded-2xl'>
               <Result
@@ -306,7 +306,7 @@ const Charging = () => {
                   <div className=''>22.8A</div>
                 </div>
                 <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
-                  <SvgIcon name='celsius' size={32} />
+                  <SvgIcon name='brush' size={32} />
                   <div className=''>22.8℃</div>
                 </div>
               </div>
@@ -352,7 +352,7 @@ const Charging = () => {
               </div>
             </div>
             {/* 充电任务 */}
-            <div className='flex flex-1  rounded-2xl bg-white/10 flex-col'>
+            <div className='flex flex-1  rounded-2xl bg-white/10 flex-col overflow-y-auto'>
               <div className='w-full'>
                 <Stack
                   className='flex p-4 flex-1 items-center justify-between'
