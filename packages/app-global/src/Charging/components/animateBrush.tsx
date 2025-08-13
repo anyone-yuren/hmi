@@ -22,14 +22,20 @@ const AnimateBrush = () => {
       </div>
       {/* 小车 */}
       <div className='flex-1 relative'>
-        <div className='absolute top-1/4 right-8 w-1/4 h-2/3 bg-gradient-to-l from-white/40 to-white/0 [perspective:300px]'>
+        <div
+          className='absolute top-1/4  w-1/4 h-2/3 bg-gradient-to-l from-white/40 to-white/0 [perspective:300px]'
+          style={{ right: '32px' }}
+        >
           <div className='w-1 h-20 bg-white/80 absolute top-1/2 -right-1'></div>
           <div className='w-1 h-20 absolute top-1/2 -right-2   bg-white/80 [clip-path:polygon(-10%_0%,100%_3%,100%_97%,-10%_100%)]'></div>
         </div>
       </div>
       {/* 刷版 */}
       <div className='flex-1 relative'>
-        <div className='absolute top-1/4 left-8 w-1/4 h-2/3 bg-gradient-to-r from-teal-400/40 to-white/0'>
+        <div
+          className='absolute top-1/4  w-1/4 h-2/3 bg-gradient-to-r from-teal-400/40 to-white/0'
+          style={{ left: '32px' }}
+        >
           {/* 三色灯 */}
           <div className='absolute top-2 left-2 w-6 h-16 bg-white/80 rounded-full flex flex-col justify-between items-center '>
             <div className='flex-1 flex items-center justify-between relative'>
@@ -115,10 +121,28 @@ const AnimateBrush = () => {
               <div className='w-3 h-3 bg-green-500 rounded-full absolute left-1/2 -translate-x-1/2'></div>
             </div>
           </div>
-          <div className='w-2 h-20 absolute top-1/2 -left-4'>
+          {/* 充电桩机械臂 */}
+          <motion.div
+            initial={{ x: -16 }}
+            animate={{ x: -64 }}
+            transition={{ duration: 1.5 }}
+            className='w-2 h-20 absolute top-1/2'
+          >
             <div className='bg-white/70 w-4 h-24 absolute -top-2'></div>
-            <div className='w-2 h-full bg-black'></div>
-          </div>
+            <div className='w-2 h-full bg-black/30 absolute'></div>
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: 48 }}
+              transition={{ duration: 1.5 }}
+              className='h-2 bg-white/60 absolute top-2 left-4'
+            ></motion.div>
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: 48 }}
+              transition={{ duration: 1.5 }}
+              className='h-2 bg-white/60 absolute bottom-2 left-4'
+            ></motion.div>
+          </motion.div>
         </div>
       </div>
     </div>
