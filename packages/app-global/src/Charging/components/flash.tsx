@@ -6,12 +6,15 @@ interface FlashProps {
 const Flash = (props: FlashProps) => {
   const { type } = props;
   const shadow =
-    type === 'car' ? 'shadow-[0_0_4px_2px_rgba(255,45,45,1)]' : 'shadow-[0_0_10px_2px_rgba(45,212,191,0.8)]';
+    type === 'car' ? 'shadow-[0_0_4px_2px_rgba(255,255,255,0.4)]' : 'shadow-[0_0_10px_2px_rgba(255,255,255,0.4)]';
 
   return (
     <>
       <motion.div
-        className={`relative w-full h-1 top-1  ${shadow} z-20`}
+        className={`relative w-full h-1 top-1 ${shadow} z-40`}
+        style={{
+          background: type === 'car' ? 'rgba(255,0,0,0.7)' : 'rgba(255,255,0, 0.7)',
+        }}
         animate={{
           opacity: [1, 0.8, 1],
         }}
@@ -26,7 +29,7 @@ const Flash = (props: FlashProps) => {
             key={index}
             className={`absolute w-1 h-1 top-1/2 -translate-y-1/2 rounded-full`}
             style={{
-              backgroundColor: type === 'car' ? 'red' : 'rgb(45,212,191)',
+              backgroundColor: type === 'car' ? 'red' : 'rgb(255,255,0)',
             }}
             initial={{ left: type === 'car' ? '0%' : '100%', opacity: 0 }}
             animate={{ left: type === 'car' ? '100%' : '0%', opacity: 1 }}

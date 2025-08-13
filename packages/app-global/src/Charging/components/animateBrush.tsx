@@ -36,7 +36,7 @@ const AnimateBrush = (props) => {
   >([]);
   return (
     <div className='w-full flex flex-1  relative'>
-      <div className='absolute flex gap-2 p-4 z-10'>
+      <div className='absolute flex gap-2 p-4 z-10 '>
         <Button
           type='primary'
           size='small'
@@ -158,13 +158,13 @@ const AnimateBrush = (props) => {
       {/* 小车 */}
       <div className='flex-1 relative'>
         <div
-          className='absolute top-1/4  w-1/3 h-2/3 bg-gradient-to-l from-white/40 to-white/0'
+          className='absolute  z-40 top-1/2 -translate-y-1/2 w-1/3 h-2/3 bg-gradient-to-l from-white/40 to-white/0'
           style={{ right: '80px' }}
         >
           {/* 俯视截面 */}
           <div className='w-12 h-[calc(100%+4px)] absolute -top-[2px] -right-12  bg-gradient-to-r from-white/40 to-white/10 [clip-path:polygon(-10%_0%,100%_6%,100%_94%,-10%_100%)]'></div>
           {/* 传感器 */}
-          <div className='w-1 h-20 absolute top-1/2 -right-10 flex flex-col justify-between'>
+          <div className='w-1 h-20 absolute top-1/2 -right-10 flex flex-col justify-between z-40'>
             <div className='w-1 h-3 bg-gradient-to-r from-white/80 to-white/40 rounded-[1px]'>
               <div
                 className='absolute top-0'
@@ -204,7 +204,7 @@ const AnimateBrush = (props) => {
       {/* 刷版 */}
       <div className='flex-1 relative'>
         <div
-          className='absolute top-1/4  w-1/3 h-2/3 bg-gradient-to-r from-teal-400/60 to-white/0'
+          className='absolute top-1/2 -translate-y-1/2 w-1/3 h-2/3 bg-gradient-to-r from-teal-400/60 to-white/0'
           style={{ left: '80px' }}
         >
           {/* 开关 */}
