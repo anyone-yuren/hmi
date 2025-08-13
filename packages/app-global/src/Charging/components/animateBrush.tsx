@@ -163,19 +163,26 @@ const AnimateBrush = (props) => {
         >
           {/* 俯视截面 */}
           <div className='w-12 h-[calc(100%+4px)] absolute -top-[2px] -right-12  bg-gradient-to-r from-white/40 to-white/10 [clip-path:polygon(-10%_0%,100%_6%,100%_94%,-10%_100%)]'></div>
+          {/* 传感器 */}
+          <div className='w-1 h-20 absolute top-1/2 -right-10 flex flex-col justify-between'>
+            <div className='w-1 h-3 bg-gradient-to-r from-white/80 to-white/40 rounded-[1px]'>
+              <div
+                className='absolute top-0'
+                style={{
+                  width: '92px',
+                  right: '-92px',
+                }}
+              >
+                {isBrush && <Flash type='car' />}
+              </div>
+            </div>
+            <div className='w-1 h-3 bg-gradient-to-r from-white/80 to-white/40 rounded-[1px]'></div>
+          </div>
           <div className='w-1 h-20 bg-white/80 absolute top-1/2 -right-12'></div>
           <div className='w-1 h-20 absolute top-1/2 -right-12 translate-x-1 bg-white/30 [clip-path:polygon(-10%_0%,100%_3%,100%_97%,-10%_100%)]'></div>
-          <div
-            className='absolute top-1/3 -translate-y-1/2'
-            style={{
-              width: '80px',
-              right: '-80px',
-            }}
-          >
-            {isBrush && <Flash type='car' />}
-          </div>
+
           {/* 充电信息 */}
-          <div className='absolute -left-1/2 flex flex-col divide-y divide-slate-400/40'>
+          <div className='absolute -left-full flex flex-col divide-y divide-slate-400/40'>
             {vehicleChargingData.map((item, index) => (
               <motion.div
                 className='py-2'
@@ -208,6 +215,21 @@ const AnimateBrush = (props) => {
           </div>
           {/* 俯视截面 */}
           <div className='w-12 h-full absolute top-0 -left-12  bg-gradient-to-l  from-teal-400/60 to-teal-600/10 [clip-path:polygon(-10%_6%,100%_0%,100%_100%,-10%_94%)]'></div>
+          {/* 传感器 */}
+          <div className='w-1 h-20 absolute top-1/2 -left-7 flex flex-col justify-between'>
+            <div className='w-1 h-3 bg-gradient-to-l from-white/80 to-white/40 rounded-[1px]'></div>
+            <div className='w-1 h-3 bg-gradient-to-l from-white/80 to-white/40 rounded-[1px] relative'>
+              <div
+                className='absolute top-0'
+                style={{
+                  width: '92px',
+                  left: '-92px',
+                }}
+              >
+                {isStation && <Flash type='brush' />}
+              </div>
+            </div>
+          </div>
           {/* 充电桩机械臂 */}
           <motion.div
             initial={{ x: -16 }}
@@ -215,7 +237,7 @@ const AnimateBrush = (props) => {
             transition={{ duration: 1.5 }}
             className='w-2 h-20 absolute top-1/2 -left-8'
           >
-            <div className='bg-white/70 w-4 h-24 absolute -top-2'></div>
+            <div className='w-4 h-24 absolute -top-2 bg-gradient-to-l from-white/80 to-white/50'></div>
             <div className='w-2 h-full bg-black/30 absolute'></div>
             <motion.div
               initial={{ width: 0 }}
@@ -230,17 +252,8 @@ const AnimateBrush = (props) => {
               className='h-2 bg-white/60 absolute bottom-2 left-4'
             ></motion.div>
           </motion.div>
-          <div
-            className='absolute bottom-3 -translate-y-1/2'
-            style={{
-              width: '80px',
-              left: '-80px',
-            }}
-          >
-            {isStation && <Flash type='brush' />}
-          </div>
           {/* 充电信息 */}
-          <div className='absolute -right-1/2 flex flex-col divide-y divide-slate-400/40'>
+          <div className='absolute -right-full flex flex-col divide-y divide-slate-400/40'>
             {stationChargingData.map((item, index) => (
               <motion.div
                 className='py-2'
