@@ -1,19 +1,93 @@
+import { useVehicleStore } from '@gbeata/store';
 import { Button } from 'antd';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import Flash from './flash';
 import LoadingCharging from './loadingCharging';
 
 const AnimateBrush = (props) => {
-  const [threeColor, setThreeColor] = useState('red');
+  const { setPowerStatus, powerStatus } = useVehicleStore(
+    useShallow((state) => {
+      return {
+        setPowerStatus: state.setPowerStatus,
+        powerStatus: state.powerStatus,
+      };
+    }),
+  );
+  const [threeColor, setThreeColor] = useState('green');
   const [isBrush, setIsBrush] = useState(false);
+  const [isStation, setIsStation] = useState(false);
   const [stretch, setStretch] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // 小车是否正在赶路
+  const [isLoading, setIsLoading] = useState(true); // 小车是否正在赶路
+  const [vehicleChargingData, setVehicleChargingData] = useState<
+    {
+      key: string;
+      message: string;
+      time: string;
+    }[]
+  >([]);
+  const [stationChargingData, setStationChargingData] = useState<
+    {
+      key: string;
+      message: string;
+      time: string;
+    }[]
+  >([]);
   return (
-    <div className='w-full flex flex-1 bg-black/10 relative'>
+    <div className='w-full flex flex-1  relative'>
       <div className='absolute flex gap-2 p-4 z-10'>
-        <Button type='primary' size='small' onClick={() => setIsBrush(true)}>
+        <Button
+          type='primary'
+          size='small'
+          onClick={() => {
+            setIsBrush(!isBrush);
+            setIsLoading(false);
+            setVehicleChargingData(
+              isBrush
+                ? []
+                : [
+                    {
+                      key: '1',
+                      message: '车辆发送光电',
+                      time: '2023-01-01 12:00:00',
+                    },
+                    {
+                      key: '2',
+                      message: '等待充电桩伸出',
+                      time: '2023-01-01 12:00:00',
+                    },
+                  ],
+            );
+          }}
+        >
           光电触发
+        </Button>
+        <Button
+          type='primary'
+          size='small'
+          onClick={() => {
+            setIsStation(!isStation);
+            setStretch(true);
+            setStationChargingData(
+              isStation
+                ? []
+                : [
+                    {
+                      key: '1',
+                      message: '充电桩伸出',
+                      time: '2023-01-01 12:00:00',
+                    },
+                    {
+                      key: '2',
+                      message: '等待充电桩发光',
+                      time: '2023-01-01 12:00:00',
+                    },
+                  ],
+            );
+          }}
+        >
+          充电桩光电
         </Button>
         <Button variant='solid' color='yellow' size='small' onClick={() => setThreeColor('yellow')}>
           黄灯
@@ -30,11 +104,44 @@ const AnimateBrush = (props) => {
         <Button variant='solid' color='yellow' size='small' onClick={() => setIsLoading(!isLoading)}>
           准备充电
         </Button>
+        <Button
+          type='primary'
+          size='small'
+          onClick={() => {
+            setThreeColor('yellow');
+            setPowerStatus({
+              power: 50,
+              charge_status: 4,
+            });
+          }}
+        >
+          开始充电
+        </Button>
+        <Button
+          variant='solid'
+          color='red'
+          size='small'
+          onClick={() => {
+            setThreeColor('green');
+            setPowerStatus({
+              power: 0,
+              charge_status: 0,
+            });
+
+            setStationChargingData([]);
+            setVehicleChargingData([]);
+            setIsBrush(false);
+            setStretch(false);
+            setIsStation(false);
+          }}
+        >
+          测试停止
+        </Button>
       </div>
       {/* 小车 */}
       <div className='flex-1 relative'>
         <div
-          className='absolute top-1/4  w-1/4 h-2/3 bg-gradient-to-l from-white/40 to-white/0 [perspective:300px]'
+          className='absolute top-1/4  w-1/3 h-2/3 bg-gradient-to-l from-white/40 to-white/0 [perspective:300px]'
           style={{ right: '40px' }}
         >
           <div className='w-1 h-20 bg-white/80 absolute top-1/2 -right-1'></div>
@@ -46,14 +153,32 @@ const AnimateBrush = (props) => {
               right: '-80px',
             }}
           >
-            <Flash type='car' />
+            {isBrush && <Flash type='car' />}
+          </div>
+          {/* 充电信息 */}
+          <div className='absolute -left-1/2 flex flex-col divide-y divide-slate-400/40'>
+            {vehicleChargingData.map((item, index) => (
+              <motion.div
+                className='py-2'
+                key={item.key}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.5 * index,
+                }}
+              >
+                <div className='text-white font-bold'>{item.message}</div>
+                <div className='text-xs text-white/50'>{item.time}</div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>
       {/* 刷版 */}
       <div className='flex-1 relative'>
         <div
-          className='absolute top-1/4  w-1/4 h-2/3 bg-gradient-to-r from-teal-400/40 to-white/0'
+          className='absolute top-1/4  w-1/3 h-2/3 bg-gradient-to-r from-teal-400/40 to-white/0'
           style={{ left: '40px' }}
         >
           {/* 三色灯 */}
@@ -152,7 +277,25 @@ const AnimateBrush = (props) => {
               left: '-80px',
             }}
           >
-            <Flash type='brush' />
+            {isStation && <Flash type='brush' />}
+          </div>
+          {/* 充电信息 */}
+          <div className='absolute -right-1/2 flex flex-col divide-y divide-slate-400/40'>
+            {stationChargingData.map((item, index) => (
+              <motion.div
+                className='py-2'
+                key={item.key}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.5 * index,
+                }}
+              >
+                <div className='text-white font-bold'>{item.message}</div>
+                <div className='text-xs text-white/50'>{item.time}</div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>

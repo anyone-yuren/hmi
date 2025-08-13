@@ -255,7 +255,7 @@ const Charging = () => {
       </div>
       {/* 电池模块 */}
       <div className='flex gap-4 items-center flex-1 '>
-        {hasTask ? (
+        {!hasTask ? (
           <div className='p-[2px] w-full h-full rounded-2xl bg-white/10 relative flex flex-col gap-2'>
             <div className='flex h-full items-center justify-between p-2  shadow-sm rounded-2xl'>
               <Result
@@ -324,31 +324,6 @@ const Charging = () => {
                   </Typography.Text>
                 </div>
                 <span className='text-xs text-white/50'>总充电次数包含已充满次数和异常次数</span>
-              </div>
-              <div className='flex gap-2'>
-                <Button
-                  type='primary'
-                  onClick={() => {
-                    setPowerStatus({
-                      power: 50,
-                      charge_status: 4,
-                    });
-                  }}
-                >
-                  测试充电
-                </Button>
-                <Button
-                  variant='solid'
-                  color='red'
-                  onClick={() => {
-                    setPowerStatus({
-                      power: 0,
-                      charge_status: 0,
-                    });
-                  }}
-                >
-                  测试停止
-                </Button>
               </div>
             </div>
             {/* 充电任务 */}

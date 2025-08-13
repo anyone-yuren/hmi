@@ -5,6 +5,8 @@ const useStyles = createStyles(({ css, token }) => ({
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
+    gap: 10px;
     position: absolute;
     align-items: center;
     justify-content: center;
@@ -81,6 +83,7 @@ const LoadingCharging = () => {
   return (
     <div className={styles.loadingContainer}>
       <div className='loader'></div>
+      <p>正在赶往充电...</p>
     </div>
   );
 };
