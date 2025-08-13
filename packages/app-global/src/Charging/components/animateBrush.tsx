@@ -158,11 +158,13 @@ const AnimateBrush = (props) => {
       {/* 小车 */}
       <div className='flex-1 relative'>
         <div
-          className='absolute top-1/4  w-1/3 h-2/3 bg-gradient-to-l from-white/40 to-white/0 [perspective:300px]'
-          style={{ right: '40px' }}
+          className='absolute top-1/4  w-1/3 h-2/3 bg-gradient-to-l from-white/40 to-white/0'
+          style={{ right: '80px' }}
         >
-          <div className='w-1 h-20 bg-white/80 absolute top-1/2 -right-1'></div>
-          <div className='w-1 h-20 absolute top-1/2 -right-2   bg-white/80 [clip-path:polygon(-10%_0%,100%_3%,100%_97%,-10%_100%)]'></div>
+          {/* 俯视截面 */}
+          <div className='w-12 h-[calc(100%+4px)] absolute -top-[2px] -right-12  bg-gradient-to-r from-white/40 to-white/10 [clip-path:polygon(-10%_0%,100%_6%,100%_94%,-10%_100%)]'></div>
+          <div className='w-1 h-20 bg-white/80 absolute top-1/2 -right-12'></div>
+          <div className='w-1 h-20 absolute top-1/2 -right-12 translate-x-1 bg-white/30 [clip-path:polygon(-10%_0%,100%_3%,100%_97%,-10%_100%)]'></div>
           <div
             className='absolute top-1/3 -translate-y-1/2'
             style={{
@@ -195,98 +197,39 @@ const AnimateBrush = (props) => {
       {/* 刷版 */}
       <div className='flex-1 relative'>
         <div
-          className='absolute top-1/4  w-1/3 h-2/3 bg-gradient-to-r from-teal-400/40 to-white/0'
-          style={{ left: '40px' }}
+          className='absolute top-1/4  w-1/3 h-2/3 bg-gradient-to-r from-teal-400/60 to-white/0'
+          style={{ left: '80px' }}
         >
-          {/* 三色灯 */}
-          <div className='absolute top-2 left-2 w-6 h-16 bg-white/80 rounded-full flex flex-col justify-between items-center '>
+          {/* 开关 */}
+          <div className='absolute top-8 left-1/2 translate-x-1/2 w-6 h-6 bg-gradient-to-r from-yellow-500 to-yellow-700/40 rounded-full flex flex-col justify-between items-center '>
             <div className='flex-1 flex items-center justify-between relative'>
-              {threeColor === 'red' && (
-                <motion.div
-                  className='w-3 h-3 bg-red-500 rounded-full shadow-[0_0_30px_10px_rgba(255,0,0,0.8)]'
-                  initial={{
-                    opacity: 0.8,
-                    scale: 1,
-                  }}
-                  // 动画状态
-                  animate={{
-                    // 透明度波动
-                    opacity: [0.8, 1, 0.8],
-                    scale: [1, 1.3, 1],
-                  }}
-                  transition={{
-                    duration: 1,
-                    repeat: Infinity,
-                    repeatType: 'loop' as const,
-                  }}
-                ></motion.div>
-              )}
-              <div className='w-3 h-3 bg-red-500 rounded-full absolute left-1/2 -translate-x-1/2'></div>
-            </div>
-            <div className='flex-1 flex items-center justify-between'>
-              {threeColor === 'yellow' && (
-                <motion.div
-                  className='w-3 h-3 bg-yellow-500 rounded-full shadow-[0_0_30px_10px_rgba(255,255,0,0.8)]'
-                  initial={{
-                    opacity: 0.8,
-                    scale: 1,
-                  }}
-                  animate={{
-                    opacity: [0.8, 1, 0.8],
-                    scale: [1, 1.3, 1],
-                  }}
-                  transition={{
-                    duration: 1,
-                    repeat: Infinity,
-                  }}
-                ></motion.div>
-              )}
-              <div className='w-3 h-3 bg-yellow-500 rounded-full absolute left-1/2 -translate-x-1/2'></div>
-            </div>
-            <div className='flex-1 flex items-center justify-between'>
-              {threeColor === 'green' && (
-                <motion.div
-                  className='w-3 h-3 bg-green-500 rounded-full shadow-[0_0_30px_10px_rgba(0,255,0,0.8)]'
-                  initial={{
-                    opacity: 0.8,
-                    scale: 1,
-                  }}
-                  animate={{
-                    opacity: [0.8, 1, 0.8],
-                    scale: [1, 1.3, 1],
-                  }}
-                  transition={{
-                    duration: 1,
-                    repeat: Infinity,
-                  }}
-                ></motion.div>
-              )}
-              <div className='w-3 h-3 bg-green-500 rounded-full absolute left-1/2 -translate-x-1/2'></div>
+              <div className='w-3 h-3 bg-gradient-to-r from-red-500 to-red-800 rounded-full absolute left-1/2 -translate-x-1/2 shadow-[1px_0_10px_1px_rgba(0,0,0,0.8)]'></div>
             </div>
           </div>
+          {/* 俯视截面 */}
+          <div className='w-12 h-full absolute top-0 -left-12  bg-gradient-to-l  from-teal-400/60 to-teal-600/10 [clip-path:polygon(-10%_6%,100%_0%,100%_100%,-10%_94%)]'></div>
           {/* 充电桩机械臂 */}
           <motion.div
             initial={{ x: -16 }}
-            animate={stretch ? { x: -80 } : { x: -16 }}
+            animate={stretch ? { x: -84 } : { x: -16 }}
             transition={{ duration: 1.5 }}
-            className='w-2 h-20 absolute top-1/2'
+            className='w-2 h-20 absolute top-1/2 -left-8'
           >
             <div className='bg-white/70 w-4 h-24 absolute -top-2'></div>
             <div className='w-2 h-full bg-black/30 absolute'></div>
             <motion.div
               initial={{ width: 0 }}
-              animate={stretch ? { width: 64 } : { width: 0 }}
+              animate={stretch ? { width: 68 } : { width: 0 }}
               transition={{ duration: 1.5 }}
               className='h-2 bg-white/60 absolute top-2 left-4'
             ></motion.div>
             <motion.div
               initial={{ width: 0 }}
-              animate={stretch ? { width: 64 } : { width: 0 }}
+              animate={stretch ? { width: 68 } : { width: 0 }}
               transition={{ duration: 1.5 }}
               className='h-2 bg-white/60 absolute bottom-2 left-4'
             ></motion.div>
           </motion.div>
-
           <div
             className='absolute bottom-3 -translate-y-1/2'
             style={{
@@ -313,6 +256,10 @@ const AnimateBrush = (props) => {
                 <div className='text-xs text-white/50'>{item.time}</div>
               </motion.div>
             ))}
+          </div>
+          {/* 充电桩上的面板 */}
+          <div className='absolute top-1/2 left-1/2 -translate-y-2 -translate-x-3 w-20 h-24 bg-gradient-to-r from-black/70 to-white/0 rounded-sm p-4'>
+            <div className='w-full h-full bg-gradient-to-r from-white/70 to-white/0 rounded-sm'></div>
           </div>
         </div>
       </div>
