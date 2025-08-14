@@ -14,3 +14,18 @@ export const postPeripheralControlParam = (params: any): Promise<any> => {
 export const postChargingHistory = (params: any): Promise<any> => {
   return post('/mwrobot/get_charge_record', params);
 };
+
+// 累计充电度数
+export const getAccumulatedChargingDegrees = (): Promise<any> => {
+  return get('/mwrobot/get_charge_degree');
+};
+
+// 累计充电次数
+export const getAccumulatedChargingTimes = (): Promise<any> => {
+  return get('/mwrobot/get_charge_times');
+};
+
+// 获取上次满电时间
+export const getLastFullChargeTime = (): Promise<any> => {
+  return get('/mwrobot/get_last_full_battery_time');
+};
