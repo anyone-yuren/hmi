@@ -8,6 +8,7 @@ const useStyles = createStyles(({ css, token }) => ({
     flex-direction: column;
     gap: 10px;
     position: absolute;
+    z-index: 40;
     align-items: center;
     justify-content: center;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 1) 70%);

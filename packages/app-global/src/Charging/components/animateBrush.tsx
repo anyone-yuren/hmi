@@ -36,7 +36,7 @@ const AnimateBrush = (props) => {
   >([]);
   return (
     <div className='w-full flex flex-1  relative'>
-      <div className='absolute flex gap-2 p-4 z-10 '>
+      <div className='absolute flex gap-2 p-4 z-50'>
         <Button
           type='primary'
           size='small'
@@ -89,15 +89,6 @@ const AnimateBrush = (props) => {
         >
           充电桩光电
         </Button>
-        <Button variant='solid' color='yellow' size='small' onClick={() => setThreeColor('yellow')}>
-          黄灯
-        </Button>
-        <Button variant='solid' color='green' size='small' onClick={() => setThreeColor('green')}>
-          绿灯
-        </Button>
-        <Button variant='solid' color='red' size='small' onClick={() => setThreeColor('red')}>
-          红灯
-        </Button>
         <Button variant='solid' color='red' size='small' onClick={() => setStretch(!stretch)}>
           伸缩机械臂
         </Button>
@@ -111,7 +102,7 @@ const AnimateBrush = (props) => {
             setThreeColor('yellow');
             setPowerStatus({
               power: 50,
-              charge_status: 4,
+              charge_status: 3,
             });
           }}
         >
@@ -164,7 +155,7 @@ const AnimateBrush = (props) => {
           {/* 俯视截面 */}
           <div className='w-12 h-[calc(100%+4px)] absolute -top-[2px] -right-12  bg-gradient-to-r from-white/40 to-white/10 [clip-path:polygon(-10%_0%,100%_6%,100%_94%,-10%_100%)]'></div>
           {/* 传感器 */}
-          <div className='w-1 h-20 absolute top-1/2 -right-10 flex flex-col justify-between z-40'>
+          <div className='w-1 h-20 absolute top-1/2 -right-10 flex flex-col justify-between '>
             <div className='w-1 h-3 bg-gradient-to-r from-white/80 to-white/40 rounded-[1px]'>
               <div
                 className='absolute top-0'
@@ -220,7 +211,7 @@ const AnimateBrush = (props) => {
             <div className='w-1 h-3 bg-gradient-to-l from-white/80 to-white/40 rounded-[1px]'></div>
             <div className='w-1 h-3 bg-gradient-to-l from-white/80 to-white/40 rounded-[1px] relative'>
               <div
-                className='absolute top-0'
+                className='absolute top-0 '
                 style={{
                   width: '92px',
                   left: '-92px',
