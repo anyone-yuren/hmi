@@ -152,6 +152,7 @@
       "noGoods": "Pas de marchandise",
       "obsAdjust": "Ajustement du plan d'évitement",
       "obsDistance": "Distance d'arrêt pour éviter un obstacle",
+      "obsScheme": "Type de navigation",
       "obsType": "Type d'évitement",
       "right": "Droite",
       "rightDistance": "Distance de rotation à droite",

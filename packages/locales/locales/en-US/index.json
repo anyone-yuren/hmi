@@ -151,6 +151,7 @@
       "noGoods": "Unavailable",
       "obsAdjust": "Adjustment of obstacle avoidance scheme",
       "obsDistance": "Obstacle avoidance parking distance",
+      "obsScheme": "Navigation type",
       "obsType": "Obstacle avoidance type",
       "right": "Right",
       "rightDistance": "Right-handed distance",
