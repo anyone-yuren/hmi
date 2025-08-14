@@ -21,7 +21,7 @@ import SecondaryPage from './components/SecondaryPage';
 import TaskPanel from './components/TaskPanel';
 import TaskSetting from './components/TaskSetting';
 import WsContainer from './components/wsContainer';
-import './index.css';
+
 import { IMode, IPoint, ISubTaskItem, ITaskItem } from './index.d';
 import { useSingleTaskStore } from './store/singleTask.store';
 import useConstants from './useConstants';
