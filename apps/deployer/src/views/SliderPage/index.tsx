@@ -187,7 +187,14 @@ const SwiperPage = () => {
                 {t('deployer.sliderPage.setting')}
               </Typography.Title>
             </div>
-
+            <div className='flex flex-col items-center justify-center gap-2'>
+              <div className='flex justify-center items-center w-44 h-44  bg-gradient-to-b from-[#0A3D62] to-[#3C6382]  rounded-3xl'>
+                <SvgIcon name={'maintenance'} size={140} />
+              </div>
+              <Typography.Title className='!font-normal' level={3}>
+                {t('deployer.sliderPage.maintenance')}
+              </Typography.Title>
+            </div>
             <div className='flex flex-col items-center justify-center gap-2 invisible'>
               <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
                 <SvgIcon name={'cloud'} size={180} />
@@ -197,14 +204,6 @@ const SwiperPage = () => {
               </Typography.Title>
             </div>
 
-            <div className='flex flex-col items-center justify-center gap-2 invisible'>
-              <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
-                <SvgIcon name={'setting'} size={180} />
-              </div>
-              <Typography.Title className='!font-normal' level={3}>
-                {t('deployer.sliderPage.setting')}
-              </Typography.Title>
-            </div>
             <div className='flex flex-col items-center justify-center gap-2 invisible'>
               <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
                 <SvgIcon name={'setting'} size={180} />

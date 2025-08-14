@@ -369,6 +369,7 @@
       "cloud": "Cloud",
       "diagnosis": "Diagnosis",
       "io": "IOSignal",
+      "maintenance": "Maintenance",
       "navigation": "Navigate",
       "offset": "Offset",
       "safety": "Safe",
