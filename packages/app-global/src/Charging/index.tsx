@@ -284,6 +284,7 @@ const Charging = () => {
                           <div>
                             <div>1.请确认AGV已经移动到充电桩。</div>
                             <div>2.请确认充电桩已经上电。</div>
+                            <div>3.请确保当前车辆处于手动状态。</div>
                           </div>
                         ),
                         okText: '确定',
