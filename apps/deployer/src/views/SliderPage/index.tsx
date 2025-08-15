@@ -187,7 +187,12 @@ const SwiperPage = () => {
                 {t('deployer.sliderPage.setting')}
               </Typography.Title>
             </div>
-            <div className='flex flex-col items-center justify-center gap-2'>
+            <div
+              className='flex flex-col items-center justify-center gap-2'
+              onClick={() => {
+                navigate('/maintenance');
+              }}
+            >
               <div className='flex justify-center items-center w-44 h-44  bg-gradient-to-b from-[#0A3D62] to-[#3C6382]  rounded-3xl'>
                 <SvgIcon name={'maintenance'} size={140} />
               </div>
