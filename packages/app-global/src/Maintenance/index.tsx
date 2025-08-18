@@ -39,14 +39,14 @@ const Maintenance = () => {
   return (
     <div className='flex w-full h-full items-center justify-center gap-4 p-4'>
       <div className='flex flex-1  h-full'>
-        <Sensor loading={loading} data={data?.data?.electronicControlsAndSensors ?? {}} />
+        <Sensor loading={loading} data={data?.data?.electronicControlsAndSensors ?? {}} reload={getMaintenance} />
       </div>
       <div className='flex flex-1  h-full'>
-        <Running loading={loading} data={data?.data?.runningSystem ?? {}} />
+        <Running loading={loading} data={data?.data?.runningSystem ?? {}} reload={getMaintenance} />
       </div>
       <div className='flex flex-1  h-full'>
         {/* 玻璃卡片 */}
-        <Lifting loading={loading} data={data?.data?.liftingSystem ?? {}} />
+        <Lifting loading={loading} data={data?.data?.liftingSystem ?? {}} reload={getMaintenance} />
       </div>
       {resetLoading ? <LoadingReset /> : null}
       {token === 'admin' && <FloatButton shape='circle' icon={<UndoOutlined />} onClick={() => reset()} />}

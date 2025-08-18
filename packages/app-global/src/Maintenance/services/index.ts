@@ -18,3 +18,7 @@ export const getMaintenanceData = (): Promise<any> => {
 export const resetMaintenance = (): Promise<any> => {
   return post('/resetData');
 };
+// 维保
+export const maintenance = (params: { subsystem: number }): Promise<any> => {
+  return post('/alreadyMaintain', params);
+};

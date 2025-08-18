@@ -1,15 +1,26 @@
 import { DoubleRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useGlobalStore } from '@gbeata/store';
-import { Button, Skeleton, Tooltip } from 'antd';
+import { useRequest } from 'ahooks';
+import { App, Button, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
+import { maintenance } from '../services';
+
 interface SensorProps {
   loading: boolean;
   data: any;
+  reload: () => void;
 }
 const Sensor = (props: SensorProps) => {
-  const { loading, data } = props;
+  const { modal } = App.useApp();
+  const { loading, data, reload } = props;
+  const { run: maintain } = useRequest(maintenance, {
+    manual: true,
+    onSuccess: () => {
+      reload();
+    },
+  });
   const { token } = useGlobalStore(
     useShallow((state) => ({
       token: state.token,
@@ -114,6 +125,17 @@ const Sensor = (props: SensorProps) => {
               disabled={loading || !data?.next}
               size='large'
               className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
+              onClick={() => {
+                modal.confirm({
+                  title: '确认维保',
+                  content: '确认维保？',
+                  okText: '确认',
+                  okType: 'primary',
+                  onOk: () => {
+                    maintain({ subsystem: 0 });
+                  },
+                });
+              }}
             >
               维保
             </Button>

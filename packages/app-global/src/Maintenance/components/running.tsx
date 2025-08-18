@@ -7,17 +7,19 @@ import {
 } from '@ant-design/icons';
 import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
-import { Button, Popconfirm, Skeleton, Tooltip } from 'antd';
+import { App, Button, Popconfirm, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
-import { getRunningData } from '../services';
+import { getRunningData, maintenance } from '../services';
 interface Props {
   loading: boolean;
   data: any;
+  reload: () => void;
 }
 const Running = (props: Props) => {
-  const { loading, data } = props;
+  const { loading, data, reload } = props;
+  const { modal } = App.useApp();
   const { token } = useGlobalStore(
     useShallow((state) => ({
       token: state.token,
@@ -29,6 +31,12 @@ const Running = (props: Props) => {
   const milesPercentage = (data?.current?.miles ?? 70) / (data?.condition?.miles ?? 1000);
   const COLORS = [theme.colorSuccessText, theme.colorWarningText, theme.colorErrorText];
   const { data: runningData, loading: runningLoading } = useRequest(getRunningData);
+  const { run: maintain } = useRequest(maintenance, {
+    manual: true,
+    onSuccess: () => {
+      reload();
+    },
+  });
   return (
     <div className='relative w-full h-full rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/25 shadow-[0_25px_80px_-25px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.35)] overflow-hidden'>
       <Tooltip
@@ -177,6 +185,17 @@ const Running = (props: Props) => {
               disabled={loading || !data?.next}
               size='large'
               className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
+              onClick={() => {
+                modal.confirm({
+                  title: '维保',
+                  content: '确认维保吗？',
+                  onOk: () => {
+                    maintain({
+                      subsystem: 1,
+                    });
+                  },
+                });
+              }}
             >
               维保
             </Button>
