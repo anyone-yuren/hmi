@@ -2,12 +2,12 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { Badge, Button, Drawer, List, Tree, TreeDataNode, Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
-import { DrawerClassNames } from 'antd/es/drawer/DrawerPanel';
 import { motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useAgvType } from '../hooks/useAgvType';
+import useDrawerClassName from '../hooks/useDrawerClassName';
 import NodeLogs from './components/nodeLogs';
 import { getNodeLogs } from './services';
 
@@ -36,21 +36,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const useDrawerStyles = createStyles(({ token }) => ({
-  'my-drawer-body': {
-    background: 'transparent',
-  },
-  'my-drawer-header': {
-    background: '#162640',
-  },
-  'my-drawer-footer': {
-    color: token.colorPrimary,
-  },
-  'my-drawer-content': {
-    background: `#162640 !important`,
-  },
-}));
-
 // Vite环境下获取assets/vehicles目录下的所有图片
 const imageModules = import.meta.glob('../assets/vehicles/*', { eager: true });
 
@@ -70,17 +55,10 @@ const getImage = (imageName: string) => {
 const About = () => {
   const { t } = useTranslation();
   const { styles } = useStyles();
-  const { styles: drawerStyles } = useDrawerStyles();
   const theme = useTheme();
   const [openLogs, setLogsOpen] = useState(false);
   const [openNodeLogs, setOpenNodeLogs] = useState(false);
-  const classNames: DrawerClassNames = {
-    body: drawerStyles['my-drawer-body'],
-    mask: drawerStyles['my-drawer-mask'],
-    header: drawerStyles['my-drawer-header'],
-    footer: drawerStyles['my-drawer-footer'],
-    content: drawerStyles['my-drawer-content'],
-  };
+  const classNames = useDrawerClassName();
 
   const agvType = useAgvType();
 

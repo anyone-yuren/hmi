@@ -77,6 +77,10 @@ const router = createHashRouter([
         element: LazyLoad(lazy(() => import('@/views/Charging'))),
       },
       {
+        path: 'maintenance',
+        element: LazyLoad(lazy(() => import('@/views/maintenance'))),
+      },
+      {
         path: '*',
         element: <Navigate to='/404' />,
       },

@@ -1,0 +1,218 @@
+import { useVehicleStore } from '@gbeata/store';
+import { useRequest } from 'ahooks';
+import { Button, Skeleton, Slider, Switch, Typography } from 'antd';
+import { ThemeProvider } from 'antd-style';
+import dayjs from 'dayjs';
+import { motion } from 'framer-motion';
+import { useCallback, useState } from 'react';
+import { SvgIcon } from 'ui';
+import { useShallow } from 'zustand/react/shallow';
+import { useAgvType } from '../../../hooks/useAgvType';
+import {
+  getAccumulatedChargingDegrees,
+  getAccumulatedChargingTimes,
+  getLastFullChargeTime,
+  getPeripheralControlParam,
+  postPeripheralControlParam,
+} from '../../services';
+import ChargingHistory from '../chargingHistory';
+
+// 获取图片函数
+const getImage = (imageName: string) => {
+  return new URL(`./../../../assets/vehicles/${imageName}`, import.meta.url).href;
+};
+const VehicleBattery = () => {
+  const agvType = useAgvType();
+
+  const [pdName, setPdName] = useState(`MW_${agvType}.png`);
+  const productImage = useCallback(() => {
+    return getImage(`${pdName}`);
+  }, [pdName]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [lowPower, setLowPower] = useState(false);
+  const { powerStatus } = useVehicleStore(
+    useShallow((state) => {
+      return {
+        powerStatus: state.powerStatus,
+      };
+    }),
+  );
+  const {
+    run,
+    loading,
+    data: serviceControlParam,
+  } = useRequest(getPeripheralControlParam, {
+    manual: true,
+  });
+
+  const postRun = useRequest(postPeripheralControlParam, {
+    manual: true,
+  });
+
+  const { loading: loadingAccumulatedChargingDegrees, data: accumulatedChargingDegrees } =
+    useRequest(getAccumulatedChargingDegrees);
+  const { loading: loadingAccumulatedChargingTimes, data: accumulatedChargingTimes } =
+    useRequest(getAccumulatedChargingTimes);
+  const { loading: loadingLastFullChargeTime, data: lastFullChargeTime } = useRequest(getLastFullChargeTime);
+  return (
+    <div className='relative h-full rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm flex flex-col w-1/3 gap-4'>
+      <motion.div className='w-full h-full rounded-2xl backdrop-blur-2xl p-4 flex flex-col'>
+        <div className='flex-1 relative'>
+          <div className='w-full'>
+            <h2 className='text-lg font-bold mb-1'>车辆电池</h2>
+            <motion.div
+              className='!w-full h-px'
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+            >
+              <div
+                className='w-full h-full'
+                style={{
+                  background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)',
+                }}
+              />
+            </motion.div>
+          </div>
+          {/* 车辆电池电压 */}
+          <div className='flex flex-row gap-4 mt-4 text-yellow-200'>
+            <div className='rounded-md flex flex-1 items-center flex-col p-4 shadow-md shadow-yellow-400/20 bg-white/10'>
+              <SvgIcon name='volt' size={48} />
+              <div className=''>22.8V</div>
+            </div>
+            <div className='rounded-md flex flex-1 items-center flex-col p-4 shadow-md shadow-yellow-400/20 bg-white/10'>
+              <SvgIcon name='ampere' size={48} />
+              <div className=''>22.8A</div>
+            </div>
+            <div className='rounded-md flex flex-1 items-center flex-col p-4 shadow-md shadow-yellow-400/20 bg-white/10'>
+              <SvgIcon name='celsius' size={48} />
+              <div className=''>22.8℃</div>
+            </div>
+          </div>
+          <div className='mt-4 flex flex-col gap-4'>
+            <div className='bg-white/10 p-2 flex justify-between rounded-md'>
+              <Typography.Text className='!m-0 font-bold '>上次充满时间</Typography.Text>
+              <Typography.Text className='!m-0 opacity-70'>
+                {loadingLastFullChargeTime ? (
+                  <Skeleton.Button active size='small' />
+                ) : lastFullChargeTime?.data?.last_full_battery_time ? (
+                  dayjs(lastFullChargeTime?.data?.last_full_battery_time).format('YYYY-MM-DD HH:mm:ss')
+                ) : (
+                  '-'
+                )}
+              </Typography.Text>
+            </div>
+            <div>
+              <div className='bg-white/10 p-2 flex justify-between rounded-md'>
+                <Typography.Text className='!m-0 font-bold '>充电次数统计</Typography.Text>
+                <Typography.Text className='!m-0 opacity-70'>
+                  {loadingAccumulatedChargingTimes ? (
+                    <Skeleton.Button active size='small' />
+                  ) : (
+                    (accumulatedChargingTimes?.data?.charging_times ?? '-')
+                  )}
+                </Typography.Text>
+              </div>
+              <span className='text-xs text-white/50'>总充电次数包含已充满次数和异常次数</span>
+            </div>
+            <div>
+              <div className='bg-white/10 p-2 flex justify-between rounded-md'>
+                <Typography.Text className='!m-0 font-bold '>累计充电度数</Typography.Text>
+                <Typography.Text className='!m-0 opacity-70'>
+                  {loadingAccumulatedChargingDegrees ? (
+                    <Skeleton.Button active size='small' />
+                  ) : (
+                    (accumulatedChargingDegrees?.data?.charging_degree ?? '-' + '°')
+                  )}
+                </Typography.Text>
+              </div>
+            </div>
+            <div className='bg-white/10 rounded-md'>
+              <div className=' p-2 flex justify-between '>
+                <Typography.Text className='!m-0 font-bold '>低电量报警</Typography.Text>
+                <Typography.Text className='!m-0 opacity-70'>
+                  <Switch
+                    defaultChecked={lowPower}
+                    onChange={(checked) => {
+                      setLowPower(checked);
+                    }}
+                  />
+                </Typography.Text>
+              </div>
+              {lowPower && (
+                <div className='flex flex-row px-4'>
+                  <ThemeProvider
+                    theme={{
+                      components: {
+                        Slider: {
+                          handleSize: 20, // 滑块直径
+                          railSize: 12, // 轨道高度
+                          handleSizeHover: 24,
+                        },
+                      },
+                    }}
+                  >
+                    <Slider
+                      defaultValue={serviceControlParam?.low_power}
+                      className={`swiper-no-swiping w-full m-0`}
+                      min={0}
+                      max={100}
+                      tooltip={
+                        {
+                          // open: true,
+                        }
+                      }
+                      onChangeComplete={(value) => {
+                        postRun.run({
+                          volumn: value,
+                        });
+                      }}
+                    />
+                  </ThemeProvider>
+                </div>
+              )}
+            </div>
+          </div>
+          {/* 车辆图片与充电效果 */}
+          <div className='absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4'>
+            <motion.img
+              src={productImage()}
+              initial={{ filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }}
+              animate={
+                powerStatus.charge_status === 3
+                  ? { filter: 'drop-shadow(0 10px 10px rgba(255,0,255,0.5))' }
+                  : { filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }
+              }
+              transition={
+                powerStatus.charge_status === 3
+                  ? { duration: 1.6, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }
+                  : { duration: 0 }
+              }
+              className='w-full absolute bottom-4 '
+            />
+          </div>
+        </div>
+        <div className='flex justify-end gap-2'>
+          <Button
+            type='primary'
+            onClick={() => {
+              setShowHistory(true);
+            }}
+          >
+            充电记录
+          </Button>
+          <Button color='yellow' variant='solid'>
+            异常记录
+          </Button>
+          <ChargingHistory
+            open={showHistory}
+            onClose={() => {
+              return () => setShowHistory(false);
+            }}
+          />
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+export default VehicleBattery;
