@@ -12,19 +12,24 @@ import { SvgIcon } from 'ui';
 import { getRunningData } from '../services';
 interface Props {
   loading: boolean;
+  data: any;
 }
 const Running = (props: Props) => {
-  const { loading } = props;
+  const { loading, data } = props;
+  const STATUS = ['正常', '已触发', '严重超期'];
   const theme = useTheme();
-  const { data, loading: runningLoading } = useRequest(getRunningData);
+  const datePercentage = (data?.current?.time ?? 182) / (data?.condition?.time ?? 180);
+  const milesPercentage = (data?.current?.miles ?? 70) / (data?.condition?.miles ?? 1000);
+  const COLORS = [theme.colorSuccessText, theme.colorWarningText, theme.colorErrorText];
+  const { data: runningData, loading: runningLoading } = useRequest(getRunningData);
   return (
     <div className='relative w-full h-full rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/25 shadow-[0_25px_80px_-25px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.35)] overflow-hidden'>
       <Tooltip
         title={
           <>
             <div className='text-md font-bold'>维保条件：</div>
-            <div>时长：180天</div>
-            <div>行走公里数：1000公里</div>
+            <div>时长：{data?.condition?.time ?? '-'}天</div>
+            <div>行走公里数：{data?.condition?.miles ?? '-'}公里</div>
           </>
         }
       >
@@ -48,20 +53,24 @@ const Running = (props: Props) => {
           </p>
         </div>
         <div className='flex flex-col w-full items-end justify-center gap-2'>
-          <div className='flex  flex-col items-end'>
+          <div className='flex flex-col items-end'>
             <h4 className='text-xs'>维保状态</h4>
-            {loading ? (
-              <Skeleton.Button active size='small' />
-            ) : (
-              <p className='text-lg font-bold' style={{ color: theme.colorWarningTextHover }}>
-                即将维保
+            {!loading ? (
+              <p className='text-lg font-bold' style={{ color: COLORS[data?.status ?? 1] }}>
+                {STATUS[data?.status ?? 1]}
               </p>
+            ) : (
+              <Skeleton.Button active size='small' />
             )}
           </div>
 
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>已维保次数</h4>
-            {loading ? <Skeleton.Button active size='small' /> : <p className='text-lg font-bold'>2次</p>}
+            {loading ? (
+              <Skeleton.Button active size='small' />
+            ) : (
+              <p className='text-lg font-bold'>{data?.alreadyMaintainTimes ?? '-'}次</p>
+            )}
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>上次维保</h4>
@@ -71,11 +80,11 @@ const Running = (props: Props) => {
               <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
                 <div className='text-xs flex items-center gap-1'>
                   <ScheduleOutlined />
-                  2025-01-01
+                  {data?.history?.[data?.history?.length - 1]?.date ?? '-'}
                 </div>
                 <div className='text-xs flex items-center gap-1'>
                   <LineChartOutlined />
-                  里程 180km
+                  里程 {data?.history?.[data?.history?.length - 1]?.miles ?? '-'}km
                 </div>
               </div>
             )}
@@ -92,11 +101,11 @@ const Running = (props: Props) => {
               <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
                 <div className='text-xs flex items-center gap-1'>
                   <ScheduleOutlined />
-                  2025-07-01
+                  {data?.next?.date ?? '-'}
                 </div>
                 <div className='text-xs flex items-center gap-1'>
                   <LineChartOutlined />
-                  里程 280km
+                  里程 {data?.next?.miles ?? '-'}km
                 </div>
               </div>
             )}
@@ -111,16 +120,19 @@ const Running = (props: Props) => {
                   <LineChartOutlined />
                   {/* <span>0</span> */}
                   <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
-                    <div className='w-1/2 h-full bg-white rounded-full'></div>
+                    <div className='h-full bg-white rounded-full' style={{ width: `${milesPercentage * 100}%` }}></div>
                   </div>
-                  <span>280(km)</span>
+                  <span>{data?.condition?.miles ?? '-'}km</span>
                 </div>
                 <div className='flex flex-1 items-center gap-2'>
                   <ScheduleOutlined />
                   <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
-                    <div className='w-3/4 h-full bg-white rounded-full bg-gradient-to-r from-white to-yellow-400'></div>
+                    <div
+                      className=' h-full bg-white rounded-full bg-gradient-to-r from-white to-yellow-400'
+                      style={{ width: `${datePercentage * 100}%` }}
+                    ></div>
                   </div>
-                  <span>180</span>
+                  <span>{data?.condition?.time ?? '-'}天</span>
                 </div>
               </div>
             )}
@@ -134,15 +146,15 @@ const Running = (props: Props) => {
                   <>
                     <div className='flex items-center gap-2'>
                       <span className='font-bold min-w-24 text-right'>刹车次数：</span>
-                      {data?.data?.braking_times ?? '-'}次
+                      {runningData?.data?.braking_times ?? '-'}次
                     </div>
                     <div className='flex items-center gap-2'>
                       <span className='font-bold min-w-24 text-right'>行走公里数：</span>
-                      {data?.data?.running_distance ?? '-'}米
+                      {runningData?.data?.running_distance ?? '-'}米
                     </div>
                     <div className='flex items-center gap-2'>
                       <span className='font-bold min-w-24 text-right'>运行时间：</span>
-                      {data?.data?.running_seconds ?? '-'}秒
+                      {runningData?.data?.running_seconds ?? '-'}秒
                     </div>
                   </>
                 }
@@ -154,7 +166,7 @@ const Running = (props: Props) => {
         </div>
         <div className='flex gap-3 justify-end'>
           <Button
-            disabled={loading}
+            disabled={loading || !data?.next}
             size='large'
             className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
           >

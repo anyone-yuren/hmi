@@ -7,18 +7,19 @@ import { getMaintenanceData } from './services';
 
 const Maintenance = () => {
   const { data, loading } = useRequest(getMaintenanceData);
+
   const theme = useTheme();
   return (
     <div className='flex w-full h-full items-center justify-center gap-4 p-4'>
       <div className='flex flex-1  h-full'>
-        <Sensor loading={loading} />
+        <Sensor loading={loading} data={data?.data?.electronicControlsAndSensors ?? {}} />
       </div>
       <div className='flex flex-1  h-full'>
-        <Running loading={loading} />
+        <Running loading={loading} data={data?.data?.runningSystem ?? {}} />
       </div>
       <div className='flex flex-1  h-full'>
         {/* 玻璃卡片 */}
-        <Lifting loading={loading} />
+        <Lifting loading={loading} data={data?.data?.liftingSystem ?? {}} />
       </div>
     </div>
   );

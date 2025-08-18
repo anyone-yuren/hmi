@@ -4,17 +4,21 @@ import { useTheme } from 'antd-style';
 import { SvgIcon } from 'ui';
 interface SensorProps {
   loading: boolean;
+  data: any;
 }
 const Sensor = (props: SensorProps) => {
-  const { loading } = props;
+  const { loading, data } = props;
+  const STATUS = ['正常', '已触发', '严重超期'];
   const theme = useTheme();
+  const percentage = (data?.current?.time ?? 70) / (data?.condition?.time ?? 180);
+  const COLORS = [theme.colorSuccessText, theme.colorWarningText, theme.colorErrorText];
   return (
     <div className='relative w-full h-full rounded-3xl bg-white/10 border border-white/25  overflow-hidden'>
       <Tooltip
         title={
           <>
             <div className='text-md font-bold'>维保条件：</div>
-            <div>时长：180天</div>
+            <div>时长：{data?.condition?.time ?? '-'}天</div>
           </>
         }
       >
@@ -42,8 +46,8 @@ const Sensor = (props: SensorProps) => {
           <div className='flex  flex-col items-end'>
             <h4 className='text-xs'>维保状态</h4>
             {!loading ? (
-              <p className='text-lg font-bold' style={{ color: theme.colorSuccessText }}>
-                正常
+              <p className='text-lg font-bold' style={{ color: COLORS[data?.status ?? 0] }}>
+                {STATUS[data?.status ?? 0]}
               </p>
             ) : (
               <Skeleton.Button active size='small' />
@@ -52,15 +56,27 @@ const Sensor = (props: SensorProps) => {
 
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>已维保次数</h4>
-            {!loading ? <p className='text-lg font-bold'>2次</p> : <Skeleton.Button active size='small' />}
+            {!loading ? (
+              <p className='text-lg font-bold'>{data?.alreadyMaintainTimes ?? '-'}次</p>
+            ) : (
+              <Skeleton.Button active size='small' />
+            )}
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>上次维保时间</h4>
-            {!loading ? <p className='text-lg font-bold'>2025-01-01</p> : <Skeleton.Button active size='small' />}
+            {!loading ? (
+              <p className='text-lg font-bold'>{data?.History?.[data?.History?.length - 1]?.date ?? '-'}</p>
+            ) : (
+              <Skeleton.Button active size='small' />
+            )}
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>下次维保时间</h4>
-            {!loading ? <p className='text-lg font-bold'>2025-07-01</p> : <Skeleton.Button active size='small' />}
+            {!loading ? (
+              <p className='text-lg font-bold'>{data?.next?.date ?? '-'}</p>
+            ) : (
+              <Skeleton.Button active size='small' />
+            )}
           </div>
           <div className='flex flex-col items-end w-full'>
             <h4 className='text-md'>当前进度</h4>
@@ -69,7 +85,7 @@ const Sensor = (props: SensorProps) => {
                 <div className='flex w-full items-center gap-2'>
                   <span>0</span>
                   <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
-                    <div className='w-1/2 h-full bg-white rounded-full'></div>
+                    <div className='h-full bg-white rounded-full' style={{ width: `${percentage * 100}%` }}></div>
                   </div>
                   <span>180</span>
                 </div>
@@ -87,7 +103,7 @@ const Sensor = (props: SensorProps) => {
 
         <div className='flex gap-3 justify-end'>
           <Button
-            disabled={loading}
+            disabled={loading || !data?.next}
             size='large'
             className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
           >

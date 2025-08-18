@@ -12,18 +12,23 @@ import { SvgIcon } from 'ui';
 import { getMotorWorkingTime } from '../services';
 interface Props {
   loading: boolean;
+  data: any;
 }
-const Lifting = ({ loading }: Props) => {
-  const { data, loading: workingLoading } = useRequest(getMotorWorkingTime);
+const Lifting = ({ loading, data }: Props) => {
+  const { data: workingData, loading: workingLoading } = useRequest(getMotorWorkingTime);
+  const STATUS = ['正常', '已触发', '严重超期'];
   const theme = useTheme();
+  const datePercentage = (data?.current?.time ?? 282) / (data?.condition?.time ?? 180);
+  const workingPercentage = (data?.current?.workingTime ?? 70) / (data?.condition?.miles ?? 1000);
+  const COLORS = [theme.colorSuccessText, theme.colorWarningText, theme.colorErrorText];
   return (
     <div className='relative w-full h-full rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/25 shadow-[0_25px_80px_-25px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.35)] overflow-hidden'>
       <Tooltip
         title={
           <>
             <div className='text-md font-bold'>维保条件：</div>
-            <div>时长：180天</div>
-            <div>工作时长：6000分钟</div>
+            <div>时长：{data?.condition?.time ?? '-'}天</div>
+            <div>工作时长：{data?.condition?.workingTime ?? '-'}分钟</div>
           </>
         }
       >
@@ -49,8 +54,8 @@ const Lifting = ({ loading }: Props) => {
           <div className='flex  flex-col items-end'>
             <h4 className='text-xs'>维保状态</h4>
             {!loading ? (
-              <p className='text-lg font-bold' style={{ color: theme.colorErrorText }}>
-                维保已过期
+              <p className='text-lg font-bold' style={{ color: COLORS[data?.status ?? 2] }}>
+                {STATUS[data?.status ?? 2]}
               </p>
             ) : (
               <Skeleton.Button active size='small' />
@@ -59,7 +64,11 @@ const Lifting = ({ loading }: Props) => {
 
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>已维保次数</h4>
-            {!loading ? <p className='text-lg font-bold'>2次</p> : <Skeleton.Button active size='small' />}
+            {!loading ? (
+              <p className='text-lg font-bold'>{data?.AlreadyMaintainTimes ?? '-'}次</p>
+            ) : (
+              <Skeleton.Button active size='small' />
+            )}
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>上次维保</h4>
@@ -67,11 +76,11 @@ const Lifting = ({ loading }: Props) => {
               <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
                 <div className='text-xs flex items-center gap-1'>
                   <ScheduleOutlined />
-                  2025-01-01
+                  {data?.history?.[data?.history?.length - 1]?.date ?? '-'}
                 </div>
                 <div className='text-xs flex items-center gap-1'>
                   <ClockCircleOutlined />
-                  运行时间 1080mm
+                  运行时间 {data?.history?.[data?.history?.length - 1]?.workingTime ?? '-'}mm
                 </div>
               </div>
             ) : (
@@ -88,11 +97,11 @@ const Lifting = ({ loading }: Props) => {
               <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
                 <div className='text-xs flex items-center gap-1'>
                   <ScheduleOutlined />
-                  2025-07-01
+                  {data?.next?.date ?? '-'}
                 </div>
                 <div className='text-xs flex items-center gap-1'>
                   <ClockCircleOutlined />
-                  运行时间 2080mm
+                  运行时间 {data?.next?.workingTime ?? '-'}mm
                 </div>
               </div>
             ) : (
@@ -107,16 +116,26 @@ const Lifting = ({ loading }: Props) => {
                   <ClockCircleOutlined />
                   {/* <span>0</span> */}
                   <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
-                    <div className='w-1/2 h-full bg-white rounded-full'></div>
+                    <div
+                      className='h-full bg-white rounded-full'
+                      style={{ width: `${workingPercentage * 100}%` }}
+                    ></div>
                   </div>
-                  <span>280(mm)</span>
+                  <span>{data?.current?.workingTime ?? '-'}mm</span>
                 </div>
                 <div className='flex flex-1 items-center gap-2'>
                   <ScheduleOutlined />
                   <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
-                    <div className='w-3/4 h-full bg-white rounded-full bg-gradient-to-r from-white to-yellow-400'></div>
+                    <div
+                      className={
+                        datePercentage < 1.5
+                          ? 'h-full bg-white rounded-full bg-gradient-to-r from-white to-yellow-400'
+                          : 'h-full bg-white rounded-full bg-gradient-to-r from-white to-red-400'
+                      }
+                      style={{ width: `${(datePercentage > 1 ? 1 : datePercentage) * 100}%` }}
+                    ></div>
                   </div>
-                  <span>180</span>
+                  <span>{data?.condition?.time ?? '-'}mm</span>
                 </div>
               </div>
             ) : (
@@ -132,7 +151,7 @@ const Lifting = ({ loading }: Props) => {
                   <>
                     <div className='flex items-center gap-2'>
                       <span className='font-bold min-w-24 text-right'>工作次数：</span>
-                      {data?.data?.motor_working_times ?? '-'}次
+                      {workingData?.data?.motor_working_times ?? '-'}次
                     </div>
                   </>
                 }
@@ -144,7 +163,7 @@ const Lifting = ({ loading }: Props) => {
         </div>
         <div className='flex gap-3 justify-end'>
           <Button
-            disabled={loading}
+            disabled={loading || !data?.next}
             size='large'
             className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
           >
