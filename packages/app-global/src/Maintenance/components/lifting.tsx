@@ -5,16 +5,24 @@ import {
   QuestionCircleOutlined,
   ScheduleOutlined,
 } from '@ant-design/icons';
+import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
 import { Button, Popconfirm, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
 import { SvgIcon } from 'ui';
+import { useShallow } from 'zustand/react/shallow';
 import { getMotorWorkingTime } from '../services';
+
 interface Props {
   loading: boolean;
   data: any;
 }
 const Lifting = ({ loading, data }: Props) => {
+  const { token } = useGlobalStore(
+    useShallow((state) => ({
+      token: state.token,
+    })),
+  );
   const { data: workingData, loading: workingLoading } = useRequest(getMotorWorkingTime);
   const STATUS = ['正常', '已触发', '严重超期'];
   const theme = useTheme();
@@ -162,13 +170,15 @@ const Lifting = ({ loading, data }: Props) => {
           </div>
         </div>
         <div className='flex gap-3 justify-end'>
-          <Button
-            disabled={loading || !data?.next}
-            size='large'
-            className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
-          >
-            维保
-          </Button>
+          {token === 'admin' && (
+            <Button
+              disabled={loading || !data?.next}
+              size='large'
+              className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
+            >
+              维保
+            </Button>
+          )}
         </div>
       </div>
     </div>
