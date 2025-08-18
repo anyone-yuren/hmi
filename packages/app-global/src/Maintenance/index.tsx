@@ -1,12 +1,39 @@
+import { UndoOutlined } from '@ant-design/icons';
+import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
+import { FloatButton } from 'antd';
 import { useTheme } from 'antd-style';
+import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import Lifting from './components/lifting';
+import LoadingReset from './components/resetLoading';
 import Running from './components/running';
 import Sensor from './components/sensor';
-import { getMaintenanceData } from './services';
+import { getMaintenanceData, resetMaintenance } from './services';
 
 const Maintenance = () => {
-  const { data, loading } = useRequest(getMaintenanceData);
+  const {
+    data,
+    loading,
+    run: getMaintenance,
+  } = useRequest(getMaintenanceData, {
+    manual: true,
+  });
+  const { token } = useGlobalStore(
+    useShallow((state) => ({
+      token: state.token,
+    })),
+  );
+  const { run: reset, loading: resetLoading } = useRequest(resetMaintenance, {
+    manual: true,
+    onSuccess: () => {
+      getMaintenance();
+    },
+  });
+
+  useEffect(() => {
+    getMaintenance();
+  }, []);
 
   const theme = useTheme();
   return (
@@ -21,6 +48,8 @@ const Maintenance = () => {
         {/* 玻璃卡片 */}
         <Lifting loading={loading} data={data?.data?.liftingSystem ?? {}} />
       </div>
+      {resetLoading ? <LoadingReset /> : null}
+      {token === 'admin' && <FloatButton shape='circle' icon={<UndoOutlined />} onClick={() => reset()} />}
     </div>
   );
 };
