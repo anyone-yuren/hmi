@@ -1,12 +1,36 @@
-import { ClockCircleOutlined, DoubleRightOutlined, InfoCircleOutlined, ScheduleOutlined } from '@ant-design/icons';
-import { Tooltip } from 'antd';
+import {
+  ClockCircleOutlined,
+  DoubleRightOutlined,
+  InfoCircleOutlined,
+  QuestionCircleOutlined,
+  ScheduleOutlined,
+} from '@ant-design/icons';
+import { Button, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
 import { SvgIcon } from 'ui';
-
-const Lifting = () => {
+interface Props {
+  loading: boolean;
+}
+const Lifting = ({ loading }: Props) => {
   const theme = useTheme();
   return (
     <div className='relative w-full h-full rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/25 shadow-[0_25px_80px_-25px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.35)] overflow-hidden'>
+      <Tooltip
+        title={
+          <>
+            <div className='text-md font-bold'>维保条件：</div>
+            <div>时长：180天</div>
+            <div>工作时长：6000分钟</div>
+          </>
+        }
+      >
+        <QuestionCircleOutlined
+          className='absolute top-4 right-4 z-20'
+          style={{
+            fontSize: 20,
+          }}
+        />
+      </Tooltip>
       {/* 顶部高光 */}
       <div className='pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-b from-[#d763b7]/100 to-[#462580]'></div>
       {/* 内容 */}
@@ -21,27 +45,35 @@ const Lifting = () => {
         <div className='flex flex-col w-full items-end justify-center gap-2'>
           <div className='flex  flex-col items-end'>
             <h4 className='text-xs'>维保状态</h4>
-            <p className='text-lg font-bold' style={{ color: theme.colorErrorText }}>
-              维保已过期
-            </p>
+            {!loading ? (
+              <p className='text-lg font-bold' style={{ color: theme.colorErrorText }}>
+                维保已过期
+              </p>
+            ) : (
+              <Skeleton.Button active size='small' />
+            )}
           </div>
 
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>已维保次数</h4>
-            <p className='text-lg font-bold'>2次</p>
+            {!loading ? <p className='text-lg font-bold'>2次</p> : <Skeleton.Button active size='small' />}
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>上次维保</h4>
-            <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
-              <div className='text-xs flex items-center gap-1'>
-                <ScheduleOutlined />
-                2025-01-01
+            {!loading ? (
+              <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
+                <div className='text-xs flex items-center gap-1'>
+                  <ScheduleOutlined />
+                  2025-01-01
+                </div>
+                <div className='text-xs flex items-center gap-1'>
+                  <ClockCircleOutlined />
+                  运行时间 1080mm
+                </div>
               </div>
-              <div className='text-xs flex items-center gap-1'>
-                <ClockCircleOutlined />
-                运行时间 1080mm
-              </div>
-            </div>
+            ) : (
+              <Skeleton.Button active size='small' className='!w-36' />
+            )}
           </div>
           <div className='flex flex-col items-end'>
             <Tooltip placement='topRight' title='维保触发条件为：规定使用时间或规定行驶里程，二者以先达到者为准。'>
@@ -49,36 +81,44 @@ const Lifting = () => {
                 下次维保 <InfoCircleOutlined />
               </h4>
             </Tooltip>
-            <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
-              <div className='text-xs flex items-center gap-1'>
-                <ScheduleOutlined />
-                2025-07-01
+            {!loading ? (
+              <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
+                <div className='text-xs flex items-center gap-1'>
+                  <ScheduleOutlined />
+                  2025-07-01
+                </div>
+                <div className='text-xs flex items-center gap-1'>
+                  <ClockCircleOutlined />
+                  运行时间 2080mm
+                </div>
               </div>
-              <div className='text-xs flex items-center gap-1'>
-                <ClockCircleOutlined />
-                运行时间 2080mm
-              </div>
-            </div>
+            ) : (
+              <Skeleton.Button active size='small' className='!w-36' />
+            )}
           </div>
           <div className='flex flex-col items-end w-full'>
             <h4 className='text-md'>当前进度</h4>
-            <div className='flex gap-2 w-full'>
-              <div className='flex flex-1 items-center gap-2'>
-                <ClockCircleOutlined />
-                {/* <span>0</span> */}
-                <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
-                  <div className='w-1/2 h-full bg-white rounded-full'></div>
+            {!loading ? (
+              <div className='flex gap-2 w-full'>
+                <div className='flex flex-1 items-center gap-2'>
+                  <ClockCircleOutlined />
+                  {/* <span>0</span> */}
+                  <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
+                    <div className='w-1/2 h-full bg-white rounded-full'></div>
+                  </div>
+                  <span>280(mm)</span>
                 </div>
-                <span>280(mm)</span>
-              </div>
-              <div className='flex flex-1 items-center gap-2'>
-                <ScheduleOutlined />
-                <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
-                  <div className='w-3/4 h-full bg-white rounded-full bg-gradient-to-r from-white to-yellow-400'></div>
+                <div className='flex flex-1 items-center gap-2'>
+                  <ScheduleOutlined />
+                  <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
+                    <div className='w-3/4 h-full bg-white rounded-full bg-gradient-to-r from-white to-yellow-400'></div>
+                  </div>
+                  <span>180</span>
                 </div>
-                <span>180</span>
               </div>
-            </div>
+            ) : (
+              <Skeleton.Button active size='small' className='!w-full' />
+            )}
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs font-bold cursor-pointer'>
@@ -87,9 +127,13 @@ const Lifting = () => {
           </div>
         </div>
         <div className='flex gap-3 justify-end'>
-          <button className='px-4 py-2 rounded-xl bg-transparent hover:bg-white/10 transition border border-white/25'>
+          <Button
+            disabled={loading}
+            size='large'
+            className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
+          >
             维保
-          </button>
+          </Button>
         </div>
       </div>
     </div>

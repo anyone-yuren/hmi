@@ -1,11 +1,30 @@
-import { DoubleRightOutlined } from '@ant-design/icons';
+import { DoubleRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
 import { SvgIcon } from 'ui';
-
-const Sensor = () => {
+interface SensorProps {
+  loading: boolean;
+}
+const Sensor = (props: SensorProps) => {
+  const { loading } = props;
   const theme = useTheme();
   return (
     <div className='relative w-full h-full rounded-3xl bg-white/10 border border-white/25  overflow-hidden'>
+      <Tooltip
+        title={
+          <>
+            <div className='text-md font-bold'>维保条件：</div>
+            <div>时长：180天</div>
+          </>
+        }
+      >
+        <QuestionCircleOutlined
+          className='absolute top-4 right-4 z-20'
+          style={{
+            fontSize: 20,
+          }}
+        />
+      </Tooltip>
       {/* 顶部高光 */}
       <div className='pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-b from-[#00a0a6]/100 to-transparent'></div>
 
@@ -22,33 +41,41 @@ const Sensor = () => {
         <div className='flex flex-col w-full items-end justify-center gap-2'>
           <div className='flex  flex-col items-end'>
             <h4 className='text-xs'>维保状态</h4>
-            <p className='text-lg font-bold' style={{ color: theme.colorSuccessText }}>
-              正常
-            </p>
+            {!loading ? (
+              <p className='text-lg font-bold' style={{ color: theme.colorSuccessText }}>
+                正常
+              </p>
+            ) : (
+              <Skeleton.Button active size='small' />
+            )}
           </div>
 
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>已维保次数</h4>
-            <p className='text-lg font-bold'>2次</p>
+            {!loading ? <p className='text-lg font-bold'>2次</p> : <Skeleton.Button active size='small' />}
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>上次维保时间</h4>
-            <p className='text-lg font-bold'>2025-01-01</p>
+            {!loading ? <p className='text-lg font-bold'>2025-01-01</p> : <Skeleton.Button active size='small' />}
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>下次维保时间</h4>
-            <p className='text-lg font-bold'>2025-07-01</p>
+            {!loading ? <p className='text-lg font-bold'>2025-07-01</p> : <Skeleton.Button active size='small' />}
           </div>
           <div className='flex flex-col items-end w-full'>
             <h4 className='text-md'>当前进度</h4>
             <div className='w-1/2'>
-              <div className='flex w-full items-center gap-2'>
-                <span>0</span>
-                <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
-                  <div className='w-1/2 h-full bg-white rounded-full'></div>
+              {!loading ? (
+                <div className='flex w-full items-center gap-2'>
+                  <span>0</span>
+                  <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
+                    <div className='w-1/2 h-full bg-white rounded-full'></div>
+                  </div>
+                  <span>180</span>
                 </div>
-                <span>180</span>
-              </div>
+              ) : (
+                <Skeleton.Button active className='!w-full' size='small' />
+              )}
             </div>
           </div>
           <div className='flex flex-col items-end'>
@@ -59,9 +86,13 @@ const Sensor = () => {
         </div>
 
         <div className='flex gap-3 justify-end'>
-          <button className='px-4 py-2 rounded-xl bg-transparent hover:bg-white/10 transition border border-white/25'>
+          <Button
+            disabled={loading}
+            size='large'
+            className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
+          >
             维保
-          </button>
+          </Button>
         </div>
       </div>
     </div>
