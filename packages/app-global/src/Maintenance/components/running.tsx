@@ -9,6 +9,8 @@ import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
 import { App, Button, Popconfirm, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
+import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { getRunningData, maintenance } from '../services';
@@ -19,13 +21,14 @@ interface Props {
 }
 const Running = (props: Props) => {
   const { loading, data, reload } = props;
+  const { t, i18n } = useTranslation();
   const { modal } = App.useApp();
   const { token } = useGlobalStore(
     useShallow((state) => ({
       token: state.token,
     })),
   );
-  const STATUS = ['正常', '已触发', '严重超期'];
+  const STATUS = [t('common.normal'), t('common.triggered'), t('common.severelyExpired')];
   const theme = useTheme();
   const datePercentage = (data?.current?.time ?? 182) / (data?.condition?.time ?? 180);
   const milesPercentage = (data?.current?.miles ?? 70) / (data?.condition?.miles ?? 1000);
@@ -42,9 +45,13 @@ const Running = (props: Props) => {
       <Tooltip
         title={
           <>
-            <div className='text-md font-bold'>维保条件：</div>
-            <div>时长：{data?.condition?.time ?? '-'}天</div>
-            <div>行走公里数：{data?.condition?.miles ?? '-'}公里</div>
+            <div className='text-md font-bold'>{t('common.maintenance.condition')}：</div>
+            <div>
+              {t('common.maintenance.duration')}：{data?.condition?.time ?? '-'} {t('common.maintenance.day')}
+            </div>
+            <div>
+              {t('common.maintenance.miles')}：{data?.condition?.miles ?? '-'} KM
+            </div>
           </>
         }
       >
@@ -59,17 +66,19 @@ const Running = (props: Props) => {
       <div className='pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-b from-[#e47254]/100 to-[#d71752]'></div>
 
       {/* 内容 */}
-      <div className='relative z-10 h-full p-8 flex flex-col justify-between'>
+      <div
+        className={classNames('relative z-10 h-full p-8 flex flex-col justify-between', {
+          '!p-4': i18n.language !== 'zh_CN',
+        })}
+      >
         <div className='flex flex-col w-full items-center justify-center gap-2'>
           <SvgIcon name='running' size={120} />
-          <h3 className='text-xl xl:text-3xl font-semibold tracking-tight'>行走系统</h3>
-          <p className='mt-2 text-white/80 max-w-xl'>
-            移动执行机构，由驱动电机、转向机构、轮组及相应控制器组成，接收电控指令实现前进、后退、转向及调速，保障移动精准性与稳定性。
-          </p>
+          <h3 className='text-xl xl:text-3xl font-semibold tracking-tight'>{t('common.maintenance.running')}</h3>
+          <p className='mt-2 text-white/80 max-w-xl'>{t('common.maintenance.runningDesc')}</p>
         </div>
         <div className='flex flex-col w-full items-end justify-center gap-2'>
           <div className='flex flex-col items-end'>
-            <h4 className='text-xs'>维保状态</h4>
+            <h4 className='text-xs'>{t('common.maintenance.status')}</h4>
             {!loading ? (
               <p className='text-lg font-bold' style={{ color: COLORS[data?.status ?? 1] }}>
                 {STATUS[data?.status ?? 1]}
@@ -80,15 +89,17 @@ const Running = (props: Props) => {
           </div>
 
           <div className='flex flex-col items-end'>
-            <h4 className='text-xs'>已维保次数</h4>
+            <h4 className='text-xs'>{t('common.maintenance.maintainTimes')}</h4>
             {loading ? (
               <Skeleton.Button active size='small' />
             ) : (
-              <p className='text-lg font-bold'>{data?.alreadyMaintainTimes ?? '-'}次</p>
+              <p className='text-lg font-bold'>
+                {data?.alreadyMaintainTimes ?? '-'} {t('common.maintenance.times')}
+              </p>
             )}
           </div>
           <div className='flex flex-col items-end'>
-            <h4 className='text-xs'>上次维保</h4>
+            <h4 className='text-xs'>{t('common.maintenance.lastMaintainTime')}</h4>
             {loading ? (
               <Skeleton.Button active size='small' className='!w-36' />
             ) : (
@@ -99,15 +110,15 @@ const Running = (props: Props) => {
                 </div>
                 <div className='text-xs flex items-center gap-1'>
                   <LineChartOutlined />
-                  里程 {data?.history?.[data?.history?.length - 1]?.miles ?? '-'}km
+                  {t('common.maintenance.miles')} {data?.history?.[data?.history?.length - 1]?.miles ?? '-'}km
                 </div>
               </div>
             )}
           </div>
           <div className='flex flex-col items-end'>
-            <Tooltip placement='topRight' title='维保触发条件为：规定使用时间或规定行驶里程，二者以先达到者为准。'>
+            <Tooltip placement='topRight' title={t('common.maintenance.nextMaintainTimeDesc')}>
               <h4 className='text-xs'>
-                下次维保 <InfoCircleOutlined />
+                {t('common.maintenance.nextMaintainTime')} <InfoCircleOutlined />
               </h4>
             </Tooltip>
             {loading ? (
@@ -120,13 +131,13 @@ const Running = (props: Props) => {
                 </div>
                 <div className='text-xs flex items-center gap-1'>
                   <LineChartOutlined />
-                  里程 {data?.next?.miles ?? '-'}km
+                  {t('common.maintenance.miles')} {data?.next?.miles ?? '-'}km
                 </div>
               </div>
             )}
           </div>
           <div className='flex flex-col items-end w-full'>
-            <h4 className='text-md'>当前进度</h4>
+            <h4 className='text-md'>{t('common.maintenance.progress')}</h4>
             {loading ? (
               <Skeleton.Button active size='small' className='!w-full' />
             ) : (
@@ -147,7 +158,9 @@ const Running = (props: Props) => {
                       style={{ width: `${datePercentage * 100}%` }}
                     ></div>
                   </div>
-                  <span>{data?.condition?.time ?? '-'}天</span>
+                  <span>
+                    {data?.condition?.time ?? '-'} {t('common.maintenance.day')}
+                  </span>
                 </div>
               </div>
             )}
@@ -160,21 +173,21 @@ const Running = (props: Props) => {
                 title={
                   <>
                     <div className='flex items-center gap-2'>
-                      <span className='font-bold min-w-24 text-right'>刹车次数：</span>
-                      {runningData?.data?.braking_times ?? '-'}次
+                      <span className='font-bold min-w-24 text-right'>{t('common.maintenance.brakingTimes')}：</span>
+                      {runningData?.data?.braking_times ?? '-'} {t('common.maintenance.times')}
                     </div>
                     <div className='flex items-center gap-2'>
-                      <span className='font-bold min-w-24 text-right'>行走公里数：</span>
-                      {runningData?.data?.running_distance ?? '-'}米
+                      <span className='font-bold min-w-24 text-right'>{t('common.maintenance.runningDistance')}：</span>
+                      {runningData?.data?.running_distance ?? '-'} KM
                     </div>
                     <div className='flex items-center gap-2'>
-                      <span className='font-bold min-w-24 text-right'>运行时间：</span>
-                      {runningData?.data?.running_seconds ?? '-'}秒
+                      <span className='font-bold min-w-24 text-right'>{t('common.maintenance.runningTime')}：</span>
+                      {runningData?.data?.running_seconds ?? '-'} s
                     </div>
                   </>
                 }
               >
-                更多信息 <DoubleRightOutlined />
+                {t('common.maintenance.maintain')} <DoubleRightOutlined />
               </Popconfirm>
             </h4>
           </div>
