@@ -5,13 +5,16 @@ import {
   QuestionCircleOutlined,
   ScheduleOutlined,
 } from '@ant-design/icons';
-import { Button, Skeleton, Tooltip } from 'antd';
+import { useRequest } from 'ahooks';
+import { Button, Popconfirm, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
 import { SvgIcon } from 'ui';
+import { getMotorWorkingTime } from '../services';
 interface Props {
   loading: boolean;
 }
 const Lifting = ({ loading }: Props) => {
+  const { data, loading: workingLoading } = useRequest(getMotorWorkingTime);
   const theme = useTheme();
   return (
     <div className='relative w-full h-full rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/25 shadow-[0_25px_80px_-25px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.35)] overflow-hidden'>
@@ -122,7 +125,20 @@ const Lifting = ({ loading }: Props) => {
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs font-bold cursor-pointer'>
-              更多信息 <DoubleRightOutlined />
+              <Popconfirm
+                placement='topRight'
+                // title={'维保条件：时长：180天，行走公里数：1000公里'}
+                title={
+                  <>
+                    <div className='flex items-center gap-2'>
+                      <span className='font-bold min-w-24 text-right'>工作次数：</span>
+                      {data?.data?.motor_working_times ?? '-'}次
+                    </div>
+                  </>
+                }
+              >
+                更多信息 <DoubleRightOutlined />
+              </Popconfirm>
             </h4>
           </div>
         </div>
