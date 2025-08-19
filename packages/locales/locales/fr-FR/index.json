@@ -1,17 +1,24 @@
 {
   "common": {
     "about": {
+      "choose": "Veuillez sélectionner un autre journal",
+      "client": "Client",
       "cpu": "CPU",
       "date": "Date de production",
+      "log": "enregistrer",
+      "loglist": "Liste de journaux",
       "logs": "Journal système",
       "memory": "Mémoire",
       "nodes": "Informations sur le nœud système",
+      "nolog": "Pas encore de journaux",
       "serial": "Numéro de série",
-      "vehicleType": "Modèle de voiture"
+      "vehicleType": "Modèle de voiture",
+      "viewlog": "Afficher le journal"
     },
     "action": "Opération",
     "actionSuccess": "Opération réussie",
     "add": "Ajouter",
+    "all": "tous",
     "back": "Retour",
     "backToHome": "Retour à la page d'accueil",
     "cancel": "Annuler",
@@ -33,12 +40,14 @@
       "success": "Charge terminée",
       "waitting": "En attente de charge"
     },
+    "choose": "choisir",
     "close": "Fermer",
     "confirm": "Confirmer",
     "constructionEnd": "Fin de construction",
     "constructionEndTip": "Veuillez vous connecter en premier",
     "delete": "Supprimer",
     "edit": "Modifier",
+    "error": "erreur",
     "errorMsg": {
       "title": "Message d'exception"
     },
@@ -73,6 +82,7 @@
       "timeout": "Délai de requête dépassé, veuillez vérifier votre connexion réseau",
       "withoutAuth": "Non autorisé, veuillez vous reconnecter"
     },
+    "info": "information",
     "login": "Se connecter",
     "loginSuccessTip": "S'il n'y a pas d'opération dans les dix minutes, le système sortira automatiquement!",
     "logoutTip": "Confirmer la connexion?",
@@ -139,6 +149,7 @@
     "pleaseUsername": "Veuillez saisir votre nom d'utilisateur",
     "plsInput": "Veuillez entrer",
     "plsInputParams": "パラメータを入力してください",
+    "refresh": "rafraîchir",
     "save": "Enregistrer",
     "serverError": "Désolé, une erreur s'est produite sur le serveur.",
     "setting": "Paramètres",
@@ -162,7 +173,8 @@
     "tips": "ヒント",
     "triggered": "Déclenché",
     "unauthorized": "Pas de données de carte",
-    "username": "nom d'utilisateur"
+    "username": "nom d'utilisateur",
+    "warn": "avertir"
   },
   "deployer": {
     "diagnosis": {

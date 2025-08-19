@@ -1,17 +1,24 @@
 {
   "common": {
     "about": {
+      "choose": "다른 로그를 선택하십시오",
+      "client": "고객",
       "cpu": "CPU",
       "date": "생산 날짜",
+      "log": "통나무",
+      "loglist": "로그 목록",
       "logs": "시스템 로그",
       "memory": "메모리",
       "nodes": "시스템 노드 정보",
+      "nolog": "아직 통나무가 없습니다",
       "serial": "일련 번호",
-      "vehicleType": "자동차 모델"
+      "vehicleType": "자동차 모델",
+      "viewlog": "로그를 봅니다"
     },
     "action": "조작",
     "actionSuccess": "조작 성공",
     "add": "추가",
+    "all": "모두",
     "back": "돌아오다",
     "backToHome": "홈페이지로 돌아갑니다",
     "cancel": "취소",
@@ -33,12 +40,14 @@
       "success": "충전 완료",
       "waitting": "충전 대기 중"
     },
+    "choose": "선택하다",
     "close": "닫기",
     "confirm": "확인",
     "constructionEnd": "건축 종료",
     "constructionEndTip": "먼저 로그인하십시오",
     "delete": "삭제",
     "edit": "편집",
+    "error": "실수",
     "errorMsg": {
       "title": "예외 메시지"
     },
@@ -73,6 +82,7 @@
       "timeout": "요청 시간 초과, 네트워크 연결을 확인해 주세요",
       "withoutAuth": "인증되지 않았습니다. 다시 로그인해 주세요"
     },
+    "info": "정보",
     "login": "로그인",
     "loginSuccessTip": "10 분 이내에 작동이 없으면 시스템이 자동으로 종료됩니다!",
     "logoutTip": "로그 아웃을 확인 하시겠습니까?",
@@ -139,6 +149,7 @@
     "pleaseUsername": "사용자 이름을 입력하십시오",
     "plsInput": "입력하십시오.",
     "plsInputParams": "파라미터를 입력해주세요",
+    "refresh": "새로 고치다",
     "save": "저장",
     "serverError": "죄송합니다. 서버에서 오류가 발생했습니다.",
     "setting": "설립",
@@ -162,7 +173,8 @@
     "tips": "팁",
     "triggered": "트리거",
     "unauthorized": "지도 데이터가 없습니다",
-    "username": "사용자 이름"
+    "username": "사용자 이름",
+    "warn": "경고하다"
   },
   "deployer": {
     "diagnosis": {

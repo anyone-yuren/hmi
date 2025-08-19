@@ -1,17 +1,24 @@
 {
   "common": {
     "about": {
+      "choose": "请选择其他日志",
+      "client": "客户端",
       "cpu": "CPU",
       "date": "出产日期",
+      "log": "日志",
+      "loglist": "日志列表",
       "logs": "系统日志",
       "memory": "内存",
       "nodes": "系统节点信息",
+      "nolog": "暂无日志",
       "serial": "序列号",
-      "vehicleType": "车型"
+      "vehicleType": "车型",
+      "viewlog": "查看日志"
     },
     "action": "操作",
     "actionSuccess": "操作成功",
     "add": "添加",
+    "all": "全部",
     "back": "返回",
     "backToHome": "返回主页",
     "cancel": "取消",
@@ -33,12 +40,14 @@
       "success": "充电完成",
       "waitting": "等待充电"
     },
+    "choose": "选择",
     "close": "关闭",
     "confirm": "确定",
     "constructionEnd": "施工端",
     "constructionEndTip": "请先登录",
     "delete": "删除",
     "edit": "编辑",
+    "error": "错误",
     "errorMsg": {
       "title": "异常消息"
     },
@@ -73,6 +82,7 @@
       "timeout": "请求超时，请检查网络连接",
       "withoutAuth": "未授权，请重新登录"
     },
+    "info": "信息",
     "login": "登录",
     "loginSuccessTip": "若十分钟内无操作，系统将自动退出！",
     "logoutTip": "确认退出登录吗？",
@@ -139,6 +149,7 @@
     "pleaseUsername": "请输入用户名",
     "plsInput": "请输入",
     "plsInputParams": "请填写参数",
+    "refresh": "刷新",
     "save": "保存",
     "serverError": "对不起，服务器发生错误。",
     "setting": "设置",
@@ -162,7 +173,8 @@
     "tips": "提示",
     "triggered": "已触发",
     "unauthorized": "无地图数据",
-    "username": "用户名"
+    "username": "用户名",
+    "warn": "警告"
   },
   "deployer": {
     "diagnosis": {

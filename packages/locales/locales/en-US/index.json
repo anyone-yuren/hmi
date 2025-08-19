@@ -1,17 +1,24 @@
 {
   "common": {
     "about": {
+      "choose": "Please select another log",
+      "client": "Client",
       "cpu": "CPU",
       "date": "Date of production",
+      "log": "Log",
+      "loglist": "Log list",
       "logs": "System log",
       "memory": "Memory",
       "nodes": "System node information",
+      "nolog": "No logs yet",
       "serial": "Serial number",
-      "vehicleType": "Vehicle model"
+      "vehicleType": "Vehicle model",
+      "viewlog": "View log"
     },
     "action": "Operate",
     "actionSuccess": "Success",
     "add": "Add",
+    "all": "All",
     "back": "Back",
     "backToHome": "Back home",
     "cancel": "Cancel",
@@ -33,12 +40,14 @@
       "success": "Charging complete",
       "waitting": "Waiting for charging"
     },
+    "choose": "Choose",
     "close": "Close",
     "confirm": "OK",
     "constructionEnd": "Construction end",
     "constructionEndTip": "Please log in first",
     "delete": "Delete",
     "edit": "Edit",
+    "error": "Error",
     "errorMsg": {
       "title": "Abnormal message"
     },
@@ -73,6 +82,7 @@
       "timeout": "Request timeout, please check network connection",
       "withoutAuth": "Unauthorized, please log in again"
     },
+    "info": "Info",
     "login": "Log in",
     "loginSuccessTip": "If there is no operation within ten minutes, the system will automatically exit!",
     "logoutTip": "Confirm logging out?",
@@ -139,6 +149,7 @@
     "pleaseUsername": "Please enter your username",
     "plsInput": "Please input",
     "plsInputParams": "Please input parameters",
+    "refresh": "Refresh",
     "save": "Save",
     "serverError": "Sorry, an error occurred on the server.",
     "setting": "Setting",
@@ -162,7 +173,8 @@
     "tips": "Tips",
     "triggered": "Triggered",
     "unauthorized": "No map data",
-    "username": "Username"
+    "username": "Username",
+    "warn": "Warn"
   },
   "deployer": {
     "diagnosis": {

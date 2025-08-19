@@ -1,17 +1,24 @@
 {
   "common": {
     "about": {
+      "choose": "別のログを選択してください",
+      "client": "クライアント",
       "cpu": "CPU",
       "date": "生産日",
+      "log": "ログ",
+      "loglist": "ログリスト",
       "logs": "システムログ",
       "memory": "メモリ",
       "nodes": "システムノード情報",
+      "nolog": "まだログはありません",
       "serial": "シリアルナンバー",
-      "vehicleType": "車モデル"
+      "vehicleType": "車モデル",
+      "viewlog": "ログを表示します"
     },
     "action": "動く",
     "actionSuccess": "操作は成功しました",
     "add": "增",
+    "all": "全て",
     "back": "帰る",
     "backToHome": "ホームページに戻ります",
     "cancel": "キャンセル",
@@ -33,12 +40,14 @@
       "success": "充電完了",
       "waitting": "充電待ち"
     },
+    "choose": "選ぶ",
     "close": "閉じる",
     "confirm": "確かですか",
     "constructionEnd": "建設の終わり",
     "constructionEndTip": "最初にログインしてください",
     "delete": "削除",
     "edit": "編集",
+    "error": "間違い",
     "errorMsg": {
       "title": "例外メッセージ"
     },
@@ -73,6 +82,7 @@
       "timeout": "リクエストタイムアウトです。ネットワーク接続を確認してください。",
       "withoutAuth": "未認証です。再ログインしてください。"
     },
+    "info": "情報",
     "login": "ログイン",
     "loginSuccessTip": "10分以内に操作がない場合、システムは自動的に終了します！",
     "logoutTip": "ログアウトを確認しますか？",
@@ -139,6 +149,7 @@
     "pleaseUsername": "ユーザー名を入力してください",
     "plsInput": "入力してください",
     "plsInputParams": "パラメータを入力してください",
+    "refresh": "リフレッシュします",
     "save": "セーブ",
     "serverError": "申し訳ありませんが、サーバーでエラーが発生しました。",
     "setting": "並べる",
@@ -162,7 +173,8 @@
     "tips": "ヒント",
     "triggered": "トリガー",
     "unauthorized": "マップデータはありません",
-    "username": "ユーザー名"
+    "username": "ユーザー名",
+    "warn": "警告"
   },
   "deployer": {
     "diagnosis": {

@@ -248,11 +248,8 @@ const About = () => {
             </div>
           </div>
           <div className='flex justify-end gap-2'>
-            <Button type='primary' onClick={() => setLogsOpen(true)}>
-              系统日志
-            </Button>
             <Button color='yellow' variant='solid'>
-              客户端
+              {t('common.about.client')}
             </Button>
           </div>
         </div>
@@ -303,7 +300,7 @@ const About = () => {
                         getLogs({ node_name: item.title });
                       }}
                     >
-                      查看日志
+                      {t('common.about.viewlog')}
                     </Button>,
                   ]}
                 >
@@ -369,7 +366,11 @@ const About = () => {
       <Drawer
         closable
         destroyOnHidden
-        title={<p>{loadingNode} 日志</p>}
+        title={
+          <p>
+            {loadingNode} {t('common.about.log')}
+          </p>
+        }
         placement='right'
         open={openNodeLogs}
         loading={false}

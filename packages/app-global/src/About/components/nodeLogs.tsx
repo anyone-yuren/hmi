@@ -1,12 +1,14 @@
 import { RedoOutlined } from '@ant-design/icons';
 import { Button, List, Radio, Result, Splitter, Typography } from 'antd';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import LoadingPage from '../../components/PageLoading/Loading';
 
 const { Paragraph } = Typography;
 
 const NodeLogs = () => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingList, setLoadingList] = useState(false);
@@ -59,7 +61,7 @@ const NodeLogs = () => {
         <Splitter.Panel defaultSize='25%' min='20%' max='30%'>
           <div className='p-2'>
             <h2 className='text-lg font-bold mb-1 flex items-center justify-between'>
-              日志列表{' '}
+              {t('common.about.loglist')}
               <Button
                 type='primary'
                 icon={<RedoOutlined />}
@@ -71,7 +73,7 @@ const NodeLogs = () => {
                   }, 2000);
                 }}
               >
-                刷新
+                {t('common.refresh')}
               </Button>
             </h2>
             <List
@@ -109,15 +111,15 @@ const NodeLogs = () => {
                   <div className='flex items-center justify-between p-2 bg-black/40 shadow-sm rounded-lg'>
                     <p className='m-0'>20250804-161507.[DEBUG]</p>
                     <Radio.Group defaultValue='a' buttonStyle='solid' className=''>
-                      <Radio.Button value='a'>全部</Radio.Button>
+                      <Radio.Button value='a'>{t('common.all')}</Radio.Button>
                       <Radio.Button value='b' className='text-[#ff4d4f]'>
-                        错误
+                        {t('common.error')}
                       </Radio.Button>
                       <Radio.Button value='c' className='text-[#faad14]'>
-                        警告
+                        {t('common.warn')}
                       </Radio.Button>
                       <Radio.Button value='d' className='text-[#409eff]'>
-                        信息
+                        {t('common.info')}
                       </Radio.Button>
                     </Radio.Group>
                   </div>
@@ -202,11 +204,11 @@ const NodeLogs = () => {
             {!visible && (
               <Result
                 icon={<SvgIcon size={320} name={'noLog'} />}
-                title='暂无日志'
-                subTitle='请选择其他日志'
+                title={t('common.about.nolog')}
+                subTitle={t('common.about.choose')}
                 extra={
                   <Button type='primary' onClick={() => setVisible(true)}>
-                    选择
+                    {t('common.choose')}
                   </Button>
                 }
               ></Result>
