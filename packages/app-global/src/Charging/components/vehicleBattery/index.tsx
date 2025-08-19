@@ -20,8 +20,9 @@ import ChargingHistory from '../chargingHistory';
 
 // 获取图片函数
 const getImage = (imageName: string) => {
-  return new URL(`./../../../assets/vehicles/${imageName}`, import.meta.url).href;
+  return new URL(`../../../assets/vehicles/${imageName}`, import.meta.url).href;
 };
+
 const VehicleBattery = () => {
   const { t } = useTranslation();
   const agvType = useAgvType();
@@ -30,6 +31,8 @@ const VehicleBattery = () => {
   const productImage = useCallback(() => {
     return getImage(`${pdName}`);
   }, [pdName]);
+
+  console.log(productImage());
   const [showHistory, setShowHistory] = useState(false);
   const [lowPower, setLowPower] = useState(false);
   const { powerStatus } = useVehicleStore(
