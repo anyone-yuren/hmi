@@ -12,7 +12,6 @@ import VehicleBattery from './components/vehicleBattery';
 const Charging = () => {
   const { t } = useTranslation();
   const [modal, contextHolder] = Modal.useModal();
-  console.log(11111);
 
   const { powerStatus } = useVehicleStore(
     useShallow((state) => {

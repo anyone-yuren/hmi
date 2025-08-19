@@ -32,7 +32,6 @@ const VehicleBattery = () => {
     return getImage(`${pdName}`);
   }, [pdName]);
 
-  console.log(productImage());
   const [showHistory, setShowHistory] = useState(false);
   const [lowPower, setLowPower] = useState(false);
   const { powerStatus } = useVehicleStore(
