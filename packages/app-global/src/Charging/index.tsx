@@ -3,12 +3,14 @@ import { useVehicleStore } from '@gbeata/store';
 import { Divider, Stack } from '@mui/material';
 import { Button, Modal, Result, Typography } from 'antd';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import AnimateBrush from './components/animateBrush';
 import VehicleBattery from './components/vehicleBattery';
 
 const Charging = () => {
+  const { t } = useTranslation();
   const [modal, contextHolder] = Modal.useModal();
   const { powerStatus } = useVehicleStore(
     useShallow((state) => {
@@ -31,8 +33,8 @@ const Charging = () => {
               <Result
                 className='w-full flex flex-col items-center justify-center'
                 status='success'
-                title='没有充电任务'
-                subTitle='是否立刻下发充电任务？'
+                title={t('common.charging.nodata')}
+                subTitle={t('common.charging.confirm')}
                 icon={<SvgIcon name='stationNodata' size={380} />}
                 extra={
                   <Button
@@ -41,13 +43,13 @@ const Charging = () => {
                       modal.confirm({
                         content: (
                           <div>
-                            <div>1.请确认AGV已经移动到充电桩。</div>
-                            <div>2.请确认充电桩已经上电。</div>
-                            <div>3.请确保当前车辆处于手动状态。</div>
+                            <div>1.{t('common.charging.confirm1')}</div>
+                            <div>2.{t('common.charging.confirm2')}</div>
+                            <div>3.{t('common.charging.confirm3')}</div>
                           </div>
                         ),
-                        okText: '确定',
-                        cancelText: '取消',
+                        okText: t('common.confirm'),
+                        cancelText: t('common.cancel'),
                         onOk() {
                           setHasTask(true);
                         },
@@ -57,7 +59,7 @@ const Charging = () => {
                       });
                     }}
                   >
-                    立即充电
+                    {t('common.charging.chargeNow')}
                   </Button>
                 }
               />
@@ -66,7 +68,7 @@ const Charging = () => {
         ) : (
           <div className='h-full w-full flex flex-col gap-4'>
             <div className='p-4 flex flex-col gap-4 bg-white/10 rounded-2xl'>
-              <h2 className='text-lg font-bold mb-0'>充电桩信息</h2>
+              <h2 className='text-lg font-bold mb-0'>{t('common.charging.stationInfo')}</h2>
               <div className='flex flex-row gap-4'>
                 <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
                   <SvgIcon name='volt' size={32} />
@@ -83,18 +85,18 @@ const Charging = () => {
               </div>
               <div>
                 <div className='bg-white/10 p-2 flex justify-between rounded-md'>
-                  <Typography.Text className='!m-0 font-bold '>IP地址</Typography.Text>
+                  <Typography.Text className='!m-0 font-bold '>{t('common.charging.ip')}</Typography.Text>
                   <Typography.Text className='!m-0 opacity-70'>192.168.1.1</Typography.Text>
                 </div>
               </div>
               <div>
                 <div className='bg-white/10 p-2 flex justify-between rounded-md'>
-                  <Typography.Text className='!m-0 font-bold '>状态</Typography.Text>
+                  <Typography.Text className='!m-0 font-bold '>{t('common.charging.status')}</Typography.Text>
                   <Typography.Text className='!m-0 opacity-70'>
-                    {powerStatus.charge_status === 4 ? '充电中' : '未充电'}
+                    {powerStatus.charge_status === 4 ? t('common.charging.charging') : t('common.charging.stop')}
                   </Typography.Text>
                 </div>
-                <span className='text-xs text-white/50'>总充电次数包含已充满次数和异常次数</span>
+                <span className='text-xs text-white/50'>{t('common.charging.totalTimes')}</span>
               </div>
             </div>
             {/* 充电任务 */}
@@ -109,28 +111,28 @@ const Charging = () => {
                   <div className='flex flex-col items-center justify-center relative'>
                     <div className='text-sm font-bold flex gap-1 items-center '>
                       <SnippetsOutlined />
-                      任务号
+                      {t('common.charging.taskNo')}
                     </div>
                     <div className='text-sm opacity-70'>10002912</div>
                   </div>
                   <div className='flex flex-col items-center justify-center relative'>
                     <div className='text-sm font-bold flex gap-1 items-center'>
                       <ColumnWidthOutlined />
-                      位置偏差(mm)
+                      {t('common.charging.positionDeviation')}(mm)
                     </div>
                     <div className='text-sm opacity-70'>x:2300 y:2300 4°</div>
                   </div>
                   <div className='flex flex-col items-center justify-center relative'>
                     <div className='text-sm font-bold flex gap-1 items-center'>
                       <AppstoreOutlined />
-                      充电类型
+                      {t('common.charging.chargeType')}
                     </div>
-                    <div className='text-sm opacity-70'>自动充电</div>
+                    <div className='text-sm opacity-70'>{t('common.charging.autoCharge')}</div>
                   </div>
                   <div className='flex flex-col items-center justify-center relative'>
                     <div className='text-sm font-bold flex gap-1 items-center'>
                       <DotChartOutlined />
-                      目标电量
+                      {t('common.charging.targetEnergy')}
                     </div>
                     <div className='text-sm opacity-70'>99%</div>
                   </div>
