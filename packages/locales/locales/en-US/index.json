@@ -12,6 +12,7 @@
       "nodes": "System node information",
       "nolog": "No logs yet",
       "serial": "Serial number",
+      "unknown": "Unknown",
       "vehicleType": "Vehicle model",
       "viewlog": "View log"
     },

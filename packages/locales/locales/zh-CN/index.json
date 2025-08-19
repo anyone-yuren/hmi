@@ -12,6 +12,7 @@
       "nodes": "系统节点信息",
       "nolog": "暂无日志",
       "serial": "序列号",
+      "unknown": "未知",
       "vehicleType": "车型",
       "viewlog": "查看日志"
     },

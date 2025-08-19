@@ -12,6 +12,7 @@
       "nodes": "시스템 노드 정보",
       "nolog": "아직 통나무가 없습니다",
       "serial": "일련 번호",
+      "unknown": "알려지지 않은",
       "vehicleType": "자동차 모델",
       "viewlog": "로그를 봅니다"
     },

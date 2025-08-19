@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
+import noVehicleSvg from '../assets/icons/noVehicle.svg';
 import { useAgvType } from '../hooks/useAgvType';
 import useDrawerClassName from '../hooks/useDrawerClassName';
 import NodeLogs from './components/nodeLogs';
@@ -76,8 +77,11 @@ const About = () => {
   });
 
   const productImage = useCallback(() => {
+    if (!agvType) {
+      return noVehicleSvg;
+    }
     return getImage(`${pdName}`);
-  }, [pdName]);
+  }, [pdName, agvType]);
 
   const treeData: TreeDataNode[] = [
     {
@@ -202,10 +206,11 @@ const About = () => {
             className='flex-1 flex flex-col gap-2  bg-no-repeat'
             style={{
               backgroundImage: `url(${productImage()})`,
-              backgroundSize: '100% auto',
+              backgroundSize: agvType ? '100% auto' : '70% auto',
               backgroundPosition: 'center bottom',
             }}
           >
+            <div></div>
             <div>
               <Typography.Title level={5} className='!m-0'>
                 {t('common.about.serial')}
@@ -231,7 +236,7 @@ const About = () => {
                 }}
                 className='!m-0 opacity-70'
               >
-                {agvType}
+                {agvType ? agvType : t('common.about.unknown')}
               </Typography.Text>
             </div>
             <div>

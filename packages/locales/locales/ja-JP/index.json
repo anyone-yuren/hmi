@@ -12,6 +12,7 @@
       "nodes": "システムノード情報",
       "nolog": "まだログはありません",
       "serial": "シリアルナンバー",
+      "unknown": "未知",
       "vehicleType": "車モデル",
       "viewlog": "ログを表示します"
     },

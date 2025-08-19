@@ -12,6 +12,7 @@
       "nodes": "Informations sur le nœud système",
       "nolog": "Pas encore de journaux",
       "serial": "Numéro de série",
+      "unknown": "inconnu",
       "vehicleType": "Modèle de voiture",
       "viewlog": "Afficher le journal"
     },
