@@ -24,7 +24,7 @@
     "backToHome": "ホームページに戻ります",
     "cancel": "キャンセル",
     "charging": {
-      "Voltage": "電圧/電流",
+      "voltage": "電圧/電流",
       "abnormalRecord": "例外ロギング",
       "accumulatedChargingDegrees": "累積充電の学位",
       "accumulatedChargingTimes": "充電カウント",

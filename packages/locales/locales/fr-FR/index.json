@@ -24,7 +24,7 @@
     "backToHome": "Retour à la page d'accueil",
     "cancel": "Annuler",
     "charging": {
-      "Voltage": "Tension/Courant",
+      "voltage": "Tension/Courant",
       "abnormalRecord": "Excortion d'exception",
       "accumulatedChargingDegrees": "Diplôme de charge cumulatif",
       "accumulatedChargingTimes": "Compte de charge",

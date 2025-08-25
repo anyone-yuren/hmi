@@ -24,7 +24,7 @@
     "backToHome": "홈페이지로 돌아갑니다",
     "cancel": "취소",
     "charging": {
-      "Voltage": "전압/전류",
+      "voltage": "전압/전류",
       "abnormalRecord": "예외 로깅",
       "accumulatedChargingDegrees": "누적 충전 학위",
       "accumulatedChargingTimes": "충전 카운트",
