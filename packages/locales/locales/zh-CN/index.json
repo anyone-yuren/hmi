@@ -97,7 +97,7 @@
       "vehicleControl": "控制状态",
       "vehicleControlMode": "控制模式",
       "vehicleControlStatus": "是否有货",
-      "vehicleControlWeight": "货物重量（KG）",
+      "vehicleControlWeight": "货物重量(KG)",
       "vehicleFork": "货叉位置",
       "vehicleForkx": "左右",
       "vehicleForky": "前后",

@@ -97,7 +97,7 @@
       "vehicleControl": "Control status",
       "vehicleControlMode": "Control mode",
       "vehicleControlStatus": "Is available",
-      "vehicleControlWeight": "Goods poids (KG)",
+      "vehicleControlWeight": "Goods weight(KG)",
       "vehicleFork": "Fork arm position",
       "vehicleForkx": "Left and right",
       "vehicleForky": "Front and back",
