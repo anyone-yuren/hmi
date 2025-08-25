@@ -305,7 +305,6 @@
       "hybridHttpErrorTips2009": "请删除当前楼层SLAM地图之后再进行新建地图",
       "hybridHttpErrorTips3": "请切换到目标楼层,再进行合并地图操作",
       "hybridHttpErrorTips3001": "指定操作的目标楼层不存在反光板地图,无法进行操作",
-      "hybridHttpErrorTips3002": "",
       "hybridHttpErrorTips4": "合并地图时需要指定SLAM匹配正常的位置,请重新指定",
       "hybridHttpErrorTips4001": "当前二维码坐标依赖当前定位结果推算,不能在丢定位状态下操作",
       "hybridHttpErrorTips4002": "将车辆停到要添加的二维码上,并确保读码头能扫描到二维码",

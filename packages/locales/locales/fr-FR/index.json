@@ -305,7 +305,6 @@
       "hybridHttpErrorTips2009": "Veuillez supprimer la carte SLAM de l'étage actuel avant de créer une nouvelle carte",
       "hybridHttpErrorTips3": "Veuillez basculer vers l'étage cible avant de procéder à la fusion des cartes",
       "hybridHttpErrorTips3001": "L'étage cible spécifié pour l'opération n'a pas de carte de réflecteurs, impossible de procéder",
-      "hybridHttpErrorTips3002": "",
       "hybridHttpErrorTips4": "Lors de la fusion des cartes, il est nécessaire de spécifier un emplacement avec un positionnement SLAM correct, veuillez ressaisir",
       "hybridHttpErrorTips4001": "Les coordonnées du code QR dépendent des résultats de localisation actuels, impossible d'opérer sans localisation",
       "hybridHttpErrorTips4002": "Placez le véhicule sur le code QR à ajouter et assurez-vous que le lecteur peut scanner le code QR",
