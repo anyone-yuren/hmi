@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getPeripheralControlParam, postPeripheralControlParam } from '../service';
 const branch = import.meta.env.VITE_APP_BUILD_BRANCH;
-const data = import.meta.env.VITE_APP_BUILD_TIME;
+const date = import.meta.env.VITE_APP_BUILD_TIME;
 const info = import.meta.env.VITE_APP_BUILD_INFO;
 const hash = import.meta.env.VITE_APP_BUILD_COMMIT;
 /**
@@ -33,7 +33,7 @@ const Peripheral = () => {
 
   useEffect(() => {
     if (count % 9 === 0) {
-      alert(`branch: ${branch || '-'} \ndata: ${data || '-'} \ninfo: ${info || '-'} \nhash: ${hash || '-'}`);
+      alert(`branch: ${branch || '-'} \ndate: ${date || '-'} \ninfo: ${info || '-'} \nhash: ${hash || '-'}`);
     }
   }, [count]);
 

@@ -1,7 +1,5 @@
-import { mapValues } from 'lodash';
 import { Arrow, Group, Rect, Text } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
-import { useHybirdStore } from '../../Hybrid/store/hybird.store';
 import { useSafetyStore } from '../store/safety.store';
 import { meterToPixel } from '../utils';
 
@@ -15,15 +13,6 @@ const AvoidanceGroup = ({ width = 0, height = 0 }: any) => {
     }),
   );
 
-  const obsSlectData = mapValues(obstacleData, (item) => item);
-  const { stageScale } = useHybirdStore(
-    useShallow((store) => {
-      return {
-        stageScale: store.stageScale,
-      };
-    }),
-  );
-
   return obstacleData ? (
     <Group>
       <Rect
@@ -31,15 +20,8 @@ const AvoidanceGroup = ({ width = 0, height = 0 }: any) => {
         onTap={() => setSetting(true)}
         onClick={() => setSetting(true)}
         width={meterToPixel(obstacleData.stop_region_left)}
-        height={meterToPixel(
-          height,
-          //  +
-          //   obstacleData.stop_distance_backward_empty +
-          //   obstacleData.stop_distance_forward_empty
-        )}
+        height={meterToPixel(height)}
         x={-meterToPixel(obstacleData.stop_region_left)}
-        // y={0 - meterToPixel(obstacleData.stop_distance_forward_empty)}
-        // fill="red"
         stroke={'red'}
         strokeWidth={2}
         opacity={0.5}
@@ -49,15 +31,8 @@ const AvoidanceGroup = ({ width = 0, height = 0 }: any) => {
         onTap={() => setSetting(true)}
         onClick={() => setSetting(true)}
         width={meterToPixel(obstacleData.stop_region_right)}
-        height={meterToPixel(
-          height,
-          // +
-          //   obstacleData.stop_distance_backward_empty +
-          //   obstacleData.stop_distance_forward_empty
-        )}
+        height={meterToPixel(height)}
         x={meterToPixel(width)}
-        // y={0 - meterToPixel(obstacleData.stop_distance_forward_empty)}
-        // fill="red"
         stroke={'red'}
         strokeWidth={2}
         opacity={0.5}

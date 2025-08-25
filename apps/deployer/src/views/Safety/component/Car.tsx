@@ -38,21 +38,7 @@ const Car = (props: any) => {
   const forkImagePath = getForkImage(executor);
 
   const [image] = useImage(forkImagePath); // 使用 useImage 钩子加载图片
-  // const {
-  //   data: footPoints = {
-  //     data: {
-  //       x1: 1.256,
-  //       y1: 0.47,
-  //       x2: -0.41,
-  //       y2: 0.47,
-  //       x3: -0.41,
-  //       y3: -0.47,
-  //       x4: 1.256,
-  //       y4: -0.47,
-  //     },
-  //   },
-  // } = useRequest(getFootPrint);
-  // const [image] = useImage(X20);
+
   const footPoints = {
     data: {
       x4: 1.256,
@@ -80,17 +66,6 @@ const Car = (props: any) => {
         y={meterToPixel(leftTopY)}
       >
         <Group name='car'>
-          {/* <KonvaImage
-            height={meterToPixel(width)}
-            width={meterToPixel(height)}
-            image={image}
-            name='car-image'
-            rotation={90}
-            offsetY={meterToPixel(width)}
-            // offsetX={meterToPixel(height)}
-            x={0}
-            y={0}
-          /> */}
           {/* 创建叉臂 */}
           <Group x={0} y={0} name='left-arm'>
             <Rect width={20} height={meterToPixel(height)} fill='#8c8c8c' strokeWidth={2} />

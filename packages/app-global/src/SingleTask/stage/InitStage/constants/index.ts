@@ -7,21 +7,15 @@ export const BOUNDARY_DASH = [50, 40];
 // 普通点位
 export const COMMON_POINT_RADIUS = 3;
 export const COMMON_POINT_COLOR = '#12d1d1';
-// export const COMMON_POINT_COLOR = '#12d1d1';
 // 普通点位对应的文字
 export const COMMON_POINT_TEXT_VISIBLE = true;
 export const COMMON_POINT_TEXT_COLOR = 'white';
 
 // 库位点
-// fill='rgba(47.5, 48, 62.5, 0.8)'
-//       stroke='rgb(76, 75, 79)'
 export const STORAGE_POINT_WIDTH = 7;
 export const STORAGE_POINT_HEIGHT = 7;
 export const STORAGE_POINT_FILL = '#bee8e8';
-// export const STORAGE_POINT_FILL = 'rgba(47.5, 48, 62.5, 0.8)';
-// export const STORAGE_POINT_FILL = 'rgba(47.5, 48, 62.5, 0.8)';
 export const STORAGE_POINT_STROKE = '#00d1d1';
-// export const STORAGE_POINT_STROKE = 'rgb(76, 75, 79)';
 export const STORAGE_POINT_STROKE_WIDTH = 0.5;
 
 // 站点 - 显示图片的

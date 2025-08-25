@@ -107,8 +107,6 @@ const StatusPanel = (prop) => {
                     }
                   }}
                   checked={cloudCategory?.includes(item?.id)}
-                  // onChange={handleToggle("bluetooth")}
-                  // checked={checked.includes("bluetooth")}
                   inputProps={{
                     'aria-labelledby': 'switch-list-label-bluetooth',
                   }}
@@ -119,12 +117,6 @@ const StatusPanel = (prop) => {
       : [];
   }, [deviceList, obsInfo.sensor_sources, cloudCategory, serviceLanguage, obstacleData, obstacleIndex]);
 
-  // const motionStatus = [t('初始化，未动'), t('停止'), t('前进'), t('后退'), t('横移'), t('自旋'), t('出错')];
-  // const { motionInfo } = useDashboardInfo(
-  //   useShallow((store) => ({
-  //     motionInfo: store.motionInfo,
-  //   })),
-  // );
   return (
     <>
       <ThemeProvider
@@ -147,15 +139,11 @@ const StatusPanel = (prop) => {
             component='nav'
             disablePadding
             sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-            // subheader={<ListSubheader>Settings</ListSubheader>}
           >
             <Typography sx={{ my: 0 }} variant='subtitle2' component='div'>
               {t('deployer.safety.status')}
             </Typography>
-            <ListItemButton
-              // key={item.label}
-              sx={{ py: 0, minHeight: 32, fontSize: '14px' }}
-            >
+            <ListItemButton sx={{ py: 0, minHeight: 32, fontSize: '14px' }}>
               <ListItemIcon sx={{ marginRight: 0 }}>
                 <Icon fontSize={20} icon='ep:tools' />
               </ListItemIcon>
@@ -164,12 +152,8 @@ const StatusPanel = (prop) => {
                 sx={{ color: 'text.primary', fontSize: '14px' }}
                 primary={t('deployer.safety.vehicleStatus')}
               />
-              {/* {motionStatus[motionInfo?.motion_state] || '-'} */}
             </ListItemButton>
-            <ListItemButton
-              // key={item.label}
-              sx={{ py: 0, minHeight: 32, fontSize: '14px' }}
-            >
+            <ListItemButton sx={{ py: 0, minHeight: 32, fontSize: '14px' }}>
               <ListItemIcon>
                 <Icon fontSize={20} icon='stash:radar-duotone' />
               </ListItemIcon>
@@ -180,20 +164,8 @@ const StatusPanel = (prop) => {
               />
               {getObsMsg(obsInfo.type as number) || '-'}
             </ListItemButton>
-            {/* <ListItemButton
-              // key={item.label}
-              sx={{ py: 0, minHeight: 32 }}
-            >
-              <ListItemIcon>
-                <Icon fontSize={20} icon="arcticons:sensor-lab" />
-              </ListItemIcon>
-              <ListItemText primary={t("触发避障传感器")} />
-              {obsInfo.sensor_description || "-"}
-            </ListItemButton> */}
-            <ListItemButton
-              // key={item.label}
-              sx={{ py: 0, minHeight: 32, fontSize: '14px' }}
-            >
+
+            <ListItemButton sx={{ py: 0, minHeight: 32, fontSize: '14px' }}>
               <ListItemIcon>
                 <Icon fontSize={20} icon='eos-icons:compare-states-outlined' />
               </ListItemIcon>
@@ -204,10 +176,7 @@ const StatusPanel = (prop) => {
               />
               {goodsInfo?.good_status ? t('deployer.safety.hasGoods') : t('deployer.safety.noGoods')}
             </ListItemButton>
-            <ListItemButton
-              // key={item.label}
-              sx={{ py: 0, minHeight: 32, fontSize: '14px' }}
-            >
+            <ListItemButton sx={{ py: 0, minHeight: 32, fontSize: '14px' }}>
               <ListItemIcon>
                 <Icon fontSize={20} icon='grommet-icons:share-option' />
               </ListItemIcon>

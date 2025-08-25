@@ -1,18 +1,17 @@
 import InitStage from '@/components/InitStage';
 import SafetyCoordinate from '@/components/InitStage/components/safetyCoordinate';
+import { FormControl, MenuItem, Select } from '@mui/material';
 import { useSize } from 'ahooks';
 import { ConfigProvider, Drawer, Result, Space, theme } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { Layer } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import { useHybirdStore } from '../Hybrid/store/hybird.store';
-import DrawerContent from './component/DrawerContent';
-import { useSafetyStore } from './store/safety.store';
-// import { ThemeProvider as ConfigProvider } from "antd-style";
-import { Box, FormControl, MenuItem, Select } from '@mui/material';
 import Car from './component/Car';
+import DrawerContent from './component/DrawerContent';
 import StatusPanel from './component/status';
 import TurnRegion from './component/TurmRegion';
+import { useSafetyStore } from './store/safety.store';
 
 import useObsError from '@/components/NotificationGlobal/obsError';
 import { useRequest } from 'ahooks';
@@ -148,51 +147,7 @@ const Safety = () => {
       </div>
 
       {/* 操作区域 */}
-      <Box className='absolute bottom-0 left-0 flex items-center w-full '>
-        {/* 避障方案列表 */}
-        {/* <Box className=" bg-slate-700 min-w-1/5">
-          <Tabs
-            variant="scrollable"
-            value={value}
-            className=""
-            onChange={handleChange}
-          >
-            {obstacleData &&
-              obstacleData?.data?.map((item: any, index: number) => (
-                <Tab
-                  label={`避障方案` + item.scheme_id}
-                  key={index}
-                  value={item.scheme_id}
-                  className="text-white"
-                />
-              ))}
-          </Tabs>
-        </Box>
-        <FormControlLabel
-          label="显示点云"
-          componentsProps={{
-            // 设置label间距
-            typography: {
-              style: {
-                marginRight: 10,
-                whiteSpace: "nowrap",
-                fontWeight: "bold",
-              },
-            },
-          }}
-          labelPlacement="start"
-          control={
-            <CustomSwitch
-              size="small"
-              // value={showPointCloud}
-              checked={showPointCloud}
-              onChange={(e, value) => {
-                setShowPointCloud(value);
-              }}
-            />
-          }
-        ></FormControlLabel> */}
-      </Box>
+
       <div className='absolute bottom-0 right-0 flex items-center'>
         <CenterAction />
       </div>
@@ -237,20 +192,11 @@ const Safety = () => {
                         return <MenuItem value={item.scheme_id}>{item.scheme_id}</MenuItem>;
                       })
                     : null}
-                  {/* <MenuItem value="reflector">反光板导航</MenuItem>
-                    <MenuItem value="slam">slam导航</MenuItem> */}
-                  {/* <MenuItem value="hybird">混合导航</MenuItem> */}
                 </Select>
               </FormControl>
             </Space>
           }
           mask={false}
-          classNames={
-            {
-              // body: "!bg-[#445260] !p-0",
-              // header: "!bg-[#000]",
-            }
-          }
           onClose={() => setSetting(!setting)}
           open={setting}
         >
