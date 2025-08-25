@@ -174,7 +174,6 @@ const MapActionBar = forwardRef((props: any, ref) => {
             const { x, y } = stageRef?.current?.getVehiclePosition();
             if (x != null && y != null) {
               stageRef?.current && stageRef?.current?.setStageScale(1);
-              console.log('taskmode', x, y);
               setMoveToTarget({ x: x * 20, y: -y * 20 } as any);
             } else {
               toast.error(t('common.noData'));

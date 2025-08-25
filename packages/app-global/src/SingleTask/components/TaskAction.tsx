@@ -211,7 +211,7 @@ const TaskAction = forwardRef((props: any, ref) => {
       setTemplateName('');
       onFinish && onFinish(true);
     } catch (error) {
-      console.log(error);
+      //
     }
   };
 

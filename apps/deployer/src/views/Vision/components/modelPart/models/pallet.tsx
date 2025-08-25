@@ -170,7 +170,6 @@ const Pallet = forwardRef((props: any, ref: any) => {
           }
 
           const newObj = reGetPosition(obj);
-          console.log('newObj', newObj);
           if (newObj?.width > 5000 || newObj?.totalHeight > 1500) {
             toast.error(t('deployer.vision.basicSizeValidateTips'));
             return Promise.reject();
@@ -220,11 +219,9 @@ const Pallet = forwardRef((props: any, ref: any) => {
     try {
       obj.handles = obj?.handles?.map((handle: any, index: number) => {
         const newHandle = { ...handle };
-        console.log(newHandle);
         if (!index) {
           newHandle.leftPosition = 0;
         } else {
-          console.log(leftHandlePosition);
           newHandle.leftPosition =
             leftHandlePosition + obj?.handles[index - 1]?.width + obj?.handlesForkInWidth[index - 1].width;
           leftHandlePosition = newHandle.leftPosition;
@@ -232,7 +229,7 @@ const Pallet = forwardRef((props: any, ref: any) => {
         return newHandle;
       });
     } catch (err) {
-      console.log(err);
+      //
     }
 
     for (let index = 0; index < obj.legs.length; index++) {

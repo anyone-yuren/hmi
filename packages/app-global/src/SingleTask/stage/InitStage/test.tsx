@@ -1,8 +1,7 @@
-import Konva from 'konva';
-import React, { memo, useState, useEffect } from 'react';
-import { Circle, Group, Layer, Rect, Stage } from 'react-konva';
-import { PointData } from './data';
+import { memo, useEffect } from 'react';
+import { Circle, Group, Layer, Stage } from 'react-konva';
 import { RCS_POINTS_GROUP } from './constants/konvas';
+import { PointData } from './data';
 
 import useStage from './hooks/useStage';
 import IInitStage from './index.d';
@@ -35,8 +34,6 @@ const InitStage = (props: IInitStage) => {
     // 根据size大小缩放scale让图形全部显示
     const scale = Math.min(size.width / width, size.height / height);
     if (stage) {
-      console.log('scale', height, size.height);
-
       stage.scale({ x: scale, y: scale });
       stage.position({ y: (size.height - height * scale) / 2 });
       stage.batchDraw();

@@ -67,10 +67,6 @@ const Vehicle = (props: IVehicle | any) => {
     return imageModule.default;
   };
 
-  useEffect(() => {
-    console.log('showVehiclePopup', showVehiclePopup);
-  }, [showVehiclePopup]);
-
   useAsyncEffect(async () => {
     const newImage = new Image();
     const imagesPath = await getVehicleImage(image);

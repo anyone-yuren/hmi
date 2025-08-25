@@ -22,7 +22,6 @@ const Illustration = (props: any) => {
       TRILATERAL: 'K1',
       OMNI_FORWARD: 'O20',
     };
-    console.log('vehicleChassis', vehicleChassis);
     return hashMap[vehicleChassis] || 'X20';
   }, [vehicleChassis]);
   const isTrilateral = useMemo(() => {

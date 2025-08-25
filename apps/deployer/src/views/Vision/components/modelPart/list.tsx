@@ -56,7 +56,6 @@ const ModelList = forwardRef((props: any, ref: any) => {
       return <Shelf {...container} />;
     },
     tail_truck: (container: any) => {
-      console.log('container', container);
       return <Truck {...container} />;
     },
   };
@@ -150,7 +149,6 @@ const ModelList = forwardRef((props: any, ref: any) => {
                       onOk: async () => {
                         const params = { id: container.id };
                         const response = await deleteModel(params);
-                        console.log(response);
                         runGetModelList();
                       },
                     });

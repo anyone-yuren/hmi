@@ -7,7 +7,6 @@ import './pallet.css';
 
 const PalletAnnotation = (props: any) => {
   const { t } = useTranslation();
-  console.log('props', props);
   const isPallet = useMemo(() => {
     return props.type === 'pallet';
   }, [props]);
@@ -95,7 +94,6 @@ const PalletAnnotation = (props: any) => {
           })}
 
         {props?.handlesForkInWidth?.map((handle: any, index: number) => {
-          console.log('handle', handle);
           return (
             <div
               key={'handlesForkInWidth' + index}

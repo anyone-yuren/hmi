@@ -175,7 +175,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
     stage.scale({ x: scale, y: scale });
     stage.position(originPosition);
     stage.batchDraw();
-    console.log('initMapCenter', initMapCenter, scale, boundaryWidth);
     setMapRationView(1 / scale);
     setMaxScale(scale);
   }, [initMapCenter, boundaryWidth, boundaryHeight, size]);
@@ -222,10 +221,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
 
   return (
     <div className='relative'>
-      {(() => {
-        console.log('stage主页面不能一直刷新');
-        return null;
-      })()}
       <Stage
         width={size.width}
         height={size.height}

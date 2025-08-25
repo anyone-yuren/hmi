@@ -23,7 +23,6 @@ const createOnMessageHandler = (keys, YAML, onChange) => {
         // 判断是否满足更新条件
         if (!lastEntry) {
           // 首次匹配
-          console.log(`首次匹配 key=${key}`, currentYAMLData);
           lastDataByKeys[key] = {
             raw: data,
             parsed: currentYAMLData,
@@ -34,13 +33,8 @@ const createOnMessageHandler = (keys, YAML, onChange) => {
           const timeDiff = now - lastEntry.timestamp;
 
           if (timeDiff < 200) {
-            console.log(`key=${key} 更新间隔小于 200ms，忽略更新`);
             return;
           }
-
-          console.log(`key=${key} 数据发生了变化`);
-          console.log('旧数据:', lastEntry.parsed);
-          console.log('新数据:', currentYAMLData);
 
           // 更新数据和时间戳
           lastDataByKeys[key] = {
@@ -51,7 +45,7 @@ const createOnMessageHandler = (keys, YAML, onChange) => {
 
           onChange?.(key, currentYAMLData, lastEntry.parsed);
         } else {
-          // console.log(`key=${key} 数据没有变化`);
+          //
         }
       }
     });

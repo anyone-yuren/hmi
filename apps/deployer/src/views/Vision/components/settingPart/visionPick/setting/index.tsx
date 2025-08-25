@@ -327,14 +327,12 @@ const Setting = (props: any) => {
         try {
           const val = getInput();
           const isValidate = hashMap.validate[obj.key] ? hashMap.validate[obj.key](Number(val)) : true;
-          console.log(val, isValidate);
           if (!isValidate) {
             return Promise.reject();
           }
           hashMap.update[obj.key](Number(val));
         } catch (err) {
           toast.error(t('deployer.vision.paramsValidateRange') + '[0-0]');
-          console.log(err);
         }
       },
     });
@@ -718,7 +716,6 @@ const Setting = (props: any) => {
                   <TextUpdateRow
                     key={item.name}
                     onClick={() => {
-                      console.log(updateHashMap);
                       handleValue({
                         key: 'select_model',
                         title: modelHashMap[item.name],

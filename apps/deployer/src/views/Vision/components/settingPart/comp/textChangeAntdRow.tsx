@@ -9,7 +9,6 @@ const TextChangeAntdRow = (props: any) => {
   const { t } = useTranslation();
 
   const validate = (val: any) => {
-    console.log(val, validateRange);
     return new Promise<void>((resolve, reject) => {
       if (!validateRange?.length) {
         resolve();
@@ -52,7 +51,6 @@ const TextChangeAntdRow = (props: any) => {
               defaultValue={value}
               variant='borderless'
               onChange={(event: any) => {
-                console.log(event.target.value);
                 setTempValue(event.target.value);
               }}
             />

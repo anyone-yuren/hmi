@@ -159,7 +159,6 @@ const Space = () => {
               variant='standard'
               value={sensorHashMap[child.key]}
               onChange={(value) => {
-                console.log(child, value);
                 setSensorHashMap({
                   __isSubmit: true,
                   [child.key]: value.target.value,

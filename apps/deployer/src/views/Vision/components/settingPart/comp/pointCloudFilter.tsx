@@ -396,7 +396,6 @@ const PointCloudFilter = (props: IProps) => {
                         variant='standard'
                         value={mode}
                         onChange={(event) => {
-                          console.log('value', event.target.value);
                           setMode(event.target.value);
                         }}
                       >

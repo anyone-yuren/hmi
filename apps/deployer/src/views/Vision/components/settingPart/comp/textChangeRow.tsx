@@ -25,7 +25,6 @@ const TextChangeRow = (props: IProps) => {
   const { t } = useTranslation();
 
   const validate = (val: any) => {
-    console.log(val, validateRange);
     return new Promise<void>((resolve, reject) => {
       if (!validateRange?.length) {
         resolve();
@@ -78,7 +77,6 @@ const TextChangeRow = (props: IProps) => {
           await validate(val);
           onChange && onChange(val);
         } catch (err) {
-          console.log(err);
           toast.error(t('参数限制范围') + `[${validateRange?.[0]}-${validateRange?.[1]}]`);
           return Promise.reject();
         }

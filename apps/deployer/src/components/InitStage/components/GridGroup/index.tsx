@@ -4,7 +4,6 @@ import { Group, Line } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 
 const GridGroup = ({ width, height, gridSize, scale }: any) => {
-  console.log(scale, 'fffff');
   const { hybirdStage } = useHybirdStore(
     useShallow((store) => {
       return {
@@ -67,7 +66,9 @@ const GridGroup = ({ width, height, gridSize, scale }: any) => {
   return (
     <Group name='grid-group'>
       {/* 绘制水平网格线 */}
-      {gridLines?.map((line, index) => <Line key={index} points={line.points} stroke={line.color} strokeWidth={0.5} />)}
+      {gridLines?.map((line, index) => (
+        <Line key={index} points={line.points} stroke={line.color} strokeWidth={0.5} />
+      ))}
     </Group>
   );
 };

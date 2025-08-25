@@ -38,7 +38,6 @@ const ParamsSetting = (props: any) => {
 
   const goodsValidateRange = useMemo(() => {
     if (propsState?.type !== 'warehouse_shelves') return [0, 0];
-    console.log();
     const { storage_width, legs_width, goods_width } = propsState;
     const maxGoodsNums = Math.floor((storage_width - legs_width * 2) / goods_width);
     return [0, maxGoodsNums];

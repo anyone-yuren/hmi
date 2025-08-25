@@ -34,7 +34,6 @@ const InputWidthKeyboard = (props: any) => {
     if (index < 0 || index >= str.length) {
       return str; // 返回原始字符串，因为索引无效
     }
-    console.log('str', str);
     // 使用 slice 截取字符串的两部分并拼接在一起
     return str?.slice(0, index) + str?.slice(index + 1);
   };
@@ -137,7 +136,7 @@ const InputWidthKeyboard = (props: any) => {
                     setInputText(newInputText);
                   },
                   '{close}': () => {
-                    // console.log("inputText", inputText);
+                    //
                   },
                   '{confirm}': async () => {},
                   '{numbers}': () => {

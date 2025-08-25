@@ -25,7 +25,6 @@ export const useHybrid = () => {
       const uriRegex = /"uri":"([^"]+)"/;
       const uri = message.data.match(uriRegex);
       if (!uri?.[1]) {
-        console.log(message.data);
         return;
       }
       const data = { uri: uri[1] };

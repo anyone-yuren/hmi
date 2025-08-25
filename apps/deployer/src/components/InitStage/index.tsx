@@ -77,7 +77,6 @@ const InitStage = (props: IProps) => {
       setRadarVisible(false);
     });
     stage?.on('mouseup', () => {
-      console.log('mouseup');
       setRadarVisible(true);
     });
     stage?.on('touchstart', () => {

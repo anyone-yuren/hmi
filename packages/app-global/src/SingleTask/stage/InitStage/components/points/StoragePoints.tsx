@@ -1,17 +1,8 @@
-import Konva from "konva";
-import React, { memo, useState, useEffect, useMemo } from "react";
-import {
-  Circle,
-  Group,
-  Layer,
-  Rect,
-  Stage,
-  Text,
-  Image as KonvaImage,
-} from "react-konva";
-import packageImageUrl from "../../../assets/points/package.png";
+import { memo, useEffect, useState } from 'react';
+import { Group, Image as KonvaImage, Rect, Text } from 'react-konva';
+import packageImageUrl from '../../../assets/points/package.png';
 
-import { IPoint } from "../../index.d";
+import { IPoint } from '../../index.d';
 
 interface IMapPointsProps {
   visible: boolean;
@@ -24,19 +15,9 @@ interface IMapPointsProps {
 }
 const textFontSize = 4;
 const StoragePoints = (props: IMapPointsProps) => {
-  const {
-    visible,
-    points,
-    storageProps,
-    storageTextVisible,
-    onPointsClick,
-    extremum,
-    storageTextProps,
-  } = props;
-  const [textSizeHashMap, setTextSizeHashMap] = useState<
-    Record<IPoint["id"], any>
-  >({});
-  const [packageImages, setPackageImages] = useState("");
+  const { visible, points, storageProps, storageTextVisible, onPointsClick, extremum, storageTextProps } = props;
+  const [textSizeHashMap, setTextSizeHashMap] = useState<Record<IPoint['id'], any>>({});
+  const [packageImages, setPackageImages] = useState('');
 
   useEffect(() => {
     const image = new Image();
@@ -45,7 +26,7 @@ const StoragePoints = (props: IMapPointsProps) => {
       setPackageImages(image);
     };
     image.onerror = () => {
-      console.log("[StoragePoints]:托盘加载失败了");
+      console.log('[StoragePoints]:托盘加载失败了');
     };
   }, []);
 
@@ -60,7 +41,6 @@ const StoragePoints = (props: IMapPointsProps) => {
             x={storage.x}
             y={-storage.y}
             onClick={(event) => {
-              console.log("storage", storage);
               onPointsClick && onPointsClick(storage);
               event.cancelBubble = true;
             }}
@@ -106,7 +86,7 @@ const StoragePoints = (props: IMapPointsProps) => {
                     });
                 }}
                 text={storage.id}
-                fill={"black"}
+                fill={'black'}
                 fontSize={textFontSize}
                 offsetY={(textSizeHashMap[storage.id]?.height || 2) / 2 - 0.5}
                 offsetX={(textSizeHashMap[storage.id]?.width || 2) / 2}

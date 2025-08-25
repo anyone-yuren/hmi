@@ -91,7 +91,6 @@ const Setting = (props: any) => {
       value: [Number(updateHashMap['extra_heights'])],
     };
 
-    console.log(sendState, updateHashMap);
     await save(sendState);
     toast.success(t('common.actionSuccess'));
   };
@@ -104,7 +103,6 @@ const Setting = (props: any) => {
             title={t('deployer.vision.storage')}
             value={updateHashMap?.['ground_transfer_points']}
             onChange={(value: any) => {
-              console.log(value);
               changeUpdateHashMap('ground_transfer_points', value);
             }}
           ></StorageListSelect>

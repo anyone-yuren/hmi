@@ -1,14 +1,7 @@
-import { useClickAway } from "ahooks";
-import {
-  useState,
-  useRef,
-  MutableRefObject,
-  forwardRef,
-  useImperativeHandle,
-  useCallback,
-} from "react";
-import Keyboard from "react-simple-keyboard";
-import "react-simple-keyboard/build/css/index.css";
+import { useClickAway } from 'ahooks';
+import { MutableRefObject, forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
+import Keyboard from 'react-simple-keyboard';
+import 'react-simple-keyboard/build/css/index.css';
 
 interface IProps {
   containerStyle?: React.CSSProperties;
@@ -24,7 +17,7 @@ export interface IKeyboardWrapperRef {
 
 const KeyboardWrapper = forwardRef<IKeyboardWrapperRef, IProps>(
   ({ containerStyle, onChange, onClickOutside, setInputFocus }, ref) => {
-    const [layoutName, setLayoutName] = useState("default");
+    const [layoutName, setLayoutName] = useState('default');
     const keyboardRef = useRef<any>(null);
 
     const containerRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
@@ -37,23 +30,23 @@ const KeyboardWrapper = forwardRef<IKeyboardWrapperRef, IProps>(
     }, containerRef);
 
     const onKeyPress = useCallback((button: string) => {
-      if (button === "{shift}" || button === "{lock}") {
-        setLayoutName(layoutName === "default" ? "shift" : "default");
+      if (button === '{shift}' || button === '{lock}') {
+        setLayoutName(layoutName === 'default' ? 'shift' : 'default');
       }
-      if (button === "{abc}") {
-        setLayoutName("abc");
+      if (button === '{abc}') {
+        setLayoutName('abc');
         setInputFocus?.();
       }
-      if (button === "{numbers}") {
-        setLayoutName("default");
+      if (button === '{numbers}') {
+        setLayoutName('default');
         setInputFocus?.();
       }
-      if (button === "{shift}") {
-        setLayoutName("abc");
+      if (button === '{shift}') {
+        setLayoutName('abc');
         setInputFocus?.();
       }
-      if (button === "{SHIFT}") {
-        setLayoutName("shift");
+      if (button === '{SHIFT}') {
+        setLayoutName('shift');
         setInputFocus?.();
       }
     }, []);
@@ -66,21 +59,21 @@ const KeyboardWrapper = forwardRef<IKeyboardWrapperRef, IProps>(
           keyboardRef.current.setInput(input);
         },
       }),
-      [keyboardRef.current]
+      [keyboardRef.current],
     );
 
     return (
       <div
         ref={(el) => setTimeout(() => (containerRef.current = el))}
         style={{
-          position: "fixed",
+          position: 'fixed',
           bottom: 0,
-          left: "50%",
+          left: '50%',
           right: 0,
           zIndex: 999,
-          color: "black",
-          width: layoutName === "abc" || layoutName === "shift" ? "50%" : "35%",
-          transform: "translateX(-50%)",
+          color: 'black',
+          width: layoutName === 'abc' || layoutName === 'shift' ? '50%' : '35%',
+          transform: 'translateX(-50%)',
           ...containerStyle,
         }}
       >
@@ -92,33 +85,22 @@ const KeyboardWrapper = forwardRef<IKeyboardWrapperRef, IProps>(
           }}
           onKeyPress={onKeyPress}
           layout={{
-            default: ["1 2 3", "4 5 6", "7 8 9", ". 0 {bksp}", "{abc}"],
-            abc: [
-              "q w e r t y u i o p",
-              "a s d f g h j k l",
-              "{SHIFT} z x c v b n m {bksp}",
-              "{numbers} {ent}",
-            ],
-            shift: [
-              "Q W E R T Y U I O P",
-              "A S D F G H J K L",
-              "{shift} Z X C V B N M {bksp}",
-              "{numbers} {ent}",
-            ],
+            default: ['1 2 3', '4 5 6', '7 8 9', '. 0 {bksp}', '{abc}'],
+            abc: ['q w e r t y u i o p', 'a s d f g h j k l', '{SHIFT} z x c v b n m {bksp}', '{numbers} {ent}'],
+            shift: ['Q W E R T Y U I O P', 'A S D F G H J K L', '{shift} Z X C V B N M {bksp}', '{numbers} {ent}'],
           }}
           display={{
-            "{bksp}": "⌫",
-            "{abc}": "ABC",
-            "{numbers}": "numbers",
-            "{ent}": "confirm",
-            "{SHIFT}": "⇧",
-            "{shift}": "⇧",
+            '{bksp}': '⌫',
+            '{abc}': 'ABC',
+            '{numbers}': 'numbers',
+            '{ent}': 'confirm',
+            '{SHIFT}': '⇧',
+            '{shift}': '⇧',
           }}
-          onRender={() => console.log("Rendered")}
         />
       </div>
     );
-  }
+  },
 );
 
 export default KeyboardWrapper;

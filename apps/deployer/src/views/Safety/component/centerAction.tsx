@@ -14,8 +14,6 @@ const CenterActions = () => {
   );
 
   const handleClick = useCallback(() => {
-    // console.log("CenterActions handleClick = ", reflectorMap, currentReflectors)
-
     hybirdStage.to({
       x: 0,
       y: 0,
@@ -29,7 +27,6 @@ const CenterActions = () => {
           scaleY: 1 * 1, // 新的纵向缩放比例
           easing: Konva.Easings.EaseInOut, // 缓动效果
           onFinish: () => {
-            // console.log('缩放动画完成');
             tween.destroy();
             // 处理画线不完整问题
             setStagePos({ x: 0, y: 0 });

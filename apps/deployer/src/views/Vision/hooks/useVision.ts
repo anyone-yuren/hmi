@@ -22,7 +22,6 @@ const useVision = () => {
     onMessage: (message, isBinary) => {
       const data = message ? YAML.load(message.data) : {};
       if (!data.uri) {
-        console.log(data);
         return;
       }
       let overwrite = false;

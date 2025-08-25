@@ -55,7 +55,6 @@ const SecondaryPage = (props: Props) => {
     transform: start ? transformStart : transformEnd,
     config: { tension: 260, friction: 40 },
     onRest: () => {
-      console.log('onRest', open, start);
       if (!start) {
         setOpen(false);
       }

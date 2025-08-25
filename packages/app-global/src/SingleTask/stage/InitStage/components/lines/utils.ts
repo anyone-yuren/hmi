@@ -1,5 +1,5 @@
-import { SplinePoint } from './splinePoint';
 import { BSpline } from './bSpline';
+import { SplinePoint } from './splinePoint';
 export const newCalcSplinePoints = ({ ary, length, type }) => {
   if (type === 1) {
     return ary.flatMap((item: any) => {
@@ -35,7 +35,6 @@ export const calcSplinePoints = (
     const points = edge.ControlPoint.map(function (p) {
       return SplinePoint.CreateSplinePoint(p.X, p.Y);
     });
-    // console.log('[useLines]: points', points);
     const bSpline = new BSpline(points, t);
     bSpline.PlotPoints().forEach((point) => {
       result.push(point.X, point.Y);

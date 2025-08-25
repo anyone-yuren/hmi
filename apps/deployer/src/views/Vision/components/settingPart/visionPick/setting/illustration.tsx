@@ -113,7 +113,6 @@ const Illustration = (props: any) => {
       TRILATERAL,  // K车三向叉 K1
       OMNI_FORWARD, // 全向车 O20
     */
-    console.log(props.vehicleChassis);
     if (!props.vehicleChassis) return;
     setVehicleChassis(props.vehicleChassis || 'FORWARD');
   }, [props.vehicleChassis]);

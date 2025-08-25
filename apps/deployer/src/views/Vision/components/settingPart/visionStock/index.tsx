@@ -47,7 +47,6 @@ const VisionStock = () => {
     for (let key in params) {
       params[key].value = updateHashMap[key];
     }
-    console.log(params);
     await postVisualPlaceSave(params);
     toast.success(t('common.actionSuccess'));
   }, [updateHashMap, postVisualPlaceSave]);

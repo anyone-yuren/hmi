@@ -188,15 +188,10 @@ const PlaceMove = (props: IProps) => {
               let sendState: any = {};
               const translateHashMap: any = {
                 compensation: (originState: any, hashMap: any) => {
-                  console.log(`updateHashMap["compensation"]`, updateHashMap['compensation']);
-
                   const obj = {
                     ...originState['compensation'],
                     compensation: [updateHashMap['compensation']],
                   };
-
-                  // obj.compensation[3] = obj.compensation[3]
-                  // console.log("onb", obj);
                   return obj;
                 },
               };

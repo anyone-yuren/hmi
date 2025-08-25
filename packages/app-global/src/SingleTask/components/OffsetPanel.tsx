@@ -61,7 +61,6 @@ const OffsetPanel = forwardRef((props: any, ref) => {
         const params = {
           point_id: point.point_id,
         };
-        console.log('params', params);
         const { code }: any = await deleteOffsetTable(params);
         if (code === 200) {
           toast.success(t('common.actionSuccess'));

@@ -37,7 +37,6 @@ const StorageListSelect = (props: IProps) => {
           <div
             className='absolute w-full h-full top-0 left-0 z-10'
             onClick={() => {
-              console.log('iclick');
               setOpen(true);
             }}
           ></div>
@@ -47,7 +46,6 @@ const StorageListSelect = (props: IProps) => {
             variant='standard'
             value={value}
             renderValue={(value: any) => {
-              console.log('render value', value);
               return (
                 <div className='flex flex-wrap pr-[10px] items-center justify-start'>
                   {value?.map((item: any, index: number) => {

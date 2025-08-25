@@ -90,7 +90,6 @@ const Setting = () => {
             }
           : originHashMap[key];
     });
-    console.log(sendState, updateHashMap);
     await save(sendState);
     toast.success(t('common.actionSuccess'));
   };

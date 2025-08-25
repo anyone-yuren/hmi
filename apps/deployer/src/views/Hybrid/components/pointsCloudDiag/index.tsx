@@ -9,7 +9,6 @@ import { useHybirdStore } from '../../store/hybird.store';
 export default function PointsCloudDiag() {
   const { run, data: pointCloudData } = useRequest(pointCloudDiag, {
     manual: true,
-    // pollingInterval: 1000,
   });
 
   const [minIntensity, setMinIntensity] = useState(0);
@@ -50,21 +49,7 @@ export default function PointsCloudDiag() {
       {showPointCloudDiag &&
         pointCloudData?.point_cloud?.map((point, index) => {
           if (index % 5 === 0 || point.intensity > 1000) {
-            console.log(point.intensity);
-
             return (
-              // <Rect
-              //   key={index}
-              //   x={point.x / 50} // 放大以适应画布
-              //   y={0 - point.y / 50}
-              //   width={2}
-              //   height={2}
-              //   fill={getColorFromIntensity(point.intensity)} // 设置亮度颜色
-              //   // shadowBlur={1}
-              //   listening={false}
-              //   draggable={false}
-              //   gpuAcceleration
-              // />
               <Circle
                 key={index}
                 x={point.x / 50}

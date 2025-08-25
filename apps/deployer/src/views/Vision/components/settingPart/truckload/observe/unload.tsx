@@ -48,12 +48,10 @@ const UnLoad = () => {
       !params.offset_angle && (params.offset_angle = {});
       params.offset_y.value = [updateHashMap.offset_left, updateHashMap.offset_right];
       params.offset_angle.value = updateHashMap.offset_angle;
-
-      console.log('params', params);
       await save(params);
       toast.success(t('common.actionSuccess'));
     } catch (e) {
-      console.log('e', e);
+      //
     }
   };
   return (

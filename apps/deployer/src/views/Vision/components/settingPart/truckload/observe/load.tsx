@@ -51,7 +51,7 @@ const Load = () => {
       await save(params);
       toast.success(t('common.actionSuccess'));
     } catch (e) {
-      console.log('e', e);
+      //
     }
   };
   return (

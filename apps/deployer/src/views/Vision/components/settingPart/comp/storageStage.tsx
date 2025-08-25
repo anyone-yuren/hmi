@@ -36,7 +36,6 @@ const StorageStage = (props: IProps) => {
       point.type === 6 && charges.push(point);
       point.type === 1 && locations.push(point);
     }
-    console.log('locations', locations);
     return { hashMap, points, charges, locations };
   }, [pointsList]);
 

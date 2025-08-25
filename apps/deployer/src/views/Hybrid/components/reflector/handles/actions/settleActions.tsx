@@ -28,7 +28,6 @@ const AddActions = () => {
       isSettled: state.isSettled,
     })),
   );
-  console.log(isSettled);
 
   // 镇定
   const { runAsync: runCalm, loading: calmLoading } = useRequest(postSettleReflectors, {

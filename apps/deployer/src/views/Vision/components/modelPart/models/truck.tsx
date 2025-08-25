@@ -212,7 +212,6 @@ const Truck = forwardRef((props: any, ref) => {
       ),
       onOk: async () => {
         const val: any = getInput();
-        console.log('val', val);
         if (!/^\d+$/.test(val)) {
           toast.error(t('deployer.vision.plsInputNumber'));
           return Promise.reject();

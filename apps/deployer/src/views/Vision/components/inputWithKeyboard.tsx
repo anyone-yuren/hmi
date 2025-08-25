@@ -34,7 +34,6 @@ const InputWidthKeyboard = (props: any) => {
     if (index < 0 || index >= str.length) {
       return str; // 返回原始字符串，因为索引无效
     }
-    console.log('str', str);
     // 使用 slice 截取字符串的两部分并拼接在一起
     return str?.slice(0, index) + str?.slice(index + 1);
   };
@@ -136,9 +135,7 @@ const InputWidthKeyboard = (props: any) => {
                     const newInputText = removeChar(inputText, inputText.length - 1);
                     setInputText(newInputText);
                   },
-                  '{close}': () => {
-                    // console.log("inputText", inputText);
-                  },
+                  '{close}': () => {},
                   '{confirm}': async () => {},
                   '{numbers}': () => {
                     setKeyboardMode('numbers');
@@ -157,13 +154,11 @@ const InputWidthKeyboard = (props: any) => {
                     setInputText(newInputText);
                   },
                   '{ent}': () => {
-                    // 点击了确定
                     setKeyboardVisible(false);
                   },
                   '{-}': () => {
                     let newInput = '';
                     if (inputText.indexOf('-') > -1) {
-                      // 去除-
                       newInput = inputText.replace('-', '');
                     } else {
                       newInput = '-' + inputText;

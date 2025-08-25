@@ -57,7 +57,6 @@ export default function useHybirdWsExtend() {
 
   return {
     '/navigation/slam_extending_map': (data: any) => {
-      console.log(data, '新建slam的数据');
       // 这里不做阈值处理
       setAddSlamMappingData(data);
     },
@@ -67,19 +66,14 @@ export default function useHybirdWsExtend() {
 
     '/navigation/real_time_data/current_reflector_map': (data: any) => {
       const { reflectors_info: list } = data ?? {};
-      // console.log(list, "websocket: 实时发送");
-      // if (!list) return;
       const newReflectors = roundCoordinates(list ?? []);
 
       if (!isEqual(currentReflectors, newReflectors)) {
-        // console.log(list, "websocket: 11111111111111");
         setCurrentReflectors(newReflectors ?? []);
       }
     },
     '/navigation/real_time_data/matched_reflectors': (data: any) => {
       const { reflectors_info: list } = data ?? {};
-      // console.log(list, "websocket: 匹配到的");
-      // if (!list) return;
       const newMatchedReflectors = roundCoordinates(list ?? []);
 
       if (!isEqual(matchedReflectors, newMatchedReflectors)) {
@@ -89,11 +83,7 @@ export default function useHybirdWsExtend() {
     '/navigation/real_time_data/mismatched_reflectors': (data: any) => {
       const { reflectors_info: list } = data ?? {};
       const newMismatchedReflectors = roundCoordinates(list ?? []);
-      // console.log(list, "websocket: 未匹配到的");
-      // if (!list) return;
-
       if (!isEqual(mismatchedReflectors, newMismatchedReflectors)) {
-        // console.log(list, "websocket: 3333333333333333");
         setMismatchedReflectors(newMismatchedReflectors ?? []);
       }
     },
@@ -103,8 +93,6 @@ export default function useHybirdWsExtend() {
     '/navigation/real_time_data/scan_head': (data: any) => {
       const ary = unzipText(data?.point_cloud);
       setPointCloudV1Data(JSON.parse(ary) || []);
-      // setPointCloudV1Data(data?.point_cloud || []);
-      // console.log(data.point_cloud.length, "点云数据长度");
     },
     '/navigation/current_qrcode_info': (data: any) => {
       setQrCodeData(data);

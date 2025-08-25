@@ -53,7 +53,6 @@ const PoseDetect = (props: IProps) => {
         tempHashMap[key] = translateHashMap[key] ? translateHashMap[key](initState) : initState[key]?.value;
       }
     });
-    console.log('tempHashMap', tempHashMap);
     setUpdateHashMap(tempHashMap);
   }, [initState]);
 
