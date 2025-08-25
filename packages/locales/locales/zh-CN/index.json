@@ -24,7 +24,7 @@
     "backToHome": "返回主页",
     "cancel": "取消",
     "charging": {
-      "Voltage": "电压/电流",
+      "voltage": "电压/电流",
       "abnormalRecord": "异常记录",
       "accumulatedChargingDegrees": "累计充电度数",
       "accumulatedChargingTimes": "充电次数统计",
