@@ -274,7 +274,6 @@
       "hybridHttpError2009": "The current SLAM map of the floor has already been created",
       "hybridHttpError3": "You can only merge maps on the current floor",
       "hybridHttpError3001": "The target floor reflection map does not exist",
-      "hybridHttpError3002": "",
       "hybridHttpError4": "SLAM positioning failed when merging maps",
       "hybridHttpError4001": "The drop position cannot add the current QR code",
       "hybridHttpError4002": "The current QR code is not scanned, and cannot be added",

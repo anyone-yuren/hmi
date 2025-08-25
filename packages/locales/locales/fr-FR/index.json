@@ -274,7 +274,6 @@
       "hybridHttpError2009": "La carte SLAM de l'étage actuel existe déjà",
       "hybridHttpError3": "La fusion des cartes n'est possible que sur l'étage actuel",
       "hybridHttpError3001": "La carte des réflecteurs de l'étage cible n'existe pas",
-      "hybridHttpError3002": "",
       "hybridHttpError4": "Échec du positionnement SLAM lors de la fusion des cartes",
       "hybridHttpError4001": "Impossible d'ajouter le code QR actuel en l'absence de localisation",
       "hybridHttpError4002": "Aucun code QR détecté, impossible d'ajouter",

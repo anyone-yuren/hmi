@@ -274,7 +274,6 @@
       "hybridHttpError2009": "当前建图楼层SLAM地图已存在",
       "hybridHttpError3": "只能在当前层合并地图",
       "hybridHttpError3001": "目标楼层反光板地图不存在",
-      "hybridHttpError3002": "",
       "hybridHttpError4": "合并地图时SLAM定位失败",
       "hybridHttpError4001": "丢定位状态下不能添加当前二维码",
       "hybridHttpError4002": "当前未扫描到二维码,不能添加",
