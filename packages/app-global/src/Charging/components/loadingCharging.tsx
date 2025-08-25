@@ -1,4 +1,5 @@
 import { createStyles } from 'antd-style';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createStyles(({ css, token }) => ({
   loadingContainer: css`
@@ -81,10 +82,11 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const LoadingCharging = () => {
   const { styles } = useStyles();
+  const { t } = useTranslation();
   return (
     <div className={styles.loadingContainer}>
       <div className='loader'></div>
-      <p>正在赶往充电...</p>
+      <p>{t('common.charging.runCharging')}...</p>
     </div>
   );
 };

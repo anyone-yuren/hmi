@@ -59,7 +59,7 @@ export const useVehicleStore = create<State>()(
         charge_status: number;
       }) => {
         const { cacheSave } = useGlobalStore.getState();
-        if (cacheSave) {
+        if (cacheSave && !isEqual(powerStatus, get().powerStatus)) {
           set({ powerStatus });
         }
       },

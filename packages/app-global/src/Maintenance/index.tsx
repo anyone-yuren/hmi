@@ -49,7 +49,17 @@ const Maintenance = () => {
         <Lifting loading={loading} data={data?.data?.liftingSystem ?? {}} reload={getMaintenance} />
       </div>
       {resetLoading ? <LoadingReset /> : null}
-      {token === 'admin' && <FloatButton shape='circle' icon={<UndoOutlined />} onClick={() => reset()} />}
+      {token === 'admin' && (
+        <FloatButton
+          shape='circle'
+          style={{
+            insetBlockEnd: 24,
+            insetInlineEnd: 24,
+          }}
+          icon={<UndoOutlined />}
+          onClick={() => reset()}
+        />
+      )}
     </div>
   );
 };

@@ -40,16 +40,16 @@ const ChargingHistory = (props: Props) => {
   };
 
   const rangePresets: TimeRangePickerProps['presets'] = [
-    { label: '最近7天', value: [dayjs().add(-7, 'd'), dayjs()] },
-    { label: '最近14天', value: [dayjs().add(-14, 'd'), dayjs()] },
-    { label: '最近30天', value: [dayjs().add(-30, 'd'), dayjs()] },
-    { label: '最近90天', value: [dayjs().add(-90, 'd'), dayjs()] },
+    { label: t('common.charging.recent7Days'), value: [dayjs().add(-7, 'd'), dayjs()] },
+    { label: t('common.charging.recent14Days'), value: [dayjs().add(-14, 'd'), dayjs()] },
+    { label: t('common.charging.recent30Days'), value: [dayjs().add(-30, 'd'), dayjs()] },
+    { label: t('common.charging.recent90Days'), value: [dayjs().add(-90, 'd'), dayjs()] },
   ];
   return (
     <Drawer
       closable
       destroyOnHidden
-      title={<p>充电记录</p>}
+      title={<p>{t('common.charging.chargingRecord')}</p>}
       placement='right'
       open={open}
       loading={false}
@@ -72,7 +72,7 @@ const ChargingHistory = (props: Props) => {
             defaultValue={[todayStart, today]}
             presets={[
               {
-                label: <span aria-label='今天'>今天</span>,
+                label: <span aria-label={t('common.charging.today')}>{t('common.charging.today')}</span>,
                 value: () => [todayStart, today], // 5.8.0+ support function
               },
               ...rangePresets,
@@ -80,7 +80,7 @@ const ChargingHistory = (props: Props) => {
           />
 
           <Button type='primary' onClick={submit}>
-            查询
+            {t('common.search')}
           </Button>
         </div>
         {/* 查询结果 */}
@@ -94,28 +94,28 @@ const ChargingHistory = (props: Props) => {
               <Table
                 columns={[
                   {
-                    title: '起始电量',
+                    title: t('common.charging.startPower'),
                     dataIndex: 'start_power',
                     key: 'start_power',
                   },
                   {
-                    title: '结束电量',
+                    title: t('common.charging.endPower'),
                     dataIndex: 'end_power',
                     key: 'end_power',
                   },
                   {
-                    title: '充电度数',
+                    title: t('common.charging.chargingDegree'),
                     dataIndex: 'charging_degree',
                     key: 'charging_degree',
                   },
                   {
-                    title: '开始时间',
+                    title: t('common.startTime'),
                     dataIndex: 'start_time',
                     key: 'start_time',
                     render: (text) => dayjs(text * 1000).format('YYYY-MM-DD HH:mm:ss'),
                   },
                   {
-                    title: '结束时间',
+                    title: t('common.endTime'),
                     dataIndex: 'end_time',
                     key: 'end_time',
                     render: (text) => dayjs(text * 1000).format('YYYY-MM-DD HH:mm:ss'),

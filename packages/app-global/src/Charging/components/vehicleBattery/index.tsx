@@ -5,6 +5,7 @@ import { ThemeProvider } from 'antd-style';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgvType } from '../../../hooks/useAgvType';
@@ -19,15 +20,18 @@ import ChargingHistory from '../chargingHistory';
 
 // 获取图片函数
 const getImage = (imageName: string) => {
-  return new URL(`./../../../assets/vehicles/${imageName}`, import.meta.url).href;
+  return new URL(`../../../assets/vehicles/${imageName}`, import.meta.url).href;
 };
+
 const VehicleBattery = () => {
+  const { t } = useTranslation();
   const agvType = useAgvType();
 
   const [pdName, setPdName] = useState(`MW_${agvType}.png`);
   const productImage = useCallback(() => {
     return getImage(`${pdName}`);
   }, [pdName]);
+
   const [showHistory, setShowHistory] = useState(false);
   const [lowPower, setLowPower] = useState(false);
   const { powerStatus } = useVehicleStore(
@@ -59,7 +63,7 @@ const VehicleBattery = () => {
       <motion.div className='w-full h-full rounded-2xl backdrop-blur-2xl p-4 flex flex-col'>
         <div className='flex-1 relative'>
           <div className='w-full'>
-            <h2 className='text-lg font-bold mb-1'>车辆电池</h2>
+            <h2 className='text-lg font-bold mb-1'>{t('common.charging.vehicleBattery')}</h2>
             <motion.div
               className='!w-full h-px'
               initial={{ opacity: 0 }}
@@ -91,7 +95,7 @@ const VehicleBattery = () => {
           </div>
           <div className='mt-4 flex flex-col gap-4'>
             <div className='bg-white/10 p-2 flex justify-between rounded-md'>
-              <Typography.Text className='!m-0 font-bold '>上次充满时间</Typography.Text>
+              <Typography.Text className='!m-0 font-bold '>{t('common.charging.lastFullChargeTime')}</Typography.Text>
               <Typography.Text className='!m-0 opacity-70'>
                 {loadingLastFullChargeTime ? (
                   <Skeleton.Button active size='small' />
@@ -104,7 +108,9 @@ const VehicleBattery = () => {
             </div>
             <div>
               <div className='bg-white/10 p-2 flex justify-between rounded-md'>
-                <Typography.Text className='!m-0 font-bold '>充电次数统计</Typography.Text>
+                <Typography.Text className='!m-0 font-bold '>
+                  {t('common.charging.accumulatedChargingTimes')}
+                </Typography.Text>
                 <Typography.Text className='!m-0 opacity-70'>
                   {loadingAccumulatedChargingTimes ? (
                     <Skeleton.Button active size='small' />
@@ -113,11 +119,13 @@ const VehicleBattery = () => {
                   )}
                 </Typography.Text>
               </div>
-              <span className='text-xs text-white/50'>总充电次数包含已充满次数和异常次数</span>
+              <span className='text-xs text-white/50'>{t('common.charging.accumulatedChargingTimesTip')}</span>
             </div>
             <div>
               <div className='bg-white/10 p-2 flex justify-between rounded-md'>
-                <Typography.Text className='!m-0 font-bold '>累计充电度数</Typography.Text>
+                <Typography.Text className='!m-0 font-bold '>
+                  {t('common.charging.accumulatedChargingDegrees')}
+                </Typography.Text>
                 <Typography.Text className='!m-0 opacity-70'>
                   {loadingAccumulatedChargingDegrees ? (
                     <Skeleton.Button active size='small' />
@@ -129,7 +137,7 @@ const VehicleBattery = () => {
             </div>
             <div className='bg-white/10 rounded-md'>
               <div className=' p-2 flex justify-between '>
-                <Typography.Text className='!m-0 font-bold '>低电量报警</Typography.Text>
+                <Typography.Text className='!m-0 font-bold '>{t('common.charging.lowPowerAlarm')}</Typography.Text>
                 <Typography.Text className='!m-0 opacity-70'>
                   <Switch
                     defaultChecked={lowPower}
@@ -175,21 +183,23 @@ const VehicleBattery = () => {
           </div>
           {/* 车辆图片与充电效果 */}
           <div className='absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4'>
-            <motion.img
-              src={productImage()}
-              initial={{ filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }}
-              animate={
-                powerStatus.charge_status === 3
-                  ? { filter: 'drop-shadow(0 10px 10px rgba(255,0,255,0.5))' }
-                  : { filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }
-              }
-              transition={
-                powerStatus.charge_status === 3
-                  ? { duration: 1.6, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }
-                  : { duration: 0 }
-              }
-              className='w-full absolute bottom-4 '
-            />
+            {agvType ? (
+              <motion.img
+                src={productImage()}
+                initial={{ filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }}
+                animate={
+                  powerStatus.charge_status === 3
+                    ? { filter: 'drop-shadow(0 10px 10px rgba(255,0,255,0.5))' }
+                    : { filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }
+                }
+                transition={
+                  powerStatus.charge_status === 3
+                    ? { duration: 1.6, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }
+                    : { duration: 0 }
+                }
+                className='w-full absolute bottom-4 '
+              />
+            ) : null}
           </div>
         </div>
         <div className='flex justify-end gap-2'>
@@ -199,15 +209,15 @@ const VehicleBattery = () => {
               setShowHistory(true);
             }}
           >
-            充电记录
+            {t('common.charging.chargingRecord')}
           </Button>
           <Button color='yellow' variant='solid'>
-            异常记录
+            {t('common.charging.abnormalRecord')}
           </Button>
           <ChargingHistory
             open={showHistory}
             onClose={() => {
-              return () => setShowHistory(false);
+              setShowHistory(false);
             }}
           />
         </div>

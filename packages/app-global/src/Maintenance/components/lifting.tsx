@@ -9,6 +9,7 @@ import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
 import { App, Button, Popconfirm, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
+import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { getMotorWorkingTime, maintenance } from '../services';
@@ -19,6 +20,7 @@ interface Props {
   reload: () => void;
 }
 const Lifting = ({ loading, data, reload }: Props) => {
+  const { t, i18n } = useTranslation();
   const { token } = useGlobalStore(
     useShallow((state) => ({
       token: state.token,
@@ -32,7 +34,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
     },
   });
   const { data: workingData, loading: workingLoading } = useRequest(getMotorWorkingTime);
-  const STATUS = ['正常', '已触发', '严重超期'];
+  const STATUS = [t('common.normal'), t('common.triggered'), t('common.severelyExpired')];
   const theme = useTheme();
   const datePercentage = (data?.current?.time ?? 282) / (data?.condition?.time ?? 180);
   const workingPercentage = (data?.current?.workingTime ?? 70) / (data?.condition?.miles ?? 1000);
@@ -42,9 +44,13 @@ const Lifting = ({ loading, data, reload }: Props) => {
       <Tooltip
         title={
           <>
-            <div className='text-md font-bold'>维保条件：</div>
-            <div>时长：{data?.condition?.time ?? '-'}天</div>
-            <div>工作时长：{data?.condition?.workingTime ?? '-'}分钟</div>
+            <div className='text-md font-bold'>{t('common.maintenance.condition')}：</div>
+            <div>
+              {t('common.maintenance.duration')}：{data?.condition?.time ?? '-'} {t('common.maintenance.day')}
+            </div>
+            <div>
+              {t('common.maintenance.workingTime')}：{data?.condition?.workingTime ?? '-'} Min
+            </div>
           </>
         }
       >
@@ -61,14 +67,12 @@ const Lifting = ({ loading, data, reload }: Props) => {
       <div className='relative z-10 h-full p-8 flex flex-col justify-between'>
         <div className='flex flex-col w-full items-center justify-center gap-2'>
           <SvgIcon name='left' size={120} />
-          <h3 className='text-xl xl:text-3xl font-semibold tracking-tight'>举升系统</h3>
-          <p className='mt-2 text-white/80 max-w-xl'>
-            举升电机、液压泵（或电动推杆）、货叉架及控制器组成，接收指令驱动货叉升降，精准完成取放货作业，兼具负载能力与运行平稳性。
-          </p>
+          <h3 className='text-xl xl:text-3xl font-semibold tracking-tight'>{t('common.maintenance.lifting')}</h3>
+          <p className='mt-2 text-white/80 max-w-xl'>{t('common.maintenance.liftingDesc')}</p>
         </div>
         <div className='flex flex-col w-full items-end justify-center gap-2'>
           <div className='flex  flex-col items-end'>
-            <h4 className='text-xs'>维保状态</h4>
+            <h4 className='text-xs'>{t('common.maintenance.status')}</h4>
             {!loading ? (
               <p className='text-lg font-bold' style={{ color: COLORS[data?.status ?? 2] }}>
                 {STATUS[data?.status ?? 2]}
@@ -79,15 +83,17 @@ const Lifting = ({ loading, data, reload }: Props) => {
           </div>
 
           <div className='flex flex-col items-end'>
-            <h4 className='text-xs'>已维保次数</h4>
+            <h4 className='text-xs'>{t('common.maintenance.maintainTimes')}</h4>
             {!loading ? (
-              <p className='text-lg font-bold'>{data?.AlreadyMaintainTimes ?? '-'}次</p>
+              <p className='text-lg font-bold'>
+                {data?.AlreadyMaintainTimes ?? '-'} {t('common.maintenance.times')}
+              </p>
             ) : (
               <Skeleton.Button active size='small' />
             )}
           </div>
           <div className='flex flex-col items-end'>
-            <h4 className='text-xs'>上次维保</h4>
+            <h4 className='text-xs'>{t('common.maintenance.lastMaintainTime')}</h4>
             {!loading ? (
               <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
                 <div className='text-xs flex items-center gap-1'>
@@ -96,7 +102,8 @@ const Lifting = ({ loading, data, reload }: Props) => {
                 </div>
                 <div className='text-xs flex items-center gap-1'>
                   <ClockCircleOutlined />
-                  运行时间 {data?.history?.[data?.history?.length - 1]?.workingTime ?? '-'}mm
+                  {t('common.maintenance.workingTime')} {data?.history?.[data?.history?.length - 1]?.workingTime ?? '-'}
+                  mm
                 </div>
               </div>
             ) : (
@@ -104,9 +111,9 @@ const Lifting = ({ loading, data, reload }: Props) => {
             )}
           </div>
           <div className='flex flex-col items-end'>
-            <Tooltip placement='topRight' title='维保触发条件为：规定使用时间或规定行驶里程，二者以先达到者为准。'>
+            <Tooltip placement='topRight' title={t('common.maintenance.nextLiftMaintainTimeDesc')}>
               <h4 className='text-xs'>
-                下次维保 <InfoCircleOutlined />
+                {t('common.maintenance.nextMaintainTime')} <InfoCircleOutlined />
               </h4>
             </Tooltip>
             {!loading ? (
@@ -117,7 +124,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
                 </div>
                 <div className='text-xs flex items-center gap-1'>
                   <ClockCircleOutlined />
-                  运行时间 {data?.next?.workingTime ?? '-'}mm
+                  {t('common.maintenance.workingTime')} {data?.next?.workingTime ?? '-'}mm
                 </div>
               </div>
             ) : (
@@ -125,7 +132,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
             )}
           </div>
           <div className='flex flex-col items-end w-full'>
-            <h4 className='text-md'>当前进度</h4>
+            <h4 className='text-md'>{t('common.maintenance.progress')}</h4>
             {!loading ? (
               <div className='flex gap-2 w-full'>
                 <div className='flex flex-1 items-center gap-2'>
@@ -166,13 +173,13 @@ const Lifting = ({ loading, data, reload }: Props) => {
                 title={
                   <>
                     <div className='flex items-center gap-2'>
-                      <span className='font-bold min-w-24 text-right'>工作次数：</span>
-                      {workingData?.data?.motor_working_times ?? '-'}次
+                      <span className='font-bold min-w-24 text-right'>{t('common.maintenance.workingTimes')}：</span>
+                      {workingData?.data?.motor_working_times ?? '-'} {t('common.maintenance.times')}
                     </div>
                   </>
                 }
               >
-                更多信息 <DoubleRightOutlined />
+                {t('common.maintenance.maintain')} <DoubleRightOutlined />
               </Popconfirm>
             </h4>
           </div>
@@ -185,8 +192,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
               className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
               onClick={() => {
                 modal.confirm({
-                  title: '维保',
-                  content: '确认维保吗？',
+                  content: t('common.maintenance.confirm'),
                   onOk: () => {
                     maintain({
                       subsystem: 2,
