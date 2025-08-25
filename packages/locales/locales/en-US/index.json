@@ -672,7 +672,8 @@
       "vehicleStartShelfDist": "The distance from the base point to the pallet when the car is corrected.",
       "vehicleStopShelfDist": "The distance from the base point to the pallet after parking.",
       "visionChangeWarning": "The visual configuration file has been changed. Please check the latest parameters",
-      "width": "Width"
+      "width": "Width",
+      "forkExtendParams": "Fork Arm Extension Distance Parameters"
     }
   }
 }

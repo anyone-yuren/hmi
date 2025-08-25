@@ -672,7 +672,8 @@
       "vehicleStartShelfDist": "차체가 원위치일 때 기준점에서 선반까지의 거리",
       "vehicleStopShelfDist": "주차 후 기준점에서 선반까지의 거리",
       "visionChangeWarning": "비전 프로필이 변경되었으니 최신 파라미터를 확인하세요.",
-      "width": "넓이"
+      "width": "넓이",
+      "forkExtendParams": "포크 암 확장 거리 매개변수"
     }
   }
 }

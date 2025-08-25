@@ -672,7 +672,8 @@
       "vehicleStartShelfDist": "Distance entre le point de référence et l'étagère lorsque le véhicule est redressé",
       "vehicleStopShelfDist": "Distance entre le point de référence et l'étagère après le stationnement",
       "visionChangeWarning": "Le profil de vision a changé, veuillez vérifier les derniers paramètres",
-      "width": "Largeur"
+      "width": "Largeur",
+      "forkExtendParams": "Paramètres de distance d'extension du bras de fourche"
     }
   }
 }

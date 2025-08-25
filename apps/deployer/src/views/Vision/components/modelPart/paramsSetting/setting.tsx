@@ -45,7 +45,7 @@ const ParamsSetting = (props: any) => {
 
   return (
     <LightTheme>
-      <div className='text-black flex gap-[10px] justify-center'>
+      <div className='text-black flex flex-wrap gap-[10px] justify-center'>
         <TextChangeRow
           className={'w-[280px]'}
           title={t('deployer.vision.extraDepthCompensation')}
@@ -56,6 +56,18 @@ const ParamsSetting = (props: any) => {
         >
           <div>{propsState?.['extra_deep_compensation'] || 0}</div>
         </TextChangeRow>
+        {propsState.type != 'tail_truck' && (
+          <TextChangeRow
+            className={'w-[280px]'}
+            title={t('deployer.vision.forkExtendParams')}
+            value={propsState?.['forkarm_final_width']}
+            onChange={(value: string) => {
+              changeUpdateHashMap('forkarm_final_width', value);
+            }}
+          >
+            <div>{propsState?.['forkarm_final_width'] || 0}</div>
+          </TextChangeRow>
+        )}
 
         {propsState.type === 'warehouse_shelves' && (
           <TextChangeRow

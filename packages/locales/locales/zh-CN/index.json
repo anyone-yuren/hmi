@@ -672,7 +672,8 @@
       "vehicleStartShelfDist": "车身回正时基准点到货架的距离",
       "vehicleStopShelfDist": "停车后基准点到货架的距离",
       "visionChangeWarning": "视觉配置文件已经改变,请检查最新参数",
-      "width": "宽"
+      "width": "宽",
+      "forkExtendParams": "叉臂张开距离参数"
     }
   }
 }

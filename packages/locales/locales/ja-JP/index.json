@@ -672,7 +672,8 @@
       "vehicleStartShelfDist": "車体が戻ったときの基準点から棚までの距離",
       "vehicleStopShelfDist": "駐車後の基準点から棚までの距離",
       "visionChangeWarning": "ビジュアルプロファイルが変更されましたので、最新のパラメータを確認してください",
-      "width": "広い"
+      "width": "広い",
+      "forkExtendParams": "フォークアームの伸長距離パラメータ"
     }
   }
 }
