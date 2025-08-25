@@ -71,7 +71,7 @@ const Cargo = () => {
   };
   const scaledPoints = useMemo(() => {
     if (!locationAry) return [];
-    return locationAry.slice(1).map((p) => [p[1] * 1000, p[0] * 1000, p[2], p[3]]);
+    return locationAry.slice(1).map((p) => [-p[1] * 1000, p[0] * 1000, p[2], p[3]]);
   }, [locationAry]);
   const topLeftPoint = useMemo(() => {
     if (!scaledPoints.length) return null;
@@ -117,16 +117,17 @@ const Cargo = () => {
     const hashMap = {
       load: {
         splitAry: () => {
-          return state === 1 ? ary.slice(index + 1, ary.length) : ary.slice(0, index);
+          return ary.slice(0, index);
         },
       },
       unload: {
         splitAry: () => {
-          return ary.slice(0, index);
+          return ary.slice(index + 1, ary.length);
         },
       },
     };
-    const validateAry = hashMap[mode].splitAry();
+    const action = state === 1 ? 'load' : 'unload';
+    const validateAry = hashMap[action].splitAry();
     validateAry.forEach((item: any) => {
       if (item[3] !== state) {
         isPass = false;
@@ -166,7 +167,7 @@ const Cargo = () => {
           await getLocation();
         },
       },
-    ];
+    ].filter((item) => item.status !== status);
   };
 
   const handleChangeAllState = async (state: any) => {
@@ -191,17 +192,6 @@ const Cargo = () => {
         }
       },
     });
-  };
-
-  const modeHashMap = {
-    title: {
-      load: t('deployer.vision.loadMode'),
-      unload: t('deployer.vision.unloadMode'),
-    },
-    tips: {
-      load: t('deployer.vision.loadModeTips'),
-      unload: t('deployer.vision.unloadModeTips'),
-    },
   };
 
   return (
@@ -275,33 +265,6 @@ const Cargo = () => {
               >
                 {t('deployer.vision.setAllNoGoods')}
               </Button>
-            </div>
-            <div className='mt-[20px]'>
-              <div>
-                {modeHashMap.title[mode]}（{t('deployer.vision.truckModeTips')}）
-              </div>
-              <div>{modeHashMap.tips[mode]}</div>
-              <div className='flex gap-[20px] mt-[5px]'>
-                <Button
-                  variant='contained'
-                  size={'small'}
-                  style={{ color: 'white' }}
-                  onClick={() => {
-                    setMode('load');
-                  }}
-                >
-                  {t('deployer.vision.setLoad')}
-                </Button>
-                <Button
-                  variant='outlined'
-                  size={'small'}
-                  onClick={() => {
-                    setMode('unload');
-                  }}
-                >
-                  {t('deployer.vision.setUnload')}
-                </Button>
-              </div>
             </div>
           </div>
         </div>
