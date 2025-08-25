@@ -56,7 +56,6 @@ import InputWidthKeyboard from './components/inputWithKeyboard';
 import MwConfirm from './components/MwConfirm';
 import { NavigationRegion } from './components/navigationRegion';
 import OnlinePoint from './components/onLinePoint';
-import PointCloudV1 from './components/pointCloudV1';
 import PointsCloudDiagV1 from './components/pointsCloudDiagV1';
 import PositionView from './components/reflector/positionView';
 import { postDeleteTargetReflectors } from './components/reflector/services';
@@ -205,7 +204,7 @@ const Mapping = () => {
 
   const handleChange = (newValue: number) => {
     if (robot_current_status.system_status !== 0) {
-      toast.warning(t('请先取消当前操作'));
+      toast.warning(t('deployer.hybrid.plsCancelAction'));
       return;
     }
     setFloor(newValue);
@@ -396,20 +395,8 @@ const Mapping = () => {
                     {isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? (
                       <MenuItem value='slam'>{t('deployer.hybrid.slamNavigation')}</MenuItem>
                     ) : null}
-                    {/* <MenuItem value="hybird">混合导航</MenuItem> */}
                   </Select>
                 </FormControl>
-                {/* <ToggleButtonGroup
-                    color="primary"
-                    value={alignment}
-                    exclusive
-                    onChange={changeHybird}
-                    aria-label="Platform"
-                    className="bg-gray-700"
-                  >
-                    <ToggleButton value="reflector">反光板导航</ToggleButton>
-                    <ToggleButton value="slam">slam导航</ToggleButton>
-                  </ToggleButtonGroup> */}
               </>
               {<OnlinePoint />}
             </Paper>
@@ -444,20 +431,16 @@ const Mapping = () => {
                   {alignment === 'reflector' && isShowNavigation(navigationType, 'REFLECTOR') ? (
                     <ReflectorLayer onReflectorClick={handleReflectorClick} />
                   ) : null}
-                  {/* <QrCodemap /> */}
                   <Group>
-                    {/* <PointsCloud /> */}
                     <Group>
                       <Agv isOnline={true} floor={floor}></Agv>
                       <CoordinateSystem />
                     </Group>
                     <ChangePose floor={floor} />
                     <NavigationRegion />
-                    {/* <GridGroup width={size?.width} height={size?.height} /> */}
                   </Group>
                   <CanvaOnline />
                 </Layer>
-                {false && <PointCloudV1 />}
                 <PointsCloudDiagV1 />
               </InitStage>
             </Box>
@@ -523,9 +506,6 @@ const Mapping = () => {
               flexShrink: 0,
               '& .MuiDrawer-paper': {
                 width: drawerWidth,
-                // height: "auto",
-                // top: "4rem",
-                // bottom: "3.5rem",
               },
             }}
             variant='persistent'
@@ -534,7 +514,6 @@ const Mapping = () => {
           >
             <DrawerHeader>
               <Add
-                // fontSize="small"
                 sx={{
                   color: robot_current_status.system_status !== 0 ? 'gray' : '#00D1D1',
                 }}
@@ -547,7 +526,6 @@ const Mapping = () => {
                     title: t('deployer.hybrid.floorNo'),
                     content: (
                       <>
-                        {/* <div style={{ textAlign: "center" }}>{t("楼层号")}</div> */}
                         <InputWidthKeyboard
                           mode='numbers'
                           input={''}

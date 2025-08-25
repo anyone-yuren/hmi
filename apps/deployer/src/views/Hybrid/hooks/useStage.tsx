@@ -31,7 +31,6 @@ export const useStageEvents = () => {
   // 处理触摸开始事件
   const handleTouchStart = (e: Konva.KonvaEventObject<TouchEvent>) => {
     setShowAgv(true);
-    // const touch = e.evt.touches[0];
     const stage: any = e.target.getStage();
     const pointer = stage?.getPointerPosition();
     const coordName = stage?.findOne('.coordinateSystem');
@@ -80,8 +79,6 @@ export const useStageEvents = () => {
   };
   const handleTouchEnd = (e: Konva.KonvaEventObject<TouchEvent>) => {
     // 隐藏AGV
-    // setBeginPose(false);
-    // setStartTouch(null);
     setShowAgv(false);
     setVehiclePosition({});
   };
