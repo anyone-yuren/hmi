@@ -16,6 +16,9 @@ interface State {
   // 车辆类型
   avgType: string;
   setAvgType: (avgType: string) => void;
+  // 显示充电弹窗
+  showChargingDialog: Boolean;
+  setShowChargingDialog: (v: Boolean) => void;
 }
 export const useGlobalStore = create<State>()(
   persist(
@@ -61,6 +64,9 @@ export const useGlobalStore = create<State>()(
         // 车辆类型
         avgType: "",
         setAvgType: (avgType: string) => set({ avgType }),
+
+        showChargingDialog: false,
+        setShowChargingDialog: (v) => set({ showChargingDialog: v }),
       };
     },
     {

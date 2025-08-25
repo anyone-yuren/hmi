@@ -77,7 +77,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ min, max, value, height = 20,
       </div>
 
       {/* 进度条 */}
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-2 relative'>
         <span>{min}</span>
         <svg ref={svgRef} width='100%' height={height} className='overflow-visible'>
           {/* 背景线 */}

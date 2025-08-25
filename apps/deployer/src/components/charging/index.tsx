@@ -1,6 +1,6 @@
+import { CloseOutlined } from '@ant-design/icons';
 import { useVehicleStore } from '@gbeata/store';
-import { Icon } from '@iconify/react';
-import { Timeline } from 'antd';
+import { Modal } from 'antd';
 import { t } from 'i18next';
 import type { FC, MouseEventHandler, PropsWithChildren } from 'react';
 import { memo } from 'react';
@@ -14,24 +14,33 @@ interface IChargingProps {
 
 const Charging: FC<PropsWithChildren<IChargingProps>> = (props) => {
   const { status } = props;
+  const [modal, contextHolder] = Modal.useModal();
   const { charge_pile_status, powerStatus } = useVehicleStore(
     useShallow((store) => ({
       charge_pile_status: store.charge_pile_status,
       powerStatus: store.powerStatus,
     })),
   );
-  debugger;
-  const chargeStatus = [
-    '',
-    '',
-    t('common.charging.readyCharging'),
-    t('common.charging.charging'),
-    t('common.charging.success'),
-    t('common.charging.fail'),
-  ];
   return (
-    <ChargingContainer onClick={props.onClick}>
+    <ChargingContainer>
       <div className='text'>{powerStatus?.power || 0}%</div>
+      <CloseOutlined
+        className='absolute top-4 right-4 z-20'
+        style={{
+          fontSize: 48,
+        }}
+        onClick={(e) => {
+          modal.confirm({
+            title: t('common.charging.close'),
+            content: t('common.charging.closeContent'),
+            okText: t('common.confirm'),
+            okType: 'danger',
+            onOk: () => {
+              props?.onClick?.(e);
+            },
+          });
+        }}
+      />
       {charge_pile_status?.charge_status === 2 ? (
         <div className='text text-gray-50 mt-10 opacity-50 animate-fadeIn'>{t('common.charging.waitting')}</div>
       ) : null}
@@ -45,45 +54,7 @@ const Charging: FC<PropsWithChildren<IChargingProps>> = (props) => {
         {/* 下面的 */}
         <div className='button'></div>
       </div>
-      {charge_pile_status?.charge_status !== 0 ? (
-        <div className='!absolute flex justify-between items-end bottom-2 w-full left-0 px-4'>
-          <div>
-            <p className='font-bold mb-2 text-xl'>{t('common.charging.battery')}</p>
-            <Timeline
-              reverse={true}
-              items={[
-                charge_pile_status?.pe_charge_input &&
-                  ({
-                    children: t('common.charging.chargeingOutput') + charge_pile_status?.pe_charge_input,
-                  } as any),
-                charge_pile_status?.pe_charge_output && {
-                  children: t('common.charging.chargeingOutput') + charge_pile_status?.pe_charge_output,
-                },
-                {
-                  children: `${t('common.charging.chargePile')} ${t('common.charging.Voltage')} ：${
-                    charge_pile_status?.output_voltage
-                  }V/${charge_pile_status?.output_current}A`,
-                },
-                {
-                  children: `${t('common.charging.battery')} ${t('common.charging.Voltage')} ：${status?.power}V/${status?.current}A`,
-                },
-                {
-                  children: `${t('common.charging.errorCode')} ：${charge_pile_status?.error_code}`,
-                },
-                {
-                  dot: <Icon icon='svg-spinners:clock' />,
-                  children: `${t('common.charging.brushBoardStatus')} :
-                    ${charge_pile_status?.brush_board_status === 0 ? t('common.charging.extend') : t('common.charging.retract')}`,
-                },
-                {
-                  dot: <Icon icon='svg-spinners:clock' />,
-                  children: `${t('common.charging.chargeStatus')}：${chargeStatus[charge_pile_status?.charge_status]}`,
-                },
-              ]}
-            />
-          </div>
-        </div>
-      ) : null}
+      {contextHolder}
     </ChargingContainer>
   );
 };

@@ -226,5 +226,8 @@
   "commentTranslate.multiLineMerge": true,
   "vue.server.hybridMode": true,
   "oxc.enable": false,
-  "i18n-ally.theme.annotation": "rgba(255,255,255)"
+  "i18n-ally.theme.annotation": "rgba(255,255,255)",
+  "[svg]": {
+    "editor.defaultFormatter": "jock.svg"
+  }
 }

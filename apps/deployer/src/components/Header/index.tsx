@@ -49,18 +49,21 @@ const GlobalHeader = () => {
   const responsive = useResponsive();
   const [modal, contextHolder] = Modal.useModal();
   const { styles } = useStyles();
-  const { powerStatus } = useVehicleStore(
+  const { powerStatus, setPowerStatus } = useVehicleStore(
     useShallow((state) => {
       return {
         powerStatus: state.powerStatus,
+        setPowerStatus: state.setPowerStatus,
       };
     }),
   );
-  const { token, setToken, setAvgType } = useGlobalStore(
+  const { token, setToken, setAvgType, showChargingDialog, setShowChargingDialog } = useGlobalStore(
     useShallow((state) => ({
       token: state.token,
       setToken: state.setToken,
       setAvgType: state.setAvgType,
+      showChargingDialog: state.showChargingDialog,
+      setShowChargingDialog: state.setShowChargingDialog,
     })),
   );
 
@@ -71,6 +74,20 @@ const GlobalHeader = () => {
       data?.agv_type && setAvgType(data?.agv_type);
     }
   }, [data]);
+
+  // 设置十分钟定时器
+  useEffect(() => {
+    if (powerStatus.charge_status === 3) {
+      setShowChargingDialog(true);
+      const timer = setTimeout(
+        () => {
+          setShowChargingDialog(true);
+        },
+        10 * 60 * 1000,
+      );
+      return () => clearTimeout(timer);
+    }
+  }, [powerStatus.charge_status]);
 
   return (
     <div className='flex flex-col h-full items-center justify-between px-4 py-2 text-white '>
@@ -159,7 +176,17 @@ const GlobalHeader = () => {
           onClick={() => navigate('/slider')}
         ></Button>
       </div>
-      {[2, 3].includes(powerStatus.charge_status) && <ChargingAnimation />}
+      {[2, 3].includes(powerStatus.charge_status) && showChargingDialog && (
+        <ChargingAnimation
+          onClick={() => {
+            setShowChargingDialog(false);
+            setPowerStatus({
+              charge_status: 0,
+              power: 0,
+            });
+          }}
+        />
+      )}
       <WsVehicleContainer />
       <GlobalNotification />
       <LoginDialog />

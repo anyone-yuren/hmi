@@ -2,12 +2,13 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { Badge, Button, Drawer, List, Tree, TreeDataNode, Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
-import { DrawerClassNames } from 'antd/es/drawer/DrawerPanel';
 import { motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
+import noVehicleSvg from '../assets/icons/noVehicle.svg';
 import { useAgvType } from '../hooks/useAgvType';
+import useDrawerClassName from '../hooks/useDrawerClassName';
 import NodeLogs from './components/nodeLogs';
 import { getNodeLogs } from './services';
 
@@ -36,21 +37,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const useDrawerStyles = createStyles(({ token }) => ({
-  'my-drawer-body': {
-    background: 'transparent',
-  },
-  'my-drawer-header': {
-    background: '#162640',
-  },
-  'my-drawer-footer': {
-    color: token.colorPrimary,
-  },
-  'my-drawer-content': {
-    background: `#162640 !important`,
-  },
-}));
-
 // Vite环境下获取assets/vehicles目录下的所有图片
 const imageModules = import.meta.glob('../assets/vehicles/*', { eager: true });
 
@@ -70,17 +56,10 @@ const getImage = (imageName: string) => {
 const About = () => {
   const { t } = useTranslation();
   const { styles } = useStyles();
-  const { styles: drawerStyles } = useDrawerStyles();
   const theme = useTheme();
   const [openLogs, setLogsOpen] = useState(false);
   const [openNodeLogs, setOpenNodeLogs] = useState(false);
-  const classNames: DrawerClassNames = {
-    body: drawerStyles['my-drawer-body'],
-    mask: drawerStyles['my-drawer-mask'],
-    header: drawerStyles['my-drawer-header'],
-    footer: drawerStyles['my-drawer-footer'],
-    content: drawerStyles['my-drawer-content'],
-  };
+  const classNames = useDrawerClassName();
 
   const agvType = useAgvType();
 
@@ -98,8 +77,11 @@ const About = () => {
   });
 
   const productImage = useCallback(() => {
+    if (!agvType) {
+      return noVehicleSvg;
+    }
     return getImage(`${pdName}`);
-  }, [pdName]);
+  }, [pdName, agvType]);
 
   const treeData: TreeDataNode[] = [
     {
@@ -224,10 +206,11 @@ const About = () => {
             className='flex-1 flex flex-col gap-2  bg-no-repeat'
             style={{
               backgroundImage: `url(${productImage()})`,
-              backgroundSize: '100% auto',
+              backgroundSize: agvType ? '100% auto' : '70% auto',
               backgroundPosition: 'center bottom',
             }}
           >
+            <div></div>
             <div>
               <Typography.Title level={5} className='!m-0'>
                 {t('common.about.serial')}
@@ -253,7 +236,7 @@ const About = () => {
                 }}
                 className='!m-0 opacity-70'
               >
-                {agvType}
+                {agvType ? agvType : t('common.about.unknown')}
               </Typography.Text>
             </div>
             <div>
@@ -270,11 +253,8 @@ const About = () => {
             </div>
           </div>
           <div className='flex justify-end gap-2'>
-            <Button type='primary' onClick={() => setLogsOpen(true)}>
-              系统日志
-            </Button>
             <Button color='yellow' variant='solid'>
-              客户端
+              {t('common.about.client')}
             </Button>
           </div>
         </div>
@@ -325,7 +305,7 @@ const About = () => {
                         getLogs({ node_name: item.title });
                       }}
                     >
-                      查看日志
+                      {t('common.about.viewlog')}
                     </Button>,
                   ]}
                 >
@@ -391,7 +371,11 @@ const About = () => {
       <Drawer
         closable
         destroyOnHidden
-        title={<p>{loadingNode} 日志</p>}
+        title={
+          <p>
+            {loadingNode} {t('common.about.log')}
+          </p>
+        }
         placement='right'
         open={openNodeLogs}
         loading={false}
