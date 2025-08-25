@@ -15,7 +15,7 @@ interface IMapPointsProps {
 }
 const textFontSize = 4;
 const StoragePoints = (props: IMapPointsProps) => {
-  const { visible, points, storageProps, storageTextVisible, onPointsClick, extremum, storageTextProps } = props;
+  const { visible, points, storageProps, storageTextVisible, onPointsClick, storageTextProps } = props;
   const [textSizeHashMap, setTextSizeHashMap] = useState<Record<IPoint['id'], any>>({});
   const [packageImages, setPackageImages] = useState('');
 

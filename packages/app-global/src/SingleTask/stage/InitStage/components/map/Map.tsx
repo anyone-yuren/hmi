@@ -1,27 +1,10 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from 'react';
 // import vehicleImages from '../../../assets/vehicle/vector.svg';
-import { useTranslation } from "react-i18next";
-import { Group, Image as KonvaImage } from "react-konva";
-import useImage from "use-image";
-import CloudPoints from "./CloudPoints";
-// grid_map: {
-//     data: {
-//         height: number;
-//         pic: string;
-//         width: number;
-//     };
-//     is_mapping: boolean;
-//     map_to_cad: {
-//         theta: number;
-//         x: number;
-//         y: number;
-//     };
-//     origin: {
-//         theta: number;
-//         x: number;
-//         y: number;
-//     };
-// };
+import { useTranslation } from 'react-i18next';
+import { Group, Image as KonvaImage } from 'react-konva';
+import useImage from 'use-image';
+import CloudPoints from './CloudPoints';
+
 const Map = (props: any) => {
   const { floorMapData, cloudPoints } = props;
   const [floorMapImages, setFloorMapImages] = useState<any>(null);
@@ -68,18 +51,6 @@ const Map = (props: any) => {
           offsetY={floorMapSize?.height}
         ></KonvaImage>
         <CloudPoints></CloudPoints>
-        {/* <KonvaImage
-          image={image || imagesRef.current}
-          name="point-scanImage"
-          x={prevData?.current?.pose.x * 20} // 设置图片的 x 位置
-          y={0 - prevData.current?.pose.y * 20} // 设置图片的 y 位置
-          width={prevData.current?.data.width} // 设置图片的宽度
-          height={prevData.current?.data.height} // 设置图片的高度
-          offsetX={0}
-          offsetY={prevData.current?.data.height}
-          rotation={-(prevData.current?.pose.theta * 180) / Math.PI}
-          opacity={1}
-        /> */}
       </Group>
     </>
   );

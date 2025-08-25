@@ -1,5 +1,4 @@
 import { forwardRef, memo, useImperativeHandle } from 'react';
-// import vehicleImages from '../../../assets/vehicle/vector.svg';
 import { useShallow } from 'zustand/react/shallow';
 import { useSingleTaskStore } from '../../../../store/singleTask.store';
 import Vehicle from './Vehicle';

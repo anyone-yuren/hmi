@@ -1,7 +1,6 @@
 import Konva from 'konva';
 import React, { type ElementRef, forwardRef, memo, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import { Group, Layer, Line, Rect, Stage } from 'react-konva';
-// import { Image as KonvaImage } from 'react-konva';
 import { Html } from 'react-konva-utils';
 
 import { getBoundaryFromExtremum } from '../utils';
@@ -251,7 +250,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
         }}
       >
         <Layer name='map'>
-          <Rect cache={false} width={10} fill='green' height={10} offsetX={10 / 2} offsetY={10 / 2} x={0} y={0} />
           <Map floorMapData={floorMapData} scale={currentScale}></Map>
         </Layer>
         {/* 缩放显示的问题，应该与地图实际的尺寸有关系想想如何处理 */}
@@ -269,7 +267,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
                   points={visibleConfig.storagePoints ? line.controls : line.simpleControls}
                   stroke='#6d83be'
                   strokeWidth={1}
-                  // tension={0.4}
                   {...lineProps}
                 />
               );
@@ -292,7 +289,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
               points={storagePoints}
               storageTextVisible={storageTextVisible && visibleConfig.storageText}
               {...{ storageProps, storageTextProps, onPointsClick }}
-              extremum={extremum}
             />
           )}
           {stationVisible && visibleConfig.stationPoints && (

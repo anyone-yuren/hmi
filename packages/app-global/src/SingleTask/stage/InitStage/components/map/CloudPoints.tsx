@@ -1,28 +1,10 @@
 import { memo, useEffect, useRef } from 'react';
-// import vehicleImages from '../../../assets/vehicle/vector.svg';
 import { useTranslation } from 'react-i18next';
 import { Image as KonvaImage } from 'react-konva';
 import useImage from 'use-image';
 import { useShallow } from 'zustand/react/shallow';
 import { useSingleTaskStore } from '../../../../store/singleTask.store';
-// grid_map: {
-//     data: {
-//         height: number;
-//         pic: string;
-//         width: number;
-//     };
-//     is_mapping: boolean;
-//     map_to_cad: {
-//         theta: number;
-//         x: number;
-//         y: number;
-//     };
-//     origin: {
-//         theta: number;
-//         x: number;
-//         y: number;
-//     };
-// };
+
 const CloudPoints = (props: any) => {
   const { t } = useTranslation();
   const imagesRef = useRef<any>(null);
