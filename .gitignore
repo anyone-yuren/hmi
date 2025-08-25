@@ -16,3 +16,5 @@ gbeata-*
 @gbeata/*
 docs-dist
 pnpm-lock.yaml
+app/deployer/.env.production
+
