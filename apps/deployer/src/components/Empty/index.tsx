@@ -1,7 +1,6 @@
-import { t } from 'i18next';
-// 暂无数据
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { t } from 'i18next';
 import Empty from '../SvgIcon/Empty';
 
 const StyleBox = styled(Box)(({ theme }) => ({

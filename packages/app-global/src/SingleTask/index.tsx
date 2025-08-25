@@ -89,6 +89,7 @@ const SingleTask = () => {
     title: {
       0: t('deployer.singleTask.rcsMode'),
       3: t('deployer.singleTask.singleMode'),
+      100: '',
     },
     showTaskPanel: {
       0: () => {
@@ -98,6 +99,7 @@ const SingleTask = () => {
         setTaskSettingVisible(false);
         setTaskVisible(true);
       },
+      100: () => {},
     },
   };
 
@@ -293,7 +295,6 @@ const SingleTask = () => {
                 lines,
                 lineVisible: true,
               }}
-              // stageStyle={{ background: 'white' }}
               points={{
                 points: pointsDict?.points,
               }}
@@ -362,7 +363,7 @@ const SingleTask = () => {
                     </TableHead>
                     <TableBody>
                       {subTask?.tasks?.length ? (
-                        subTask?.tasks?.map((row, index) => (
+                        subTask?.tasks?.map((row: any, index) => (
                           <TableRow key={row?.task_id}>
                             {isTask && (
                               <TableCell align='center' component='th' scope='row'>
@@ -388,7 +389,7 @@ const SingleTask = () => {
                               <TableCell align='center'>
                                 <Button
                                   onClick={async () => {
-                                    const { code } = await cancelTask({
+                                    const { code }: any = await cancelTask({
                                       task_id_list: [Number(row?.task_id)],
                                     });
                                     if (code === 200) {

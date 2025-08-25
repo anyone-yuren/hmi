@@ -7,14 +7,6 @@ const useBoundary = (props: IBoundary) => {
   const { boundaryVisible = false, boundaryPoints = [], boundaryProps = {} } = props;
   const [boundary_visible, set_boundary_visible] = React.useState<any>(boundaryVisible);
   const [boundary_points, set_boundary_points] = React.useState<any>(boundaryPoints);
-  // 静态变量要加入props,这个可以考虑加入localStorage
-  // const [boundary_props, set_boundary_props] = React.useState({
-  //   strokeWidth: BOUNDARY_STROKE_WIDTH,
-  //   stroke: BOUNDARY_STROKE,
-  //   dash: BOUNDARY_DASH,
-  //   ...boundaryProps,
-  // });
-  // 设置的问题先放一下
   const [boundary_props, set_boundary_props] = useLocalStorageState('boundary_props', {
     defaultValue: {
       strokeWidth: BOUNDARY_STROKE_WIDTH,

@@ -46,7 +46,6 @@ export interface IOriginPoints {
   stationTextProps?: Omit<Konva.Text, 'text'>;
 
   boundary?: any;
-  // locationStateHashMap?: Record<string, any>;
   scale?: number;
   visibleConfig?: Record<string, boolean>;
 }

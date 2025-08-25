@@ -41,7 +41,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
     infiniteView, // 无限视距
     allPointsVisible,
     floorMapData = null,
-    // cloudPoints = null,
   } = props;
 
   const [activePoints, setActivePoints] = useState<any>([]);
@@ -311,29 +310,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
 
         {/* 车应该在线上 */}
         <Layer name='vehicle' listening={false}>
-          {false &&
-            vehicles.map((vehicle: any) => {
-              return vehicle.tracks
-                ?.filter((item) => {
-                  return [3, 4, 6].includes(item.state);
-                })
-                .map((t: any) => {
-                  const line = lineHashMap ? lineHashMap[t.routeKey] : {};
-                  return line?.id ? (
-                    <Line
-                      listening={false}
-                      id={line.id + ''}
-                      key={line.id}
-                      points={line.controls}
-                      stroke={{ 3: '#00abc7', 4: 'yellow', 6: 'red' }[t.state]}
-                      strokeWidth={100}
-                    ></Line>
-                  ) : (
-                    <></>
-                  );
-                });
-            })}
-
           <Vehicles ref={vehicleRef}></Vehicles>
         </Layer>
 
@@ -347,7 +323,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
                   height={7}
                   offsetX={7 / 2}
                   offsetY={7 / 2}
-                  // stroke="green"
                   stroke='#12d1d1'
                   strokeWidth={0.5}
                   onClick={(event) => {

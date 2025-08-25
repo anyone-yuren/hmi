@@ -1,8 +1,6 @@
-import { useRef, useMemo, useState, useEffect } from 'react';
-import Konva from 'konva';
-import { LINE_COLOR } from '../constants/index';
-import { newCalcSplinePoints } from '../components/lines/utils';
 import { useThrottleEffect } from 'ahooks';
+import { useState } from 'react';
+import { newCalcSplinePoints } from '../components/lines/utils';
 
 const useLines = (props: any) => {
   const { lines, lineProps, lineVisible, boundary = [], scale, visibleConfig = {} } = props;
@@ -68,16 +66,6 @@ const useLines = (props: any) => {
       // 移动端只取单向线
       origin.length > 1000 && (origin = origin.filter((_, index) => _.directionType === 1));
 
-      // const percent = Math.floor(origin.length / 1400);
-      // origin.length > 1400 && (origin = origin.filter((_, index) => index % percent == 0));
-
-      // console.log(
-      //   '[useLines.tsx]: 总共多少条线=>',
-      //   Object.keys(lineHashMap).length,
-      //   '要渲染多少条线:',
-      //   origin.length,
-      //   origin,
-      // );
       set_origin_lines({
         lines: origin,
         hashMap: lineHashMap,

@@ -9,8 +9,6 @@ import { LineGrid } from './components/LineGrid';
 import { MAX_SCALE, MIN_SCALE } from './constants/config';
 import useStage from './hooks/useStage'; // 假设自定义 hook
 
-// Konva.pixelRatio = 1;
-
 interface IProps {
   size?: {
     width: number;
@@ -49,27 +47,18 @@ const InitStage = (props: IProps) => {
     const stage = stageRef.current?.getStage();
     if (stage) {
       stage.batchDraw();
-      // setLoading(false);
     }
   }, [size]);
   useEffect(() => {
     if (!stageRef.current) return;
     const stage = stageRef.current?.getStage();
-    // 获取stage的中心点
-
     if (stage) {
       setHybirdStage(stage);
-      // stage.position({
-      //   x: stage.width() / 2,
-      //   y: stage.height() / 2,
-      // });
       stage.batchDraw();
       setStageScale(1);
-      // 将 0,0 坐标点移动到屏幕中心
     }
   }, [stageRef.current, size]);
 
-  // const [image, setRadarVisible] = useState<any>(null);
   useEffect(() => {
     const stage = stageRef.current;
 

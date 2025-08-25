@@ -1,9 +1,8 @@
 /* eslint-disable no-param-reassign */
-import { type ElementRef, useCallback, useEffect, useState } from 'react';
 import Hammer from 'hammerjs';
-import type { Stage } from 'react-konva';
-import { message } from 'antd';
 import _ from 'lodash';
+import { type ElementRef, useCallback, useEffect, useState } from 'react';
+import type { Stage } from 'react-konva';
 
 const scaleBy = 1.7;
 let lastCenter: any = null;
@@ -16,7 +15,6 @@ export function getCenter(p1: any, p2: any) {
 }
 export function getDistance(p1: any, p2: any) {
   return Math.hypot(p2.x - p1.x, p2.y - p1.y);
-  return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
 }
 
 export function useZoom(
@@ -87,23 +85,15 @@ export function useZoom(
     if (!stage) return;
 
     const handleWheel = (e: any) => {
-      // stop default scrolling
       e.evt.preventDefault();
-
       const pointer = stage.getPointerPosition()!;
-      // how to scale? Zoom in? Or zoom out?
       let direction = e.evt.deltaY > 0 ? 1 : -1;
-
-      // when we zoom on trackpad, e.evt.ctrlKey is true
-      // in that case lets revert direction
       direction = -direction;
       if (e.evt.ctrlKey) {
         direction = -direction;
       }
       const oldScale = stage.scaleX();
-
       const newScale = direction > 0 ? oldScale * scaleBy : oldScale / scaleBy;
-
       handleZoom(newScale, {
         targetPosition: pointer,
       });
@@ -114,67 +104,6 @@ export function useZoom(
       stage.off('wheel', handleWheel);
     };
   }, [stageRef, handleZoom]);
-
-  // 祖传代码 想要与zoom兼容，要改后面定义重定位中心点的位置
-  const handleTouchMove = (e: any) => {
-    e.evt.preventDefault();
-    const touch1 = e.evt.touches[0];
-    const touch2 = e.evt.touches[1];
-
-    if (touch1 && touch2) {
-      if (stageRef.current.isDragging()) {
-        stageRef.current.stopDrag();
-      }
-
-      const p1 = {
-        x: touch1.clientX,
-        y: touch1.clientY,
-      };
-      const p2 = {
-        x: touch2.clientX,
-        y: touch2.clientY,
-      };
-
-      if (!lastCenter) {
-        lastCenter = getCenter(p1, p2);
-        return;
-      }
-      const newCenter = getCenter(p1, p2);
-
-      const dist = getDistance(p1, p2);
-
-      if (!lastDist) {
-        lastDist = dist;
-      }
-
-      const pointTo = {
-        x: (newCenter.x - stageRef.current.x()) / stageRef.current.scaleX(),
-        y: (newCenter.y - stageRef.current.y()) / stageRef.current.scaleX(),
-      };
-
-      let scale = stageRef.current.scaleX() * (dist / lastDist);
-
-      stageRef.current.scale({ x: scale, y: scale });
-      setCurrentScale(scale);
-
-      const dx = newCenter.x - lastCenter.x;
-      const dy = newCenter.y - lastCenter.y;
-
-      const newPos = {
-        x: newCenter.x - pointTo.x * scale + dx,
-        y: newCenter.y - pointTo.y * scale + dy,
-      };
-      stageRef.current.position(newPos);
-
-      lastDist = dist;
-      lastCenter = newCenter;
-    }
-  };
-
-  const handleTouchend = () => {
-    lastDist = 0;
-    lastCenter = null;
-  };
 
   useEffect(() => {
     if (!stageRef.current) return;
@@ -244,7 +173,5 @@ export function useZoom(
     currentScale,
     zoom: handleZoom,
     setCurrentScale,
-    // handleTouchMove,
-    // handleTouchend,
   };
 }
