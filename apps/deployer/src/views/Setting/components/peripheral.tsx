@@ -1,15 +1,20 @@
 import useCommonStyles from '@/utils/commonStyle';
 import { useRequest } from 'ahooks';
 import { Skeleton, Slider, Switch, Typography } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getPeripheralControlParam, postPeripheralControlParam } from '../service';
+const branch = import.meta.env.VITE_APP_BUILD_BRANCH;
+const data = import.meta.env.VITE_APP_BUILD_TIME;
+const info = import.meta.env.VITE_APP_BUILD_INFO;
+const hash = import.meta.env.VITE_APP_BUILD_COMMIT;
 /**
  * 外设参数
  */
 const Peripheral = () => {
   const { styles } = useCommonStyles();
   const { t } = useTranslation();
+  const [count, setCount] = useState(1);
   const {
     run,
     loading,
@@ -26,9 +31,19 @@ const Peripheral = () => {
     run();
   }, []);
 
+  useEffect(() => {
+    if (count % 9 === 0) {
+      alert(`branch: ${branch || '-'} \ndata: ${data || '-'} \ninfo: ${info || '-'} \nhash: ${hash || '-'}`);
+    }
+  }, [count]);
+
+  const handleTitle = () => {
+    setCount((origin) => origin + 1);
+  };
+
   return (
     <div className='flex-1 overflow-auto'>
-      <Typography.Title className='text-center' level={3}>
+      <Typography.Title className='text-center' level={3} onClick={handleTitle}>
         {t('deployer.setting.peripheral')}
       </Typography.Title>
       {!loading ? (
