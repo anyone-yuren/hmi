@@ -673,7 +673,29 @@
       "vehicleStopShelfDist": "Distance entre le point de référence et l'étagère après le stationnement",
       "visionChangeWarning": "Le profil de vision a changé, veuillez vérifier les derniers paramètres",
       "width": "Largeur",
-      "forkExtendParams": "Paramètres de distance d'extension du bras de fourche"
+      "forkExtendParams": "Paramètres de distance d'extension du bras de fourche",
+      "beforeMove": "Avant le déplacement du véhicule",
+      "afterMove": "Après le déplacement du véhicule",
+      "loadInstructions": "Instructions de chargement",
+      "photoDistance": "Distance de prise de vue",
+      "firstVisualPoint": "Premier point de détection visuelle",
+      "secondVisualPoint": "Deuxième point de détection visuelle",
+      "pickFlatWingLegendTips1": "Tout d'abord, une reconnaissance de l'attitude de dépôt est effectuée pour ajuster l'attitude. Après que le véhicule soit arrivé au point d'étagère, une reconnaissance du déplacement du véhicule est effectuée, permettant d'ajuster finement le déplacement latéral du bras de fourche ainsi que la position avant/arrière du véhicule pour un dépôt précis.",
+      "pickFlatWingLegendTips2": "Les paramètres de compensation lors du chargement sur les côtés gauche et droit du camion sont différents et doivent être réglés séparément. Généralement, lors du chargement à gauche ou à droite, les paramètres de compensation gauche/droite devraient être inverses l'un de l'autre en théorie.",
+      "pickFlatWingLegendTips3": "Le chargement doit commencer par l'avant du camion et se poursuivre successivement jusqu'à l'arrière.",
+      "pickFlatWingLegendTips4": "Avant le chargement, il est nécessaire d'indiquer précisément la largeur des marchandises et les espaces nécessaires. En cas de palettes variées, veuillez renseigner les dimensions maximales des marchandises.",
+      "pickFlatWingLegendTips5": "En regardant dans la direction de l'avant du camion, utilisez la main gauche et la main droite pour distinguer le chargement côté gauche et côté droit.",
+      "pickFlatWingLegendTips6": "Compensation de dépôt côté gauche : Direction gauche/droite : pour rapprocher le chariot élévateur de l'avant du camion, diminuez la compensation gauche/droite ; pour l'éloigner, augmentez-la. Direction avant/arrière : pour rapprocher les marchandises de la surface du compartiment, diminuez la compensation avant/arrière ; pour les éloigner, augmentez-la. Pour faire tourner les marchandises dans le sens antihoraire, augmentez la compensation angulaire, sinon diminuez-la.",
+      "pickFlatWingLegendTips7": "Compensation de dépôt côté droit : Direction gauche/droite : pour rapprocher le chariot élévateur de l'avant du camion, augmentez la compensation gauche/droite ; pour l'éloigner, diminuez-la. Direction avant/arrière : pour rapprocher les marchandises de la surface du compartiment, diminuez la compensation avant/arrière ; pour les éloigner, augmentez-la. Pour faire tourner les marchandises dans le sens antihoraire, augmentez la compensation angulaire, sinon diminuez-la.",
+      "multiLayerStack": "Empilement multicouche",
+      "stackBackFromShelf": "Distance entre le point de référence et la surface avant de l'étagère lorsque le véhicule est redressé",
+      "stackStopFromShelf": "Distance entre le point de référence et la surface de l'étagère après le stationnement",
+      "stockStackLegendTips1": "Si, à chaque empilement, il y a un décalage dans une direction, vous pouvez ajuster les paramètres de compensation gauche/droite ou avant/arrière en fonction de la situation réelle.",
+      "stockStackLegendTips2": "En prenant la direction du hayon vers le pare-brise comme direction positive, une diminution de la compensation gauche/droite déplace le véhicule vers la droite, et une diminution de la compensation avant/arrière déplace le véhicule vers l'arrière.",
+      "stockStackLegendTips3": "L'effet d'empilement après compensation est illustré à droite.",
+      "stockStackLegendTips4": "Si, à chaque empilement, la palette sur la fourche présente un angle, vous pouvez modifier les paramètres de compensation angulaire.",
+      "stockStackLegendTips5": "Si le décalage est d'environ 1° comme indiqué ci-dessous, entrez -1 dans les paramètres de compensation angulaire.",
+      "stockStackLegendTips6": "Règle de compensation : une augmentation de la valeur fait tourner le véhicule dans le sens antihoraire."
     }
   }
 }

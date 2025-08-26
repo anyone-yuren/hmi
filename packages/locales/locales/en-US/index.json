@@ -673,7 +673,29 @@
       "vehicleStopShelfDist": "The distance from the base point to the pallet after parking.",
       "visionChangeWarning": "The visual configuration file has been changed. Please check the latest parameters",
       "width": "Width",
-      "forkExtendParams": "Fork Arm Extension Distance Parameters"
+      "forkExtendParams": "Fork Arm Extension Distance Parameters",
+      "beforeMove": "Before moving",
+      "afterMove": "After moving",
+      "loadInstructions": "Loading instructions",
+      "photoDistance": "Photo distance",
+      "firstVisualPoint": "First visual point",
+      "secondVisualPoint": "Second visual point",
+      "pickFlatWingLegendTips1": "First, the pallet pose recognition will be performed, and the pallet pose will be adjusted, and the vehicle will be moved to the loading point after the pallet pose recognition, and the cross arm will be adjusted, and the car body will be adjusted in front and back, and the precise pallet will be placed.",
+      "pickFlatWingLegendTips2": "In the case of trucking, the compensation parameters on the left and right sides are different, and need to be adjusted separately. Generally, when loading on the left and right sides, the compensation parameters on the left and right sides should be exactly opposite.",
+      "pickFlatWingLegendTips3": "Loading must start from the front of the vehicle and load sequentially until the rear of the vehicle.",
+      "pickFlatWingLegendTips4": "Before loading, you need to fill in the width of the goods and the gap between the goods, assuming there are multiple pallets, fill in according to the maximum goods size.",
+      "pickFlatWingLegendTips5": "People look at the truck head, and use their left and right hands to distinguish the left and right side of the loading.",
+      "pickFlatWingLegendTips6": "Left side compensation: Left and right direction: To make the cross car approach the truck head direction, reduce the left and right compensation, otherwise to approach the truck head direction, increase the compensation. Front and back direction: To make the goods approach the surface of the carriage, reduce the front and back compensation, otherwise to make the goods approach the surface of the carriage, increase the compensation. To make the goods rotate counterclockwise, increase the angle compensation, otherwise reduce it.",
+      "pickFlatWingLegendTips7": "Right side compensation: Left and right direction: To make the cross car approach the truck car head direction, increase the left and right compensation, otherwise to approach the truck head direction, reduce the compensation. Front and back direction: To make the goods approach the carriage surface, reduce the front and back compensation, otherwise to make the goods away from the carriage surface, increase the front and back compensation. To make the goods rotate counterclockwise, increase the angle compensation, otherwise reduce.",
+      "multiLayerStack": "Multi layer stack",
+      "stackBackFromShelf": "The distance from the base point to the front surface of the vehicle when the vehicle is corrected",
+      "stackStopFromShelf": "The distance from the base point to the surface of the vehicle after parking",
+      "stockStackLegendTips1": "Assuming that each time the tray is stacked, it is shifted to one direction, you can adjust the left or right or front and rear compensation parameters according to the actual situation.",
+      "stockStackLegendTips2": "Taking the direction from the rear to the front of the vehicle as the positive direction, decreasing the left-right compensation value will result in the final position of the vehicle shifting to the right, and decreasing the front-back compensation value will result in the final position of the vehicle shifting backward.",
+      "stockStackLegendTips3": "The stacking effect after compensation is shown in the figure on the right.",
+      "stockStackLegendTips4": "Assuming that each time a tray is stacked on the cross-carriage, you can modify the angle compensation parameter.",
+      "stockStackLegendTips5": "As shown in the figure, it is about 1 ° off, so fill in -1 in the angle compensation parameter.",
+      "stockStackLegendTips6": "The larger the value, the counterclockwise rotation of the car."
     }
   }
 }
