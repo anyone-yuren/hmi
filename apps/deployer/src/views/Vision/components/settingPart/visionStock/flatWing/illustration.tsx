@@ -36,7 +36,7 @@ const Illustration = (props: IProps) => {
   }, [vehicleChassis, type]);
 
   if (!isExist) {
-    return <div className='w-full text-center'>{t('该车型不支持此模式')}</div>;
+    return <div className='w-full text-center'>{t('deployer.vision.notSupportChassis')}</div>;
   }
   if (pageType === 'move') {
     return (

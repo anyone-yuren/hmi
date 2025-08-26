@@ -2,6 +2,7 @@ import { useGlobalStore } from '@gbeata/store';
 import { message } from 'antd';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { t } from 'i18next';
+import ErrorMessageManager from './errorMessage';
 // 统一的响应枚举
 export enum ResultEnum {
   SUCCESS = 200,
@@ -33,6 +34,7 @@ const instance = axios.create({
   },
 });
 
+const manager = new ErrorMessageManager();
 // 请求拦截器
 instance.interceptors.request.use(
   (config: AxiosRequestConfig) => {
@@ -100,7 +102,9 @@ instance.interceptors.response.use(
           message.error(t('common.http.notFound'));
           break;
         case 500:
-          message.error(t('common.http.serverError'));
+          // message.error(t('common.http.serverError'));
+          // 暂时只启用这一个,防止多次弹窗。其他有需要可以按需加。
+          manager.push(t('common.http.serverError'));
           break;
         default:
           message.error(error.response.data.message || t('common.http.fail'));
