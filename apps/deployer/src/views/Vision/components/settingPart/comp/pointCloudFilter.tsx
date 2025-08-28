@@ -129,7 +129,6 @@ const PointCloudFilter = (props: IProps) => {
   }, [initParams]);
 
   useAsyncEffect(async () => {
-    // open && getPointCloudResponse({ task_id: type });
     if (open) {
       getPointCloudResponse({ task_id: type });
       timer = setInterval(() => {
@@ -139,7 +138,6 @@ const PointCloudFilter = (props: IProps) => {
   }, [open]);
 
   useUpdateEffect(() => {
-    // !open && getPointCloudMonitoringBack();
     if (!open) {
       getPointCloudMonitoringBack();
       clearInterval(timer);
@@ -319,21 +317,34 @@ const PointCloudFilter = (props: IProps) => {
           {open && (
             <LightTheme>
               <div className='flex text-black h-full'>
-                <div className='w-[320px] h-full overflow-auto'>
+                <div className='w-[350px] h-full overflow-auto'>
                   {Object.keys(state)?.map((key: string) => {
                     return (
                       <TextUpdateRow key={key} className='flex-col py-2'>
                         <div className='flex justify-between w-full relative z-10'>
                           <div>{state?.[key]?.label || '-'}</div>
-                          <div
-                            onDoubleClick={() => {
-                              handleDoubleClick({
-                                label: state?.[key]?.label,
-                                key,
-                              });
-                            }}
-                          >
-                            {state?.[key]?.value || 0}
+                          <div className='flex gap-[5px] align-bottom'>
+                            <div
+                              onDoubleClick={() => {
+                                handleDoubleClick({
+                                  label: state?.[key]?.label,
+                                  key,
+                                });
+                              }}
+                            >
+                              {state?.[key]?.value || 0}
+                            </div>
+                            <div
+                              className='text-[blue] text-[12px]'
+                              onClick={() => {
+                                handleDoubleClick({
+                                  label: state?.[key]?.label,
+                                  key,
+                                });
+                              }}
+                            >
+                              {t('common.edit')}
+                            </div>
                           </div>
                         </div>
                         <div className='flex w-full'>

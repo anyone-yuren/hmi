@@ -3,14 +3,7 @@ import { Suspense } from 'react';
 import * as THREE from 'three';
 const Axes = () => {
   const createAxis = (points: any, color: any) => {
-    return (
-      <Line
-        points={points} // Array of Vector3
-        color={color} // Color
-        lineWidth={2} // Line width
-        dashed={false} // Whether the line is dashed
-      />
-    );
+    return <Line points={points} color={color} lineWidth={2} dashed={false} />;
   };
 
   return (

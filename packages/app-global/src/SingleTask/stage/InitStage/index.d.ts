@@ -86,4 +86,6 @@ export default interface IInitStage {
 
   floorMapData?: any;
   cloudPoints?: any;
+
+  activePointStroke?: string; // 选中点的描边颜色
 }

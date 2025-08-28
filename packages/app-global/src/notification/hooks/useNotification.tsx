@@ -39,6 +39,7 @@ export const useNotification = () => {
         const data = JSON.parse(message.data);
         setErrorMessage((prev) => {
           if (isEqual(prev, data.data)) {
+            console.log('[/sirius/topics/error_description]: 错误弹窗提示', prev, data.data);
             return prev;
           }
           return data.data;
@@ -55,13 +56,13 @@ export const useNotification = () => {
         title: (
           <>
             <div className='flex items-center justify-between'>
-              <div className=' text-white font-bold'>{t('common.errorMsg.title')}</div>
+              <div className='text-white font-bold'>{t('common.errorMsg.title')}</div>
             </div>
           </>
         ),
         description: (
           <div className=''>
-            {errorMessage.map((item: string, index) => {
+            {errorMessage.map((item: any, index) => {
               return (
                 <div key={item.error_code} className='mb-2'>
                   <p>
@@ -76,10 +77,9 @@ export const useNotification = () => {
             })}
           </div>
         ),
-        className: ' bg-[#d90707]',
+        className: 'bg-[#d90707]',
       });
     } else {
-      // errorMsg.current?.close();
       if (errorMsg.current) {
         sonnerToast.dismiss(errorMsg.current);
       }
@@ -98,9 +98,7 @@ export const useNotification = () => {
         description: getObsMsg(obsInfo),
         button: {
           label: t('common.obsError.view'),
-          onClick: () => {
-            console.log('查看通知');
-          },
+          onClick: () => {},
         },
       });
     }

@@ -1,5 +1,6 @@
 import { getLineList, getPointList } from '@/views/Vision/services/index';
-import { InitStage } from '@gbeata/mapping';
+// import { InitStage } from '@gbeata/mapping';
+import { InitStage } from '@gbeata/app-global';
 import { Button } from '@mui/material';
 import { useRequest, useSize } from 'ahooks';
 import { memo, useMemo, useRef, useState } from 'react';
@@ -31,10 +32,16 @@ const StorageStage = (props: IProps) => {
       if (point.type === 5) {
         point.type = 1;
       }
-      hashMap[point.id] = point;
-      points.push({ ...point, state: 0 });
-      point.type === 6 && charges.push(point);
-      point.type === 1 && locations.push(point);
+      const newPoint = {
+        ...point,
+        x: (point.x / 1000) * 20,
+        y: (point.y / 1000) * 20,
+        state: 0,
+      };
+      hashMap[point.id] = newPoint;
+      points.push(newPoint);
+      point.type === 6 && charges.push(newPoint);
+      point.type === 1 && locations.push(newPoint);
     }
     return { hashMap, points, charges, locations };
   }, [pointsList]);
@@ -50,7 +57,7 @@ const StorageStage = (props: IProps) => {
         end: end_point?.id,
         length: 1,
         controlPoint: control_points?.map((point: any, index: number) => {
-          return { x: point.x, y: point.y };
+          return { x: point.x / 50, y: point.y / 50 };
         }),
         directionType: 1,
       });
@@ -72,6 +79,10 @@ const StorageStage = (props: IProps) => {
           <InitStage
             size={size}
             infiniteView={true}
+            allPointsVisible={true}
+            boundary={{
+              boundaryVisible: false,
+            }}
             lines={{
               lines,
               lineVisible: true,
@@ -85,6 +96,7 @@ const StorageStage = (props: IProps) => {
               if (!points.length && renderTemplateValue.length !== 1) return;
               setTemplateValue(points);
             }}
+            activePointStroke={'red'}
           ></InitStage>
         )}
       </div>

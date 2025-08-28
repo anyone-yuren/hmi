@@ -26,9 +26,6 @@ function PointCloud3D(props: IProps) {
     const colors: any = [];
     pointCloud.forEach((point: any) => {
       positions.push(point[0], point[1], point[2]);
-
-      // 将强度值映射到颜色（强度越大，颜色越红）
-      //   const { intensity } = point;
       const intensity = point[3];
       const color = new THREE.Color(1, 1 - intensity / 100, 1 - intensity / 100); // 颜色从蓝色到红色
       colors.push(color.r, color.g, color.b);

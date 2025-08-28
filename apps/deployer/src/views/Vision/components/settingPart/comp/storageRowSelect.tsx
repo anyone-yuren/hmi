@@ -14,8 +14,6 @@ interface IProps {
 const StorageRowSelect = (props: IProps) => {
   const { title, value, onChange } = props;
   const [open, setOpen] = useState(false);
-  // 0:普通点位 1：库位点 2：待命点 6：充电点
-  // const { data: pointList } = useRequest(() => getPointList({}), {});
   const { t } = useTranslation();
 
   return (

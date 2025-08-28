@@ -40,6 +40,7 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
     infiniteView, // 无限视距
     allPointsVisible,
     floorMapData = null,
+    activePointStroke = '#12d1d1',
   } = props;
 
   const [activePoints, setActivePoints] = useState<any>([]);
@@ -160,7 +161,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
   useUpdateEffect(() => {
     if (!size.height || !size.width) return;
     const { x, y } = initMapCenter;
-
     if (x === null && y === null) return;
     const stage: any = stageRef.current?.getStage();
     const scale = Math.min(size.width / boundaryWidth, size.height / boundaryHeight);
@@ -319,7 +319,7 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
                   height={7}
                   offsetX={7 / 2}
                   offsetY={7 / 2}
-                  stroke='#12d1d1'
+                  stroke={activePointStroke}
                   strokeWidth={0.5}
                   onClick={(event) => {
                     onPointsClick(pointHashMap[id]);

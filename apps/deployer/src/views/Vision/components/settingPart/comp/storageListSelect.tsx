@@ -1,6 +1,6 @@
 import { Chip } from '@mui/material';
 import { useRequest } from 'ahooks';
-import { memo, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getPointList } from '../../../services/index';
@@ -19,15 +19,8 @@ const StorageListSelect = (props: IProps) => {
   const { title, value, onChange } = props;
   const [open, setOpen] = useState(false);
   // 0:普通点位 1：库位点 2：待命点 6：充电点
-  const { data: pointList } = useRequest(() => getPointList({}), {});
+  const { data: pointList } = useRequest(() => getPointList(), {});
   const { t } = useTranslation();
-
-  const storages = useMemo(() => {
-    const ary = pointList?.data || [];
-    return ary.filter((item: any) => {
-      return item?.types.includes(1);
-    });
-  }, [pointList]);
 
   return (
     <>
@@ -49,15 +42,7 @@ const StorageListSelect = (props: IProps) => {
               return (
                 <div className='flex flex-wrap pr-[10px] items-center justify-start'>
                   {value?.map((item: any, index: number) => {
-                    return (
-                      <Chip
-                        key={item + (index + '')}
-                        className='mt-1 mr-1'
-                        // label={modelHashMap?.[item] || "-"}
-                        label={item}
-                        size='small'
-                      />
-                    );
+                    return <Chip key={item + (index + '')} className='mt-1 mr-1' label={item} size='small' />;
                   })}
                 </div>
               );

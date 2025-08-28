@@ -8,13 +8,14 @@ import * as commonServices from './src/https/global';
 import Maintenance from './src/Maintenance';
 import GlobalNotification from './src/notification';
 import SingleTask from './src/SingleTask';
-
+import { InitStage } from './src/SingleTask/stage/index';
 export {
   commonServices,
   get,
   GlobalNotification,
   HomePage,
   https,
+  InitStage,
   LoginDialog,
   Maintenance,
   post,

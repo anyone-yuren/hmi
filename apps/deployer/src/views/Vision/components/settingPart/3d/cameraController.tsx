@@ -8,7 +8,7 @@ const CameraController = memo(() => {
       minDistance={1}
       maxDistance={1000}
       zoomSpeed={5}
-      rotateSpeed={5}
+      rotateSpeed={1}
       dynamicDampingFactor={0.1}
     />
   );
