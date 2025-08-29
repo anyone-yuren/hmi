@@ -15,24 +15,6 @@ module.exports = {
     { value: "revert", name: "revert:   回退" },
     { value: "build", name: "build:    打包" },
   ],
-  // 项目选项
-  scopeOverrides: {
-    // 当选择 feat 或 fix 时要跳过 Questions
-    feat: [
-      { name: "customer" },
-      { name: "deployer" },
-      {
-        name: "common",
-      },
-    ],
-    fix: [
-      { name: "customer" },
-      { name: "deployer" },
-      {
-        name: "common",
-      },
-    ],
-  },
   // 确认提交
   allowCustomScopes: true,
   // 消息步骤
@@ -48,6 +30,41 @@ module.exports = {
   skipQuestions: ["body", "footer"],
   // subject文字长度默认是72
   subjectLimit: 72,
+  // 自定义 prompts 实现多级选择
+  prompts: {
+    // 项目选择
+    project: {
+      type: "list",
+      message: "请选择项目:",
+      choices: ["customer", "deployer", "common"],
+    },
+
+    // 功能模块选择
+    module: {
+      type: "list",
+      message: "请选择功能模块:",
+      choices: (answers) => {
+        if (answers.project === "customer") {
+          return ["首页", "维保", "设置"];
+        }
+        if (answers.project === "deployer") {
+          return [
+            "首页",
+            "单任务",
+            "安全",
+            "混导",
+            "视觉",
+            "诊断",
+            "车辆信息",
+            "IO信号",
+            "设置",
+            "维保",
+          ];
+        }
+        return ["common"];
+      },
+    },
+  },
   // 自定义提交信息格式
-  format: "{type}({project}): {subject}",
+  format: "{type}({project}/{module}): {subject}",
 };
