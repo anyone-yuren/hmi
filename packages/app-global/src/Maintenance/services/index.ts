@@ -16,9 +16,9 @@ export const getMaintenanceData = (): Promise<any> => {
 
 // 重置维保
 export const resetMaintenance = (): Promise<any> => {
-  return post('/resetData');
+  return post('/sirius/topics/resetData');
 };
 // 维保
 export const maintenance = (params: { subsystem: number }): Promise<any> => {
-  return post('/alreadyMaintain', params);
+  return post('/sirius/topics/alreadyMaintain', params);
 };

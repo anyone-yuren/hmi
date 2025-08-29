@@ -126,14 +126,16 @@ const VehicleTask = () => {
                     color: theme.colorWarning,
                   }}
                 >
-                  {t('common.home.actualSpeed')}: {controlStatus?.vel_real ?? 0} mm/s
+                  {/* 保留两位小数 */}
+                  {t('common.home.actualSpeed')}: {controlStatus?.vel_real?.toFixed(2) ?? 0} mm/s
                 </Typography.Text>
                 <Typography.Text
                   style={{
                     color: theme.colorPrimary,
                   }}
                 >
-                  {t('common.home.plannedSpeed')}: {controlStatus?.vel_reference ?? 0} mm/s
+                  {/* 保留两位小数 */}
+                  {t('common.home.plannedSpeed')}: {controlStatus?.vel_reference?.toFixed(2) ?? 0} mm/s
                 </Typography.Text>
               </div>
             </div>

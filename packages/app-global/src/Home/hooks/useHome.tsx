@@ -2,6 +2,7 @@ import { useWebSocket } from 'ahooks';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useHomeStore } from '../store';
+import { useHomeHybirdStore } from '../store/hybird';
 
 // 动态获取当前 host
 const currentHost = window.location.hostname;
@@ -33,6 +34,14 @@ export const useHybrid = () => {
         setRobotIsensorStatus: state.setRobotIsensorStatus,
         setRobotGoodsStatus: state.setRobotGoodsStatus,
         setRobotForkarmStatus: state.setRobotForkarmStatus,
+      };
+    }),
+  );
+  const { agvPosition, setAgvPosition } = useHomeHybirdStore(
+    useShallow((state) => {
+      return {
+        agvPosition: state.agvPosition,
+        setAgvPosition: state.setAgvPosition,
       };
     }),
   );
@@ -81,6 +90,30 @@ export const useHybrid = () => {
       if (data.uri == '/navigation/robot_current_status') {
         const { timestamp, ...rest } = data;
         setRobotCurrentStatus(rest);
+      }
+      if (data?.uri === '/navigation/robot_status_localizer_result') {
+        data.pose.x = Math.round(data.pose.x * 1000 * 100) / 100;
+        data.pose.y = Math.round(data.pose.y * 1000 * 100) / 100;
+        data.pose.theta = Math.round(data.pose.theta * 100) / 100;
+        // TODO 转整数
+        if (!agvPosition) {
+          setAgvPosition({
+            angel: data.pose.theta,
+            x: data.pose.x,
+            y: data.pose.y,
+          });
+        }
+        const diffX = Math.abs(data.pose.x - agvPosition.x);
+        const diffY = Math.abs(data.pose.y - agvPosition.y);
+
+        // if (diffX > 1 || diffY > 1) {
+        // }
+        setAgvPosition({
+          angel: data.pose.theta,
+          x: data.pose.x,
+          y: data.pose.y,
+        });
+        // }
       }
     },
   });
