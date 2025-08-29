@@ -30,7 +30,7 @@ const instance = axios.create({
   baseURL: BASE_API, // 设置默认 baseURL
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded',
   },
 });
 
@@ -128,9 +128,14 @@ export const get = (url: string, params?: any, port: string = '10009') => {
 
 // POST 封装
 export const post = (url: string, data?: any, port: string = '10009') => {
-  return instance.post(url, data, {
-    baseURL: PORT_BASEURL[port],
-  });
+  const options = {
+    url: `${PORT_BASEURL[port]}${url}`,
+    method: 'POST',
+    data,
+  };
+  console.log('options', options);
+  return instance(options);
+  // return instance.post(`${PORT_BASEURL[port]}${url}`, data, {});
 };
 
 export default instance;

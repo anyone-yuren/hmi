@@ -36,7 +36,7 @@ const GlobalProvider: FC<GlobalProviderProps> = ({ children }) => {
       }}
     >
       {/* 如果要右对齐，使用 justify-end */}
-      <Toaster className='flex justify-center ' richColors visibleToasts={2} expand={true} closeButton />
+      <Toaster className='flex justify-center ' richColors visibleToasts={2} expand={true} />
       <CssBaseline />
       <ThemeProvider theme={darkTheme}>
         <Fragment>

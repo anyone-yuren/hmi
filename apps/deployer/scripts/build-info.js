@@ -1,4 +1,3 @@
-
 import { execSync } from 'child_process';
 import fs from 'fs';
 
@@ -36,7 +35,14 @@ function getCommitHash() {
 // 获取最后一次提交时间
 function getCommitDate() {
   try {
-    return execSync('git log -1 --format=%cd --date=iso').toString().trim();
+    // 获取原始提交时间（ISO 格式）
+    const rawDate = execSync('git log -1 --format=%cd --date=iso').toString().trim();
+    // 转换为 Date 对象
+    const date = new Date(rawDate);
+    // 转换为中国区时间（UTC+8）
+    const cstDate = new Date(date.getTime() + 8 * 60 * 60 * 1000); // 加上 8 小时
+    // 格式化为 ISO 字符串
+    return cstDate.toISOString();
   } catch (e) {
     console.error('获取提交时间失败:', e.message);
     return 'unknown';
@@ -49,7 +55,7 @@ const envContent = `
 VITE_APP_BUILD_BRANCH=${getBranch()}
 VITE_APP_BUILD_COMMIT=${getCommitHash()}
 VITE_APP_BUILD_DATE=${getCommitDate()}
-VITE_APP_BUILD_TIME=${new Date().toISOString()}
+VITE_APP_BUILD_TIME=${new Date().toLocaleString()}
 VITE_APP_BUILD_INFO=${getCommitInfo().subject}
 VITE_USE_GLOBAL_LOADING=true
 `.trim();
@@ -57,5 +63,5 @@ VITE_USE_GLOBAL_LOADING=true
 // // 写入 .env.local 文件
 fs.writeFileSync('./.env.production', envContent);
 
-// console.log('✅ 构建信息已写入 .env.local 文件');
-// console.log(envContent);
+console.log('✅ 构建信息已写入 .env.local 文件');
+console.log(envContent);

@@ -66,7 +66,7 @@ const SecondaryPage = (props: Props) => {
     alignItems: 'center',
     fontSize: '30px',
     borderRadius: '20px',
-    background,
+
     color: titleColor,
   };
 
@@ -82,29 +82,31 @@ const SecondaryPage = (props: Props) => {
           ...slideBoxStyle,
         }}
       >
-        <div
-          style={headerStyle}
-          onClick={() => {
-            setStart(false);
-            setOpen(false);
-            startAnimate && startAnimate(false);
-          }}
-        >
-          <IconButton
-            sx={{
-              background: '#fff !important',
-              color: '#000 !important',
-              marginRight: '8px',
+        <div className='bg-[#162640] h-full w-full '>
+          <div
+            style={headerStyle}
+            onClick={() => {
+              setStart(false);
+              setOpen(false);
+              startAnimate && startAnimate(false);
             }}
-            aria-label='back'
-            size='medium'
           >
-            <ArrowBackIosNewIcon />
-          </IconButton>
-          {t('common.back')}
+            <IconButton
+              sx={{
+                background: '#fff !important',
+                color: '#000 !important',
+                marginRight: '8px',
+              }}
+              aria-label='back'
+              size='medium'
+            >
+              <ArrowBackIosNewIcon sx={{ width: '24px', height: '24px' }} />
+            </IconButton>
+            {t('common.back')}
+          </div>
+          <div className={`w-full h-[20px]`}></div>
+          {children}
         </div>
-        <div className={`w-full h-[20px]`} style={{ background }}></div>
-        {children}
       </SlideBox>
     </>
   );

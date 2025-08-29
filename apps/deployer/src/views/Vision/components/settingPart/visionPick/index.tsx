@@ -46,6 +46,7 @@ const VisionPick = () => {
   }, [updateHashMap, settingHashMap]);
 
   const handleTitle = () => {
+    return;
     // 获取总运行时间
     const totalMilliseconds = performance.now();
     const hours = Math.floor(totalMilliseconds / (1000 * 60 * 60));

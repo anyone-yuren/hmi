@@ -1,14 +1,4 @@
-import {
-  Button,
-  Grid,
-  InputLabel,
-  List,
-  ListSubheader,
-  Paper,
-  Switch,
-  ThemeProvider,
-  createTheme,
-} from '@mui/material';
+import { Button, createTheme, Grid, List, ListSubheader, Paper, Switch, TextField, ThemeProvider } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { useRequest } from 'ahooks';
 import { Flex } from 'antd';
@@ -17,7 +7,6 @@ import { FormContainer, TextFieldElement, useForm } from 'react-hook-form-mui';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { addHeightInfo, chargePolicy, deleteHeightInfo, getChargePolicy, getHeightInfo } from '../services';
-import InputWidthKeyboard from './inputWithKeyboard';
 import KeyboardWrapper from './KeyboardWrapper';
 import TempTaskList from './TempTaskList';
 
@@ -171,14 +160,14 @@ function TaskSetting() {
                     sx={{
                       width: '100%',
                     }}
-                    onFocus={() => {
-                      handleElementFocus('name');
-                      setNumberKeyboardMode('abc');
-                    }}
-                    onBlur={() => {
-                      setNumberKeyboardOpen(false);
-                      setNumberKeyboardMode('number');
-                    }}
+                    // onFocus={() => {
+                    //   handleElementFocus('name');
+                    //   setNumberKeyboardMode('abc');
+                    // }}
+                    // onBlur={() => {
+                    //   setNumberKeyboardOpen(false);
+                    //   setNumberKeyboardMode('number');
+                    // }}
                     rules={{
                       required: true,
                     }}
@@ -193,10 +182,10 @@ function TaskSetting() {
                     sx={{
                       width: '100%',
                     }}
-                    onFocus={() => handleElementFocus('low_height')}
-                    onBlur={() => {
-                      setNumberKeyboardOpen(false);
-                    }}
+                    // onFocus={() => handleElementFocus('low_height')}
+                    // onBlur={() => {
+                    //   setNumberKeyboardOpen(false);
+                    // }}
                     rules={{
                       required: true,
                     }}
@@ -211,10 +200,10 @@ function TaskSetting() {
                     sx={{
                       width: '100%',
                     }}
-                    onFocus={() => handleElementFocus('high_height')}
-                    onBlur={() => {
-                      setNumberKeyboardOpen(false);
-                    }}
+                    // onFocus={() => handleElementFocus('high_height')}
+                    // onBlur={() => {
+                    //   setNumberKeyboardOpen(false);
+                    // }}
                     rules={{
                       required: true,
                     }}
@@ -265,34 +254,39 @@ function TaskSetting() {
                 subheader={<ListSubheader>{t('deployer.singleTask.autoChargeSetting')}</ListSubheader>}
               >
                 <Switch checked={checked} onChange={handleChange} inputProps={{ 'aria-label': 'controlled' }} />
+
                 <div style={{ paddingInline: '16px' }}>
-                  <InputLabel htmlFor='standard-adornment-amount'>{t('deployer.singleTask.minCharge')}</InputLabel>
-                  <Flex justify='center' align='center' gap={2}>
-                    <InputWidthKeyboard
-                      style={{ flex: 1 }}
-                      mode='numbers'
-                      input={auto_charge_threshold + ''}
-                      placeholder={t('deployer.singleTask.plsInput')}
-                      setInput={(e: any) => {
-                        setLowPowerThreshold(Number(e));
-                      }}
-                    ></InputWidthKeyboard>
-                    <div style={{ width: '40px' }}>%</div>
-                  </Flex>
-                  <InputLabel htmlFor='standard-adornment-amount'>{t('deployer.singleTask.freeTime')}</InputLabel>
-                  <Flex justify='center' align='center' gap={2}>
-                    <InputWidthKeyboard
-                      mode='numbers'
-                      style={{ flex: 1 }}
-                      input={auto_charge_idle_wait_time + ''}
-                      placeholder={t('deployer.singleTask.plsInput')}
-                      setInput={(e) => {
-                        setIdleWaitTime(Number(e));
-                      }}
-                    ></InputWidthKeyboard>
-                    <div style={{ width: '40px' }}>{t('deployer.singleTask.second')}</div>
-                  </Flex>
+                  <Grid container flexDirection={'column'} gap={1}>
+                    <Flex justify='center' align='center' gap={2}>
+                      <TextField
+                        fullWidth
+                        label={t('deployer.singleTask.minCharge')}
+                        variant='outlined'
+                        size={'small'}
+                        value={auto_charge_threshold}
+                        onChange={(event) => {
+                          console.log('value', event);
+                          setLowPowerThreshold(Number(event.target.value));
+                        }}
+                      ></TextField>
+                      <div style={{ width: '40px' }}>%</div>
+                    </Flex>
+                    <Flex justify='center' align='center' gap={2}>
+                      <TextField
+                        fullWidth
+                        label={t('deployer.singleTask.freeTime')}
+                        variant='outlined'
+                        size={'small'}
+                        value={auto_charge_idle_wait_time}
+                        onChange={(event) => {
+                          setIdleWaitTime(Number(event.target.value));
+                        }}
+                      ></TextField>
+                      <div style={{ width: '40px' }}>{t('deployer.singleTask.second')}</div>
+                    </Flex>
+                  </Grid>
                 </div>
+
                 <Flex>
                   <Button
                     sx={{
@@ -312,31 +306,33 @@ function TaskSetting() {
         </Grid>
       </ThemeProvider>
 
-      <KeyboardWrapper
-        ref={keyboardWrapperRef}
-        containerStyle={{
-          display: numberKeyboardOpen ? 'block' : 'none',
-        }}
-        key={focusedKey}
-        setInputFocus={() => {
-          setTimeout(() => {
+      {false && (
+        <KeyboardWrapper
+          ref={keyboardWrapperRef}
+          containerStyle={{
+            display: numberKeyboardOpen ? 'block' : 'none',
+          }}
+          key={focusedKey}
+          setInputFocus={() => {
+            setTimeout(() => {
+              const currentElement = document.activeElement as HTMLInputElement;
+              currentElement.focus();
+            });
+          }}
+          onChange={(value) => {
+            form.setValue(focusedKey!, value);
             const currentElement = document.activeElement as HTMLInputElement;
-            currentElement.focus();
-          });
-        }}
-        onChange={(value) => {
-          form.setValue(focusedKey!, value);
-          const currentElement = document.activeElement as HTMLInputElement;
-          setTimeout(() => {
-            currentElement.focus();
-          });
-        }}
-        onClickOutside={() => {
-          if (numberKeyboardOpen) {
-            setNumberKeyboardOpen(false);
-          }
-        }}
-      />
+            setTimeout(() => {
+              currentElement.focus();
+            });
+          }}
+          onClickOutside={() => {
+            if (numberKeyboardOpen) {
+              setNumberKeyboardOpen(false);
+            }
+          }}
+        />
+      )}
     </Paper>
   );
 }
