@@ -128,14 +128,9 @@ export const get = (url: string, params?: any, port: string = '10009') => {
 
 // POST 封装
 export const post = (url: string, data?: any, port: string = '10009') => {
-  const options = {
-    url: `${PORT_BASEURL[port]}${url}`,
-    method: 'POST',
-    data,
-  };
-  console.log('options', options);
-  return instance(options);
-  // return instance.post(`${PORT_BASEURL[port]}${url}`, data, {});
+  return instance.post(url, data, {
+    baseURL: PORT_BASEURL[port],
+  });
 };
 
 export default instance;
