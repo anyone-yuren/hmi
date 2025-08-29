@@ -1,8 +1,8 @@
-import { useHybridStore } from '@gbeata/store';
 import { Grid } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { useHomeHybirdStore } from '../../../store/hybird';
 // interface IProps {
 //   agvPosition: {
 //     x: number;
@@ -11,7 +11,7 @@ import { useShallow } from 'zustand/react/shallow';
 //   };
 // }
 const StageBase = (props) => {
-  const { agvPosition } = useHybridStore(
+  const { agvPosition } = useHomeHybirdStore(
     useShallow((state) => ({
       agvPosition: state.agvPosition,
     })),
