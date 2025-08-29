@@ -22,7 +22,7 @@ const PlaceMove = (props: IProps) => {
   const { initState } = props;
 
   const [updateHashMap, setUpdateHashMap] = useSetState<any>({
-    auto_para_tuning: true, // 自动调参
+    auto_para_tuning: false, // 自动调参
     need_detect: false,
     extra_height: 0,
     compensation: [],

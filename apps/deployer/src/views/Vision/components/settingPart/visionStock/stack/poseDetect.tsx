@@ -21,8 +21,8 @@ interface IProps {
 const PoseDetect = (props: IProps) => {
   const { initState } = props;
   const [updateHashMap, setUpdateHashMap] = useSetState<any>({
-    auto_para_tuning: true, // 自动调参
-    need_detect: true, // 是否启用
+    auto_para_tuning: false, // 自动调参
+    need_detect: false, // 是否启用
     pallet_model_list: [], // 选择的模型列表
     need_detect_height: true, // 放货高度识别
     extra_height: 0, // 额外抬升叉臂高度

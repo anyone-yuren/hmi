@@ -110,7 +110,7 @@ instance.interceptors.response.use(
           message.error(error.response.data.message || t('common.http.fail'));
       }
     } else if (error.request) {
-      message.error(t('common.http.timeout'));
+      manager.push(t('common.http.timeout'));
     } else {
       message.error(t('common.http.fail'));
     }

@@ -39,7 +39,6 @@ export const useNotification = () => {
         const data = JSON.parse(message.data);
         setErrorMessage((prev) => {
           if (isEqual(prev, data.data)) {
-            console.log('[/sirius/topics/error_description]: 错误弹窗提示', prev, data.data);
             return prev;
           }
           return data.data;

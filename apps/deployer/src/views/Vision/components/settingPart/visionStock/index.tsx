@@ -101,16 +101,19 @@ const VisionStock = () => {
                   <VisionBox className={'pt-0'}>
                     <div className='mt-[5px]'>{option.label}</div>
                     <div className='flex justify-between items-center w-full'>
-                      <CustomSwitch
-                        size='small'
-                        checked={updateHashMap[option.value]}
-                        onChange={(event: any) => {
-                          setUpdateHashMap({
-                            __isSubmit: true,
-                            [option.value]: event.target.checked,
-                          });
-                        }}
-                      ></CustomSwitch>
+                      <div></div>
+                      {false && (
+                        <CustomSwitch
+                          size='small'
+                          checked={updateHashMap[option.value]}
+                          onChange={(event: any) => {
+                            setUpdateHashMap({
+                              __isSubmit: true,
+                              [option.value]: event.target.checked,
+                            });
+                          }}
+                        ></CustomSwitch>
+                      )}
                       <Button
                         size='small'
                         sx={{
@@ -139,16 +142,19 @@ const VisionStock = () => {
             <VisionBox>
               <div>{options[2].label}</div>
               <div className='flex justify-between items-center w-full'>
-                <CustomSwitch
-                  size='small'
-                  checked={updateHashMap[options[2].value]}
-                  onChange={(event: any) => {
-                    setUpdateHashMap({
-                      __isSubmit: true,
-                      [options[2].value]: event.target.checked,
-                    });
-                  }}
-                ></CustomSwitch>
+                <div></div>
+                {false && (
+                  <CustomSwitch
+                    size='small'
+                    checked={updateHashMap[options[2].value]}
+                    onChange={(event: any) => {
+                      setUpdateHashMap({
+                        __isSubmit: true,
+                        [options[2].value]: event.target.checked,
+                      });
+                    }}
+                  ></CustomSwitch>
+                )}
                 <Button
                   size='small'
                   sx={{ color: 'white', float: 'right' }}

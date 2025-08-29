@@ -45,11 +45,91 @@ const VisionPick = () => {
     toast.success(t('common.actionSuccess'));
   }, [updateHashMap, settingHashMap]);
 
+  const handleTitle = () => {
+    // 获取总运行时间
+    const totalMilliseconds = performance.now();
+    const hours = Math.floor(totalMilliseconds / (1000 * 60 * 60));
+    const minutes = Math.floor((totalMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((totalMilliseconds % (1000 * 60)) / 1000);
+    const milliseconds = Math.floor(totalMilliseconds % 1000);
+
+    // 获取内存信息（仅在 Chrome 中支持）
+    const memoryInfo = performance.memory
+      ? {
+          usedJSHeapSize: `${(performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(2)} MB`,
+          totalJSHeapSize: `${(performance.memory.totalJSHeapSize / 1024 / 1024).toFixed(2)} MB`,
+          jsHeapSizeLimit: `${(performance.memory.jsHeapSizeLimit / 1024 / 1024).toFixed(2)} MB`,
+        }
+      : { error: 'Memory information not available' };
+
+    // 获取导航性能数据
+    const [navigation] = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+    const navigationInfo = navigation
+      ? {
+          type: navigation.type,
+          redirectCount: navigation.redirectCount,
+          duration: `${navigation.duration.toFixed(2)} ms`,
+          domContentLoadedEventEnd: `${navigation.domContentLoadedEventEnd.toFixed(2)} ms`,
+          loadEventEnd: `${navigation.loadEventEnd.toFixed(2)} ms`,
+        }
+      : { error: 'Navigation performance data not available' };
+
+    // 获取网络状态
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const networkInfo = connection
+      ? {
+          type: connection.effectiveType,
+          downlink: `${connection.downlink} Mbps`,
+          rtt: `${connection.rtt} ms`,
+        }
+      : { error: 'Network information not available' };
+
+    // 获取资源加载性能
+    const resources = performance.getEntriesByType('resource');
+
+    // 渲染和绘制性能
+    const paintTimings = performance.getEntriesByType('paint');
+    const paintInfo = paintTimings.map((paint) => ({
+      name: paint.name,
+      startTime: `${paint.startTime.toFixed(2)} ms`,
+    }));
+
+    // 格式化输出
+    const formattedOutput = `
+      === 性能信息 ===
+      运行时间: ${hours}小时 ${minutes}分钟 ${seconds}秒 ${milliseconds}毫秒
+
+      === 内存信息 ===
+      已使用堆内存: ${memoryInfo.usedJSHeapSize || 'N/A'}
+      总堆内存: ${memoryInfo.totalJSHeapSize || 'N/A'}
+      堆内存限制: ${memoryInfo.jsHeapSizeLimit || 'N/A'}
+
+      === 导航性能 ===
+      类型: ${navigationInfo.type || 'N/A'}
+      重定向次数: ${navigationInfo.redirectCount || 'N/A'}
+      总耗时: ${navigationInfo.duration || 'N/A'}
+      DOM 加载完成时间: ${navigationInfo.domContentLoadedEventEnd || 'N/A'}
+      页面加载完成时间: ${navigationInfo.loadEventEnd || 'N/A'}
+
+      === 网络状态 ===
+      类型: ${networkInfo.type || 'N/A'}
+      下行速度: ${networkInfo.downlink || 'N/A'}
+      延迟: ${networkInfo.rtt || 'N/A'}
+
+      === 渲染和绘制 ===
+      ${paintInfo.map((p) => `${p.name}: ${p.startTime}`).join('\n')}
+      `;
+
+    alert(formattedOutput.trim());
+  };
+
   return (
     <>
       <div className='flex flex-col items-center justify-center flex-1 basis-[45%] w-[50%] h-full overflow-hidden'>
         <div className='w-full bg-[#2c3645] rounded-[20px] p-[20px] overflow-hidden relative h-full overflow-y-auto'>
-          <div className='text-3xl'>{t('deployer.vision.pick')}</div>
+          <div className='text-3xl' onClick={handleTitle}>
+            {t('deployer.vision.pick')}
+          </div>
           <div className='my-3 p-4 bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-center justify-between text-lg'>
             <div>{t('deployer.vision.isTurnOn')}</div>
             <div>

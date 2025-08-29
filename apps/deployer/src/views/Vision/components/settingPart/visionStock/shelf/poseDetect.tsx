@@ -21,7 +21,7 @@ const PoseDetect = (props: IProps) => {
   const { initState } = props;
   const [updateHashMap, setUpdateHashMap] = useSetState<any>({
     auto_para_tuning: false, // 自动调参
-    need_detect: true, // 是否启用
+    need_detect: false, // 是否启用
     pallet_model_list: [], // 选择的模型列表
     extra_height: 0, // 额外抬升叉臂高度
     start_mid_dist: 0, // 车身回正时基准点到托盘的距离
