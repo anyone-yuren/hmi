@@ -35,6 +35,14 @@ const SlamLayer = () => {
   const slamOrigin = grid_map ? grid_map.origin : {};
   const [image, setImage] = useState(null);
 
+  const resetStage = (stage) => {
+    stage.position({ x: 0, y: 0 });
+    stage.scale({ x: 1, y: 1 });
+    stage.batchDraw();
+    setStagePos({ x: 0, y: 0 });
+    setStageScale(1);
+  };
+
   // 定位到中心
   useUpdateEffect(() => {
     if (
@@ -50,20 +58,27 @@ const SlamLayer = () => {
       return;
     }
     const stage = mapRef.current.getStage();
+    // 1️⃣ 先复位
+    resetStage(stage);
     const scale = mapRef.current && stage?.scaleX();
     if (!scale || scale <= 0) {
       return;
     }
+    const rect = mapRef.current.getClientRect();
+    const centerX = rect.x + rect.width / 2;
+    const centerY = rect.y + rect.height / 2;
+    const stageCenterX = stage.width() / 2;
+    const stageCenterY = stage.height() / 2;
 
-    const x = stage.width() / 2 - (data.width * scale) / 2 - map_to_cad.x * 20 * scale;
-    const y = stage.height() / 2 - (data.height * scale) / 2 + data.height * scale + map_to_cad.y * 20 * scale;
+    console.log('centerX', centerX, 'centerY', centerY, 'stageCenterX', stageCenterX, 'stageCenterY', stageCenterY);
 
     if (!stage || !stage?.attrs || !map_to_cad || !scale) return;
     stage &&
       stage.to &&
       stage.to({
-        x,
-        y,
+        x: stageCenterX - centerX * stage.scaleX(),
+        y: stageCenterY - centerY * stage.scaleY(),
+        centerY,
         duration: 0.5,
         easing: Konva.Easings.EaseInOut,
         onFinish: () => {
@@ -131,6 +146,7 @@ const SlamLayer = () => {
 
   useEffect(() => {
     if (slamFrozenData && slamFrozenData?.pic) {
+      // 将地图返回到初始位置
       const img = new window.Image();
       img.src = `data:image/png;base64,${slamFrozenData.pic}`;
       img.onload = () => setFrozenImage(img);
