@@ -695,7 +695,10 @@
       "stockStackLegendTips3": "The stacking effect after compensation is shown in the figure on the right.",
       "stockStackLegendTips4": "Assuming that each time a tray is stacked on the cross-carriage, you can modify the angle compensation parameter.",
       "stockStackLegendTips5": "As shown in the figure, it is about 1 ° off, so fill in -1 in the angle compensation parameter.",
-      "stockStackLegendTips6": "The larger the value, the counterclockwise rotation of the car."
+      "stockStackLegendTips6": "The larger the value, the counterclockwise rotation of the car.",
+      "other": "Other",
+      "storageCalibration": "Storage Calibration Assistant",
+      "forkUpPointCloud": "Point Cloud Above Fork Arm"
     }
   }
 }

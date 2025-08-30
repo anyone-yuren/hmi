@@ -18,6 +18,7 @@ import MwConfirm from '../../MwConfirm';
 import InputWidthKeyboard from '../../inputWithKeyboard';
 import PointCloud3D from '../3d/pointCloud3d';
 
+import { Tab, Tabs } from '@mui/material';
 import { useAsyncEffect, useGetState, useRequest, useThrottleEffect, useUpdateEffect } from 'ahooks';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
@@ -34,46 +35,51 @@ let timer: any = null;
 const PointCloudFilter = (props: IProps) => {
   const { type, background, titleColor } = props;
   const { t } = useTranslation();
+  const [value, setValue] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [mode, setMode] = React.useState(0); // 模式为一个单独的参数来控制
   const [inputString, setInputString, getInputString] = useGetState('');
-  const { data: pointCloudResponse, runAsync: getPointCloudResponse } = useRequest(getPointCloudMonitoringRead, {
+  const {
+    data: pointCloudResponse,
+    runAsync: getPointCloudResponse,
+    error,
+  } = useRequest(getPointCloudMonitoringRead, {
     manual: true,
   });
   const [state, setState, getState] = useGetState<any>({
     front: {
       label: t('deployer.vision.frontDetectDist'),
-      value: 10,
+      value: 0,
       keyIndex: 0,
       index: 1,
     },
     back: {
       label: t('deployer.vision.backDetectDist'),
-      value: 130,
+      value: 0,
       keyIndex: 0,
       index: 0,
     },
     left: {
       label: t('deployer.vision.leftDetectDist'),
-      value: 450,
+      value: 0,
       keyIndex: 1,
       index: 0,
     },
     right: {
       label: t('deployer.vision.rightDetectDist'),
-      value: 260,
+      value: 0,
       keyIndex: 1,
       index: 1,
     },
     top: {
       label: t('deployer.vision.topDetectDist'),
-      value: 1000,
+      value: 0,
       keyIndex: 2,
       index: 1,
     },
     down: {
       label: t('deployer.vision.bottomDetectDist'),
-      value: -990,
+      value: 0,
       keyIndex: 2,
       index: 0,
     },
@@ -86,6 +92,7 @@ const PointCloudFilter = (props: IProps) => {
       setPointsCloudKey: store.setPointsCloudKey,
     })),
   );
+  console.log('[shelf]: type', type);
 
   const isMultiwayAgv = useMemo(() => {
     return false;
@@ -94,6 +101,11 @@ const PointCloudFilter = (props: IProps) => {
   useEffect(() => {
     setPointsCloudKey(type);
   }, [type]);
+
+  const hashMap = {
+    0: type,
+    1: 'storage_calibration_assistant',
+  };
 
   const pointCloudFilterParams = useMemo(() => {
     return [
@@ -294,6 +306,11 @@ const PointCloudFilter = (props: IProps) => {
     }
   };
 
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+    getPointCloudResponse({ task_id: hashMap[newValue] });
+  };
+
   return (
     <div>
       <Button
@@ -318,123 +335,136 @@ const PointCloudFilter = (props: IProps) => {
             <LightTheme>
               <div className='flex text-black h-full'>
                 <div className='w-[350px] h-full overflow-auto'>
-                  {Object.keys(state)?.map((key: string) => {
-                    return (
-                      <TextUpdateRow key={key} className='flex-col py-2'>
-                        <div className='flex justify-between w-full relative z-10'>
-                          <div>{state?.[key]?.label || '-'}</div>
-                          <div className='flex gap-[5px] align-bottom'>
-                            <div
-                              onDoubleClick={() => {
-                                handleDoubleClick({
-                                  label: state?.[key]?.label,
-                                  key,
-                                });
-                              }}
-                            >
-                              {state?.[key]?.value || 0}
+                  <Tabs value={value} onChange={handleChange} variant='fullWidth'>
+                    <Tab label={t('deployer.vision.other')} iconPosition='end' />
+                    <Tab label={t('deployer.vision.storageCalibration')} iconPosition='end' />
+                  </Tabs>
+                  {!error ? (
+                    <>
+                      {Object.keys(state)?.map((key: string) => {
+                        return (
+                          <TextUpdateRow key={key} className='flex-col py-2'>
+                            <div className='flex justify-between w-full relative z-10'>
+                              <div>{state?.[key]?.label || '-'}</div>
+                              <div className='flex gap-[5px] align-bottom'>
+                                <div
+                                  onDoubleClick={() => {
+                                    handleDoubleClick({
+                                      label: state?.[key]?.label,
+                                      key,
+                                    });
+                                  }}
+                                >
+                                  {state?.[key]?.value || 0}
+                                </div>
+                                <div
+                                  className='text-[blue] text-[12px]'
+                                  onClick={() => {
+                                    handleDoubleClick({
+                                      label: state?.[key]?.label,
+                                      key,
+                                    });
+                                  }}
+                                >
+                                  {t('common.edit')}
+                                </div>
+                              </div>
                             </div>
-                            <div
-                              className='text-[blue] text-[12px]'
-                              onClick={() => {
-                                handleDoubleClick({
-                                  label: state?.[key]?.label,
-                                  key,
-                                });
-                              }}
-                            >
-                              {t('common.edit')}
+                            <div className='flex w-full'>
+                              <LongPressIconButton
+                                typeKey={key}
+                                onLongPressEnd={handleMouseUp}
+                                onLongPress={(key) => {
+                                  intervalRef.current = setInterval(() => {
+                                    handleDelPress(key);
+                                  }, 200);
+                                }}
+                                onPress={handleDelPress}
+                              >
+                                <RemoveCircleOutlineIcon sx={{ color: 'black', fontSize: '25px' }} />
+                              </LongPressIconButton>
+                              <div className='flex-1 relative'>
+                                <Slider
+                                  className='relative z-[2]'
+                                  aria-label={key}
+                                  value={state?.[key]?.value}
+                                  step={1}
+                                  min={validateRange.min}
+                                  max={validateRange.max}
+                                  onChange={(event: any) => {
+                                    setState({
+                                      ...state,
+                                      [key]: {
+                                        ...state?.[key],
+                                        value: event.target.value,
+                                      },
+                                    });
+                                  }}
+                                />
+                                <div className='flex justify-between w-full text-[12px] absolute bottom-[-5px] z-[1]'>
+                                  <div>{validateRange.min}</div>
+                                  <div>{validateRange.max}</div>
+                                </div>
+                              </div>
+                              <LongPressIconButton
+                                typeKey={key}
+                                onLongPressEnd={handleMouseUp}
+                                onLongPress={(key) => {
+                                  intervalRef.current = setInterval(() => {
+                                    handleAddPress(key);
+                                  }, 200);
+                                }}
+                                onPress={handleAddPress}
+                              >
+                                <ControlPointIcon sx={{ color: 'black', fontSize: '25px' }} />
+                              </LongPressIconButton>
                             </div>
-                          </div>
-                        </div>
-                        <div className='flex w-full'>
-                          <LongPressIconButton
-                            typeKey={key}
-                            onLongPressEnd={handleMouseUp}
-                            onLongPress={(key) => {
-                              intervalRef.current = setInterval(() => {
-                                handleDelPress(key);
-                              }, 200);
+                          </TextUpdateRow>
+                        );
+                      })}
+                      <TextUpdateRow>
+                        <div>{t('deployer.vision.mode')}</div>
+                        <div className='relative'>
+                          <CustomSelect
+                            size={'small'}
+                            variant='standard'
+                            value={mode}
+                            onChange={(event) => {
+                              setMode(event.target.value);
                             }}
-                            onPress={handleDelPress}
                           >
-                            <RemoveCircleOutlineIcon sx={{ color: 'black', fontSize: '25px' }} />
-                          </LongPressIconButton>
-                          <div className='flex-1 relative'>
-                            <Slider
-                              className='relative z-[2]'
-                              aria-label={key}
-                              value={state?.[key]?.value}
-                              step={1}
-                              min={validateRange.min}
-                              max={validateRange.max}
-                              onChange={(event: any) => {
-                                setState({
-                                  ...state,
-                                  [key]: {
-                                    ...state?.[key],
-                                    value: event.target.value,
-                                  },
-                                });
-                              }}
-                            />
-                            <div className='flex justify-between w-full text-[12px] absolute bottom-[-5px] z-[1]'>
-                              <div>{validateRange.min}</div>
-                              <div>{validateRange.max}</div>
-                            </div>
-                          </div>
-                          <LongPressIconButton
-                            typeKey={key}
-                            onLongPressEnd={handleMouseUp}
-                            onLongPress={(key) => {
-                              intervalRef.current = setInterval(() => {
-                                handleAddPress(key);
-                              }, 200);
-                            }}
-                            onPress={handleAddPress}
-                          >
-                            <ControlPointIcon sx={{ color: 'black', fontSize: '25px' }} />
-                          </LongPressIconButton>
+                            <MenuItem value={0}>
+                              <ListItemText primary={t('deployer.vision.backgroundOff')} />
+                            </MenuItem>
+                            <MenuItem value={1}>
+                              <ListItemText primary={t('deployer.vision.targetSelect')} />
+                            </MenuItem>
+                            <MenuItem value={2}>
+                              <ListItemText primary={t('deployer.vision.forkUpPointCloud')} />
+                            </MenuItem>
+                          </CustomSelect>
                         </div>
                       </TextUpdateRow>
-                    );
-                  })}
-                  <TextUpdateRow>
-                    <div>{t('deployer.vision.mode')}</div>
-                    <div className='relative'>
-                      <CustomSelect
-                        size={'small'}
-                        variant='standard'
-                        value={mode}
-                        onChange={(event) => {
-                          setMode(event.target.value);
-                        }}
+                      <Button
+                        fullWidth
+                        variant='contained'
+                        sx={{ color: 'white', marginBottom: '10px' }}
+                        onClick={handleParamsWrite}
                       >
-                        <MenuItem value={0}>
-                          <ListItemText primary={t('deployer.vision.backgroundOff')} />
-                        </MenuItem>
-                        <MenuItem value={1}>
-                          <ListItemText primary={t('deployer.vision.targetSelect')} />
-                        </MenuItem>
-                      </CustomSelect>
-                    </div>
-                  </TextUpdateRow>
-                  <Button
-                    fullWidth
-                    variant='contained'
-                    sx={{ color: 'white', marginBottom: '10px' }}
-                    onClick={handleParamsWrite}
-                  >
-                    {t('deployer.vision.paramsWrite')}
-                  </Button>
-                  <Button
-                    fullWidth
-                    variant='contained'
-                    sx={{ color: 'white', marginBottom: '20px' }}
-                    onClick={handleParamsSave}
-                  >
-                    {t('deployer.vision.paramsSave')}
-                  </Button>
+                        {t('deployer.vision.paramsWrite')}
+                      </Button>
+                      <Button
+                        fullWidth
+                        variant='contained'
+                        sx={{ color: 'white', marginBottom: '20px' }}
+                        onClick={handleParamsSave}
+                      >
+                        {t('deployer.vision.paramsSave')}
+                      </Button>
+                    </>
+                  ) : (
+                    <div className='w-full text-center mt-10'>{t('common.http.error')}</div>
+                  )}
                 </div>
                 <div className='flex-1 p-4 h-full'>
                   <PointCloud3D params={pointCloudFilterParams}></PointCloud3D>

@@ -96,7 +96,6 @@ function MxwCar(props: IMxwCar) {
   const deltaRotation = useMemo(() => calculateShortestAngle(0 - agvPosition?.angel - 90), [agvPosition?.angel]);
   // 将角度变化转为弧度
   const rotationRadians = degreesToRadians(deltaRotation);
-  console.log(rotationRadians, '1111111111');
   // 处理归一化后的角度
   const [groupProps] = useSpring(
     () => ({

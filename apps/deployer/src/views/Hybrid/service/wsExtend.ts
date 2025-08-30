@@ -91,8 +91,8 @@ export default function useHybirdWsExtend() {
       setNavigationType(data?.navigation_type || 0);
     },
     '/navigation/real_time_data/scan_head': (data: any) => {
-      const ary = unzipText(data?.point_cloud);
-      setPointCloudV1Data(JSON.parse(ary) || []);
+      const ary = typeof data?.point_cloud === 'object' ? data?.point_cloud : unzipText(data?.point_cloud);
+      setPointCloudV1Data(ary || []);
     },
     '/navigation/current_qrcode_info': (data: any) => {
       setQrCodeData(data);

@@ -695,7 +695,10 @@
       "stockStackLegendTips3": "보상 후 스태킹 결과는 오른쪽 그림과 같습니다.",
       "stockStackLegendTips4": "각 팔레트 적재마다 지게차에 일정한 각도가 있다고 가정하면 각도 보상 파라미터를 수정할 수 있습니다.",
       "stockStackLegendTips5": "아래 그림처럼 약 1° 벗어난 경우 각도 보상 파라미터에 -1을 입력합니다.",
-      "stockStackLegendTips6": "값이 증가하면 차량이 반시계 방향으로 회전합니다."
+      "stockStackLegendTips6": "값이 증가하면 차량이 반시계 방향으로 회전합니다.",
+      "other": "기타",
+      "storageCalibration": "저장 위치 보정 도우미",
+      "forkUpPointCloud": "포크 암 상단 포인트 클라우드"
     }
   }
 }

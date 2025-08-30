@@ -695,7 +695,10 @@
       "stockStackLegendTips3": "補正後のスタック効果は右図の通りです。",
       "stockStackLegendTips4": "各トレイ積み重ね時にフォークリフト上で一定の角度がある場合、角度補正パラメータを変更できます。",
       "stockStackLegendTips5": "以下の図のように約1°傾いている場合は、角度補正パラメータに-1を入力します。",
-      "stockStackLegendTips6": "値が大きくなると、車両は反時計回りに回転します"
+      "stockStackLegendTips6": "値が大きくなると、車両は反時計回りに回転します",
+      "other": "その他",
+      "storageCalibration": "庫位校正アシスタント",
+      "forkUpPointCloud": "フォーク上部の点群"
     }
   }
 }

@@ -27,8 +27,9 @@ export default function useHybirdWsExtend() {
     '/sirius/topics/compose_sensor_point': (data: any) => {
       // 避障点云
       if (data.points) {
-        const decompressedData = unzipText(data.points);
-        setSeniorPoints(JSON.parse(decompressedData) ?? []);
+        // const decompressedData = unzipText(data.points);
+        const decompressedData = typeof data?.point_cloud === 'object' ? data?.points : unzipText(data?.points);
+        setSeniorPoints(decompressedData ?? []);
       }
     },
     '/sirius/topics/goods_info': (data: any) => {

@@ -695,7 +695,10 @@
       "stockStackLegendTips3": "L'effet d'empilement après compensation est illustré à droite.",
       "stockStackLegendTips4": "Si, à chaque empilement, la palette sur la fourche présente un angle, vous pouvez modifier les paramètres de compensation angulaire.",
       "stockStackLegendTips5": "Si le décalage est d'environ 1° comme indiqué ci-dessous, entrez -1 dans les paramètres de compensation angulaire.",
-      "stockStackLegendTips6": "Règle de compensation : une augmentation de la valeur fait tourner le véhicule dans le sens antihoraire."
+      "stockStackLegendTips6": "Règle de compensation : une augmentation de la valeur fait tourner le véhicule dans le sens antihoraire.",
+      "other": "Autre",
+      "storageCalibration": "Assistant de calibration des emplacements de stockage",
+      "forkUpPointCloud": "Nuage de points au-dessus du bras de fourche"
     }
   }
 }

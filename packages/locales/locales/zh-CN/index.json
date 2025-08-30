@@ -695,7 +695,10 @@
       "stockStackLegendTips3": "补偿之后的堆叠效果如右图。",
       "stockStackLegendTips4": "假设每次堆叠托盘在叉车上都有一个角度,则可以修改角度补偿参数。",
       "stockStackLegendTips5": "如下图偏了约1°,则在角度补偿参数内填写-1",
-      "stockStackLegendTips6": "数值增大，则车辆逆时针旋转。"
+      "stockStackLegendTips6": "数值增大，则车辆逆时针旋转。",
+      "other": "其他",
+      "storageCalibration": "库位校准助手",
+      "forkUpPointCloud": "叉臂上方点云"
     }
   }
 }
