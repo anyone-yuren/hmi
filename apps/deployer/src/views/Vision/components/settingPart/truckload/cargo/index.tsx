@@ -59,9 +59,9 @@ const Cargo = () => {
       1: 0,
     },
     color: {
-      0: '#00d1d1', // 无货
-      1: 'yellow',
-      2: 'red',
+      0: '#8bc34a', // 无货
+      1: '#ffc107', // 有货
+      2: 'red', // 被占用
     },
     text: {
       0: t('deployer.vision.noGoods'),
@@ -238,11 +238,11 @@ const Cargo = () => {
               <span>{t('deployer.vision.planning')}</span>
             </div>
             <div className='flex items-center gap-2'>
-              <span className='w-[20px] h-[20px] bg-[yellow] block'></span>
+              <span className='w-[20px] h-[20px] bg-[#ffc107] block'></span>
               <span>{t('deployer.vision.hasGoods')}</span>
             </div>
             <div className='flex items-center gap-2'>
-              <span className='w-[20px] h-[20px] bg-[#00d1d1] block'></span>
+              <span className='w-[20px] h-[20px] bg-[#8bc34a] block'></span>
               <span>{t('deployer.vision.noGoods')}</span>
             </div>
             <div className='mt-[10px] flex gap-[20px]'>
