@@ -1,5 +1,4 @@
 import { memo, useEffect, useRef, useState } from 'react';
-// import vehicleImages from '../../../assets/vehicle/vector.svg';
 import { useTranslation } from 'react-i18next';
 import { Group, Image as KonvaImage } from 'react-konva';
 import useImage from 'use-image';
@@ -7,6 +6,8 @@ import CloudPoints from './CloudPoints';
 
 const Map = (props: any) => {
   const { floorMapData, cloudPoints } = props;
+  if (!floorMapData) return null;
+  const { map_to_cad } = floorMapData;
   const [floorMapImages, setFloorMapImages] = useState<any>(null);
   const [floorMapSize, setFloorMapSize] = useState<any>({
     width: 0,
@@ -38,17 +39,17 @@ const Map = (props: any) => {
 
   return (
     <>
-      <Group>
+      <Group name='map'>
         <KonvaImage
           cache={true}
           perfectDrawEnabled={false}
           image={floorMapImages}
           width={floorMapSize?.width}
           height={floorMapSize?.height}
-          x={0}
-          y={0}
-          // offsetX={0}
+          x={map_to_cad?.x * 20}
+          y={0 - map_to_cad?.y * 20}
           offsetY={floorMapSize?.height}
+          rotation={0 - (map_to_cad?.theta * 180) / Math.PI}
         ></KonvaImage>
         <CloudPoints></CloudPoints>
       </Group>
