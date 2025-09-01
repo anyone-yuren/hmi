@@ -87,18 +87,18 @@ export const useNotification = () => {
 
   useEffect(() => {
     if (obsInfo !== 1 && getObsMsg(obsInfo)) {
+      // if (getObsMsg(obsInfo)) {
       if (obsMsg.current) {
         sonnerToast.dismiss(obsMsg.current);
       }
-      console.log(2);
-
       obsMsg.current = toast({
         title: t('common.obsError.title'),
         description: getObsMsg(obsInfo),
-        button: {
-          label: t('common.obsError.view'),
-          onClick: () => {},
-        },
+        closable: false,
+        // button: {
+        //   label: t('common.obsError.view'),
+        //   onClick: () => {},
+        // },
       });
     }
   }, [obsInfo, i18n.language]);
