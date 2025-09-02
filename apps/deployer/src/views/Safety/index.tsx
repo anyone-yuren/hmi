@@ -4,7 +4,7 @@ import { useSize } from 'ahooks';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Layer, Rect, Stage } from 'react-konva';
+import { Group, Layer, Rect, Stage, Text } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 // 工具函数：取 Konva.Rect 的边界盒
 function getRectBox(node: Konva.Rect) {
@@ -36,10 +36,12 @@ function normalizeRect(a: { x: number; y: number }, b: { x: number; y: number })
 }
 
 // 判断是否贴着 carRect 的某一条边，并且有交集
+// 判断是否贴着 carRect 的某一条边，并且有交集（带 margin）
 function isSnappedToCar(
   rect: { x: number; y: number; width: number; height: number },
   car: { x: number; y: number; width: number; height: number },
   snap = 1,
+  margin = 1, // 吸附后保留间距
 ) {
   const rectEdges = {
     left: rect.x,
@@ -54,9 +56,9 @@ function isSnappedToCar(
     bottom: car.y + car.height,
   };
 
-  // 判断区间是否有交集
-  const hasXOverlap = !(rectEdges.right < carEdges.left || rectEdges.left > carEdges.right);
-  const hasYOverlap = !(rectEdges.bottom < carEdges.top || rectEdges.top > carEdges.bottom);
+  // 判断区间是否有交集（考虑 margin）
+  const hasXOverlap = !(rectEdges.right < carEdges.left + margin || rectEdges.left > carEdges.right - margin);
+  const hasYOverlap = !(rectEdges.bottom < carEdges.top + margin || rectEdges.top > carEdges.bottom - margin);
 
   // 四种情况：边贴合 + 对应方向必须有交集
   const alignedLeft = Math.abs(rectEdges.left - carEdges.right) <= snap && hasYOverlap; // 矩形左边贴 car 的右边
@@ -81,20 +83,53 @@ function applySnap(
   rect: { x: number; y: number; width: number; height: number },
   carRects: Array<{ x: number; y: number; width: number; height: number }>,
   snap = 5,
+  margin = 1, // 🚀 新增参数：吸附后保持间隔
 ) {
   const newRect = { ...rect };
 
   carRects.forEach((car) => {
-    // 左右
-    if (Math.abs(rect.x - (car.x + car.width)) <= snap) newRect.x = car.x + car.width;
-    if (Math.abs(rect.x + rect.width - car.x) <= snap) newRect.x = car.x - rect.width;
+    // 左边吸附到 car.right
+    if (Math.abs(rect.x - (car.x + car.width)) <= snap) {
+      newRect.x = car.x + car.width + margin;
+    }
 
-    // 上下
-    if (Math.abs(rect.y - (car.y + car.height)) <= snap) newRect.y = car.y + car.height;
-    if (Math.abs(rect.y + rect.height - car.y) <= snap) newRect.y = car.y - rect.height;
+    // 右边吸附到 car.left
+    if (Math.abs(rect.x + rect.width - car.x) <= snap) {
+      newRect.x = car.x - rect.width - margin;
+    }
+
+    // 上边吸附到 car.bottom
+    if (Math.abs(rect.y - (car.y + car.height)) <= snap) {
+      newRect.y = car.y + car.height + margin;
+    }
+
+    // 下边吸附到 car.top
+    if (Math.abs(rect.y + rect.height - car.y) <= snap) {
+      newRect.y = car.y - rect.height - margin;
+    }
   });
 
   return newRect;
+}
+
+// 碰撞检测增加 margin
+function hasCollision(
+  rect: { x: number; y: number; width: number; height: number },
+  car: { x: number; y: number; width: number; height: number },
+  snapMargin = 1,
+) {
+  // 如果矩形正好贴边，则允许
+  const snappedLeft = Math.abs(rect.x - (car.x + car.width)) <= snapMargin;
+  const snappedRight = Math.abs(rect.x + rect.width - car.x) <= snapMargin;
+  const snappedTop = Math.abs(rect.y - (car.y + car.height)) <= snapMargin;
+  const snappedBottom = Math.abs(rect.y + rect.height - car.y) <= snapMargin;
+
+  if (snappedLeft || snappedRight || snappedTop || snappedBottom) {
+    return false; // 贴边吸附时不算碰撞
+  }
+
+  // 否则正常碰撞检测
+  return Konva.Util.haveIntersection(rect, car);
 }
 
 export default function RectDrawer() {
@@ -120,10 +155,10 @@ export default function RectDrawer() {
   const [scale, setScale] = useState(1);
 
   // 车身矩形（禁止进入）
-  const carRect = { x: 100, y: 100, width: 200, height: 100 };
+  const carRect = { x: 0, y: 0, width: 200, height: 100 };
   // 叉臂矩形
-  const armRect = { x: 130, y: 200, width: 140, height: 300 };
-  const snap = 5;
+  const armRect = { x: 30, y: 100, width: 140, height: 300 };
+  const snap = 2;
 
   // ESC 取消绘制
   useEffect(() => {
@@ -149,8 +184,8 @@ export default function RectDrawer() {
   const handleMouseMove = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
       if (!isDrawing || !startPoint) return;
-      const pos = getRelativePointerPosition(layerRef.current);
 
+      const pos = getRelativePointerPosition(layerRef.current);
       let { x, y, width, height } = normalizeRect(startPoint, pos);
 
       // Shift 约束正方形
@@ -165,53 +200,86 @@ export default function RectDrawer() {
       let newRect = { x, y, width, height };
       const stage = stageRef.current;
       if (!stage) return;
+
       // 获取所有车体部件
       const carNodes = stage.find<Konva.Layer>('.car')[0].find<Konva.Rect>('Rect');
       const carRects = carNodes.map(getRectBox);
+
       // 吸附处理
       const snappedRect = applySnap(newRect, carRects, snap);
 
-      if (isSnappedToAnyCar(newRect, carRects, snap)) {
-        setIsUseFullRect(true);
-      } else {
-        setIsUseFullRect(false);
-      }
+      // 判断是否贴边
+      const isSnapped = isSnappedToAnyCar(snappedRect, carRects, snap);
+      setIsUseFullRect(isSnapped);
 
-      // 🚫 禁止与 车体 相交
-      if (carRects.some((car) => Konva.Util.haveIntersection(car, snappedRect))) {
-        setIsIntersecting(true);
-        setPreview(snappedRect);
-        return;
-      }
-
-      // 🚫 禁止与已有矩形相交
+      // 统一碰撞检测（车体 + 已有矩形）
       let intersecting = false;
-      rects.forEach((r) => {
-        if (Konva.Util.haveIntersection(r, newRect)) {
-          intersecting = true;
-          setIsIntersecting(true);
-          setPreview(newRect);
-          return;
+
+      // 与车体碰撞
+      if (carRects.some((car) => hasCollision(snappedRect, car))) {
+        intersecting = true;
+      }
+
+      // 与已有矩形碰撞
+      if (!intersecting) {
+        for (const r of rects) {
+          if (Konva.Util.haveIntersection(r, snappedRect)) {
+            intersecting = true;
+            break;
+          }
         }
-      });
+      }
 
       setIsIntersecting(intersecting);
-      setPreview(newRect);
+      setPreview(snappedRect);
     },
     [isDrawing, startPoint, rects],
   );
 
   const handleMouseUp = useCallback(() => {
     if (!isDrawing || !startPoint || !preview) return;
-    // 必须尺寸足够，并且不相交，并且贴着 car
-    if (preview.width > 1 && preview.height > 1 && !isIntersecting && isSnappedToCar(preview, carRect, snap)) {
-      setRects((prev) => [...prev, { id: `rect_${Date.now()}`, ...preview }]);
+
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    // 获取所有车体部件
+    const carNodes = stage.find<Konva.Layer>('.car')[0].find<Konva.Rect>('Rect');
+    const carRects = carNodes.map(getRectBox);
+
+    // 吸附后的矩形
+    const snappedRect = applySnap(preview, carRects, snap);
+
+    // 判断是否贴边
+    const isSnapped = isSnappedToAnyCar(snappedRect, carRects, snap);
+
+    // 碰撞检测（车体 + 已有矩形）
+    let intersecting = false;
+
+    if (carRects.some((car) => hasCollision(snappedRect, car))) {
+      intersecting = true;
     }
+
+    if (!intersecting) {
+      for (const r of rects) {
+        if (Konva.Util.haveIntersection(r, snappedRect)) {
+          intersecting = true;
+          break;
+        }
+      }
+    }
+
+    setIsIntersecting(intersecting);
+
+    // 仅在尺寸足够、贴边、无碰撞时才添加
+    if (snappedRect.width > 1 && snappedRect.height > 1 && isSnapped && !intersecting) {
+      setRects((prev) => [...prev, { id: `rect_${Date.now()}`, ...snappedRect }]);
+    }
+
+    // 重置绘制状态
     setIsDrawing(false);
     setStartPoint(null);
     setPreview(null);
-    setIsIntersecting(false);
-  }, [isDrawing, startPoint, preview, isIntersecting]);
+  }, [isDrawing, startPoint, preview, rects]);
 
   // 缩放
   const handleWheel = useCallback((e: KonvaEventObject<WheelEvent>) => {
@@ -242,6 +310,8 @@ export default function RectDrawer() {
     // 目标位置: 让 (0,0) 落在画布中心
     const targetX = width / 2;
     const targetY = height / 2;
+    console.log('targetX', targetX);
+    console.log('targetY', targetY);
 
     const tween = new Konva.Tween({
       node: stage,
@@ -250,7 +320,7 @@ export default function RectDrawer() {
       x: targetX,
       y: targetY,
       onFinish: () => {
-        setStageScale(1.2);
+        setStageScale(0.99);
       },
     });
     tween.play();
@@ -319,17 +389,27 @@ export default function RectDrawer() {
               />
             ))}
             {preview && (
-              <Rect
-                x={preview.x}
-                y={preview.y}
-                width={preview.width}
-                height={preview.height}
-                stroke={isUseFullRect && !isIntersecting ? 'green' : isIntersecting ? 'red' : '#22d3ee'}
-                strokeWidth={2}
-                dash={[8, 6]}
-                fill={isIntersecting ? 'rgba(255,0,0,0.2)' : 'transparent'}
-                listening={false}
-              />
+              <Group name='preview'>
+                {/* 显示起点坐标与长宽 */}
+                <Text
+                  text={`(${Math.round(preview.x)}, ${Math.round(preview.y)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
+                  x={Math.round(preview.x)}
+                  y={Math.round(preview.y) - 10}
+                  fontSize={10}
+                  fill='black'
+                />
+                <Rect
+                  x={preview.x}
+                  y={preview.y}
+                  width={preview.width}
+                  height={preview.height}
+                  stroke={isUseFullRect && !isIntersecting ? 'green' : isIntersecting ? 'red' : '#22d3ee'}
+                  strokeWidth={2}
+                  dash={[8, 6]}
+                  fill={isIntersecting ? 'rgba(255,0,0,0.2)' : 'transparent'}
+                  listening={false}
+                />
+              </Group>
             )}
           </Layer>
         </Stage>
