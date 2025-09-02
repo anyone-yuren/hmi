@@ -33,7 +33,7 @@ catalog:
   "dayjs": "^1.11.10"
   "sonner": "^1.7.2"
   "rc-virtual-list": "^3.18.5"
-  "axios": "^1.6.2"
+  "axios": "^0.27.2"
 
   "@types/react-router-dom": "^5.3.3"
   "rollup-plugin-visualizer": "^5.14.0"

@@ -123,7 +123,7 @@ export const useHybrid = () => {
       sendMessage10001(
         JSON.stringify({
           uri: 'subscribe',
-          topics: ['/navigation/robot_current_status'],
+          topics: ['/navigation/robot_current_status', '/navigation/robot_status_localizer_result'],
         }),
       );
     }

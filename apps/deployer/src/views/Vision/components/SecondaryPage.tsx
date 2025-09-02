@@ -82,7 +82,7 @@ const SecondaryPage = (props: Props) => {
           ...slideBoxStyle,
         }}
       >
-        <div className='bg-[#162640] h-full w-full '>
+        <div className='h-full w-full' style={{ backgroundColor: background || '#162640' }}>
           <div
             style={headerStyle}
             onClick={() => {

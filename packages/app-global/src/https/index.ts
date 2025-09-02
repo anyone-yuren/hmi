@@ -30,7 +30,7 @@ const instance = axios.create({
   baseURL: BASE_API, // 设置默认 baseURL
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded',
   },
 });
 
