@@ -121,6 +121,8 @@ export default function RectDrawer() {
     setStartPoint(null);
     setPreview(null);
     setSnapLines([]);
+    // 拖拽结束后，清除最后合法位置
+    lastValidRectRef.current = null;
   }, [isDrawing, startPoint, preview, rects]);
 
   // 拖拽
