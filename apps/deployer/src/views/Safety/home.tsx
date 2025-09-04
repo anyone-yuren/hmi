@@ -18,12 +18,12 @@ const SafetyHome = () => {
     2: <CargoSpace />,
   };
   return (
-    <div className='w-full h-full flex flex-col bg-white text-black !absolute left-0 top-0'>
-      <Tabs value={value} onChange={handleChange} textColor='inherit'>
+    <div className='w-full h-full flex flex-col bg-white text-black'>
+      <Tabs className='pt-[20px] pl-[10px]' value={value} onChange={handleChange} textColor='inherit'>
         <Tab label={t('deployer.safety.title')} value={1} />
         <Tab label={t('deployer.vision.placeSpaceCheck')} value={2} />
       </Tabs>
-      <div className='flex-1 relative h-full'>{template[value]}</div>
+      <div className='flex-1'>{template[value]}</div>
     </div>
   );
 };

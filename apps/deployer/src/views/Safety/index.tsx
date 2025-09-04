@@ -103,8 +103,8 @@ const Safety = () => {
   }, []);
 
   return (
-    <div className='w-full h-full flex flex-col !absolute left-0 top-0'>
-      <div className=''>
+    <div className='w-full h-full flex flex-col'>
+      <div className='relative'>
         {!value ? (
           <ConfigProvider
             theme={{
