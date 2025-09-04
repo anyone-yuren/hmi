@@ -26,8 +26,8 @@ export default function RectDrawer() {
   const [scale, setScale] = useState(1);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // 绘制吸附辅助线
-  // const [snapLine, setSnapLine] = useState<{ points: number[]; orientation: 'vertical' | 'horizontal' } | null>(null);
   const [snapLines, setSnapLines] = useState<{ points: number[]; orientation: 'vertical' | 'horizontal' }[]>([]);
+  const lastValidRectRef = useRef<{ x: number; y: number; width: number; height: number } | null>(null);
   const snap = 2;
 
   // Esc 取消绘制
@@ -77,6 +77,7 @@ export default function RectDrawer() {
       }
       const stage = stageRef.current;
       if (!stage) return;
+      // 校验是否与车碰撞
       const carNodes = stage.find<Konva.Layer>('.car')[0].find<Konva.Rect>('Rect');
       const carRects = carNodes.map(getRectBox);
 
@@ -86,7 +87,17 @@ export default function RectDrawer() {
         isIntersecting,
         snapLines,
       } = validateRect({ x, y, width, height }, carRects, rects, snap);
+
+      if (isIntersecting) {
+        // 有碰撞，停留在最后合法位置
+        if (lastValidRectRef.current) {
+          setPreview(lastValidRectRef.current);
+        }
+        return;
+      }
       setPreview(snappedRect);
+      // 无碰撞，更新最后合法位置
+      lastValidRectRef.current = snappedRect;
       setIsUseFullRect(isSnapped);
       setIsIntersecting(isIntersecting);
       setSnapLines(snapLines);
