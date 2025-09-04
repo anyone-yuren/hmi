@@ -169,6 +169,9 @@ const GlobalHeader = () => {
         <div>
           <Button
             className='border-none !w-[82px] h-[62px] !bg-transparent flex items-center justify-center !rounded-2xl text-white'
+            classNames={{
+              icon: 'flex items-center justify-center h-full', // 覆盖 ant-btn-icon 的样式
+            }}
             icon={<SvgIcon name='bar' size={responsive.xs ? 42 : 54} />}
             onClick={() => navigate('/slider')}
           ></Button>
