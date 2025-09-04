@@ -120,6 +120,10 @@ export default function RectDrawer() {
       setSelectedId(e.target.id());
       return;
     }
+    // 判断是否是缩放的Rect
+    if (e.target instanceof Konva.Rect && e.target.parent?.attrs?.name === 'transformer') {
+      return;
+    }
     if (e.target instanceof Konva.Transformer) return;
     if (e.evt.button !== 0) return;
     const pos = getRelativePointerPosition(layerRef.current);
@@ -196,11 +200,58 @@ export default function RectDrawer() {
         snap,
       );
 
-      node.position({ x: snappedRect.x, y: snappedRect.y });
-      node.stroke(isSnapped && !isIntersecting ? 'green' : isIntersecting ? 'red' : '#22d3ee');
-      node.fill(isIntersecting ? 'rgba(255,0,0,0.2)' : 'rgba(255,211,61,0.2)');
+      // 如果矩形不在贴靠状态，松开后需要回到拖拽开始的位置
+      if (!isSnapped || isIntersecting) {
+        node.stroke(isIntersecting ? 'red' : '#22d3ee');
+        node.fill(isIntersecting ? 'rgba(255,0,0,0.2)' : 'rgba(255,211,61,0.2)');
+      } else {
+        node.position({ x: snappedRect.x, y: snappedRect.y });
+        node.stroke('green');
+        node.fill('rgba(255,211,61,0.2)');
+      }
 
-      setRects((prev) => prev.map((r) => (r.id === id ? { ...r, x: snappedRect.x, y: snappedRect.y } : r)));
+      setRects((prev) => prev.map((r) => (r.id === id ? { ...r, x: node.x(), y: node.y() } : r)));
+    },
+    [rects],
+  );
+
+  // 拖拽结束 - 判断是否需要回到起始位置（加动画）
+  const handleDragEnd = useCallback(
+    (e: KonvaEventObject<DragEvent>) => {
+      const node = e.target as Konva.Rect;
+      const startPos = node.getAttr('startPos');
+      if (!startPos) return;
+
+      const id = node.id();
+      const stage = stageRef.current;
+      if (!stage) return;
+      const carNodes = stage.find<Konva.Layer>('.car')[0].find<Konva.Rect>('Rect');
+      const carRects = carNodes.map(getRectBox);
+
+      const rawRect = { x: node.x(), y: node.y(), width: node.width(), height: node.height() };
+      const { isSnapped, isIntersecting } = validateRect(
+        rawRect,
+        carRects,
+        rects.filter((r) => r.id !== id),
+        snap,
+      );
+
+      if (!isSnapped || isIntersecting) {
+        new Konva.Tween({
+          node,
+          duration: 0.3,
+          easing: Konva.Easings.EaseInOut,
+          x: startPos.x,
+          y: startPos.y,
+          onFinish: () => {
+            setRects((prev) => prev.map((r) => (r.id === id ? { ...r, x: startPos.x, y: startPos.y } : r)));
+            // 移除 startPos 属性
+            node.setAttr('startPos', null);
+            node.setAttr('fill', 'rgba(255,211,61,0.2)');
+            node.setAttr('stroke', '#ffd33d');
+          },
+        }).play();
+      }
     },
     [rects],
   );
@@ -334,8 +385,18 @@ export default function RectDrawer() {
                   draggable
                   onTransform={handleTransform}
                   onDragMove={handleDragMove}
+                  onDragEnd={handleDragEnd}
                   onClick={() => setSelectedId(r.id)}
                   onTap={() => setSelectedId(r.id)}
+                  onDragStart={(e) => {
+                    const node = e.target as Konva.Rect;
+                    node.setAttrs({
+                      startPos: {
+                        x: node.x(),
+                        y: node.y(),
+                      },
+                    });
+                  }}
                 />
               </Group>
             ))}
@@ -364,6 +425,7 @@ export default function RectDrawer() {
             <Transformer
               ref={transformerRef}
               rotateEnabled={false}
+              name='transformer'
               boundBoxFunc={(oldBox, newBox) => (newBox.width < 5 || newBox.height < 5 ? oldBox : newBox)}
             />
           </Layer>
