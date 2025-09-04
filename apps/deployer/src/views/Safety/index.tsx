@@ -4,7 +4,7 @@ import { useSize } from 'ahooks';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Group, Layer, Rect, Stage, Text, Transformer } from 'react-konva';
+import { Group, Layer, Line, Rect, Stage, Text, Transformer } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import CarModel from './component/newCarComponents/carModel';
 import { getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
@@ -25,7 +25,9 @@ export default function RectDrawer() {
   const [isUseFullRect, setIsUseFullRect] = useState(false);
   const [scale, setScale] = useState(1);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
+  // 绘制吸附辅助线
+  // const [snapLine, setSnapLine] = useState<{ points: number[]; orientation: 'vertical' | 'horizontal' } | null>(null);
+  const [snapLines, setSnapLines] = useState<{ points: number[]; orientation: 'vertical' | 'horizontal' }[]>([]);
   const snap = 2;
 
   // Esc 取消绘制
@@ -82,10 +84,12 @@ export default function RectDrawer() {
         rect: snappedRect,
         isSnapped,
         isIntersecting,
+        snapLines,
       } = validateRect({ x, y, width, height }, carRects, rects, snap);
       setPreview(snappedRect);
       setIsUseFullRect(isSnapped);
       setIsIntersecting(isIntersecting);
+      setSnapLines(snapLines);
     },
     [isDrawing, startPoint, rects],
   );
@@ -105,6 +109,7 @@ export default function RectDrawer() {
     setIsDrawing(false);
     setStartPoint(null);
     setPreview(null);
+    setSnapLines([]);
   }, [isDrawing, startPoint, preview, rects]);
 
   // 拖拽
@@ -121,13 +126,14 @@ export default function RectDrawer() {
         rect: snappedRect,
         isSnapped,
         isIntersecting,
+        snapLines,
       } = validateRect(
         rawRect,
         carRects,
         rects.filter((r) => r.id !== id),
         snap,
       );
-
+      setSnapLines(snapLines);
       // 如果矩形不在贴靠状态，松开后需要回到拖拽开始的位置
       if (!isSnapped || isIntersecting) {
         node.stroke(isIntersecting ? 'red' : '#22d3ee');
@@ -174,11 +180,17 @@ export default function RectDrawer() {
           onFinish: () => {
             setRects((prev) => prev.map((r) => (r.id === id ? { ...r, x: startPos.x, y: startPos.y } : r)));
             // 移除 startPos 属性
-            node.setAttr('startPos', null);
-            node.setAttr('fill', 'rgba(255,211,61,0.2)');
-            node.setAttr('stroke', '#ffd33d');
+            node.setAttrs({
+              fill: 'rgba(255,211,61,0.2)',
+              stroke: '#ffd33d',
+              startPos: null,
+            });
+            // ✅ 回退完成后清除吸附线
+            setSnapLines([]);
           },
         }).play();
+      } else {
+        setSnapLines([]);
       }
     },
     [rects],
@@ -207,12 +219,14 @@ export default function RectDrawer() {
         rect: snappedRect,
         isSnapped,
         isIntersecting,
+        snapLines,
       } = validateRect(
         rawRect,
         carRects,
         rects.filter((r) => r.id !== id),
         snap,
       );
+      setSnapLines(snapLines);
 
       // 更新外观反馈
       node.position({ x: snappedRect.x, y: snappedRect.y });
@@ -281,8 +295,12 @@ export default function RectDrawer() {
               stroke: '#ffd33d',
               fill: 'rgba(255,211,61,0.2)',
             });
+            // ✅ 回退完成后清除吸附线
+            setSnapLines([]);
           },
         }).play();
+      } else {
+        setSnapLines([]);
       }
     },
     [rects],
@@ -423,6 +441,16 @@ export default function RectDrawer() {
                 />
               </Group>
             )}
+            {snapLines.map((line, idx) => (
+              <Line
+                key={idx}
+                points={line.points}
+                stroke='rgba(0,150,136,0.8)'
+                strokeWidth={1.5}
+                dash={[6, 4]}
+                listening={false}
+              />
+            ))}
             {/* 形变 */}
             <Transformer
               ref={transformerRef}

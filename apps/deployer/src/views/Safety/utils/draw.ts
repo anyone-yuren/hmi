@@ -51,13 +51,42 @@ export function isSnappedToAnyCar(rect, carRects, snap = 1) {
  */
 export function applySnap(rect, carRects, snap = 5, margin = 1) {
   const newRect = { ...rect };
+  const snapLines: { points: number[]; orientation: 'vertical' | 'horizontal' }[] = [];
   carRects.forEach((car) => {
-    if (Math.abs(rect.x - (car.x + car.width)) <= snap) newRect.x = car.x + car.width + margin;
-    if (Math.abs(rect.x + rect.width - car.x) <= snap) newRect.x = car.x - rect.width - margin;
-    if (Math.abs(rect.y - (car.y + car.height)) <= snap) newRect.y = car.y + car.height + margin;
-    if (Math.abs(rect.y + rect.height - car.y) <= snap) newRect.y = car.y - rect.height - margin;
+    // 左对齐
+    if (Math.abs(rect.x - (car.x + car.width)) <= snap) {
+      newRect.x = car.x + car.width + margin;
+      snapLines.push({
+        points: [car.x + car.width, car.y, car.x + car.width, car.y + car.height],
+        orientation: 'vertical',
+      });
+    }
+    // 右对齐
+    if (Math.abs(rect.x + rect.width - car.x) <= snap) {
+      newRect.x = car.x - rect.width - margin;
+      snapLines.push({
+        points: [car.x, car.y, car.x, car.y + car.height],
+        orientation: 'vertical',
+      });
+    }
+    // 上对齐
+    if (Math.abs(rect.y - (car.y + car.height)) <= snap) {
+      newRect.y = car.y + car.height + margin;
+      snapLines.push({
+        points: [car.x, car.y + car.height, car.x + car.width, car.y + car.height],
+        orientation: 'horizontal',
+      });
+    }
+    // 下对齐
+    if (Math.abs(rect.y + rect.height - car.y) <= snap) {
+      newRect.y = car.y - rect.height - margin;
+      snapLines.push({
+        points: [car.x, car.y, car.x + car.width, car.y],
+        orientation: 'horizontal',
+      });
+    }
   });
-  return newRect;
+  return { newRect, snapLines };
 }
 /**
  * 检查是否碰撞
@@ -73,7 +102,7 @@ export function hasCollision(rect, car, snapMargin = 1) {
 
 // ✅ 统一校验函数
 export function validateRect(rect, carRects, otherRects, snap = 2) {
-  const snappedRect = applySnap(rect, carRects, snap);
+  const { newRect: snappedRect, snapLines } = applySnap(rect, carRects, snap);
   const isSnapped = isSnappedToAnyCar(snappedRect, carRects, snap);
 
   let intersecting = false;
@@ -88,5 +117,5 @@ export function validateRect(rect, carRects, otherRects, snap = 2) {
       }
     }
   }
-  return { rect: snappedRect, isSnapped, isIntersecting: intersecting };
+  return { rect: snappedRect, isSnapped, isIntersecting: intersecting, snapLines };
 }
