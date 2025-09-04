@@ -12,6 +12,9 @@ import CarModel from './component/newCarComponents/carModel';
 function getRectBox(node: Konva.Rect) {
   return { x: node.x(), y: node.y(), width: node.width(), height: node.height() };
 }
+/**
+ * 获取相对指针位置
+ */
 function getRelativePointerPosition(node: Konva.Node | null) {
   if (!node) return { x: 0, y: 0 };
   const stage = node.getStage();
@@ -21,6 +24,9 @@ function getRelativePointerPosition(node: Konva.Node | null) {
   transform.invert();
   return transform.point(pointer);
 }
+/**
+ * 归一化矩形
+ */
 function normalizeRect(a: { x: number; y: number }, b: { x: number; y: number }) {
   const x = Math.min(a.x, b.x);
   const y = Math.min(a.y, b.y);
@@ -28,6 +34,9 @@ function normalizeRect(a: { x: number; y: number }, b: { x: number; y: number })
   const height = Math.abs(b.y - a.y);
   return { x, y, width, height };
 }
+/**
+ * 检查是否吸附到车
+ */
 function isSnappedToCar(rect, car, snap = 1, margin = 1) {
   const rectEdges = { left: rect.x, right: rect.x + rect.width, top: rect.y, bottom: rect.y + rect.height };
   const carEdges = { left: car.x, right: car.x + car.width, top: car.y, bottom: car.y + car.height };
@@ -39,9 +48,15 @@ function isSnappedToCar(rect, car, snap = 1, margin = 1) {
   const alignedBottom = Math.abs(rectEdges.bottom - carEdges.top) <= snap && hasXOverlap;
   return alignedLeft || alignedRight || alignedTop || alignedBottom;
 }
+/**
+ * 检查是否吸附到任何车
+ */
 function isSnappedToAnyCar(rect, carRects, snap = 1) {
   return carRects.some((car) => isSnappedToCar(rect, car, snap));
 }
+/**
+ * 应用吸附
+ */
 function applySnap(rect, carRects, snap = 5, margin = 1) {
   const newRect = { ...rect };
   carRects.forEach((car) => {
@@ -52,6 +67,9 @@ function applySnap(rect, carRects, snap = 5, margin = 1) {
   });
   return newRect;
 }
+/**
+ * 检查是否碰撞
+ */
 function hasCollision(rect, car, snapMargin = 1) {
   const snappedLeft = Math.abs(rect.x - (car.x + car.width)) <= snapMargin;
   const snappedRight = Math.abs(rect.x + rect.width - car.x) <= snapMargin;
@@ -263,15 +281,18 @@ export default function RectDrawer() {
       const id = node.id();
       const stage = stageRef.current;
       if (!stage) return;
+
       const carNodes = stage.find<Konva.Layer>('.car')[0].find<Konva.Rect>('Rect');
       const carRects = carNodes.map(getRectBox);
 
+      // 缩放后的宽高（考虑 scaleX/Y）
       const rawRect = {
         x: node.x(),
         y: node.y(),
         width: node.width() * node.scaleX(),
         height: node.height() * node.scaleY(),
       };
+
       const {
         rect: snappedRect,
         isSnapped,
@@ -283,16 +304,76 @@ export default function RectDrawer() {
         snap,
       );
 
+      // 更新外观反馈
       node.position({ x: snappedRect.x, y: snappedRect.y });
       node.width(snappedRect.width);
       node.height(snappedRect.height);
       node.stroke(isSnapped && !isIntersecting ? 'green' : isIntersecting ? 'red' : '#22d3ee');
       node.fill(isIntersecting ? 'rgba(255,0,0,0.2)' : 'rgba(255,211,61,0.2)');
 
+      // 更新 rects
       setRects((prev) => prev.map((r) => (r.id === id ? { ...r, ...snappedRect } : r)));
 
+      // 清理 scale，避免累计缩放
       node.scaleX(1);
       node.scaleY(1);
+    },
+    [rects],
+  );
+
+  // Tramsformer 开始缩放
+  const handleTransformStart = useCallback((e: KonvaEventObject<Event>) => {
+    const node = e.target as Konva.Rect;
+    node.setAttr('startPos', { x: node.x(), y: node.y(), width: node.width(), height: node.height() });
+    // node.setAttr('startScaleY', node.scaleY());
+  }, []);
+
+  // Transformer 缩放结束
+  const handleTransformEnd = useCallback(
+    (e: KonvaEventObject<Event>) => {
+      debugger;
+      const node = e.target as Konva.Rect;
+      const id = node.id();
+      const stage = stageRef.current;
+      if (!stage) return;
+
+      const carNodes = stage.find<Konva.Layer>('.car')[0].find<Konva.Rect>('Rect');
+      const carRects = carNodes.map(getRectBox);
+
+      const rawRect = {
+        x: node.x(),
+        y: node.y(),
+        width: node.width(),
+        height: node.height(),
+      };
+
+      const { isSnapped, isIntersecting } = validateRect(
+        rawRect,
+        carRects,
+        rects.filter((r) => r.id !== id),
+        snap,
+      );
+
+      if (!isSnapped || isIntersecting) {
+        // 回退动画
+        const startPos = node.getAttr('startPos');
+        if (!startPos) return;
+        new Konva.Tween({
+          node,
+          duration: 0.3,
+          easing: Konva.Easings.EaseInOut,
+          x: startPos.x,
+          y: startPos.y,
+          width: startPos.width,
+          height: startPos.height,
+          onFinish: () => {
+            node.setAttrs({
+              stroke: '#ffd33d',
+              fill: 'rgba(255,211,61,0.2)',
+            });
+          },
+        }).play();
+      }
     },
     [rects],
   );
@@ -370,6 +451,7 @@ export default function RectDrawer() {
           <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} />
           <CarModel />
           <Layer ref={layerRef}>
+            {/* 绘制矩形 */}
             {rects.map((r) => (
               <Group key={r.id} className='rect'>
                 <Rect
@@ -384,6 +466,8 @@ export default function RectDrawer() {
                   fill='rgba(255,211,61,0.2)'
                   draggable
                   onTransform={handleTransform}
+                  onTransformStart={handleTransformStart}
+                  onTransformEnd={handleTransformEnd}
                   onDragMove={handleDragMove}
                   onDragEnd={handleDragEnd}
                   onClick={() => setSelectedId(r.id)}
@@ -400,6 +484,7 @@ export default function RectDrawer() {
                 />
               </Group>
             ))}
+            {/* 绘制 */}
             {preview && (
               <Group name='preview'>
                 <Text
@@ -422,6 +507,7 @@ export default function RectDrawer() {
                 />
               </Group>
             )}
+            {/* 形变 */}
             <Transformer
               ref={transformerRef}
               rotateEnabled={false}
