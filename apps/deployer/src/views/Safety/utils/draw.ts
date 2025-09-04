@@ -1,0 +1,92 @@
+import Konva from 'konva';
+
+// 工具函数
+export function getRectBox(node: Konva.Rect) {
+  return { x: node.x(), y: node.y(), width: node.width(), height: node.height() };
+}
+/**
+ * 获取相对指针位置
+ */
+export function getRelativePointerPosition(node: Konva.Node | null) {
+  if (!node) return { x: 0, y: 0 };
+  const stage = node.getStage();
+  const pointer = stage?.getPointerPosition();
+  if (!pointer) return { x: 0, y: 0 };
+  const transform = node.getAbsoluteTransform().copy();
+  transform.invert();
+  return transform.point(pointer);
+}
+/**
+ * 归一化矩形
+ */
+export function normalizeRect(a: { x: number; y: number }, b: { x: number; y: number }) {
+  const x = Math.min(a.x, b.x);
+  const y = Math.min(a.y, b.y);
+  const width = Math.abs(b.x - a.x);
+  const height = Math.abs(b.y - a.y);
+  return { x, y, width, height };
+}
+/**
+ * 检查是否吸附到车
+ */
+export function isSnappedToCar(rect, car, snap = 1, margin = 1) {
+  const rectEdges = { left: rect.x, right: rect.x + rect.width, top: rect.y, bottom: rect.y + rect.height };
+  const carEdges = { left: car.x, right: car.x + car.width, top: car.y, bottom: car.y + car.height };
+  const hasXOverlap = !(rectEdges.right < carEdges.left + margin || rectEdges.left > carEdges.right - margin);
+  const hasYOverlap = !(rectEdges.bottom < carEdges.top + margin || rectEdges.top > carEdges.bottom - margin);
+  const alignedLeft = Math.abs(rectEdges.left - carEdges.right) <= snap && hasYOverlap;
+  const alignedRight = Math.abs(rectEdges.right - carEdges.left) <= snap && hasYOverlap;
+  const alignedTop = Math.abs(rectEdges.top - carEdges.bottom) <= snap && hasXOverlap;
+  const alignedBottom = Math.abs(rectEdges.bottom - carEdges.top) <= snap && hasXOverlap;
+  return alignedLeft || alignedRight || alignedTop || alignedBottom;
+}
+/**
+ * 检查是否吸附到任何车
+ */
+export function isSnappedToAnyCar(rect, carRects, snap = 1) {
+  return carRects.some((car) => isSnappedToCar(rect, car, snap));
+}
+/**
+ * 应用吸附
+ */
+export function applySnap(rect, carRects, snap = 5, margin = 1) {
+  const newRect = { ...rect };
+  carRects.forEach((car) => {
+    if (Math.abs(rect.x - (car.x + car.width)) <= snap) newRect.x = car.x + car.width + margin;
+    if (Math.abs(rect.x + rect.width - car.x) <= snap) newRect.x = car.x - rect.width - margin;
+    if (Math.abs(rect.y - (car.y + car.height)) <= snap) newRect.y = car.y + car.height + margin;
+    if (Math.abs(rect.y + rect.height - car.y) <= snap) newRect.y = car.y - rect.height - margin;
+  });
+  return newRect;
+}
+/**
+ * 检查是否碰撞
+ */
+export function hasCollision(rect, car, snapMargin = 1) {
+  const snappedLeft = Math.abs(rect.x - (car.x + car.width)) <= snapMargin;
+  const snappedRight = Math.abs(rect.x + rect.width - car.x) <= snapMargin;
+  const snappedTop = Math.abs(rect.y - (car.y + car.height)) <= snapMargin;
+  const snappedBottom = Math.abs(rect.y + rect.height - car.y) <= snapMargin;
+  if (snappedLeft || snappedRight || snappedTop || snappedBottom) return false;
+  return Konva.Util.haveIntersection(rect, car);
+}
+
+// ✅ 统一校验函数
+export function validateRect(rect, carRects, otherRects, snap = 2) {
+  const snappedRect = applySnap(rect, carRects, snap);
+  const isSnapped = isSnappedToAnyCar(snappedRect, carRects, snap);
+
+  let intersecting = false;
+  if (carRects.some((car) => hasCollision(snappedRect, car))) {
+    intersecting = true;
+  }
+  if (!intersecting) {
+    for (const r of otherRects) {
+      if (Konva.Util.haveIntersection(r, snappedRect)) {
+        intersecting = true;
+        break;
+      }
+    }
+  }
+  return { rect: snappedRect, isSnapped, isIntersecting: intersecting };
+}
