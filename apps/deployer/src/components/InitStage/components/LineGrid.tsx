@@ -5,6 +5,8 @@ import { Layer, Line } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 
 export const LineGrid = (props: any) => {
+  const { lastPos } = props;
+
   const lineRef = useRef<any>(null);
   const cellSize = 20;
   const { stagePos, hybirdStage, stageScale } = useHybirdStore(
@@ -83,7 +85,7 @@ export const LineGrid = (props: any) => {
       );
     }
     return gridComponents;
-  }, [stagePos, hybirdStage, stageScale, lineRef.current]);
+  }, [stagePos, hybirdStage, stageScale, lineRef.current, lastPos]);
 
   return (
     <Layer listening={false} ref={lineRef}>

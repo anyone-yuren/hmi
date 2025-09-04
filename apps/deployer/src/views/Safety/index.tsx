@@ -28,6 +28,58 @@ export default function RectDrawer() {
   // 绘制吸附辅助线
   const [snapLines, setSnapLines] = useState<{ points: number[]; orientation: 'vertical' | 'horizontal' }[]>([]);
   const lastValidRectRef = useRef<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [reRenderLineGrid, setReRenderLineGrid] = useState<boolean>(false);
+  /** -------------鼠标右键 start -------------- */
+  const isPanningRef = useRef(false);
+  const lastPosRef = useRef<{ x: number; y: number } | null>(null);
+  const stageStartPosRef = useRef<{ x: number; y: number } | null>(null);
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const container = stage.container();
+
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button === 2) {
+        // 右键
+        e.preventDefault(); // 阻止默认右键菜单
+        isPanningRef.current = true;
+        setReRenderLineGrid(true);
+        lastPosRef.current = { x: e.clientX, y: e.clientY };
+        stageStartPosRef.current = { x: stage.x(), y: stage.y() };
+      }
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isPanningRef.current || !lastPosRef.current || !stageStartPosRef.current) return;
+
+      const dx = e.clientX - lastPosRef.current.x;
+      const dy = e.clientY - lastPosRef.current.y;
+
+      stage.x(stageStartPosRef.current.x + dx);
+      stage.y(stageStartPosRef.current.y + dy);
+      stage.batchDraw();
+    };
+
+    const handleMouseUp = () => {
+      isPanningRef.current = false;
+      setReRenderLineGrid(false);
+      lastPosRef.current = null;
+      stageStartPosRef.current = null;
+    };
+
+    // 阻止默认右键菜单
+    container.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    container.addEventListener('mousedown', handleMouseDown);
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      container.removeEventListener('mousedown', handleMouseDown);
+      container.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
   const snap = 2;
 
   // Esc 取消绘制
@@ -389,7 +441,7 @@ export default function RectDrawer() {
           onWheel={handleWheel}
           style={stageStyle}
         >
-          <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} />
+          <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
           <CarModel />
           <Layer ref={layerRef}>
             {/* 绘制矩形 */}
