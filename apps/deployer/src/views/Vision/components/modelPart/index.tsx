@@ -55,7 +55,7 @@ const ModelPart = () => {
         </div>
       </div>
 
-      <SecondaryPage open={open} setOpen={setOpen} fullScreen={true} background={'#445260'}>
+      <SecondaryPage open={open} setOpen={setOpen} fullScreen={true} background={'#162640'}>
         <SecondaryPaper>
           {modelConfig.visible && (
             <AddModel

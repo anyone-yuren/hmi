@@ -1,7 +1,6 @@
-import { UndoOutlined } from '@ant-design/icons';
 import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
-import { FloatButton } from 'antd';
+import { Button } from 'antd';
 import { useTheme } from 'antd-style';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -37,28 +36,35 @@ const Maintenance = () => {
 
   const theme = useTheme();
   return (
-    <div className='flex w-full h-full items-center justify-center gap-4 p-4'>
+    <div className='relative flex w-full h-full items-center justify-center gap-4 p-4'>
       <div className='flex flex-1  h-full'>
-        <Sensor loading={loading} data={data?.data?.electronicControlsAndSensors ?? {}} reload={getMaintenance} />
+        <Sensor loading={loading} data={data?.ElectronicControlsAndSensors ?? {}} reload={getMaintenance} />
       </div>
       <div className='flex flex-1  h-full'>
-        <Running loading={loading} data={data?.data?.runningSystem ?? {}} reload={getMaintenance} />
+        <Running loading={loading} data={data?.RunningSystem ?? {}} reload={getMaintenance} />
       </div>
       <div className='flex flex-1  h-full'>
         {/* 玻璃卡片 */}
-        <Lifting loading={loading} data={data?.data?.liftingSystem ?? {}} reload={getMaintenance} />
+        <Lifting loading={loading} data={data?.LiftingSystem ?? {}} reload={getMaintenance} />
       </div>
       {resetLoading ? <LoadingReset /> : null}
-      {token === 'admin' && (
-        <FloatButton
-          shape='circle'
-          style={{
-            insetBlockEnd: 24,
-            insetInlineEnd: 24,
-          }}
-          icon={<UndoOutlined />}
-          onClick={() => reset()}
-        />
+      {(token === 'admin' || true) && (
+        <div className='absolute bottom-8 left-8 z-10'>
+          <Button type={'primary'} onClick={() => reset()}>
+            {'重置全部'}
+          </Button>
+        </div>
+        // <FloatButton
+        //   shape='square'
+        //   // style={{
+        //   //   insetBlockEnd: 24,
+        //   //   insetInlineEnd: 24,
+        //   // }}
+        //   icon={<Button>重置全部</Button>}
+        //   // type={'primary'}
+        //   // description={'重置全部'}
+        //   onClick={() => reset()}
+        // />
       )}
     </div>
   );

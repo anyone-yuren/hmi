@@ -50,7 +50,7 @@ const StorageListSelect = (props: IProps) => {
           ></CustomSelect>
         </div>
       </TextUpdateRow>
-      <SecondaryPage open={open} setOpen={setOpen} fullScreen={true} background={'#445260'} titleColor={'white'}>
+      <SecondaryPage open={open} setOpen={setOpen} fullScreen={true} background={'#162640'} titleColor={'white'}>
         <SecondaryPaper>
           {open && (
             <StorageStage

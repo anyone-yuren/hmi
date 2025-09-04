@@ -1,4 +1,4 @@
-import { Button, Modal } from 'antd';
+import { Button, ConfigProvider, Modal } from 'antd';
 import { useResponsive } from 'antd-style';
 import { useNavigate } from 'react-router-dom';
 import { SvgIcon } from 'ui';
@@ -17,32 +17,18 @@ import Selectlangulage from './components/Selectlangulage';
 import Signal from './components/signal';
 
 // 去除table hover央视
-const useStyles = createStyles(({ css }) => {
-  return {
-    noHoverButton: css`
-      // 使用属性选择器增加优先级
-      &[class*='ant-btn']:hover {
-        background: inherit !important;
-        border-color: inherit !important;
-        color: inherit !important;
-        transform: none !important;
-        box-shadow: none !important;
-        transition: none !important;
-      }
-
-      // 精确匹配你提供的选择器
-      &:where(.ant-btn-variant-outlined):not(:disabled):not(.ant-btn-disabled):hover,
-      &:where(.ant-btn-variant-dashed):not(:disabled):not(.ant-btn-disabled):hover {
-        background: inherit !important;
-        border-color: inherit !important;
-        color: inherit !important;
-        transform: none !important;
-        box-shadow: none !important;
-        transition: none !important;
-      }
-    `,
-  };
-});
+const useStyles = createStyles(({ css }) => ({
+  noHoverButton: css`
+    &:hover {
+      background: inherit !important;
+      border-color: inherit !important;
+      color: inherit !important;
+      transform: none !important;
+      box-shadow: none !important;
+      transition: none !important;
+    }
+  `,
+}));
 
 const GlobalHeader = () => {
   const navigate = useNavigate();
@@ -122,60 +108,72 @@ const GlobalHeader = () => {
         <Signal />
       </div>
       <Selectlangulage />
-      <div className='flex flex-1 flex-col gap-8 items-center justify-center'>
-        <div
-          onClick={() => {
-            navigate('/');
-          }}
-          className={'justify-center flex flex-col items-center '}
-        >
-          <Button
-            classNames={{
-              icon: 'flex items-center justify-center',
+      <ConfigProvider
+        theme={{
+          components: {
+            Button: {
+              defaultHoverBg: 'transparent', // 设置透明背景
+              defaultHoverBorderColor: 'transparent', // 去除 hover 边框颜色
+              defaultHoverColor: 'inherit', // 文字颜色保持不变
+            },
+          },
+        }}
+      >
+        <div className='flex flex-1 flex-col gap-8 items-center justify-center'>
+          <div
+            onClick={() => {
+              navigate('/');
             }}
-            className={`${styles.noHoverButton} border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#00E7E7] to-[#008787]`}
-            shape='circle'
-            icon={<SvgIcon name='chache' size={responsive.xs ? 42 : 54} />}
-          />
-        </div>
-        <div
-          onClick={() => {
-            navigate('/singleTask');
-          }}
-          className={'justify-center flex  flex-col items-center '}
-        >
-          <Button
-            classNames={{
-              icon: 'flex items-center justify-center',
+            className={'justify-center flex flex-col items-center '}
+          >
+            <Button
+              classNames={{
+                icon: 'flex items-center justify-center',
+              }}
+              className={`${styles.noHoverButton} border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#00E7E7] to-[#008787]`}
+              shape='circle'
+              icon={<SvgIcon name='chache' size={responsive.xs ? 42 : 54} />}
+            />
+          </div>
+          <div
+            onClick={() => {
+              navigate('/singleTask');
             }}
-            className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#223d62] to-[#3b587e]'
-            shape='circle'
-            icon={<SvgIcon name='task' size={responsive.xs ? 42 : 54} />}
-          />
-        </div>
-        <div
-          onClick={() => {
-            navigate('/hybrid');
-          }}
-          className={' justify-center flex flex-col items-center  '}
-        >
-          <Button
-            classNames={{
-              icon: 'flex items-center justify-center',
+            className={'justify-center flex  flex-col items-center '}
+          >
+            <Button
+              classNames={{
+                icon: 'flex items-center justify-center',
+              }}
+              className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#223d62] to-[#3b587e]'
+              shape='circle'
+              icon={<SvgIcon name='task' size={responsive.xs ? 42 : 54} />}
+            />
+          </div>
+          <div
+            onClick={() => {
+              navigate('/hybrid');
             }}
-            className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white'
-            shape='circle'
-            icon={<SvgIcon name='hybrid' size={responsive.xs ? 80 : 80} />}
-          />
+            className={' justify-center flex flex-col items-center  '}
+          >
+            <Button
+              classNames={{
+                icon: 'flex items-center justify-center',
+              }}
+              className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white'
+              shape='circle'
+              icon={<SvgIcon name='hybrid' size={responsive.xs ? 80 : 80} />}
+            />
+          </div>
         </div>
-      </div>
-      <div>
-        <Button
-          className='border-none !w-[82px] h-[62px] !bg-transparent flex items-center justify-center !rounded-2xl text-white'
-          icon={<SvgIcon name='bar' size={responsive.xs ? 42 : 54} />}
-          onClick={() => navigate('/slider')}
-        ></Button>
-      </div>
+        <div>
+          <Button
+            className='border-none !w-[82px] h-[62px] !bg-transparent flex items-center justify-center !rounded-2xl text-white'
+            icon={<SvgIcon name='bar' size={responsive.xs ? 42 : 54} />}
+            onClick={() => navigate('/slider')}
+          ></Button>
+        </div>
+      </ConfigProvider>
       {[2, 3].includes(powerStatus.charge_status) && showChargingDialog && (
         <ChargingAnimation
           onClick={() => {

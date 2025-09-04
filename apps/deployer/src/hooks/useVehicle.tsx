@@ -22,7 +22,7 @@ export const useVehicle = () => {
     })),
   );
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
-    reconnectLimit: 10,
+    reconnectLimit: -1, // 改为无限重连
     reconnectInterval: 5000,
     onMessage: (e) => {
       if (e?.data?.includes('subscribe')) return;

@@ -230,7 +230,7 @@ const TruckLoad = () => {
             });
           }}
           fullScreen={true}
-          background={'#445260'}
+          background={'#162640'}
         >
           <SecondaryPaper>
             <LightTheme className='text-black'>

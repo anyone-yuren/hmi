@@ -30,9 +30,9 @@ const Running = (props: Props) => {
   );
   const STATUS = [t('common.normal'), t('common.triggered'), t('common.severelyExpired')];
   const theme = useTheme();
-  const datePercentage = (data?.current?.time ?? 182) / (data?.condition?.time ?? 180);
-  const milesPercentage = (data?.current?.miles ?? 70) / (data?.condition?.miles ?? 1000);
-  const COLORS = [theme.colorSuccessText, theme.colorWarningText, theme.colorErrorText];
+  const datePercentage = (data?.Current?.Time ?? 182) / (data?.Condition?.Time ?? 180);
+  const milesPercentage = (data?.Current?.Miles ?? 70) / (data?.Condition?.Miles ?? 1000);
+  const COLORS = [theme.colorSuccessText, theme.colorWarningText, '#FFEB3B' || theme.colorErrorText];
   const { data: runningData, loading: runningLoading } = useRequest(getRunningData);
   const { run: maintain } = useRequest(maintenance, {
     manual: true,
@@ -47,10 +47,10 @@ const Running = (props: Props) => {
           <>
             <div className='text-md font-bold'>{t('common.maintenance.condition')}：</div>
             <div>
-              {t('common.maintenance.duration')}：{data?.condition?.time ?? '-'} {t('common.maintenance.day')}
+              {t('common.maintenance.duration')}：{data?.Condition?.Time ?? '-'} {t('common.maintenance.day')}
             </div>
             <div>
-              {t('common.maintenance.miles')}：{data?.condition?.miles ?? '-'} KM
+              {t('common.maintenance.miles')}：{data?.Condition?.Miles ?? '-'} KM
             </div>
           </>
         }
@@ -80,8 +80,8 @@ const Running = (props: Props) => {
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.status')}</h4>
             {!loading ? (
-              <p className='text-lg font-bold' style={{ color: COLORS[data?.status ?? 1] }}>
-                {STATUS[data?.status ?? 1]}
+              <p className='text-lg font-bold' style={{ color: COLORS[data?.Status ?? 1] }}>
+                {STATUS[data?.Status ?? 1]}
               </p>
             ) : (
               <Skeleton.Button active size='small' />
@@ -94,7 +94,7 @@ const Running = (props: Props) => {
               <Skeleton.Button active size='small' />
             ) : (
               <p className='text-lg font-bold'>
-                {data?.alreadyMaintainTimes ?? '-'} {t('common.maintenance.times')}
+                {data?.AlreadyMaintainTimes ?? '-'} {t('common.maintenance.times')}
               </p>
             )}
           </div>
@@ -102,17 +102,20 @@ const Running = (props: Props) => {
             <h4 className='text-xs'>{t('common.maintenance.lastMaintainTime')}</h4>
             {loading ? (
               <Skeleton.Button active size='small' className='!w-36' />
-            ) : (
+            ) : data?.History?.[data?.History?.length - 1]?.Date &&
+              data?.History?.[data?.History?.length - 1]?.Miles ? (
               <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
                 <div className='text-xs flex items-center gap-1'>
                   <ScheduleOutlined />
-                  {data?.history?.[data?.history?.length - 1]?.date ?? '-'}
+                  {data?.History?.[data?.History?.length - 1]?.Date ?? '-'}
                 </div>
                 <div className='text-xs flex items-center gap-1'>
                   <LineChartOutlined />
-                  {t('common.maintenance.miles')} {data?.history?.[data?.history?.length - 1]?.miles ?? '-'}km
+                  {t('common.maintenance.miles')} {data?.History?.[data?.History?.length - 1]?.Miles ?? '-'}km
                 </div>
               </div>
+            ) : (
+              <p className='text-lg font-bold'>-</p>
             )}
           </div>
           <div className='flex flex-col items-end'>
@@ -123,17 +126,19 @@ const Running = (props: Props) => {
             </Tooltip>
             {loading ? (
               <Skeleton.Button active size='small' className='!w-36' />
-            ) : (
+            ) : data?.Next?.Date && data?.Next?.Miles ? (
               <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
                 <div className='text-xs flex items-center gap-1'>
                   <ScheduleOutlined />
-                  {data?.next?.date ?? '-'}
+                  {data?.Next?.Date ?? '-'}
                 </div>
                 <div className='text-xs flex items-center gap-1'>
                   <LineChartOutlined />
-                  {t('common.maintenance.miles')} {data?.next?.miles ?? '-'}km
+                  {t('common.maintenance.miles')} {data?.Next?.Miles ?? '-'}km
                 </div>
               </div>
+            ) : (
+              <p className='text-lg font-bold'>-</p>
             )}
           </div>
           <div className='flex flex-col items-end w-full'>
@@ -144,22 +149,26 @@ const Running = (props: Props) => {
               <div className='flex gap-2 w-full'>
                 <div className='flex flex-1 items-center gap-2'>
                   <LineChartOutlined />
-                  {/* <span>0</span> */}
+                  <span>{data?.Current?.Miles ?? '-'}</span>
                   <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
-                    <div className='h-full bg-white rounded-full' style={{ width: `${milesPercentage * 100}%` }}></div>
+                    <div
+                      className='h-full bg-white rounded-full'
+                      style={{ width: `${(milesPercentage > 1 ? 1 : milesPercentage) * 100}%` }}
+                    ></div>
                   </div>
-                  <span>{data?.condition?.miles ?? '-'}km</span>
+                  <span>{data?.Condition?.Miles ?? '-'}km</span>
                 </div>
                 <div className='flex flex-1 items-center gap-2'>
                   <ScheduleOutlined />
+                  <span>{data?.Current?.Time ?? '-'}</span>
                   <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
                     <div
                       className=' h-full bg-white rounded-full bg-gradient-to-r from-white to-yellow-400'
-                      style={{ width: `${datePercentage * 100}%` }}
+                      style={{ width: `${(datePercentage > 1 ? 1 : datePercentage) * 100}%` }}
                     ></div>
                   </div>
                   <span>
-                    {data?.condition?.time ?? '-'} {t('common.maintenance.day')}
+                    {data?.Condition?.Time ?? '-'} {t('common.maintenance.day')}
                   </span>
                 </div>
               </div>
@@ -193,11 +202,12 @@ const Running = (props: Props) => {
           </div>
         </div>
         <div className='flex gap-3 justify-end'>
-          {token === 'admin' && (
+          {(token === 'admin' || true) && (
             <Button
-              disabled={loading || !data?.next}
+              // disabled={loading || !data?.next}
+              disabled={loading}
               size='large'
-              className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
+              className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border !border-white/30 backdrop-blur-md'
               onClick={() => {
                 modal.confirm({
                   title: '维保',

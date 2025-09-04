@@ -207,7 +207,7 @@ const VisionStock = () => {
           });
         }}
         fullScreen={true}
-        background={'#445260'}
+        background={'#162640'}
       >
         <SecondaryPaper>
           <Suspense fallback={<span>loading</span>}>{template?.[modalConfig?.key] || '-'}</Suspense>

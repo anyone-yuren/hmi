@@ -36,8 +36,8 @@ const Lifting = ({ loading, data, reload }: Props) => {
   const { data: workingData, loading: workingLoading } = useRequest(getMotorWorkingTime);
   const STATUS = [t('common.normal'), t('common.triggered'), t('common.severelyExpired')];
   const theme = useTheme();
-  const datePercentage = (data?.current?.time ?? 282) / (data?.condition?.time ?? 180);
-  const workingPercentage = (data?.current?.workingTime ?? 70) / (data?.condition?.miles ?? 1000);
+  const datePercentage = (data?.Current?.Time ?? 282) / (data?.Condition?.Time ?? 180);
+  const workingPercentage = (data?.Current?.WorkingTime ?? 70) / (data?.Condition?.Miles ?? 1000);
   const COLORS = [theme.colorSuccessText, theme.colorWarningText, theme.colorErrorText];
   return (
     <div className='relative w-full h-full rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/25 shadow-[0_25px_80px_-25px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.35)] overflow-hidden'>
@@ -46,10 +46,10 @@ const Lifting = ({ loading, data, reload }: Props) => {
           <>
             <div className='text-md font-bold'>{t('common.maintenance.condition')}：</div>
             <div>
-              {t('common.maintenance.duration')}：{data?.condition?.time ?? '-'} {t('common.maintenance.day')}
+              {t('common.maintenance.duration')}：{data?.Condition?.Time ?? '-'} {t('common.maintenance.day')}
             </div>
             <div>
-              {t('common.maintenance.workingTime')}：{data?.condition?.workingTime ?? '-'} Min
+              {t('common.maintenance.workingTime')}：{data?.Condition?.WorkingTime ?? '-'} Min
             </div>
           </>
         }
@@ -74,8 +74,8 @@ const Lifting = ({ loading, data, reload }: Props) => {
           <div className='flex  flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.status')}</h4>
             {!loading ? (
-              <p className='text-lg font-bold' style={{ color: COLORS[data?.status ?? 2] }}>
-                {STATUS[data?.status ?? 2]}
+              <p className='text-lg font-bold' style={{ color: COLORS[data?.Status ?? 2] }}>
+                {STATUS[data?.Status ?? 2]}
               </p>
             ) : (
               <Skeleton.Button active size='small' />
@@ -95,17 +95,23 @@ const Lifting = ({ loading, data, reload }: Props) => {
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.lastMaintainTime')}</h4>
             {!loading ? (
-              <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
-                <div className='text-xs flex items-center gap-1'>
-                  <ScheduleOutlined />
-                  {data?.history?.[data?.history?.length - 1]?.date ?? '-'}
+              data?.History?.[data?.History?.length - 1]?.Date &&
+              data?.History?.[data?.History?.length - 1]?.WorkingTime ? (
+                <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
+                  <div className='text-xs flex items-center gap-1'>
+                    <ScheduleOutlined />
+                    {data?.History?.[data?.History?.length - 1]?.Date ?? '-'}
+                  </div>
+                  <div className='text-xs flex items-center gap-1'>
+                    <ClockCircleOutlined />
+                    {t('common.maintenance.workingTime')}{' '}
+                    {data?.History?.[data?.History?.length - 1]?.WorkingTime ?? '-'}
+                    mm
+                  </div>
                 </div>
-                <div className='text-xs flex items-center gap-1'>
-                  <ClockCircleOutlined />
-                  {t('common.maintenance.workingTime')} {data?.history?.[data?.history?.length - 1]?.workingTime ?? '-'}
-                  mm
-                </div>
-              </div>
+              ) : (
+                <p className='text-lg font-bold'>-</p>
+              )
             ) : (
               <Skeleton.Button active size='small' className='!w-36' />
             )}
@@ -117,16 +123,20 @@ const Lifting = ({ loading, data, reload }: Props) => {
               </h4>
             </Tooltip>
             {!loading ? (
-              <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
-                <div className='text-xs flex items-center gap-1'>
-                  <ScheduleOutlined />
-                  {data?.next?.date ?? '-'}
+              data?.Next?.Date && data?.Next?.WorkingTime ? (
+                <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
+                  <div className='text-xs flex items-center gap-1'>
+                    <ScheduleOutlined />
+                    {data?.Next?.Date ?? '-'}
+                  </div>
+                  <div className='text-xs flex items-center gap-1'>
+                    <ClockCircleOutlined />
+                    {t('common.maintenance.workingTime')} {data?.Next?.WorkingTime ?? '-'}mm
+                  </div>
                 </div>
-                <div className='text-xs flex items-center gap-1'>
-                  <ClockCircleOutlined />
-                  {t('common.maintenance.workingTime')} {data?.next?.workingTime ?? '-'}mm
-                </div>
-              </div>
+              ) : (
+                <p className='text-lg font-bold'>-</p>
+              )
             ) : (
               <Skeleton.Button active size='small' className='!w-36' />
             )}
@@ -137,18 +147,19 @@ const Lifting = ({ loading, data, reload }: Props) => {
               <div className='flex gap-2 w-full'>
                 <div className='flex flex-1 items-center gap-2'>
                   <ClockCircleOutlined />
-                  {/* <span>0</span> */}
+                  <span>{data?.Current?.WorkingTime ?? '-'}</span>
                   <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
                     <div
                       className='h-full bg-white rounded-full'
-                      style={{ width: `${workingPercentage * 100}%` }}
+                      style={{ width: `${(workingPercentage > 1 ? 1 : workingPercentage) * 100}%` }}
                     ></div>
                   </div>
-                  <span>{data?.current?.workingTime ?? '-'}mm</span>
+                  <span>{data?.Current?.WorkingTime ?? '-'}mm</span>
                 </div>
                 <div className='flex flex-1 items-center gap-2'>
                   <ScheduleOutlined />
-                  <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
+                  <span>{data?.Current?.Time ?? '-'}</span>
+                  <div className='flex-1 h-1 bg-white/20 roundfed-[2px]'>
                     <div
                       className={
                         datePercentage < 1.5
@@ -158,7 +169,10 @@ const Lifting = ({ loading, data, reload }: Props) => {
                       style={{ width: `${(datePercentage > 1 ? 1 : datePercentage) * 100}%` }}
                     ></div>
                   </div>
-                  <span>{data?.condition?.time ?? '-'}mm</span>
+                  <span>
+                    {data?.Condition?.Time ?? '-'}
+                    {t('common.maintenance.day')}
+                  </span>
                 </div>
               </div>
             ) : (
@@ -185,11 +199,12 @@ const Lifting = ({ loading, data, reload }: Props) => {
           </div>
         </div>
         <div className='flex gap-3 justify-end'>
-          {token === 'admin' && (
+          {(token === 'admin' || true) && (
             <Button
-              disabled={loading || !data?.next}
+              // disabled={loading || !data?.next}
+              disabled={loading}
               size='large'
-              className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
+              className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border !border-white/30 backdrop-blur-md'
               onClick={() => {
                 modal.confirm({
                   content: t('common.maintenance.confirm'),

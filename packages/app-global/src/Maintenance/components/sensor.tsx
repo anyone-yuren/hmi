@@ -30,7 +30,7 @@ const Sensor = (props: SensorProps) => {
   );
   const STATUS = [t('common.normal'), t('common.triggered'), t('common.severelyExpired')];
   const theme = useTheme();
-  const percentage = (data?.current?.time ?? 70) / (data?.condition?.time ?? 180);
+  const percentage = (data?.Current?.Time ?? 0) / (data?.Condition?.Time ?? 0);
   const COLORS = [theme.colorSuccessText, theme.colorWarningText, theme.colorErrorText];
   return (
     <div className='relative w-full h-full rounded-3xl bg-white/10 border border-white/25  overflow-hidden'>
@@ -39,7 +39,7 @@ const Sensor = (props: SensorProps) => {
           <>
             <div className='text-md font-bold'>{t('common.maintenance.condition')}：</div>
             <div>
-              {t('common.maintenance.duration')}：{data?.condition?.time ?? '-'} {t('common.maintenance.day')}
+              {t('common.maintenance.duration')}：{data?.Condition?.Time ?? '-'} {t('common.maintenance.day')}
             </div>
           </>
         }
@@ -72,8 +72,8 @@ const Sensor = (props: SensorProps) => {
           <div className='flex  flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.status')}</h4>
             {!loading ? (
-              <p className='text-lg font-bold' style={{ color: COLORS[data?.status ?? 0] }}>
-                {STATUS[data?.status ?? 0]}
+              <p className='text-lg font-bold' style={{ color: COLORS[data?.Status ?? 0] }}>
+                {STATUS[data?.Status ?? 0]}
               </p>
             ) : (
               <Skeleton.Button active size='small' />
@@ -84,7 +84,7 @@ const Sensor = (props: SensorProps) => {
             <h4 className='text-xs'>{t('common.maintenance.maintainTimes')}</h4>
             {!loading ? (
               <p className='text-lg font-bold'>
-                {data?.alreadyMaintainTimes ?? '-'} {t('common.maintenance.times')}
+                {data?.AlreadyMaintainTimes ?? '-'} {t('common.maintenance.times')}
               </p>
             ) : (
               <Skeleton.Button active size='small' />
@@ -93,7 +93,7 @@ const Sensor = (props: SensorProps) => {
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.lastMaintainTime')}</h4>
             {!loading ? (
-              <p className='text-lg font-bold'>{data?.History?.[data?.History?.length - 1]?.date ?? '-'}</p>
+              <p className='text-lg font-bold'>{data?.History?.[data?.History?.length - 1]?.Date ?? '-'}</p>
             ) : (
               <Skeleton.Button active size='small' />
             )}
@@ -101,7 +101,7 @@ const Sensor = (props: SensorProps) => {
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.nextMaintainTime')}</h4>
             {!loading ? (
-              <p className='text-lg font-bold'>{data?.next?.date ?? '-'}</p>
+              <p className='text-lg font-bold'>{data?.Next?.Date ?? '-'}</p>
             ) : (
               <Skeleton.Button active size='small' />
             )}
@@ -111,11 +111,14 @@ const Sensor = (props: SensorProps) => {
             <div className='w-1/2'>
               {!loading ? (
                 <div className='flex w-full items-center gap-2'>
-                  <span>0</span>
+                  <span>{data?.Current?.Time ?? '-'}</span>
                   <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
-                    <div className='h-full bg-white rounded-full' style={{ width: `${percentage * 100}%` }}></div>
+                    <div
+                      className='h-full bg-white rounded-full'
+                      style={{ width: `${(percentage > 1 ? 1 : percentage) * 100}%` }}
+                    ></div>
                   </div>
-                  <span>180</span>
+                  <span>{data?.Condition?.Time ?? '-'}</span>
                 </div>
               ) : (
                 <Skeleton.Button active className='!w-full' size='small' />
@@ -130,11 +133,11 @@ const Sensor = (props: SensorProps) => {
         </div>
 
         <div className='flex gap-3 justify-end'>
-          {token === 'admin' && (
+          {(token === 'admin' || true) && (
             <Button
-              disabled={loading || !data?.next}
+              disabled={loading || !data?.Next}
               size='large'
-              className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border border-white/30 backdrop-blur-md'
+              className='px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition border !border-white/30 backdrop-blur-md'
               onClick={() => {
                 modal.confirm({
                   content: t('common.maintenance.confirm'),

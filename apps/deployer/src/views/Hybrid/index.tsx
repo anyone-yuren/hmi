@@ -124,7 +124,7 @@ const Mapping = () => {
     isShowNavigation(navigationType, 'REFLECTOR') &&
       robot_current_status?.navigation_type === 1 &&
       setAlignment('reflector');
-    isShowNavigation(navigationType, 'LIDAR_SLAM_2D') &&
+    (isShowNavigation(navigationType, 'LIDAR_SLAM_2D') || isShowNavigation(navigationType, 'LIDAR_SLAM_3D')) &&
       robot_current_status?.navigation_type === 2 &&
       setAlignment('slam');
   }, [navigationType, robot_current_status.navigation_type]);
@@ -394,6 +394,9 @@ const Mapping = () => {
                     ) : null}
                     {isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? (
                       <MenuItem value='slam'>{t('deployer.hybrid.slamNavigation')}</MenuItem>
+                    ) : null}
+                    {isShowNavigation(navigationType, 'LIDAR_SLAM_3D') ? (
+                      <MenuItem value='slam'>{t('3D SLAM')}</MenuItem>
                     ) : null}
                   </Select>
                 </FormControl>
