@@ -460,10 +460,10 @@ export default function RectDrawer() {
                   y={r.y}
                   width={r.width}
                   height={r.height}
-                  stroke='#ffd33d'
-                  strokeWidth={2}
+                  stroke={selectedId === r.id ? '#22d3ee' : '#ffd33d'}
+                  strokeWidth={selectedId === r.id ? 1.5 : 2}
                   dash={[4, 4]}
-                  fill='rgba(255,211,61,0.2)'
+                  fill={'rgba(255,211,61,0.2)'}
                   draggable
                   onTransform={handleTransform}
                   onTransformStart={handleTransformStart}
@@ -499,10 +499,16 @@ export default function RectDrawer() {
                   y={preview.y}
                   width={preview.width}
                   height={preview.height}
-                  stroke={isUseFullRect && !isIntersecting ? 'green' : isIntersecting ? 'red' : '#22d3ee'}
+                  stroke={isUseFullRect && !isIntersecting ? 'rgba(0,150,136,0.6)' : isIntersecting ? 'red' : '#22d3ee'}
                   strokeWidth={2}
                   dash={[8, 6]}
-                  fill={isIntersecting ? 'rgba(255,0,0,0.2)' : 'transparent'}
+                  fill={
+                    isUseFullRect && !isIntersecting
+                      ? 'rgba(0,150,136,0.4)'
+                      : isIntersecting
+                        ? 'rgba(255,0,0,0.2)'
+                        : 'rgba(255,211,61,0.2)'
+                  }
                   listening={false}
                 />
               </Group>
@@ -511,6 +517,14 @@ export default function RectDrawer() {
             <Transformer
               ref={transformerRef}
               rotateEnabled={false}
+              anchorStroke='#22d3ee'
+              anchorFill='#ffffff'
+              anchorCornerRadius={4} // 圆角
+              anchorStrokeWidth={2}
+              borderStroke='#22d3ee' // 外框描边
+              borderStrokeWidth={1.5}
+              borderDash={[6, 4]}
+              borderCornerRadius={4} // 外框圆角
               name='transformer'
               boundBoxFunc={(oldBox, newBox) => (newBox.width < 5 || newBox.height < 5 ? oldBox : newBox)}
             />
