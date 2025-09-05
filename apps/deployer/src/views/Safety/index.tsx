@@ -1,13 +1,14 @@
 import { LineGrid } from '@/components/InitStage/components/LineGrid';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
 import { useSize } from 'ahooks';
-import { ConfigProvider, Drawer, theme, Typography } from 'antd';
+import { ConfigProvider, Drawer, theme } from 'antd';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Group, Layer, Line, Rect, Stage, Text, Transformer } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import CarModel from './component/newCarComponents/carModel';
+import DrawerContent from './component/newCarComponents/drawerContent';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
 type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
 
@@ -585,7 +586,15 @@ export default function RectDrawer() {
           mask={false}
           rootClassName='text-black'
         >
-          <Typography.Title level={4}>避障方案调整</Typography.Title>
+          <DrawerContent
+            rects={rects}
+            setSelectedId={setSelectedId}
+            selectedId={selectedId}
+            stage={stageRef?.current}
+            size={size}
+            setReRenderLineGrid={setReRenderLineGrid}
+            reRenderLineGrid={reRenderLineGrid}
+          />
         </Drawer>
       </ConfigProvider>
     </div>
