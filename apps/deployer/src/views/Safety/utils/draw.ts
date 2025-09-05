@@ -119,3 +119,38 @@ export function validateRect(rect, carRects, otherRects, snap = 2) {
   }
   return { rect: snappedRect, isSnapped, isIntersecting: intersecting, snapLines };
 }
+
+export type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
+/**
+ * 构建车边缘引导线
+ */
+export function buildCarEdgeGuides(
+  pointer: { x: number; y: number },
+  carRects: Array<{ x: number; y: number; width: number; height: number }>,
+  threshold: number,
+): SnapLine[] {
+  const lines: SnapLine[] = [];
+  carRects.forEach((car) => {
+    const left = car.x;
+    const right = car.x + car.width;
+    const top = car.y;
+    const bottom = car.y + car.height;
+
+    // 垂直边（按车体高度画线，更精准）
+    if (Math.abs(pointer.x - left) <= threshold) {
+      lines.push({ orientation: 'vertical', points: [left, top, left, bottom] });
+    }
+    if (Math.abs(pointer.x - right) <= threshold) {
+      lines.push({ orientation: 'vertical', points: [right, top, right, bottom] });
+    }
+
+    // 水平边（按车体宽度画线）
+    if (Math.abs(pointer.y - top) <= threshold) {
+      lines.push({ orientation: 'horizontal', points: [left, top, right, top] });
+    }
+    if (Math.abs(pointer.y - bottom) <= threshold) {
+      lines.push({ orientation: 'horizontal', points: [left, bottom, right, bottom] });
+    }
+  });
+  return lines;
+}

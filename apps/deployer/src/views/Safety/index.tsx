@@ -1,13 +1,15 @@
 import { LineGrid } from '@/components/InitStage/components/LineGrid';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
 import { useSize } from 'ahooks';
+import { ConfigProvider, Drawer, theme, Typography } from 'antd';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Group, Layer, Line, Rect, Stage, Text, Transformer } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import CarModel from './component/newCarComponents/carModel';
-import { getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
+import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
+type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
 
 export default function RectDrawer() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -33,6 +35,9 @@ export default function RectDrawer() {
   const isPanningRef = useRef(false);
   const lastPosRef = useRef<{ x: number; y: number } | null>(null);
   const stageStartPosRef = useRef<{ x: number; y: number } | null>(null);
+  /** -------------鼠标右键 end -------------- */
+  /** -------------避障方案调整 start -------------- */
+  const [openUpdateObsDrawer, setOpenUpdateObsDrawer] = useState(false);
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
@@ -100,6 +105,7 @@ export default function RectDrawer() {
     if (e.target === e.target.getStage()) setSelectedId(null);
     if (e.target instanceof Konva.Rect && e.target.parent?.attrs?.className === 'rect') {
       setSelectedId(e.target.id());
+      setOpenUpdateObsDrawer(true);
       return;
     }
     // 判断是否是缩放的Rect
@@ -117,9 +123,35 @@ export default function RectDrawer() {
   // 绘制 - MouseMove
   const handleMouseMove = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
-      if (!isDrawing || !startPoint) return;
+      const stage = stageRef.current;
+      if (!stage) return;
+
       const pos = getRelativePointerPosition(layerRef.current);
+      if (!pos) return;
+
+      const carLayer = stage.find<Konva.Layer>('.car')[0];
+      const carNodes = carLayer ? carLayer.find<Konva.Rect>('Rect') : [];
+      const carRects = carNodes.map(getRectBox);
+
+      // ① 无论是否在绘制，都先计算“悬停靠近车体边缘”的辅助线
+      const hoverLines = buildCarEdgeGuides(pos, carRects, snap);
+
+      // 👉 根据是否有 hoverLines 来决定鼠标样式
+      if (hoverLines.length > 0) {
+        stage.container().style.cursor = 'crosshair';
+      } else {
+        stage.container().style.cursor = 'default';
+      }
+
+      // ② 未在绘制：只显示悬停辅助线，然后返回
+      if (!isDrawing || !startPoint) {
+        setSnapLines(hoverLines);
+        return;
+      }
+
+      // ③ 正在绘制：沿用你的原有逻辑 + 合并悬停辅助线
       let { x, y, width, height } = normalizeRect(startPoint, pos);
+
       if (e.evt.shiftKey) {
         const size = Math.max(width, height);
         x = startPoint.x <= pos.x ? startPoint.x : startPoint.x - size;
@@ -127,32 +159,28 @@ export default function RectDrawer() {
         width = size;
         height = size;
       }
-      const stage = stageRef.current;
-      if (!stage) return;
-      // 校验是否与车碰撞
-      const carNodes = stage.find<Konva.Layer>('.car')[0].find<Konva.Rect>('Rect');
-      const carRects = carNodes.map(getRectBox);
 
       const {
         rect: snappedRect,
         isSnapped,
         isIntersecting,
-        snapLines,
+        snapLines: rectSnapLines,
       } = validateRect({ x, y, width, height }, carRects, rects, snap);
 
       if (isIntersecting) {
-        // 有碰撞，停留在最后合法位置
-        if (lastValidRectRef.current) {
-          setPreview(lastValidRectRef.current);
-        }
+        if (lastValidRectRef.current) setPreview(lastValidRectRef.current);
+        // 发生碰撞时也给出悬停线（可选）
+        setSnapLines(hoverLines);
         return;
       }
+
       setPreview(snappedRect);
-      // 无碰撞，更新最后合法位置
       lastValidRectRef.current = snappedRect;
       setIsUseFullRect(isSnapped);
       setIsIntersecting(isIntersecting);
-      setSnapLines(snapLines);
+
+      // 合并：吸附线 + 悬停线
+      setSnapLines([...rectSnapLines, ...hoverLines]);
     },
     [isDrawing, startPoint, rects],
   );
@@ -320,7 +348,6 @@ export default function RectDrawer() {
   // Transformer 缩放结束
   const handleTransformEnd = useCallback(
     (e: KonvaEventObject<Event>) => {
-      debugger;
       const node = e.target as Konva.Rect;
       const id = node.id();
       const stage = stageRef.current;
@@ -447,6 +474,17 @@ export default function RectDrawer() {
             {/* 绘制矩形 */}
             {rects.map((r) => (
               <Group key={r.id} className='rect'>
+                {/* 坐标和尺寸提示 */}
+                {selectedId === r.id && (
+                  <Text
+                    text={`(${Math.round(r.x)}, ${Math.round(r.y)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
+                    x={Math.round(r.x)}
+                    y={Math.round(r.y) - 12} // 显示在矩形上方
+                    fontSize={10}
+                    fill='black'
+                    listening={false} // 不可交互
+                  />
+                )}
                 <Rect
                   id={r.id}
                   x={r.x}
@@ -534,6 +572,22 @@ export default function RectDrawer() {
           </Layer>
         </Stage>
       </div>
+      <ConfigProvider
+        theme={{
+          algorithm: theme.defaultAlgorithm,
+        }}
+      >
+        <Drawer
+          title='避障方案调整'
+          open={openUpdateObsDrawer}
+          onClose={() => setOpenUpdateObsDrawer(false)}
+          width={400}
+          mask={false}
+          rootClassName='text-black'
+        >
+          <Typography.Title level={4}>避障方案调整</Typography.Title>
+        </Drawer>
+      </ConfigProvider>
     </div>
   );
 }

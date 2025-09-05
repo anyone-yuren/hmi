@@ -3,9 +3,9 @@ import { Layer, Rect } from 'react-konva';
 
 const CarModel = () => {
   // 车身矩形（禁止进入）
-  const carRect = { x: 0, y: 0, width: 200, height: 100 };
+  const carRect = { x: 0, y: 0, width: 700, height: 500 };
   // 叉臂矩形
-  const armRect = { x: 30, y: 100, width: 140, height: 300 };
+  const armRect = { x: 130, y: 500, width: 440, height: 1200 };
   return (
     <Layer name='car'>
       <Rect
