@@ -58,7 +58,14 @@ export default function LoginModalTrigger() {
       title: t('common.login'),
       content: (
         <ThemeProvider themeMode='dark'>
-          <Form form={form} autoComplete='off' clearOnDestroy>
+          <Form
+            form={form}
+            autoComplete='off'
+            clearOnDestroy
+            labelAlign='right'
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+          >
             <Form.Item
               label={t('common.username')}
               name='username'
