@@ -104,7 +104,7 @@ const PointCloudFilter = (props: IProps) => {
 
   const hashMap = {
     0: type,
-    1: 'storage_calibration_assistant',
+    1: 'location_calibration_assistant',
   };
 
   const pointCloudFilterParams = useMemo(() => {

@@ -119,6 +119,7 @@ const Sensor = (props: SensorProps) => {
                     ></div>
                   </div>
                   <span>{data?.Condition?.Time ?? '-'}</span>
+                  {t('common.maintenance.day')}
                 </div>
               ) : (
                 <Skeleton.Button active className='!w-full' size='small' />

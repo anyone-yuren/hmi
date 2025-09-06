@@ -96,7 +96,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
             <h4 className='text-xs'>{t('common.maintenance.lastMaintainTime')}</h4>
             {!loading ? (
               data?.History?.[data?.History?.length - 1]?.Date &&
-              data?.History?.[data?.History?.length - 1]?.WorkingTime ? (
+              data?.History?.[data?.History?.length - 1]?.WorkingTime !== undefined ? (
                 <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
                   <div className='text-xs flex items-center gap-1'>
                     <ScheduleOutlined />
@@ -106,7 +106,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
                     <ClockCircleOutlined />
                     {t('common.maintenance.workingTime')}{' '}
                     {data?.History?.[data?.History?.length - 1]?.WorkingTime ?? '-'}
-                    mm
+                    分钟
                   </div>
                 </div>
               ) : (
@@ -131,7 +131,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
                   </div>
                   <div className='text-xs flex items-center gap-1'>
                     <ClockCircleOutlined />
-                    {t('common.maintenance.workingTime')} {data?.Next?.WorkingTime ?? '-'}mm
+                    {t('common.maintenance.workingTime')} {data?.Next?.WorkingTime ?? '-'}分钟
                   </div>
                 </div>
               ) : (
@@ -154,7 +154,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
                       style={{ width: `${(workingPercentage > 1 ? 1 : workingPercentage) * 100}%` }}
                     ></div>
                   </div>
-                  <span>{data?.Current?.WorkingTime ?? '-'}mm</span>
+                  <span>{data?.Condition?.WorkingTime ?? '-'}分钟</span>
                 </div>
                 <div className='flex flex-1 items-center gap-2'>
                   <ScheduleOutlined />

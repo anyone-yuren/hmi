@@ -103,7 +103,7 @@ const Running = (props: Props) => {
             {loading ? (
               <Skeleton.Button active size='small' className='!w-36' />
             ) : data?.History?.[data?.History?.length - 1]?.Date &&
-              data?.History?.[data?.History?.length - 1]?.Miles ? (
+              data?.History?.[data?.History?.length - 1]?.Miles !== undefined ? (
               <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
                 <div className='text-xs flex items-center gap-1'>
                   <ScheduleOutlined />

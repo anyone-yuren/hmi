@@ -63,6 +63,7 @@ export const useHybrid = () => {
             '/navigation/type',
             '/navigation/robot_current_status',
             '/navigation/slam_extending_map',
+            '/navigation/real_time_data/scan_head',
           ],
         }),
       );
