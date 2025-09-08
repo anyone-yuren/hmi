@@ -147,7 +147,9 @@
       "status": "유지 보수 상태",
       "times": "번",
       "workingTime": "운행 시간 길이",
-      "workingTimes": "작동 횟수"
+      "workingTimes": "작동 횟수",
+      "resetAll": "전체 재설정",
+      "minute": "분"
     },
     "modify": "수정",
     "noData": "아직 데이터가 없습니다",

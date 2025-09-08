@@ -1,9 +1,10 @@
-import { DoubleRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, DoubleRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
 import { App, Button, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
 import classnames from 'classnames';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
@@ -17,6 +18,7 @@ const Sensor = (props: SensorProps) => {
   const { modal } = App.useApp();
   const { loading, data, reload } = props;
   const { t, i18n } = useTranslation();
+  const [expendAll, setExpendAll] = useState(false);
   const { run: maintain } = useRequest(maintenance, {
     manual: true,
     onSuccess: () => {
@@ -28,6 +30,7 @@ const Sensor = (props: SensorProps) => {
       token: state.token,
     })),
   );
+  console.log('data', data);
   const STATUS = [t('common.normal'), t('common.triggered'), t('common.severelyExpired')];
   const theme = useTheme();
   const percentage = (data?.Current?.Time ?? 0) / (data?.Condition?.Time ?? 0);
@@ -68,7 +71,7 @@ const Sensor = (props: SensorProps) => {
           <h3 className='text-xl xl:text-3xl font-semibold tracking-tight'>{t('common.maintenance.sensor')}</h3>
           <p className='mt-2 text-white/80 max-w-xl'>{t('common.maintenance.sensorDesc')}</p>
         </div>
-        <div className='flex flex-col w-full items-end justify-center gap-2'>
+        <div className='flex flex-col w-full items-end justify-center gap-2 overflow-y-auto'>
           <div className='flex  flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.status')}</h4>
             {!loading ? (
@@ -93,7 +96,29 @@ const Sensor = (props: SensorProps) => {
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.lastMaintainTime')}</h4>
             {!loading ? (
-              <p className='text-lg font-bold'>{data?.History?.[data?.History?.length - 1]?.Date ?? '-'}</p>
+              <div
+                className={`text-lg font-bold flex ${expendAll ? 'items-start' : 'items-center'} justify-items-center gap-2`}
+                onClick={() => {
+                  setExpendAll(!expendAll);
+                }}
+              >
+                <div>
+                  {data?.History?.filter((_, index) => expendAll || index === data.History.length - 1)?.map(
+                    (item: any, index: number) => {
+                      return (
+                        <div key={'sensor' + index} className='flex gap-2'>
+                          {item?.Date ?? '-'}
+                        </div>
+                      );
+                    },
+                  )}
+                </div>
+                {data?.History?.length > 1 && (
+                  <div>
+                    <CaretRightOutlined rotate={expendAll ? 90 : 180} />
+                  </div>
+                )}
+              </div>
             ) : (
               <Skeleton.Button active size='small' />
             )}

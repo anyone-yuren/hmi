@@ -147,7 +147,9 @@
       "status": "Maintenance status",
       "times": "Time",
       "workingTime": "Running duration",
-      "workingTimes": "Number of operations"
+      "workingTimes": "Number of operations",
+      "resetAll": "Reset All",
+      "minute": "Minute"
     },
     "modify": "Modify",
     "noData": "No data",

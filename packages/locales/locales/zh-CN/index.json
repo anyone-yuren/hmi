@@ -147,7 +147,9 @@
       "status": "维保状态",
       "times": "次",
       "workingTime": "运行时长",
-      "workingTimes": "工作次数"
+      "workingTimes": "工作次数",
+      "resetAll": "重置全部",
+      "minute": "分钟"
     },
     "modify": "修改",
     "noData": "暂无数据",

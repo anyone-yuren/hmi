@@ -147,7 +147,9 @@
       "status": "メンテナンスステータス",
       "times": "回",
       "workingTime": "運行時間",
-      "workingTimes": "作動回数"
+      "workingTimes": "作動回数",
+      "resetAll": "すべてリセット",
+      "minute": "分"
     },
     "modify": "修正",
     "noData": "データはまだありません",

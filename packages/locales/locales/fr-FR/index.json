@@ -147,7 +147,9 @@
       "status": "État de maintenance",
       "times": "fois",
       "workingTime": "durée de fonctionnement",
-      "workingTimes": "Nombre d'opérations"
+      "workingTimes": "Nombre d'opérations",
+      "resetAll": "Réinitialiser tout",
+      "minute": "minute"
     },
     "modify": "Modifier",
     "noData": "Aucune donnée disponible",

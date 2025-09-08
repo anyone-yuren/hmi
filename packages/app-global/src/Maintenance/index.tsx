@@ -3,18 +3,20 @@ import { useRequest } from 'ahooks';
 import { Button } from 'antd';
 import { useTheme } from 'antd-style';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import Lifting from './components/lifting';
 import LoadingReset from './components/resetLoading';
 import Running from './components/running';
 import Sensor from './components/sensor';
 import { getMaintenanceData, resetMaintenance } from './services';
-
 const Maintenance = () => {
+  const { t, i18n } = useTranslation();
   const {
     data,
     loading,
     run: getMaintenance,
+    mutate,
   } = useRequest(getMaintenanceData, {
     manual: true,
   });
@@ -51,20 +53,9 @@ const Maintenance = () => {
       {token === 'admin' && (
         <div className='absolute bottom-8 left-8 z-10'>
           <Button type={'primary'} onClick={() => reset()}>
-            {'重置全部'}
+            {t('common.maintenance.resetAll')}
           </Button>
         </div>
-        // <FloatButton
-        //   shape='square'
-        //   // style={{
-        //   //   insetBlockEnd: 24,
-        //   //   insetInlineEnd: 24,
-        //   // }}
-        //   icon={<Button>重置全部</Button>}
-        //   // type={'primary'}
-        //   // description={'重置全部'}
-        //   onClick={() => reset()}
-        // />
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import {
+  CaretRightOutlined,
   ClockCircleOutlined,
   DoubleRightOutlined,
   InfoCircleOutlined,
@@ -9,11 +10,11 @@ import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
 import { App, Button, Popconfirm, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { getMotorWorkingTime, maintenance } from '../services';
-
 interface Props {
   loading: boolean;
   data: any;
@@ -36,6 +37,8 @@ const Lifting = ({ loading, data, reload }: Props) => {
   const { data: workingData, loading: workingLoading } = useRequest(getMotorWorkingTime);
   const STATUS = [t('common.normal'), t('common.triggered'), t('common.severelyExpired')];
   const theme = useTheme();
+  const [expendAll, setExpendAll] = useState(false);
+
   const datePercentage = (data?.Current?.Time ?? 282) / (data?.Condition?.Time ?? 180);
   const workingPercentage = (data?.Current?.WorkingTime ?? 70) / (data?.Condition?.Miles ?? 1000);
   const COLORS = [theme.colorSuccessText, theme.colorWarningText, theme.colorErrorText];
@@ -70,7 +73,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
           <h3 className='text-xl xl:text-3xl font-semibold tracking-tight'>{t('common.maintenance.lifting')}</h3>
           <p className='mt-2 text-white/80 max-w-xl'>{t('common.maintenance.liftingDesc')}</p>
         </div>
-        <div className='flex flex-col w-full items-end justify-center gap-2'>
+        <div className='flex flex-col w-full items-end justify-center gap-2 overflow-y-auto'>
           <div className='flex  flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.status')}</h4>
             {!loading ? (
@@ -97,17 +100,36 @@ const Lifting = ({ loading, data, reload }: Props) => {
             {!loading ? (
               data?.History?.[data?.History?.length - 1]?.Date &&
               data?.History?.[data?.History?.length - 1]?.WorkingTime !== undefined ? (
-                <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
-                  <div className='text-xs flex items-center gap-1'>
-                    <ScheduleOutlined />
-                    {data?.History?.[data?.History?.length - 1]?.Date ?? '-'}
+                <div
+                  className={`p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex ${expendAll ? 'items-start' : 'items-center'} gap-2`}
+                  onClick={() => {
+                    setExpendAll(!expendAll);
+                  }}
+                >
+                  <div className={`flex flex-col gap-2`}>
+                    {data?.History?.filter((_, index) => expendAll || index === data.History.length - 1)?.map(
+                      (item: any, index: number) => {
+                        return (
+                          <div key={'history' + index} className='flex gap-2'>
+                            <div className='text-xs flex items-center gap-1'>
+                              <ScheduleOutlined />
+                              {item?.Date ?? '-'}
+                            </div>
+                            <div className='text-xs flex items-center gap-1'>
+                              <ClockCircleOutlined />
+                              {t('common.maintenance.workingTime')} {item?.WorkingTime ?? '-'}
+                              {t('common.maintenance.minute')}
+                            </div>
+                          </div>
+                        );
+                      },
+                    )}
                   </div>
-                  <div className='text-xs flex items-center gap-1'>
-                    <ClockCircleOutlined />
-                    {t('common.maintenance.workingTime')}{' '}
-                    {data?.History?.[data?.History?.length - 1]?.WorkingTime ?? '-'}
-                    分钟
-                  </div>
+                  {data?.History?.length > 1 && (
+                    <div>
+                      <CaretRightOutlined rotate={expendAll ? 90 : 180} />
+                    </div>
+                  )}
                 </div>
               ) : (
                 <p className='text-lg font-bold'>-</p>
@@ -131,7 +153,8 @@ const Lifting = ({ loading, data, reload }: Props) => {
                   </div>
                   <div className='text-xs flex items-center gap-1'>
                     <ClockCircleOutlined />
-                    {t('common.maintenance.workingTime')} {data?.Next?.WorkingTime ?? '-'}分钟
+                    {t('common.maintenance.workingTime')} {data?.Next?.WorkingTime ?? '-'}
+                    {t('common.maintenance.minute')}
                   </div>
                 </div>
               ) : (
@@ -154,7 +177,10 @@ const Lifting = ({ loading, data, reload }: Props) => {
                       style={{ width: `${(workingPercentage > 1 ? 1 : workingPercentage) * 100}%` }}
                     ></div>
                   </div>
-                  <span>{data?.Condition?.WorkingTime ?? '-'}分钟</span>
+                  <span>
+                    {data?.Condition?.WorkingTime ?? '-'}
+                    {t('common.maintenance.minute')}
+                  </span>
                 </div>
                 <div className='flex flex-1 items-center gap-2'>
                   <ScheduleOutlined />
@@ -208,6 +234,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
               onClick={() => {
                 modal.confirm({
                   content: t('common.maintenance.confirm'),
+                  okText: t('common.confirm'),
                   onOk: () => {
                     maintain({
                       subsystem: 2,
@@ -216,7 +243,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
                 });
               }}
             >
-              维保
+              {t('common.maintenance.ok')}
             </Button>
           )}
         </div>
