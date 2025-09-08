@@ -113,6 +113,11 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
             /* 这里是你的组件 token */
             // headerColor: 'white',
           },
+          Segmented: {
+            itemActiveBg: '#00D1D1',
+            itemSelectedBg: '#00D1D1',
+            itemSelectedColor: 'white',
+          },
         },
       }}
       {...rest}

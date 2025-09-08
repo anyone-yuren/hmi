@@ -1,4 +1,5 @@
-import { ConfigProvider, Input, Select, Switch, theme } from 'antd';
+import { InfoCircleOutlined, PauseOutlined, WalletOutlined } from '@ant-design/icons';
+import { Checkbox, ConfigProvider, Input, Segmented, Switch, theme, Tooltip } from 'antd';
 import Konva from 'konva';
 import { useEffect, useRef, useState } from 'react';
 export const Line1px = () => {
@@ -79,18 +80,29 @@ const DrawerContent = (props: IProps) => {
             避障策略
             <Line1px />
           </p>
-          <Select
-            options={[
-              {
-                label: '避障策略1',
-                value: '1',
-              },
-              {
-                label: '避障策略2',
-                value: '2',
-              },
-            ]}
-          />
+
+          <Checkbox.Group className='grid grid-cols-2 bg-[#f5f5f5] p-2 rounded-md'>
+            <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
+              <Checkbox value='1'>避障策略1</Checkbox>
+              <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
+            </div>
+            <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
+              <Checkbox value='2'>避障策略2</Checkbox>
+              <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
+            </div>
+            <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
+              <Checkbox value='3'>避障策略3</Checkbox>
+              <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
+            </div>
+            <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
+              <Checkbox value='4'>避障策略4</Checkbox>
+              <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
+            </div>
+            <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
+              <Checkbox value='5'>避障策略5</Checkbox>
+              <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
+            </div>
+          </Checkbox.Group>
         </div>
         <div className='flex flex-col gap-2'>
           <div className='flex flex-col gap-2'>
@@ -118,15 +130,15 @@ const DrawerContent = (props: IProps) => {
             <Line1px />
           </p>
           <div className='flex flex-col gap-2'>
-            <div className='bg-black/10 rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
               <p className='text-md'>传感器1</p>
               <Switch />
             </div>
-            <div className='bg-black/10 rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
               <p className='text-md'>传感器2</p>
               <Switch />
             </div>
-            <div className='bg-black/10 rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
               <p className='text-md'>传感器3</p>
               <Switch />
             </div>
@@ -150,7 +162,20 @@ const DrawerContent = (props: IProps) => {
                     setSelectRect(item);
                   }}
                 >
-                  <p className='text-sm'>{item.id}</p>
+                  <p className='text-sm flex items-center justify-between'>
+                    {item.id}
+                    <Tooltip title='关联机构'>
+                      <Segmented
+                        size={'small'}
+                        className='hover:shadow-lg animation-all duration-300'
+                        // shape='round'
+                        options={[
+                          { value: 'light', icon: <WalletOutlined /> },
+                          { value: 'dark', icon: <PauseOutlined /> },
+                        ]}
+                      />
+                    </Tooltip>
+                  </p>
                   <div className='w-full rounded-md grid-cols-2 grid gap-2'>
                     <p className='text-xs opacity-50'>宽度 {Math.round(item.width)} (mm)</p>
                     <p className='text-xs opacity-50'>高度 {Math.round(item.height)} (mm)</p>

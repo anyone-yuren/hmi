@@ -458,145 +458,149 @@ export default function RectDrawer() {
         <span className='text-sm opacity-80'>左键拖拽绘制矩形；按住 Shift 约束为正方形；Esc 取消。</span>
         <span className='ml-auto text-sm opacity-60'>当前缩放：{Math.round(scale * 100)}%</span>
       </div>
-      <div className='flex-1' ref={ref}>
-        <Stage
-          ref={stageRef}
-          width={size?.width}
-          height={size?.height}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onWheel={handleWheel}
-          style={stageStyle}
-        >
-          <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
-          <CarModel />
-          <Layer ref={layerRef}>
-            {/* 绘制矩形 */}
-            {rects.map((r) => (
-              <Group key={r.id} className='rect'>
-                {/* 坐标和尺寸提示 */}
-                {selectedId === r.id && (
+      <div className='flex flex-1 w-full h-full'>
+        <div className='flex-1' ref={ref}>
+          <Stage
+            ref={stageRef}
+            width={size?.width}
+            height={size?.height}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onWheel={handleWheel}
+            style={stageStyle}
+          >
+            <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
+            <CarModel />
+            <Layer ref={layerRef}>
+              {/* 绘制矩形 */}
+              {rects.map((r) => (
+                <Group key={r.id} className='rect'>
+                  {/* 坐标和尺寸提示 */}
+                  {selectedId === r.id && (
+                    <Text
+                      text={`(${Math.round(r.x)}, ${Math.round(r.y)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
+                      x={Math.round(r.x)}
+                      y={Math.round(r.y) - 12} // 显示在矩形上方
+                      fontSize={10}
+                      fill='black'
+                      listening={false} // 不可交互
+                    />
+                  )}
+                  <Rect
+                    id={r.id}
+                    x={r.x}
+                    y={r.y}
+                    width={r.width}
+                    height={r.height}
+                    stroke={selectedId === r.id ? '#22d3ee' : '#ffd33d'}
+                    strokeWidth={selectedId === r.id ? 1.5 : 2}
+                    dash={[4, 4]}
+                    fill={'rgba(255,211,61,0.2)'}
+                    draggable
+                    onTransform={handleTransform}
+                    onTransformStart={handleTransformStart}
+                    onTransformEnd={handleTransformEnd}
+                    onDragMove={handleDragMove}
+                    onDragEnd={handleDragEnd}
+                    onClick={() => setSelectedId(r.id)}
+                    onTap={() => setSelectedId(r.id)}
+                    onDragStart={(e) => {
+                      const node = e.target as Konva.Rect;
+                      node.setAttrs({
+                        startPos: {
+                          x: node.x(),
+                          y: node.y(),
+                        },
+                      });
+                    }}
+                  />
+                </Group>
+              ))}
+              {/* 绘制 */}
+              {preview && (
+                <Group name='preview'>
                   <Text
-                    text={`(${Math.round(r.x)}, ${Math.round(r.y)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
-                    x={Math.round(r.x)}
-                    y={Math.round(r.y) - 12} // 显示在矩形上方
+                    text={`(${Math.round(preview.x)}, ${Math.round(preview.y)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
+                    x={Math.round(preview.x)}
+                    y={Math.round(preview.y) - 10}
                     fontSize={10}
                     fill='black'
-                    listening={false} // 不可交互
                   />
-                )}
-                <Rect
-                  id={r.id}
-                  x={r.x}
-                  y={r.y}
-                  width={r.width}
-                  height={r.height}
-                  stroke={selectedId === r.id ? '#22d3ee' : '#ffd33d'}
-                  strokeWidth={selectedId === r.id ? 1.5 : 2}
-                  dash={[4, 4]}
-                  fill={'rgba(255,211,61,0.2)'}
-                  draggable
-                  onTransform={handleTransform}
-                  onTransformStart={handleTransformStart}
-                  onTransformEnd={handleTransformEnd}
-                  onDragMove={handleDragMove}
-                  onDragEnd={handleDragEnd}
-                  onClick={() => setSelectedId(r.id)}
-                  onTap={() => setSelectedId(r.id)}
-                  onDragStart={(e) => {
-                    const node = e.target as Konva.Rect;
-                    node.setAttrs({
-                      startPos: {
-                        x: node.x(),
-                        y: node.y(),
-                      },
-                    });
-                  }}
-                />
-              </Group>
-            ))}
-            {/* 绘制 */}
-            {preview && (
-              <Group name='preview'>
-                <Text
-                  text={`(${Math.round(preview.x)}, ${Math.round(preview.y)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
-                  x={Math.round(preview.x)}
-                  y={Math.round(preview.y) - 10}
-                  fontSize={10}
-                  fill='black'
-                />
-                <Rect
-                  x={preview.x}
-                  y={preview.y}
-                  width={preview.width}
-                  height={preview.height}
-                  stroke={isUseFullRect && !isIntersecting ? 'rgba(0,150,136,0.6)' : isIntersecting ? 'red' : '#22d3ee'}
-                  strokeWidth={2}
-                  dash={[8, 6]}
-                  fill={
-                    isUseFullRect && !isIntersecting
-                      ? 'rgba(0,150,136,0.4)'
-                      : isIntersecting
-                        ? 'rgba(255,0,0,0.2)'
-                        : 'rgba(255,211,61,0.2)'
-                  }
+                  <Rect
+                    x={preview.x}
+                    y={preview.y}
+                    width={preview.width}
+                    height={preview.height}
+                    stroke={
+                      isUseFullRect && !isIntersecting ? 'rgba(0,150,136,0.6)' : isIntersecting ? 'red' : '#22d3ee'
+                    }
+                    strokeWidth={2}
+                    dash={[8, 6]}
+                    fill={
+                      isUseFullRect && !isIntersecting
+                        ? 'rgba(0,150,136,0.4)'
+                        : isIntersecting
+                          ? 'rgba(255,0,0,0.2)'
+                          : 'rgba(255,211,61,0.2)'
+                    }
+                    listening={false}
+                  />
+                </Group>
+              )}
+              {snapLines.map((line, idx) => (
+                <Line
+                  key={idx}
+                  points={line.points}
+                  stroke='rgba(0,150,136,0.8)'
+                  strokeWidth={1.5}
+                  dash={[6, 4]}
                   listening={false}
                 />
-              </Group>
-            )}
-            {snapLines.map((line, idx) => (
-              <Line
-                key={idx}
-                points={line.points}
-                stroke='rgba(0,150,136,0.8)'
-                strokeWidth={1.5}
-                dash={[6, 4]}
-                listening={false}
+              ))}
+              {/* 形变 */}
+              <Transformer
+                ref={transformerRef}
+                rotateEnabled={false}
+                anchorStroke='#22d3ee'
+                anchorFill='#ffffff'
+                anchorCornerRadius={4} // 圆角
+                anchorStrokeWidth={2}
+                borderStroke='#22d3ee' // 外框描边
+                borderStrokeWidth={1.5}
+                borderDash={[6, 4]}
+                borderCornerRadius={4} // 外框圆角
+                name='transformer'
+                boundBoxFunc={(oldBox, newBox) => (newBox.width < 5 || newBox.height < 5 ? oldBox : newBox)}
               />
-            ))}
-            {/* 形变 */}
-            <Transformer
-              ref={transformerRef}
-              rotateEnabled={false}
-              anchorStroke='#22d3ee'
-              anchorFill='#ffffff'
-              anchorCornerRadius={4} // 圆角
-              anchorStrokeWidth={2}
-              borderStroke='#22d3ee' // 外框描边
-              borderStrokeWidth={1.5}
-              borderDash={[6, 4]}
-              borderCornerRadius={4} // 外框圆角
-              name='transformer'
-              boundBoxFunc={(oldBox, newBox) => (newBox.width < 5 || newBox.height < 5 ? oldBox : newBox)}
-            />
-          </Layer>
-        </Stage>
-      </div>
-      <ConfigProvider
-        theme={{
-          algorithm: theme.defaultAlgorithm,
-        }}
-      >
-        <Drawer
-          title='避障方案调整'
-          open={openUpdateObsDrawer}
-          onClose={() => setOpenUpdateObsDrawer(false)}
-          width={400}
-          mask={false}
-          rootClassName='text-black'
+            </Layer>
+          </Stage>
+        </div>
+        <ConfigProvider
+          theme={{
+            algorithm: theme.defaultAlgorithm,
+          }}
         >
-          <DrawerContent
-            rects={rects}
-            setSelectedId={setSelectedId}
-            selectedId={selectedId}
-            stage={stageRef?.current}
-            size={size}
-            setReRenderLineGrid={setReRenderLineGrid}
-            reRenderLineGrid={reRenderLineGrid}
-          />
-        </Drawer>
-      </ConfigProvider>
+          <Drawer
+            title='避障方案调整'
+            open={openUpdateObsDrawer}
+            onClose={() => setOpenUpdateObsDrawer(false)}
+            width={400}
+            mask={false}
+            rootClassName='text-black'
+          >
+            <DrawerContent
+              rects={rects}
+              setSelectedId={setSelectedId}
+              selectedId={selectedId}
+              stage={stageRef?.current}
+              size={size}
+              setReRenderLineGrid={setReRenderLineGrid}
+              reRenderLineGrid={reRenderLineGrid}
+            />
+          </Drawer>
+        </ConfigProvider>
+      </div>
     </div>
   );
 }
