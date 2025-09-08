@@ -259,10 +259,14 @@ const DrawerContent = (props: IProps) => {
               })
             ) : (
               <div
-                className='w-full h-40 py-4 rounded-lg flex flex-col items-center justify-center bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]
+                className='group w-full h-40 py-4 rounded-lg flex flex-col items-center justify-center bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]
   backdrop-blur-[6px] hover:shadow-lg animation-all duration-300'
               >
-                <SvgIcon name='noArea' size={128}></SvgIcon>
+                <SvgIcon
+                  className='group-hover:scale-110 animation-all duration-300'
+                  name='noArea'
+                  size={128}
+                ></SvgIcon>
                 <p className='opacity-60 text-xs'>暂无区域数据，请添加</p>
               </div>
             )}

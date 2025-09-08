@@ -154,3 +154,8 @@ export function buildCarEdgeGuides(
   });
   return lines;
 }
+
+// 吸附到网格
+export const snapToGrid = (value: number, gridSize = 10) => {
+  return Math.round(value / gridSize) * gridSize;
+};

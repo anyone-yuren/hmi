@@ -41,10 +41,10 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
         <Line1px />
       </p>
       <div
-        className='h-40 flex flex-col rounded-b-lg items-center justify-center bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]
+        className='group h-40 flex flex-col rounded-b-lg items-center justify-center bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]
   backdrop-blur-[6px] hover:shadow-lg animation-all duration-300'
       >
-        <SvgIcon name='points' size={128} />
+        <SvgIcon name='points' size={128} className='group-hover:scale-110 animation-all duration-300' />
         <p className='text-xs opacity-60'>暂无使能传感器</p>
       </div>
     </div>
