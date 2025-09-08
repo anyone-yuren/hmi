@@ -8,6 +8,7 @@ import {
   WalletOutlined,
 } from '@ant-design/icons';
 import { App, Button, Checkbox, ConfigProvider, Input, Segmented, Switch, theme, Tooltip } from 'antd';
+import { motion } from 'framer-motion';
 import Konva from 'konva';
 import { useEffect, useRef, useState } from 'react';
 import { SvgIcon } from 'ui';
@@ -196,14 +197,20 @@ const DrawerContent = (props: IProps) => {
             ) : (
               <div className='flex items-center gap-2'>
                 {checkedList.length ? (
-                  <DeleteOutlined
-                    className='border p-[1px] rounded-full border-yellow-400 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300'
-                    style={{
-                      color: token.colorWarning,
-                      fontSize: '12px',
-                    }}
-                    onClick={handleBatchDelete}
-                  />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 1.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, ease: 'easeOut' }}
+                  >
+                    <DeleteOutlined
+                      className='border p-[1px] rounded-full border-red-600 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all duration-300'
+                      style={{
+                        color: token.colorErrorActive,
+                        fontSize: '12px',
+                      }}
+                      onClick={handleBatchDelete}
+                    />
+                  </motion.div>
                 ) : (
                   <StopOutlined className='opacity-60 cursor-not-allowed' />
                 )}
@@ -214,7 +221,10 @@ const DrawerContent = (props: IProps) => {
                       // color: token.colorError,
                     }
                   }
-                  onClick={() => setIsBatchDelete(false)}
+                  onClick={() => {
+                    setIsBatchDelete(false);
+                    setCheckedList([]);
+                  }}
                 />
               </div>
             )}

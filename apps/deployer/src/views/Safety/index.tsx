@@ -588,7 +588,7 @@ export default function RectDrawer() {
             title='避障方案调整'
             open={openUpdateObsDrawer}
             onClose={() => setOpenUpdateObsDrawer(false)}
-            width={400}
+            width={'25%'}
             mask={false}
             rootClassName='text-black'
             classNames={{
