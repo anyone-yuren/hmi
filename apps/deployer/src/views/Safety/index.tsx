@@ -9,6 +9,7 @@ import { Group, Layer, Line, Rect, Stage, Text, Transformer } from 'react-konva'
 import { useShallow } from 'zustand/react/shallow';
 import CarModel from './component/newCarComponents/carModel';
 import DrawerContent from './component/newCarComponents/drawerContent';
+import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
 type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
@@ -440,7 +441,10 @@ export default function RectDrawer() {
       easing: Konva.Easings.EaseInOut,
       x: width / 2,
       y: height / 2,
-      onFinish: () => setStageScale(0.99),
+      onFinish: () => {
+        setScale(0.99);
+        setReRenderLineGrid(!reRenderLineGrid);
+      },
     });
     tween.play();
   }
@@ -584,6 +588,7 @@ export default function RectDrawer() {
             algorithm: theme.defaultAlgorithm,
           }}
         >
+          <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
           <Drawer
             title='避障方案调整'
             open={openUpdateObsDrawer}
