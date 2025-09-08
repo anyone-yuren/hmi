@@ -48,7 +48,7 @@ const Maintenance = () => {
         <Lifting loading={loading} data={data?.LiftingSystem ?? {}} reload={getMaintenance} />
       </div>
       {resetLoading ? <LoadingReset /> : null}
-      {(token === 'admin' || true) && (
+      {token === 'admin' && (
         <div className='absolute bottom-8 left-8 z-10'>
           <Button type={'primary'} onClick={() => reset()}>
             {'重置全部'}

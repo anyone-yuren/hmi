@@ -19,7 +19,7 @@ export default function PointsCloudDiag() {
   useEffect(() => {
     const data = pointCloudData?.point_cloud || [];
     if (data && data.length > 0) {
-      const intensities = data.map((point: any) => point.intensity);
+      const intensities = data?.map((point: any) => point.intensity);
       setMinIntensity(Math.min(...intensities));
       setMaxIntensity(Math.max(...intensities));
     }

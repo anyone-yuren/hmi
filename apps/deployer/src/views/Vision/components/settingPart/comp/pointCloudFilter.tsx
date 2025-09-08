@@ -94,6 +94,11 @@ const PointCloudFilter = (props: IProps) => {
   );
   console.log('[shelf]: type', type);
 
+  const showStorageCalibrationAssistant = useMemo(() => {
+    const ary = ['stack_pallet_position_detect', 'shelf_place_move_vehicle', 'stack_place_move_vehicle'];
+    return ary.includes(type);
+  }, [type]);
+
   const isMultiwayAgv = useMemo(() => {
     return false;
   }, []);
@@ -335,10 +340,12 @@ const PointCloudFilter = (props: IProps) => {
             <LightTheme>
               <div className='flex text-black h-full'>
                 <div className='w-[350px] h-full overflow-auto'>
-                  <Tabs value={value} onChange={handleChange} variant='fullWidth'>
-                    <Tab label={t('deployer.vision.other')} iconPosition='end' />
-                    <Tab label={t('deployer.vision.storageCalibration')} iconPosition='end' />
-                  </Tabs>
+                  {showStorageCalibrationAssistant && (
+                    <Tabs value={value} onChange={handleChange} variant='fullWidth'>
+                      <Tab label={t('deployer.vision.other')} iconPosition='end' />
+                      <Tab label={t('deployer.vision.storageCalibration')} iconPosition='end' />
+                    </Tabs>
+                  )}
                   {!error ? (
                     <>
                       {Object.keys(state)?.map((key: string) => {
@@ -439,9 +446,11 @@ const PointCloudFilter = (props: IProps) => {
                             <MenuItem value={1}>
                               <ListItemText primary={t('deployer.vision.targetSelect')} />
                             </MenuItem>
-                            <MenuItem value={2}>
-                              <ListItemText primary={t('deployer.vision.forkUpPointCloud')} />
-                            </MenuItem>
+                            {showStorageCalibrationAssistant && (
+                              <MenuItem value={2}>
+                                <ListItemText primary={t('deployer.vision.forkUpPointCloud')} />
+                              </MenuItem>
+                            )}
                           </CustomSelect>
                         </div>
                       </TextUpdateRow>

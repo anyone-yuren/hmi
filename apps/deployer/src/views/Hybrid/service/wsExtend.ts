@@ -91,7 +91,15 @@ export default function useHybirdWsExtend() {
       setNavigationType(data?.navigation_type || 0);
     },
     '/navigation/real_time_data/scan_head': (data: any) => {
-      const ary = typeof data?.point_cloud === 'object' ? data?.point_cloud : unzipText(data?.point_cloud);
+      let ary = [];
+      if (data?.isGzip) {
+        ary = unzipText(data?.point_cloud);
+      } else {
+        ary = data?.point_cloud;
+      }
+      if (typeof ary === 'string') {
+        ary = JSON.parse(ary);
+      }
       setPointCloudV1Data(ary || []);
     },
     '/navigation/current_qrcode_info': (data: any) => {
@@ -104,7 +112,7 @@ export default function useHybirdWsExtend() {
 
       const diffX = Math.abs(data.pose.x - agvPosition.x);
       const diffY = Math.abs(data.pose.y - agvPosition.y);
-
+      console.log('position', data?.pose);
       if (diffX > 10 || diffY > 10) {
         setAgvPosition({
           angel: data.pose.theta,

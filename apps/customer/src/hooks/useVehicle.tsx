@@ -26,10 +26,7 @@ export const useVehicle = () => {
     reconnectInterval: 5000,
     onMessage: (e) => {
       if (e?.data?.includes('subscribe')) return;
-      // if (!e?.data || !e?.data.includes('{')) return;
-      // const data = JSON.parse(e.data);
-      // if (data?.uri === '/navigation/robot_status_localizer_result') {
-      // }
+
       if (e?.data?.includes('/sirius/topics/robot_status_battery')) {
         const data = JSON.parse(e?.data);
         if (data) {

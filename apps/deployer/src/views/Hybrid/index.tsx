@@ -124,8 +124,11 @@ const Mapping = () => {
     isShowNavigation(navigationType, 'REFLECTOR') &&
       robot_current_status?.navigation_type === 1 &&
       setAlignment('reflector');
-    (isShowNavigation(navigationType, 'LIDAR_SLAM_2D') || isShowNavigation(navigationType, 'LIDAR_SLAM_3D')) &&
+    isShowNavigation(navigationType, 'LIDAR_SLAM_2D') &&
       robot_current_status?.navigation_type === 2 &&
+      setAlignment('slam');
+    isShowNavigation(navigationType, 'LIDAR_SLAM_3D') &&
+      robot_current_status?.navigation_type === 4 &&
       setAlignment('slam');
   }, [navigationType, robot_current_status.navigation_type]);
   const { getFloorMapData } = useMapFloorData();
@@ -430,7 +433,11 @@ const Mapping = () => {
             >
               <InitStage size={size}>
                 <Layer ref={layerRef} name='active-layer'>
-                  {alignment === 'slam' && isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? <SlamLayer /> : null}
+                  {alignment === 'slam' &&
+                  (isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ||
+                    isShowNavigation(navigationType, 'LIDAR_SLAM_3D')) ? (
+                    <SlamLayer />
+                  ) : null}
                   {alignment === 'reflector' && isShowNavigation(navigationType, 'REFLECTOR') ? (
                     <ReflectorLayer onReflectorClick={handleReflectorClick} />
                   ) : null}
@@ -470,7 +477,9 @@ const Mapping = () => {
             </Box>
           )}
 
-          {alignment === 'slam' && isShowNavigation(navigationType, 'LIDAR_SLAM_2D') && listData?.floor_list?.length ? (
+          {alignment === 'slam' &&
+          (isShowNavigation(navigationType, 'LIDAR_SLAM_2D') || isShowNavigation(navigationType, 'LIDAR_SLAM_3D')) &&
+          listData?.floor_list?.length ? (
             <SlamHandle floor={floor} hide={!listData?.floor_list?.length}></SlamHandle>
           ) : null}
 

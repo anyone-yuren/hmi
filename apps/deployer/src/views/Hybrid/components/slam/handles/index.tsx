@@ -97,6 +97,9 @@ const SlamHandles = (props: any) => {
       setMapLoading(false);
       setCoverFloorData('grid_map', res?.grid_map || floorData?.grid_map);
     },
+    onError: (err: any) => {
+      setMapLoading(false);
+    },
   });
 
   const { runAsync: runDel, loading: delLoading } = useRequest(delFloorMap, {

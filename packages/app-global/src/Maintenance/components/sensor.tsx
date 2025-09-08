@@ -134,7 +134,7 @@ const Sensor = (props: SensorProps) => {
         </div>
 
         <div className='flex gap-3 justify-end'>
-          {(token === 'admin' || true) && (
+          {token === 'admin' && (
             <Button
               disabled={loading || !data?.Next}
               size='large'

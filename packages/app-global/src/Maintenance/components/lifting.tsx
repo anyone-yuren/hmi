@@ -199,7 +199,7 @@ const Lifting = ({ loading, data, reload }: Props) => {
           </div>
         </div>
         <div className='flex gap-3 justify-end'>
-          {(token === 'admin' || true) && (
+          {token === 'admin' && (
             <Button
               // disabled={loading || !data?.next}
               disabled={loading}

@@ -1,5 +1,5 @@
 // 根据navigationType 位与运算判断是否显示对应导航
-const navagationTypeObj: { [key: string]: number } = {
+const navigationTypeObj: { [key: string]: number } = {
   REFLECTOR: 0, // 反光板导航，第0位表示
   LIDAR_SLAM_2D: 1, // 2D 激光 slam，第1位表示
   LIDAR_SLAM_3D: 2, // 3D 激光 slam，第2位表示
@@ -8,5 +8,5 @@ const navagationTypeObj: { [key: string]: number } = {
   MAGNETIC: 5, // 磁钉，第5位表示
 };
 export const isShowNavigation = (navigationType: number, type: string) => {
-  return navigationType & (1 << navagationTypeObj[type]);
+  return navigationType & (1 << navigationTypeObj[type]);
 };
