@@ -591,6 +591,9 @@ export default function RectDrawer() {
             width={400}
             mask={false}
             rootClassName='text-black'
+            classNames={{
+              body: 'mb-12',
+            }}
           >
             <DrawerContent
               rects={rects}
@@ -601,6 +604,7 @@ export default function RectDrawer() {
               size={size}
               setReRenderLineGrid={setReRenderLineGrid}
               reRenderLineGrid={reRenderLineGrid}
+              setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
             />
           </Drawer>
         </ConfigProvider>

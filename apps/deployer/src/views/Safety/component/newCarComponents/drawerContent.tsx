@@ -1,13 +1,13 @@
 import {
-  CloseSquareOutlined,
+  CloseCircleOutlined,
   DeleteOutlined,
   InfoCircleOutlined,
-  MinusSquareOutlined,
+  MinusCircleOutlined,
   PauseOutlined,
   StopOutlined,
   WalletOutlined,
 } from '@ant-design/icons';
-import { App, Checkbox, ConfigProvider, Input, Segmented, theme, Tooltip } from 'antd';
+import { App, Button, Checkbox, ConfigProvider, Input, Segmented, Switch, theme, Tooltip } from 'antd';
 import Konva from 'konva';
 import { useEffect, useRef, useState } from 'react';
 import { SvgIcon } from 'ui';
@@ -26,12 +26,23 @@ interface IProps {
   size?: { width: number; height: number } | null;
   setReRenderLineGrid: (value: boolean) => void;
   reRenderLineGrid: boolean;
+  setOpenUpdateObsDrawer: (value: boolean) => void;
 }
 const DrawerContent = (props: IProps) => {
   const { useToken } = theme;
   const { modal } = App.useApp();
   const { token } = useToken();
-  const { rects, setSelectedId, selectedId, stage, size, setReRenderLineGrid, reRenderLineGrid, setRects } = props;
+  const {
+    rects,
+    setSelectedId,
+    selectedId,
+    stage,
+    size,
+    setReRenderLineGrid,
+    reRenderLineGrid,
+    setRects,
+    setOpenUpdateObsDrawer,
+  } = props;
   const [selectRect, setSelectRect] = useState<{
     id: string;
     x: number;
@@ -89,6 +100,7 @@ const DrawerContent = (props: IProps) => {
       onOk: () => {
         setRects(rects.filter((item) => !checkedList.includes(item.id)));
         setCheckedList([]);
+        setIsBatchDelete(false);
       },
     });
   };
@@ -158,20 +170,34 @@ const DrawerContent = (props: IProps) => {
             传感器控制
             <Line1px />
           </p>
+          <div className='flex flex-col gap-2'>
+            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+              <p className='text-md'>传感器1</p>
+              <Switch />
+            </div>
+            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+              <p className='text-md'>传感器2</p>
+              <Switch />
+            </div>
+            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+              <p className='text-md'>传感器3</p>
+              <Switch />
+            </div>
+          </div>
         </div>
         <div className='flex flex-col gap-2'>
           <p className='flex justify-between items-center text-md font-bold relative pb-2'>
             避障区域列表
             {!isBatchDelete ? (
-              <MinusSquareOutlined
-                className='cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300'
+              <MinusCircleOutlined
+                className={`${rects.length ? '' : 'hidden'}  cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300`}
                 onClick={() => setIsBatchDelete(true)}
               />
             ) : (
               <div className='flex items-center gap-2'>
                 {checkedList.length ? (
                   <DeleteOutlined
-                    className='border border-yellow-400 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300'
+                    className='border p-[1px] rounded-full border-yellow-400 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300'
                     style={{
                       color: token.colorWarning,
                       fontSize: '12px',
@@ -181,7 +207,7 @@ const DrawerContent = (props: IProps) => {
                 ) : (
                   <StopOutlined className='opacity-60 cursor-not-allowed' />
                 )}
-                <CloseSquareOutlined
+                <CloseCircleOutlined
                   className='cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300'
                   style={
                     {
@@ -243,6 +269,18 @@ const DrawerContent = (props: IProps) => {
           </Checkbox.Group>
         </div>
       </ConfigProvider>
+      <div className='w-full h-12 p-2 border-t bg-white absolute bottom-0 left-0  flex items-center justify-end gap-2'>
+        <Button type='primary'>修改</Button>
+        <Button
+          variant='outlined'
+          color='red'
+          onClick={() => {
+            setOpenUpdateObsDrawer(false);
+          }}
+        >
+          取消
+        </Button>
+      </div>
     </div>
   );
 };
