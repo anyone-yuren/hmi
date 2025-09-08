@@ -1,7 +1,16 @@
-import { InfoCircleOutlined, PauseOutlined, WalletOutlined } from '@ant-design/icons';
-import { Checkbox, ConfigProvider, Input, Segmented, Switch, theme, Tooltip } from 'antd';
+import {
+  CloseSquareOutlined,
+  DeleteOutlined,
+  InfoCircleOutlined,
+  MinusSquareOutlined,
+  PauseOutlined,
+  StopOutlined,
+  WalletOutlined,
+} from '@ant-design/icons';
+import { App, Checkbox, ConfigProvider, Input, Segmented, theme, Tooltip } from 'antd';
 import Konva from 'konva';
 import { useEffect, useRef, useState } from 'react';
+import { SvgIcon } from 'ui';
 export const Line1px = () => {
   return (
     <div className='w-full h-px bg-gradient-to-r from-white/0 via-[#e3e3e3] to-white/0 absolute bottom-0 left-0'></div>
@@ -10,6 +19,7 @@ export const Line1px = () => {
 
 interface IProps {
   rects: Array<{ id: string; x: number; y: number; width: number; height: number }>;
+  setRects: (rects: Array<{ id: string; x: number; y: number; width: number; height: number }>) => void;
   setSelectedId: (id: string) => void;
   selectedId: string | null;
   stage: Konva.Stage | null;
@@ -18,7 +28,10 @@ interface IProps {
   reRenderLineGrid: boolean;
 }
 const DrawerContent = (props: IProps) => {
-  const { rects, setSelectedId, selectedId, stage, size, setReRenderLineGrid, reRenderLineGrid } = props;
+  const { useToken } = theme;
+  const { modal } = App.useApp();
+  const { token } = useToken();
+  const { rects, setSelectedId, selectedId, stage, size, setReRenderLineGrid, reRenderLineGrid, setRects } = props;
   const [selectRect, setSelectRect] = useState<{
     id: string;
     x: number;
@@ -28,6 +41,10 @@ const DrawerContent = (props: IProps) => {
   } | null>(null);
   // 保存每个 item 的 ref
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  // 是否开启批量删除
+  const [isBatchDelete, setIsBatchDelete] = useState(false);
+  // 多选的值
+  const [checkedList, setCheckedList] = useState<string[]>([]);
 
   // 滚动到选中的 item
   useEffect(() => {
@@ -63,6 +80,18 @@ const DrawerContent = (props: IProps) => {
       }).play();
     }
   }, [selectRect, stage, size]);
+
+  // 批量删除
+  const handleBatchDelete = () => {
+    modal.confirm({
+      title: '确认删除？',
+      okText: '确认',
+      onOk: () => {
+        setRects(rects.filter((item) => !checkedList.includes(item.id)));
+        setCheckedList([]);
+      },
+    });
+  };
 
   return (
     <div className='flex flex-col gap-4'>
@@ -129,63 +158,89 @@ const DrawerContent = (props: IProps) => {
             传感器控制
             <Line1px />
           </p>
-          <div className='flex flex-col gap-2'>
-            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
-              <p className='text-md'>传感器1</p>
-              <Switch />
-            </div>
-            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
-              <p className='text-md'>传感器2</p>
-              <Switch />
-            </div>
-            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
-              <p className='text-md'>传感器3</p>
-              <Switch />
-            </div>
-          </div>
         </div>
         <div className='flex flex-col gap-2'>
-          <p className='text-md font-bold relative pb-2'>
+          <p className='flex justify-between items-center text-md font-bold relative pb-2'>
             避障区域列表
+            {!isBatchDelete ? (
+              <MinusSquareOutlined
+                className='cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300'
+                onClick={() => setIsBatchDelete(true)}
+              />
+            ) : (
+              <div className='flex items-center gap-2'>
+                {checkedList.length ? (
+                  <DeleteOutlined
+                    className='border border-yellow-400 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300'
+                    style={{
+                      color: token.colorWarning,
+                      fontSize: '12px',
+                    }}
+                    onClick={handleBatchDelete}
+                  />
+                ) : (
+                  <StopOutlined className='opacity-60 cursor-not-allowed' />
+                )}
+                <CloseSquareOutlined
+                  className='cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300'
+                  style={
+                    {
+                      // color: token.colorError,
+                    }
+                  }
+                  onClick={() => setIsBatchDelete(false)}
+                />
+              </div>
+            )}
             <Line1px />
           </p>
-          <div className='flex flex-col gap-2'>
-            {rects.map((item) => {
-              const isSelected = selectedId === item.id;
-              return (
-                <div
-                  key={item.id}
-                  ref={(el) => (itemRefs.current[item.id] = el)}
-                  className={`w-full bg-[#F7F8FA] rounded-md flex flex-col gap-2 justify-between p-4 hover:bg-[#E8EAF0] hover:shadow-lg hover:-translate-y-1 hover:font-bold  animation-all duration-300 cursor-pointer ${isSelected ? 'shadow-lg bg-[#E8EAF0] -translate-y-1 font-bold' : ''}`}
-                  onClick={() => {
-                    setSelectedId(item.id);
-                    setSelectRect(item);
-                  }}
-                >
-                  <p className='text-sm flex items-center justify-between'>
-                    {item.id}
-                    <Tooltip title='关联机构'>
-                      <Segmented
-                        size={'small'}
-                        className='hover:shadow-lg animation-all duration-300'
-                        // shape='round'
-                        options={[
-                          { value: 'light', icon: <WalletOutlined /> },
-                          { value: 'dark', icon: <PauseOutlined /> },
-                        ]}
-                      />
-                    </Tooltip>
-                  </p>
-                  <div className='w-full rounded-md grid-cols-2 grid gap-2'>
-                    <p className='text-xs opacity-50'>宽度 {Math.round(item.width)} (mm)</p>
-                    <p className='text-xs opacity-50'>高度 {Math.round(item.height)} (mm)</p>
-                    <p className='text-xs opacity-50'>位置x {Math.round(item.x)} (mm)</p>
-                    <p className='text-xs opacity-50'>位置y {Math.round(item.y)} (mm)</p>
+          <Checkbox.Group className='flex flex-col gap-2' value={checkedList} onChange={setCheckedList}>
+            {rects?.length ? (
+              rects.map((item) => {
+                const isSelected = selectedId === item.id;
+                return (
+                  <div
+                    key={item.id}
+                    ref={(el) => (itemRefs.current[item.id] = el)}
+                    className={`w-full bg-[#F7F8FA] rounded-md flex flex-col gap-2 justify-between p-4 hover:bg-[#E8EAF0] hover:shadow-lg hover:-translate-y-1 hover:font-bold  animation-all duration-300 cursor-pointer ${isSelected ? 'shadow-lg bg-[#E8EAF0] -translate-y-1 font-bold' : ''}`}
+                    onClick={() => {
+                      setSelectedId(item.id);
+                      setSelectRect(item);
+                    }}
+                  >
+                    <p className='text-sm flex items-center justify-between'>
+                      {isBatchDelete ? <Checkbox value={item.id}>{item.id}</Checkbox> : item.id}
+                      <Tooltip title='关联机构'>
+                        <Segmented
+                          size={'small'}
+                          className='hover:shadow-lg animation-all duration-300'
+                          // shape='round'
+                          options={[
+                            { value: 'light', icon: <WalletOutlined /> },
+                            { value: 'dark', icon: <PauseOutlined /> },
+                          ]}
+                        />
+                      </Tooltip>
+                    </p>
+                    <div className='w-full rounded-md grid-cols-2 grid gap-2'>
+                      <p className='text-xs opacity-50'>宽度 {Math.round(item.width)} (mm)</p>
+                      <p className='text-xs opacity-50'>高度 {Math.round(item.height)} (mm)</p>
+                      <p className='text-xs opacity-50'>位置x {Math.round(item.x)} (mm)</p>
+                      <p className='text-xs opacity-50'>位置y {Math.round(item.y)} (mm)</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })
+            ) : (
+              <div
+                className='w-full h-40 py-4 rounded-lg flex flex-col items-center justify-center bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]
+  backdrop-blur-[6px] hover:shadow-lg animation-all duration-300'
+              >
+                <SvgIcon name='noArea' size={128}></SvgIcon>
+                <p className='opacity-60 text-xs'>暂无区域数据，请添加</p>
+              </div>
+            )}
+          </Checkbox.Group>
         </div>
       </ConfigProvider>
     </div>

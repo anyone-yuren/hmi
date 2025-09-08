@@ -38,9 +38,9 @@ const CarModel = () => {
         const { x, y, width, height } = getRectFromDiagonal(rect.diagonalCoordinates);
 
         // 不同机制用不同颜色区分
-        let fill = 'rgba(0,221,221,0.6)'; // 默认 BODY 青色
+        let fill = 'rgba(0,188,212,0.4)'; // 默认 BODY 青色
         if (rect.associated_mechanism === 'BODY') {
-          fill = 'rgba(0,112,112,0.6)'; // 叉臂红色
+          fill = 'rgba(0,188,212,0.6)'; // 叉臂红色
         }
 
         return (

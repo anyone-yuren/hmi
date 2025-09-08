@@ -9,6 +9,7 @@ import { Group, Layer, Line, Rect, Stage, Text, Transformer } from 'react-konva'
 import { useShallow } from 'zustand/react/shallow';
 import CarModel from './component/newCarComponents/carModel';
 import DrawerContent from './component/newCarComponents/drawerContent';
+import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
 type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
 
@@ -454,6 +455,8 @@ export default function RectDrawer() {
 
   return (
     <div className='w-full h-full flex flex-col !absolute left-0 top-0'>
+      {/* 避障信息 */}
+      <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} />
       <div className='p-2 flex items-center gap-3 absolute bottom-0 left-0 right-0'>
         <span className='text-sm opacity-80'>左键拖拽绘制矩形；按住 Shift 约束为正方形；Esc 取消。</span>
         <span className='ml-auto text-sm opacity-60'>当前缩放：{Math.round(scale * 100)}%</span>
@@ -591,6 +594,7 @@ export default function RectDrawer() {
           >
             <DrawerContent
               rects={rects}
+              setRects={setRects}
               setSelectedId={setSelectedId}
               selectedId={selectedId}
               stage={stageRef?.current}
