@@ -2,6 +2,7 @@ import { LineGrid } from '@/components/InitStage/components/LineGrid';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
 import { useSize } from 'ahooks';
 import { ConfigProvider, Drawer, theme } from 'antd';
+import { useResponsive } from 'antd-style';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -20,6 +21,7 @@ export default function RectDrawer() {
   const ref = useRef<HTMLDivElement>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
   const size = useSize(ref);
+  const responsive = useResponsive();
   const { setStageScale } = useHybirdStore(useShallow((store) => ({ setStageScale: store.setStageScale })));
 
   const [isDrawing, setIsDrawing] = useState(false);
@@ -593,7 +595,7 @@ export default function RectDrawer() {
             title='避障方案调整'
             open={openUpdateObsDrawer}
             onClose={() => setOpenUpdateObsDrawer(false)}
-            width={'25%'}
+            width={'360px'}
             mask={false}
             rootClassName='text-black'
             classNames={{

@@ -123,9 +123,11 @@ const DrawerContent = (props: IProps) => {
             <Line1px />
           </p>
 
-          <Checkbox.Group className='grid grid-cols-2 bg-[#f5f5f5] p-2 rounded-md'>
+          <Checkbox.Group className='grid grid-cols-2 bg-[#f5f5f5] p-2 rounded-md' value={['2', '3']}>
             <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
-              <Checkbox value='1'>避障策略1</Checkbox>
+              <Checkbox value='1' disabled>
+                避障策略1
+              </Checkbox>
               <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
             </div>
             <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
@@ -137,11 +139,15 @@ const DrawerContent = (props: IProps) => {
               <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
             </div>
             <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
-              <Checkbox value='4'>避障策略4</Checkbox>
+              <Checkbox value='4' disabled>
+                避障策略4
+              </Checkbox>
               <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
             </div>
             <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
-              <Checkbox value='5'>避障策略5</Checkbox>
+              <Checkbox value='5' disabled>
+                避障策略5
+              </Checkbox>
               <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
             </div>
           </Checkbox.Group>
@@ -188,7 +194,7 @@ const DrawerContent = (props: IProps) => {
         </div>
         <div className='flex flex-col gap-2'>
           <p className='flex justify-between items-center text-md font-bold relative pb-2'>
-            避障区域列表
+            保护区域列表
             {!isBatchDelete ? (
               <MinusCircleOutlined
                 className={`${rects.length ? '' : 'hidden'}  cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300`}
