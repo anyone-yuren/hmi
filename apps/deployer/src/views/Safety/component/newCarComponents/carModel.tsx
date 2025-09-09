@@ -1,5 +1,6 @@
 import SafetyCoordinate from '@/components/InitStage/components/safetyCoordinate';
 import { Layer, Rect } from 'react-konva';
+import VehicleImg from './vehicleImg';
 
 const CarModel = () => {
   // 车体数据
@@ -7,7 +8,7 @@ const CarModel = () => {
     {
       id: 1,
       diagonalCoordinates: [
-        { x: 200, y: -200 },
+        { x: 200, y: -100 },
         { x: -200, y: -400 },
       ],
       associated_mechanism: 'BODY',
@@ -15,8 +16,8 @@ const CarModel = () => {
     {
       id: 2,
       diagonalCoordinates: [
-        { x: -150, y: 200 },
-        { x: 150, y: -200 },
+        { x: -170, y: 400 },
+        { x: 170, y: -100 },
       ],
       associated_mechanism: 'FORKARM-LEFT',
     },
@@ -34,6 +35,7 @@ const CarModel = () => {
 
   return (
     <Layer name='car'>
+      <VehicleImg />
       {carRects.map((rect) => {
         const { x, y, width, height } = getRectFromDiagonal(rect.diagonalCoordinates);
 
