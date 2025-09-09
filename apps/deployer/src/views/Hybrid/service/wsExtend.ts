@@ -29,6 +29,7 @@ export default function useHybirdWsExtend() {
     robotCurrentStatus,
     setRobotCurrentStatus,
     setScanHead,
+    setWsState,
   } = useHybirdStore(
     useShallow((store) => ({
       robotCurrentStatus: store.robot_current_status,
@@ -52,6 +53,7 @@ export default function useHybirdWsExtend() {
       setQrCodeData: store.setQrCodeData,
       setAgvPosition: store.setAgvPosition,
       setScanHead: store.setScanHead,
+      setWsState: store.setWsState,
     })),
   );
 
@@ -112,7 +114,6 @@ export default function useHybirdWsExtend() {
 
       const diffX = Math.abs(data.pose.x - agvPosition.x);
       const diffY = Math.abs(data.pose.y - agvPosition.y);
-      console.log('position', data?.pose);
       if (diffX > 10 || diffY > 10) {
         setAgvPosition({
           angel: data.pose.theta,
@@ -132,6 +133,9 @@ export default function useHybirdWsExtend() {
     '/navigation/scan_head': (data: any) => {
       // 获取定位点云
       setScanHead(data);
+    },
+    setWebsocketState: (state) => {
+      setWsState(state);
     },
   };
 }

@@ -1,6 +1,6 @@
 import { useWebSocket } from 'ahooks';
 import YAML from 'js-yaml';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useHybirdWsExtend from '../service/wsExtend';
 // 动态获取当前 host
 const currentHost = window.location.hostname;
@@ -12,13 +12,16 @@ const HYBRID_URL = import.meta.env.DEV
 const hashMap: any = {};
 export const useHybrid = () => {
   const hybirdWsExtend = useHybirdWsExtend();
+  const [hasMessage, setHasMessage] = useState(false);
   const webSocketEventHashMap: any = {
     ...hybirdWsExtend,
   };
-  const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
+  const { sendMessage, latestMessage, readyState, connect } = useWebSocket(HYBRID_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
     onMessage: (message) => {
+      !hasMessage && setHasMessage(true);
+      // !hasMessage && message.data.indexOf('robot_current_status') > -1 && setHasMessage(true);
       if (message.data.includes('subscribe')) {
         return;
       }
@@ -53,6 +56,7 @@ export const useHybrid = () => {
   });
 
   useEffect(() => {
+    console.log('readyState10001', readyState);
     if (readyState === 1) {
       sendMessage(
         JSON.stringify({
@@ -69,9 +73,20 @@ export const useHybrid = () => {
       );
     }
   }, [readyState]);
+
+  useEffect(() => {
+    console.log('hasMessage', hasMessage, readyState);
+    if (readyState === 1 && hasMessage) {
+      hybirdWsExtend?.setWebsocketState(readyState);
+    }
+    if (readyState !== 1) {
+      hybirdWsExtend?.setWebsocketState(readyState);
+    }
+  }, [readyState, hasMessage]);
   return {
     sendMessage,
     latestMessage,
     readyState,
+    connect,
   };
 };

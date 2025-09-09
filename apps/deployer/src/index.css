@@ -83,3 +83,7 @@ button {
   background-color: transparent;
   -webkit-border-radius: 6px;
 }
+
+.floor_menu li {
+  color: black !important;
+}

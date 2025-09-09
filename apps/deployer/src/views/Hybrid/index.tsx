@@ -93,6 +93,7 @@ const Mapping = () => {
     showFloor,
     navigationType,
     setBeginPose,
+    wsState,
   } = useHybirdStore(
     useShallow((state) => ({
       setMapLoading: state.setMapLoading,
@@ -105,15 +106,18 @@ const Mapping = () => {
       showFloor: state.showFloor,
       navigationType: state.navigationType,
       setBeginPose: state.setBeginPose,
+      wsState: state.wsState,
     })),
   );
 
   // 获取当前楼层
   const ref = useRef<HTMLDivElement>(null);
+  const wsRef = useRef<any>(null);
   const size = useSize(ref);
   const [newFloor, setNewFloor] = React.useState();
   const latestInputText = useLatest(newFloor);
   const [floor, setFloor] = React.useState(robot_current_status.floor_number || 1);
+  const [floorButtonDisabled, setFloorButtonDisabled] = React.useState(true);
   const [alignment, setAlignment] = React.useState('slam');
   const currentAddFloor = useRef(0);
   useEffect(() => {
@@ -199,11 +203,11 @@ const Mapping = () => {
   });
 
   React.useEffect(() => {
-    getFloors();
+    wsState === 1 && getFloors();
     return () => {
       setMapLoading(false);
     };
-  }, []);
+  }, [wsState]);
 
   const handleChange = (newValue: number) => {
     if (robot_current_status.system_status !== 0) {
@@ -212,6 +216,15 @@ const Mapping = () => {
     }
     setFloor(newValue);
   };
+
+  React.useEffect(() => {
+    if (robot_current_status.system_status !== 0) {
+      setShowFloor(false);
+      setFloorButtonDisabled(true);
+    } else {
+      setFloorButtonDisabled(false);
+    }
+  }, [robot_current_status.system_status]);
 
   // 根据楼层切换，获取对应楼层数据
   React.useEffect(() => {
@@ -234,7 +247,6 @@ const Mapping = () => {
         zIndex: 2000,
         okText: t('common.confirm'),
         cancelText: t('common.cancel'),
-
         onOk: async () => {
           try {
             const reflectors_id = [id];
@@ -264,7 +276,6 @@ const Mapping = () => {
   const drawerWidth = 180;
 
   // 显示隐藏楼层
-
   const rightActions = [
     {
       key: 'delete',
@@ -341,6 +352,8 @@ const Mapping = () => {
                   ],
                 }}
                 trigger={['click']}
+                overlayStyle={{ zIndex: 99999, color: 'black' }}
+                overlayClassName={'floor_menu'}
               >
                 <IconButton size='small' shape='circle'>
                   <MoreVertIcon fontSize='small' className='opacity-80' />
@@ -354,9 +367,19 @@ const Mapping = () => {
   }, [floor, listData]);
   const layerRef = useRef<Konva.Layer>(null);
 
+  useEffect(() => {
+    console.log('index获取到的wsState', wsState);
+  }, [wsState]);
+
+  const wsStateHashmap = {
+    text: {
+      0: '连接中',
+      3: '连接已断开',
+    },
+  };
   return (
     <>
-      <WsContainer>
+      <WsContainer ref={wsRef}>
         <div className='h-full w-full flex flex-col gap-2 absolute top-0 left-0'>
           {/* 反光板导航 左上角坐标显示 */}
           <ThemeProvider
@@ -370,41 +393,64 @@ const Mapping = () => {
             })}
           >
             <Paper className='flex items-baseline flex-col justify-between absolute  w-[220px] z-[999] text-black p-2 left-2 top-2'>
-              <HybirdStatus />
-              <PositionView />
-              <>
-                <Divider sx={{ width: '100%', margin: '10px 0' }} />
-                <FormControl variant='standard' sx={{ width: '100%' }}>
-                  <Select
-                    size='small'
-                    value={alignment}
-                    onChange={changeHybird}
-                    label={t('deployer.hybrid.navigationType')}
-                    sx={{
-                      '& .MuiSelect-select': {
-                        color: 'black',
-                        fontSize: '14px',
-                        // position: 'relative',
-                        // zIndex: 1000,
-                      },
-                      '& .MuiPaper-root': {
-                        zIndex: 1000,
-                      },
-                    }}
-                  >
-                    {isShowNavigation(navigationType, 'REFLECTOR') ? (
-                      <MenuItem value='reflector'>{t('deployer.hybrid.reflectorsNavigation')}</MenuItem>
-                    ) : null}
-                    {isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? (
-                      <MenuItem value='slam'>{t('deployer.hybrid.slamNavigation')}</MenuItem>
-                    ) : null}
-                    {isShowNavigation(navigationType, 'LIDAR_SLAM_3D') ? (
-                      <MenuItem value='slam'>{t('3D SLAM')}</MenuItem>
-                    ) : null}
-                  </Select>
-                </FormControl>
-              </>
-              {<OnlinePoint />}
+              {wsState === 1 ? (
+                <>
+                  <HybirdStatus />
+                  <PositionView />
+                  <>
+                    <Divider sx={{ width: '100%', margin: '10px 0' }} />
+                    <FormControl variant='standard' sx={{ width: '100%' }}>
+                      <Select
+                        size='small'
+                        value={alignment}
+                        onChange={changeHybird}
+                        label={t('deployer.hybrid.navigationType')}
+                        sx={{
+                          '& .MuiSelect-select': {
+                            color: 'black',
+                            fontSize: '14px',
+                            // position: 'relative',
+                            // zIndex: 1000,
+                          },
+                          '& .MuiPaper-root': {
+                            zIndex: 1000,
+                          },
+                        }}
+                      >
+                        {isShowNavigation(navigationType, 'REFLECTOR') ? (
+                          <MenuItem value='reflector'>{t('deployer.hybrid.reflectorsNavigation')}</MenuItem>
+                        ) : null}
+                        {isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? (
+                          <MenuItem value='slam'>{t('deployer.hybrid.slamNavigation')}</MenuItem>
+                        ) : null}
+                        {isShowNavigation(navigationType, 'LIDAR_SLAM_3D') ? (
+                          <MenuItem value='slam'>{t('3D SLAM')}</MenuItem>
+                        ) : null}
+                      </Select>
+                    </FormControl>
+                  </>
+                  {<OnlinePoint />}
+                </>
+              ) : (
+                <div className='flex items-center justify-between w-full'>
+                  <div>{wsStateHashmap.text[wsState]}</div>
+                  {wsState === 3 && (
+                    <Button
+                      type='primary'
+                      variant='contained'
+                      sx={{
+                        color: 'white',
+                      }}
+                      onClick={() => {
+                        wsRef?.current && wsRef?.current?.connect();
+                      }}
+                      size='small'
+                    >
+                      重新连接
+                    </Button>
+                  )}
+                </div>
+              )}
             </Paper>
           </ThemeProvider>
           <Button
@@ -415,7 +461,13 @@ const Mapping = () => {
             }}
             className='!absolute top-2 right-2 z-10'
             endIcon={<ExchangeIcon />}
-            onClick={() => setShowFloor(true)}
+            onClick={() => {
+              if (floorButtonDisabled) {
+                toast.error(t('deployer.hybrid.plsCancelAction'));
+              } else {
+                setShowFloor(true);
+              }
+            }}
           >
             {t('deployer.hybrid.floorManage')}
           </Button>
@@ -447,7 +499,7 @@ const Mapping = () => {
                       <CoordinateSystem />
                     </Group>
                     <ChangePose floor={floor} />
-                    <NavigationRegion />
+                    {!isShowNavigation(navigationType, 'LIDAR_SLAM_3D') && <NavigationRegion />}
                   </Group>
                   <CanvaOnline />
                 </Layer>

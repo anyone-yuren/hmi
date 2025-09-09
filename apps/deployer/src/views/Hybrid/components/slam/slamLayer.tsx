@@ -179,12 +179,12 @@ const SlamLayer = () => {
           name='floor_slam_map'
           // x={map_to_cad.x * 20} // 设置图片的 x 位置
           // y={0 - map_to_cad.y * 20} // 设置图片的 y 位置
-          x={map_to_cad.x * 20}
-          y={0 - map_to_cad.y * 20}
+          x={map_to_cad?.x * 20}
+          y={0 - map_to_cad?.y * 20}
           width={data.width} // 设置图片的宽度
           height={data.height} // 设置图片的高度
-          offset={{ x: 0, y: data.height }}
-          rotation={0 - (map_to_cad.theta * 180) / Math.PI}
+          offset={{ x: 0, y: data?.height }}
+          rotation={0 - (map_to_cad?.theta * 180) / Math.PI}
         />
       )}
       {/* 新建的地图  */}

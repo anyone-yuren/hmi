@@ -48,7 +48,8 @@ const OnlinePoint = () => {
       setLinePoint(res.point_list);
       setOnlineData(res);
     } else {
-      toast.error(t('获取上线点失败'));
+      res?.error_description && toast.error(res?.error_description);
+      // toast.error(t('获取上线点失败'));
     }
   };
   React.useEffect(() => {

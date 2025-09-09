@@ -99,6 +99,8 @@ interface State {
   setOnlineData: (data: any) => void;
   qrCodeData: any;
   setQrCodeData: (data: any) => void;
+  wsState: any;
+  setWsState: (data: any) => void;
 }
 
 export const useHybirdStore = create<State>()(
@@ -221,6 +223,8 @@ export const useHybirdStore = create<State>()(
       setOnlineData: (data: any) => set({ onlineData: data }),
       qrCodeData: {},
       setQrCodeData: (data: any) => set({ qrCodeData: data }),
+      wsState: 0,
+      setWsState: (data: any) => set({ wsState: data }),
     }),
     {
       name: 'hybird-store',

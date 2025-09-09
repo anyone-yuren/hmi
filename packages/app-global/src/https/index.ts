@@ -28,7 +28,7 @@ const PORT_BASEURL = {
 // 创建 axios 实例
 const instance = axios.create({
   baseURL: BASE_API, // 设置默认 baseURL
-  timeout: 10000,
+  timeout: 1000 * 60 * 2,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
   },
