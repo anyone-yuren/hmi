@@ -18,6 +18,7 @@ import MwConfirm from '../../MwConfirm';
 import InputWidthKeyboard from '../../inputWithKeyboard';
 import PointCloud3D from '../3d/pointCloud3d';
 
+import { EditOutlined } from '@ant-design/icons';
 import { Tab, Tabs } from '@mui/material';
 import { useAsyncEffect, useGetState, useRequest, useThrottleEffect, useUpdateEffect } from 'ahooks';
 import { toast } from 'sonner';
@@ -332,7 +333,7 @@ const PointCloudFilter = (props: IProps) => {
         open={open}
         setOpen={setOpen}
         fullScreen={true}
-        background={background || '#445260'}
+        background={background || '#162640'}
         titleColor={titleColor}
       >
         <SecondaryPaper>
@@ -346,7 +347,7 @@ const PointCloudFilter = (props: IProps) => {
                       <Tab label={t('deployer.vision.storageCalibration')} iconPosition='end' />
                     </Tabs>
                   )}
-                  {!error ? (
+                  {!error || true ? (
                     <>
                       {Object.keys(state)?.map((key: string) => {
                         return (
@@ -365,7 +366,7 @@ const PointCloudFilter = (props: IProps) => {
                                   {state?.[key]?.value || 0}
                                 </div>
                                 <div
-                                  className='text-[blue] text-[12px]'
+                                  className='text-[blue] text-[12px] flex items-center justify-center'
                                   onClick={() => {
                                     handleDoubleClick({
                                       label: state?.[key]?.label,
@@ -373,7 +374,8 @@ const PointCloudFilter = (props: IProps) => {
                                     });
                                   }}
                                 >
-                                  {t('common.edit')}
+                                  {/* {t('common.edit')} */}
+                                  <EditOutlined style={{ fontSize: 18 }} />
                                 </div>
                               </div>
                             </div>
@@ -390,7 +392,7 @@ const PointCloudFilter = (props: IProps) => {
                               >
                                 <RemoveCircleOutlineIcon sx={{ color: 'black', fontSize: '25px' }} />
                               </LongPressIconButton>
-                              <div className='flex-1 relative'>
+                              <div className='flex-1 relative flex'>
                                 <Slider
                                   className='relative z-[2]'
                                   aria-label={key}
@@ -408,7 +410,7 @@ const PointCloudFilter = (props: IProps) => {
                                     });
                                   }}
                                 />
-                                <div className='flex justify-between w-full text-[12px] absolute bottom-[-5px] z-[1]'>
+                                <div className='flex justify-between w-full text-[12px] absolute bottom-[-8px] z-[1]'>
                                   <div>{validateRange.min}</div>
                                   <div>{validateRange.max}</div>
                                 </div>

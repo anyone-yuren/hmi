@@ -7,7 +7,7 @@ const HybirdStatus = () => {
   const navigationTypes = {
     1: t('deployer.hybrid.reflectors'),
     2: 'SLAM',
-    4: '3D SLAM',
+    3: '3D SLAM',
     5: t('deployer.hybrid.qrCode'),
   };
   const naviStatus = {
