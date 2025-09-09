@@ -9,11 +9,12 @@ import {
   StopOutlined,
   WalletOutlined,
 } from '@ant-design/icons';
-import { App, Button, Checkbox, ConfigProvider, Input, Segmented, Switch, theme, Tooltip } from 'antd';
+import { App, Button, Checkbox, ConfigProvider, Input, Popover, Segmented, Switch, theme, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
 import Konva from 'konva';
 import { useEffect, useRef, useState } from 'react';
 import { SvgIcon } from 'ui';
+import RenderStrategyTpye from './renderStrategyTpye';
 export const Line1px = () => {
   return (
     <div className='w-full h-px bg-gradient-to-r from-white/0 via-[#e3e3e3] to-white/0 absolute bottom-0 left-0'></div>
@@ -35,6 +36,82 @@ const DrawerContent = (props: IProps) => {
   const { useToken } = theme;
   const { modal } = App.useApp();
   const { token } = useToken();
+  const strategyTpye = [
+    {
+      id: 1,
+      name: '直线保持',
+      data: {
+        steer_angle_tolerance: 15, //舵轮打角判定阈值
+      },
+    },
+    {
+      id: 2,
+      name: '叉臂下方区域保护',
+      data: {
+        // 叉臂下方区域保护
+        rectangle: [0, 1, 2, 3], //叉臂下方保护区域
+        height_start: 100, //叉臂下方起始保护高度
+        forkarm_height_cut: 300, //叉臂下方裁剪高度
+        associated_sensor_list: ['tail_lidar', 'perception_3d_lidar'], //关联传感器frame_id
+      },
+    },
+    {
+      id: 3,
+      name: '放货空间检测',
+      data: {
+        cuboid: [0, 1, 2, 2, 3, 4], //保护区域长方体
+        associated_sensor_list: ['tail_lidar', 'perception_3d_lidar'], //关联传感器frame_id
+        min_distance_to_task_point_open_this: 1000,
+      },
+    },
+    {
+      id: 4,
+      name: '取货防护',
+      data: {
+        rectangle: [0, 1, 2, 3],
+        associated_sensor_list: ['tail_lidar', 'perception_3d_lidar'], //关联传感器frame_id
+        min_distance_to_task_point_open_this: 1000, //使能取货叉尖保护距离
+      },
+    },
+    {
+      id: 5,
+      name: '末端路线自适应最小避障距离',
+      data: {
+        forward_min_protect_distance: 150, //前进最小避障距离
+        backward_min_protect_distance: 100, //后退最小避障距离
+      },
+    },
+    {
+      id: 6,
+      name: '顶部安全防护',
+      data: {
+        empty_load_protect_rectangle: [0, 1, 2, 3], //空载防护区域
+        full_load_protect_rectangle: [0, 1, 2, 3], //负载防护区域
+        associated_sensor_list: ['top_lidar'], //关联传感器frame_id
+      },
+    },
+    {
+      id: 7,
+      name: '屏蔽门架光电避障功能',
+      data: {
+        fork_forward_protect_distance: 1000, //叉臂前移超限屏蔽光电避障
+        fork_lateral_move_protect_distance: 0, //叉臂横移超限屏蔽光电避障
+        associated_io_sensor_list: ['pe_tip_left', 'pe_tip_right'], //关联IO
+      },
+    },
+    {
+      id: 8,
+      name: '末端路线屏蔽叉尖避障功能',
+      data: {
+        pick_cargo_pe_close_distance: 400, //屏蔽光电避障功能（取货）
+        place_cargo_pe_close_distance: 400, //屏蔽光电避障功能（放货）
+        pick_cargo_pc_close_distance: 400, //屏蔽点云避障功能（取货）
+        place_cargo_pc_close_distance: 400, //屏蔽点云避障功能（放货）
+        associated_io_sensor_list: ['pe_tip_left', 'pe_tip_right'], //关联IO
+        associated_pc_sensor_list: ['tip_camera', 'perception_3d_lidar'], //关联传感器frame_id
+      },
+    },
+  ];
   const {
     rects,
     setSelectedId,
@@ -125,33 +202,23 @@ const DrawerContent = (props: IProps) => {
             <Line1px />
           </p>
 
-          <Checkbox.Group className='grid grid-cols-2 bg-[#f5f5f5] p-2 rounded-md' value={['2', '3']}>
-            <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
-              <Checkbox value='1' disabled>
-                避障策略1
-              </Checkbox>
-              <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
-            </div>
-            <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
-              <Checkbox value='2'>避障策略2</Checkbox>
-              <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
-            </div>
-            <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
-              <Checkbox value='3'>避障策略3</Checkbox>
-              <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
-            </div>
-            <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
-              <Checkbox value='4' disabled>
-                避障策略4
-              </Checkbox>
-              <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
-            </div>
-            <div className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'>
-              <Checkbox value='5' disabled>
-                避障策略5
-              </Checkbox>
-              <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
-            </div>
+          <Checkbox.Group className='grid grid-cols-1 bg-[#f5f5f5] p-2 rounded-md' value={['2', '3']}>
+            {strategyTpye.length === 0 && <p className='text-xs text-gray-500'>暂无数据</p>}
+            {strategyTpye.map((item) => {
+              return (
+                <div
+                  key={item.id}
+                  className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'
+                >
+                  <Checkbox value={item.id.toString()} disabled={![2, 3].includes(item.id)}>
+                    {item.name}
+                  </Checkbox>
+                  <Popover trigger='hover' content={<RenderStrategyTpye data={item} />} align={{ offset: [-8, -0] }}>
+                    <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
+                  </Popover>
+                </div>
+              );
+            })}
           </Checkbox.Group>
         </div>
         <div className='flex flex-col gap-2'>
