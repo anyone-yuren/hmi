@@ -487,14 +487,24 @@ export default function RectDrawer() {
                 <Group key={r.id} className='rect'>
                   {/* 坐标和尺寸提示 */}
                   {selectedId === r.id && (
-                    <Text
-                      text={`(${Math.round(r.x)}, ${Math.round(r.y)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
-                      x={Math.round(r.x)}
-                      y={Math.round(r.y) - 12} // 显示在矩形上方
-                      fontSize={10}
-                      fill='black'
-                      listening={false} // 不可交互
-                    />
+                    <>
+                      <Text
+                        text={`(${Math.round(r.x)}, ${Math.round(r.y)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
+                        x={Math.round(r.x)}
+                        y={Math.round(r.y) - 12} // 显示在矩形上方
+                        fontSize={10}
+                        fill='black'
+                        listening={false} // 不可交互
+                      />
+                      {/* 显示右下角坐标 */}
+                      <Text
+                        text={`(${Math.round(r.x + r.width)}, ${Math.round(r.y + r.height)})`}
+                        x={Math.round(r.x + r.width)}
+                        y={Math.round(r.y + r.height)}
+                        fontSize={10}
+                        fill='black'
+                      />
+                    </>
                   )}
                   <Rect
                     id={r.id}
@@ -533,6 +543,14 @@ export default function RectDrawer() {
                     text={`(${Math.round(preview.x)}, ${Math.round(preview.y)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
                     x={Math.round(preview.x)}
                     y={Math.round(preview.y) - 10}
+                    fontSize={10}
+                    fill='black'
+                  />
+                  {/* 显示右下角坐标 */}
+                  <Text
+                    text={`(${Math.round(preview.x + preview.width)}, ${Math.round(preview.y + preview.height)})`}
+                    x={Math.round(preview.x + preview.width)}
+                    y={Math.round(preview.y + preview.height)}
                     fontSize={10}
                     fill='black'
                   />

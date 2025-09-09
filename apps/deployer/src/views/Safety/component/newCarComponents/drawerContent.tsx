@@ -1,4 +1,6 @@
 import {
+  ArrowRightOutlined,
+  ArrowUpOutlined,
   CloseCircleOutlined,
   DeleteOutlined,
   InfoCircleOutlined,
@@ -244,7 +246,7 @@ const DrawerContent = (props: IProps) => {
                   <div
                     key={item.id}
                     ref={(el) => (itemRefs.current[item.id] = el)}
-                    className={`w-full bg-[#F7F8FA] rounded-md flex flex-col gap-2 justify-between p-4 hover:bg-[#E8EAF0] hover:shadow-lg hover:-translate-y-1 hover:font-bold  animation-all duration-300 cursor-pointer ${isSelected ? 'shadow-lg bg-[#E8EAF0] -translate-y-1 font-bold' : ''}`}
+                    className={`group w-full bg-[#F7F8FA] rounded-md flex flex-col gap-2 justify-between p-4 hover:bg-[#E8EAF0] hover:shadow-lg hover:-translate-y-1 hover:font-bold  animation-all duration-300 cursor-pointer ${isSelected ? 'shadow-lg bg-[#E8EAF0] -translate-y-1 font-bold' : ''}`}
                     onClick={() => {
                       setSelectedId(item.id);
                       setSelectRect(item);
@@ -265,10 +267,20 @@ const DrawerContent = (props: IProps) => {
                       </Tooltip>
                     </p>
                     <div className='w-full rounded-md grid-cols-2 grid gap-2'>
-                      <p className='text-xs opacity-50'>宽度 {Math.round(item.width)} (mm)</p>
-                      <p className='text-xs opacity-50'>高度 {Math.round(item.height)} (mm)</p>
-                      <p className='text-xs opacity-50'>位置x {Math.round(item.x)} (mm)</p>
-                      <p className='text-xs opacity-50'>位置y {Math.round(item.y)} (mm)</p>
+                      {/* 左上角坐标 */}
+                      <p className='text-xs opacity-50 flex gap-2 animation-all duration-300 border-r border-dashed hover:border-[#333]'>
+                        <ArrowUpOutlined className='-rotate-45' />
+                        <span>
+                          (x:{Math.round(item.x)}, y:{Math.round(item.y)})
+                        </span>
+                      </p>
+                      {/* 右下角坐标 */}
+                      <p className='text-xs opacity-50 flex gap-2'>
+                        <ArrowRightOutlined className='rotate-45' />
+                        <span>
+                          (x:{Math.round(item.x + item.width)}, y:{Math.round(item.y + item.height)})
+                        </span>
+                      </p>
                     </div>
                   </div>
                 );
