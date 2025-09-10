@@ -367,10 +367,6 @@ const Mapping = () => {
   }, [floor, listData]);
   const layerRef = useRef<Konva.Layer>(null);
 
-  useEffect(() => {
-    console.log('index获取到的wsState', wsState);
-  }, [wsState]);
-
   const wsStateHashmap = {
     text: {
       0: '连接中',

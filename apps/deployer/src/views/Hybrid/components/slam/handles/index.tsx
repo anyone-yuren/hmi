@@ -67,7 +67,7 @@ const SlamHandles = (props: any) => {
   );
 
   const { grid_map } = floorData;
-  const { system_status = 0 } = robot_current_status;
+  const { system_status = 0, floor_number }: any = robot_current_status;
   const { runAsync: runAdd, loading: addLoading } = useRequest(addSlamMap, {
     manual: true,
     onSuccess: (res: any) => {
@@ -129,10 +129,12 @@ const SlamHandles = (props: any) => {
 
   const handleButtonClick = async (buttonName: string) => {
     // setSelectedButton(buttonName);
+    // 新增和扩展地图要关闭重定位的状态
     if (buttonName === 'add') {
       await runAdd({ floor_number: floor, cmd_type: 1 });
       setAddSlamMappingData({});
       setShowPointCloud(true);
+      setBeginPose(false);
     }
     if (buttonName === 'cancel') {
       setMapLoading(true);
@@ -174,6 +176,7 @@ const SlamHandles = (props: any) => {
       await runExtendMapping({ floor_number: floor, cmd_type: 1 });
       setAddSlamMappingData({});
       setShowPointCloud(true);
+      setBeginPose(false);
     }
   };
 
@@ -250,15 +253,16 @@ const SlamHandles = (props: any) => {
               <MyLocationOutlined fontSize='medium' style={{ color: '#000' }} />
             </IconButton>
             {grid_map ? (
-              <HandleButton
-                variant='contained'
-                ref={extendsRef}
-                onClick={() => handleButtonClick('slamExtend')}
-                className='flex-1 flex  gap-1 items-center justify-center text-sm'
-              >
-                {/* <Icon fontSize={24} icon="icon-park-outline:extend" /> */}
-                {t('deployer.hybrid.extendMap')}
-              </HandleButton>
+              floor == floor_number ? (
+                <HandleButton
+                  variant='contained'
+                  ref={extendsRef}
+                  onClick={() => handleButtonClick('slamExtend')}
+                  className='flex-1 flex  gap-1 items-center justify-center text-sm'
+                >
+                  {t('deployer.hybrid.extendMap')}
+                </HandleButton>
+              ) : null
             ) : (
               <HandleButton
                 variant='contained'
