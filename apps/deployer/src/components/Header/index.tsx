@@ -18,9 +18,19 @@ import Signal from './components/signal';
 
 // 去除table hover央视
 const useStyles = createStyles(({ css }) => ({
-  noHoverButton: css`
+  mainHoverButton: css`
     &:hover {
-      background: inherit !important;
+      background: linear-gradient(to bottom, #00e7e7, #008787) !important;
+      border-color: inherit !important;
+      color: inherit !important;
+      transform: none !important;
+      box-shadow: none !important;
+      transition: none !important;
+    }
+  `,
+  taskHoverButton: css`
+    &:hover {
+      background: linear-gradient(to bottom, #223d62, #3b587e) !important;
       border-color: inherit !important;
       color: inherit !important;
       transform: none !important;
@@ -130,10 +140,10 @@ const GlobalHeader = () => {
               classNames={{
                 icon: 'flex items-center justify-center',
               }}
-              className={`${styles.noHoverButton} border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#00E7E7] to-[#008787]`}
+              className={`${styles.mainHoverButton} border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#00E7E7] to-[#008787]`}
               shape='circle'
               icon={<SvgIcon name='chache' size={responsive.xs ? 42 : 54} />}
-            />
+            ></Button>
           </div>
           <div
             onClick={() => {
@@ -145,10 +155,10 @@ const GlobalHeader = () => {
               classNames={{
                 icon: 'flex items-center justify-center',
               }}
-              className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#223d62] to-[#3b587e]'
+              className={`${styles.taskHoverButton} border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#223d62] to-[#3b587e]`}
               shape='circle'
               icon={<SvgIcon name='task' size={responsive.xs ? 42 : 54} />}
-            />
+            ></Button>
           </div>
           <div
             onClick={() => {
@@ -163,7 +173,7 @@ const GlobalHeader = () => {
               className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white'
               shape='circle'
               icon={<SvgIcon name='hybrid' size={responsive.xs ? 80 : 80} />}
-            />
+            ></Button>
           </div>
         </div>
         <div>

@@ -19,7 +19,7 @@ const SafetyHome = () => {
   };
   return (
     <div className='w-full h-full flex flex-col bg-white text-black'>
-      <Tabs className='pt-[20px] pl-[10px]' value={value} onChange={handleChange} textColor='inherit'>
+      <Tabs className='pt-[20px] pl-[20px]' value={value} onChange={handleChange} textColor='inherit'>
         <Tab label={t('deployer.safety.title')} value={1} />
         <Tab label={t('deployer.vision.placeSpaceCheck')} value={2} />
       </Tabs>
