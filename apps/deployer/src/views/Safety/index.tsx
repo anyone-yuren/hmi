@@ -1,7 +1,8 @@
 import { LineGrid } from '@/components/InitStage/components/LineGrid';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
+import { FormOutlined, MenuOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons';
 import { useSize } from 'ahooks';
-import { ConfigProvider, Drawer, theme } from 'antd';
+import { Button, ConfigProvider, Drawer, Switch, theme } from 'antd';
 import { useResponsive } from 'antd-style';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
@@ -16,13 +17,16 @@ import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRe
 type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
 
 export default function RectDrawer() {
+  const { token } = theme.useToken();
   const stageRef = useRef<Konva.Stage>(null);
   const layerRef = useRef<Konva.Layer>(null);
   const ref = useRef<HTMLDivElement>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
   const size = useSize(ref);
   const responsive = useResponsive();
+  const [isDark, setIsDark] = useState(false);
   const { setStageScale } = useHybirdStore(useShallow((store) => ({ setStageScale: store.setStageScale })));
+  const [show, setShow] = useState(true);
 
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(null);
@@ -43,6 +47,11 @@ export default function RectDrawer() {
   /** -------------鼠标右键 end -------------- */
   /** -------------避障方案调整 start -------------- */
   const [openUpdateObsDrawer, setOpenUpdateObsDrawer] = useState(false);
+
+  const reRenderLineGridFn = () => {
+    setReRenderLineGrid(!reRenderLineGrid);
+  };
+  /** -------------避障方案调整 end -------------- */
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
@@ -459,165 +468,232 @@ export default function RectDrawer() {
 
   const stageStyle = useMemo(() => ({ cursor: isDrawing ? 'crosshair' : 'default' }), [isDrawing]);
 
+  const strategyTpye = [
+    { id: 1, name: '直线保持' },
+    { id: 2, name: '叉臂下方区域保护叉臂下方区域保护' },
+    { id: 3, name: '放货空间检测' },
+    { id: 4, name: '取货防护' },
+    { id: 5, name: '末端路线自适应最小避障距离' },
+    { id: 6, name: '末端路线屏蔽叉尖避障功能' },
+  ];
+
   return (
-    <div className='w-full h-full flex flex-col !absolute left-0 top-0'>
-      {/* 避障信息 */}
-      <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} />
-      <div className='p-2 flex items-center gap-3 absolute bottom-0 left-0 right-0'>
-        <span className='text-sm opacity-80'>左键拖拽绘制矩形；按住 Shift 约束为正方形；Esc 取消。</span>
-        <span className='ml-auto text-sm opacity-60'>当前缩放：{Math.round(scale * 100)}%</span>
-      </div>
-      <div className='flex flex-1 w-full h-full'>
-        <div className='flex-1' ref={ref}>
-          <Stage
-            ref={stageRef}
-            width={size?.width}
-            height={size?.height}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onWheel={handleWheel}
-            style={stageStyle}
-          >
-            <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
-            <CarModel />
-            <Layer ref={layerRef}>
-              {/* 绘制矩形 */}
-              {rects.map((r) => (
-                <Group key={r.id} className='rect'>
-                  {/* 坐标和尺寸提示 */}
-                  {selectedId === r.id && (
-                    <>
+    <ConfigProvider
+      theme={{
+        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+      }}
+    >
+      <div
+        className={`w-full h-full flex flex-col !absolute left-0 top-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}
+      >
+        {/* 避障信息 */}
+        {/* <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} /> */}
+        <div className='header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4'>
+          <Button
+            size='small'
+            className='text-current shrink-0'
+            icon={<MenuOutlined />}
+            onClick={() => setShow(!show)}
+          />
+          <p className='shrink-0'>
+            当前避障方案：
+            <span
+              className={`px-4 py-1 ${
+                !isDark
+                  ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
+                  : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_70%)]'
+              } font-bold`}
+            >
+              1212
+              <FormOutlined
+                className='ml-2 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all'
+                onClick={() => setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
+              />
+            </span>
+          </p>
+
+          {/* 关键部分 */}
+          <div className='flex-1 flex items-center gap-2 min-w-0'>
+            <p className='shrink-0'>避障策略：</p>
+            <div className='flex-1 overflow-x-auto flex flex-row gap-2 scrollbar-hide min-w-0 '>
+              {strategyTpye.map((item) => (
+                <p
+                  key={item.id}
+                  className='text-nowrap text-xs shrink-0 hover:shadow-md hover:scale-110 px-2 py-1 rounded-md animation-all duration-200 cursor-pointer'
+                  title={item.name}
+                >
+                  {item.name}
+                </p>
+              ))}
+            </div>
+          </div>
+          <Switch
+            checkedChildren={<SunOutlined />}
+            unCheckedChildren={<MoonOutlined />}
+            value={isDark}
+            onChange={setIsDark}
+          />
+        </div>
+        <div className='flex-1 w-full relative'>
+          <div className='h-full flex'>
+            <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} show={show} animateEnd={reRenderLineGridFn} />
+            <div className='relative h-full flex-1 min-w-0' ref={ref}>
+              <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
+              <div className='p-2 flex items-center gap-3 absolute bottom-0 left-0 right-0'>
+                <span className='text-sm opacity-80'>左键拖拽绘制矩形；按住 Shift 约束为正方形；Esc 取消。</span>
+                <span className='ml-auto text-sm opacity-60'>当前缩放：{Math.round(scale * 100)}%</span>
+              </div>
+              <Stage
+                ref={stageRef}
+                width={size?.width}
+                height={size?.height}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onWheel={handleWheel}
+                style={stageStyle}
+              >
+                <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
+                <CarModel />
+                <Layer ref={layerRef}>
+                  {/* 绘制矩形 */}
+                  {rects.map((r) => (
+                    <Group key={r.id} className='rect'>
+                      {/* 坐标和尺寸提示 */}
+                      {selectedId === r.id && (
+                        <>
+                          <Text
+                            text={`(${Math.round(r.x)}, ${Math.round(r.y)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
+                            x={Math.round(r.x)}
+                            y={Math.round(r.y) - 12} // 显示在矩形上方
+                            fontSize={10}
+                            fill={isDark ? '#fff' : '#000'}
+                            listening={false} // 不可交互
+                          />
+                          {/* 显示右下角坐标 */}
+                          <Text
+                            text={`(${Math.round(r.x + r.width)}, ${Math.round(r.y + r.height)})`}
+                            x={Math.round(r.x + r.width)}
+                            y={Math.round(r.y + r.height)}
+                            fontSize={10}
+                            fill={isDark ? '#fff' : '#000'}
+                          />
+                        </>
+                      )}
+                      <Rect
+                        id={r.id}
+                        x={r.x}
+                        y={r.y}
+                        width={r.width}
+                        height={r.height}
+                        stroke={selectedId === r.id ? '#22d3ee' : '#ffd33d'}
+                        strokeWidth={selectedId === r.id ? 1.5 : 2}
+                        dash={[4, 4]}
+                        fill={'rgba(255,211,61,0.2)'}
+                        draggable
+                        onTransform={handleTransform}
+                        onTransformStart={handleTransformStart}
+                        onTransformEnd={handleTransformEnd}
+                        onDragMove={handleDragMove}
+                        onDragEnd={handleDragEnd}
+                        onClick={() => setSelectedId(r.id)}
+                        onTap={() => setSelectedId(r.id)}
+                        onDragStart={(e) => {
+                          const node = e.target as Konva.Rect;
+                          node.setAttrs({
+                            startPos: {
+                              x: node.x(),
+                              y: node.y(),
+                            },
+                          });
+                        }}
+                      />
+                    </Group>
+                  ))}
+                  {/* 绘制 */}
+                  {preview && (
+                    <Group name='preview'>
                       <Text
-                        text={`(${Math.round(r.x)}, ${Math.round(r.y)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
-                        x={Math.round(r.x)}
-                        y={Math.round(r.y) - 12} // 显示在矩形上方
+                        text={`(${Math.round(preview.x)}, ${Math.round(preview.y)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
+                        x={Math.round(preview.x)}
+                        y={Math.round(preview.y) - 10}
                         fontSize={10}
-                        fill='black'
-                        listening={false} // 不可交互
+                        fill={isDark ? '#fff' : '#000'}
                       />
                       {/* 显示右下角坐标 */}
                       <Text
-                        text={`(${Math.round(r.x + r.width)}, ${Math.round(r.y + r.height)})`}
-                        x={Math.round(r.x + r.width)}
-                        y={Math.round(r.y + r.height)}
+                        text={`(${Math.round(preview.x + preview.width)}, ${Math.round(preview.y + preview.height)})`}
+                        x={Math.round(preview.x + preview.width)}
+                        y={Math.round(preview.y + preview.height)}
                         fontSize={10}
-                        fill='black'
+                        fill={isDark ? '#fff' : '#000'}
                       />
-                    </>
+                      <Rect
+                        x={preview.x}
+                        y={preview.y}
+                        width={preview.width}
+                        height={preview.height}
+                        stroke={
+                          isUseFullRect && !isIntersecting ? 'rgba(0,150,136,0.6)' : isIntersecting ? 'red' : '#22d3ee'
+                        }
+                        strokeWidth={2}
+                        dash={[8, 6]}
+                        fill={
+                          isUseFullRect && !isIntersecting
+                            ? 'rgba(0,150,136,0.4)'
+                            : isIntersecting
+                              ? 'rgba(255,0,0,0.2)'
+                              : 'rgba(255,211,61,0.2)'
+                        }
+                        listening={false}
+                      />
+                    </Group>
                   )}
-                  <Rect
-                    id={r.id}
-                    x={r.x}
-                    y={r.y}
-                    width={r.width}
-                    height={r.height}
-                    stroke={selectedId === r.id ? '#22d3ee' : '#ffd33d'}
-                    strokeWidth={selectedId === r.id ? 1.5 : 2}
-                    dash={[4, 4]}
-                    fill={'rgba(255,211,61,0.2)'}
-                    draggable
-                    onTransform={handleTransform}
-                    onTransformStart={handleTransformStart}
-                    onTransformEnd={handleTransformEnd}
-                    onDragMove={handleDragMove}
-                    onDragEnd={handleDragEnd}
-                    onClick={() => setSelectedId(r.id)}
-                    onTap={() => setSelectedId(r.id)}
-                    onDragStart={(e) => {
-                      const node = e.target as Konva.Rect;
-                      node.setAttrs({
-                        startPos: {
-                          x: node.x(),
-                          y: node.y(),
-                        },
-                      });
-                    }}
+                  {snapLines.map((line, idx) => (
+                    <Line
+                      key={idx}
+                      points={line.points}
+                      stroke='rgba(0,150,136,0.8)'
+                      strokeWidth={1.5}
+                      dash={[6, 4]}
+                      listening={false}
+                    />
+                  ))}
+                  {/* 形变 */}
+                  <Transformer
+                    ref={transformerRef}
+                    rotateEnabled={false}
+                    anchorStroke='#22d3ee'
+                    anchorFill='#ffffff'
+                    anchorCornerRadius={4} // 圆角
+                    anchorStrokeWidth={2}
+                    borderStroke='#22d3ee' // 外框描边
+                    borderStrokeWidth={1.5}
+                    borderDash={[6, 4]}
+                    borderCornerRadius={4} // 外框圆角
+                    name='transformer'
+                    boundBoxFunc={(oldBox, newBox) => (newBox.width < 5 || newBox.height < 5 ? oldBox : newBox)}
                   />
-                </Group>
-              ))}
-              {/* 绘制 */}
-              {preview && (
-                <Group name='preview'>
-                  <Text
-                    text={`(${Math.round(preview.x)}, ${Math.round(preview.y)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
-                    x={Math.round(preview.x)}
-                    y={Math.round(preview.y) - 10}
-                    fontSize={10}
-                    fill='black'
-                  />
-                  {/* 显示右下角坐标 */}
-                  <Text
-                    text={`(${Math.round(preview.x + preview.width)}, ${Math.round(preview.y + preview.height)})`}
-                    x={Math.round(preview.x + preview.width)}
-                    y={Math.round(preview.y + preview.height)}
-                    fontSize={10}
-                    fill='black'
-                  />
-                  <Rect
-                    x={preview.x}
-                    y={preview.y}
-                    width={preview.width}
-                    height={preview.height}
-                    stroke={
-                      isUseFullRect && !isIntersecting ? 'rgba(0,150,136,0.6)' : isIntersecting ? 'red' : '#22d3ee'
-                    }
-                    strokeWidth={2}
-                    dash={[8, 6]}
-                    fill={
-                      isUseFullRect && !isIntersecting
-                        ? 'rgba(0,150,136,0.4)'
-                        : isIntersecting
-                          ? 'rgba(255,0,0,0.2)'
-                          : 'rgba(255,211,61,0.2)'
-                    }
-                    listening={false}
-                  />
-                </Group>
-              )}
-              {snapLines.map((line, idx) => (
-                <Line
-                  key={idx}
-                  points={line.points}
-                  stroke='rgba(0,150,136,0.8)'
-                  strokeWidth={1.5}
-                  dash={[6, 4]}
-                  listening={false}
-                />
-              ))}
-              {/* 形变 */}
-              <Transformer
-                ref={transformerRef}
-                rotateEnabled={false}
-                anchorStroke='#22d3ee'
-                anchorFill='#ffffff'
-                anchorCornerRadius={4} // 圆角
-                anchorStrokeWidth={2}
-                borderStroke='#22d3ee' // 外框描边
-                borderStrokeWidth={1.5}
-                borderDash={[6, 4]}
-                borderCornerRadius={4} // 外框圆角
-                name='transformer'
-                boundBoxFunc={(oldBox, newBox) => (newBox.width < 5 || newBox.height < 5 ? oldBox : newBox)}
-              />
-            </Layer>
-          </Stage>
+                </Layer>
+              </Stage>
+            </div>
+          </div>
         </div>
         <ConfigProvider
           theme={{
-            algorithm: theme.defaultAlgorithm,
+            // algorithm: theme.defaultAlgorithm,
+            algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
           }}
         >
-          <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
           <Drawer
             title='避障方案调整'
             open={openUpdateObsDrawer}
             onClose={() => setOpenUpdateObsDrawer(false)}
             width={'360px'}
             mask={false}
-            rootClassName='text-black'
+            rootClassName={isDark ? 'text-white' : 'text-black'}
             classNames={{
-              body: 'mb-12',
+              body: `mb-12`,
             }}
           >
             <DrawerContent
@@ -634,6 +710,6 @@ export default function RectDrawer() {
           </Drawer>
         </ConfigProvider>
       </div>
-    </div>
+    </ConfigProvider>
   );
 }

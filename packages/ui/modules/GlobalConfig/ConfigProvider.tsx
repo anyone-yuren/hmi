@@ -116,7 +116,7 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
           Segmented: {
             itemActiveBg: '#00D1D1',
             itemSelectedBg: '#00D1D1',
-            itemSelectedColor: 'white',
+            // itemSelectedColor: 'white',
           },
         },
       }}

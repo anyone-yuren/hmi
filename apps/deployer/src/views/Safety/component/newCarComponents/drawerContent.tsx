@@ -189,7 +189,7 @@ const DrawerContent = (props: IProps) => {
     <div className='flex flex-col gap-4'>
       <ConfigProvider
         theme={{
-          algorithm: theme.defaultAlgorithm,
+          // algorithm: theme.defaultAlgorithm,
           token: {
             colorText: '#000',
             colorTextSecondary: '#000',
@@ -202,15 +202,19 @@ const DrawerContent = (props: IProps) => {
             <Line1px />
           </p>
 
-          <Checkbox.Group className='grid grid-cols-1 bg-[#f5f5f5] p-2 rounded-md' value={['2', '3']}>
+          <Checkbox.Group className='grid grid-cols-1  p-2 rounded-md' value={['2', '3']}>
             {strategyTpye.length === 0 && <p className='text-xs text-gray-500'>暂无数据</p>}
             {strategyTpye.map((item) => {
               return (
                 <div
                   key={item.id}
-                  className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#e3e3e3] rounded-md p-2 animation-all duration-300'
+                  className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
                 >
-                  <Checkbox value={item.id.toString()} disabled={![2, 3].includes(item.id)}>
+                  <Checkbox
+                    style={{ color: token.colorTextBase }}
+                    value={item.id.toString()}
+                    disabled={![2, 3].includes(item.id)}
+                  >
                     {item.name}
                   </Checkbox>
                   <Popover trigger='hover' content={<RenderStrategyTpye data={item} />} align={{ offset: [-8, -0] }}>
@@ -247,15 +251,30 @@ const DrawerContent = (props: IProps) => {
             <Line1px />
           </p>
           <div className='flex flex-col gap-2'>
-            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '
+            >
               <p className='text-md'>传感器1</p>
               <Switch />
             </div>
-            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '
+            >
               <p className='text-md'>传感器2</p>
               <Switch />
             </div>
-            <div className='bg-[#f5f5f5] rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className=' rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '
+            >
               <p className='text-md'>传感器3</p>
               <Switch />
             </div>
@@ -313,6 +332,11 @@ const DrawerContent = (props: IProps) => {
                   <div
                     key={item.id}
                     ref={(el) => (itemRefs.current[item.id] = el)}
+                    style={{
+                      borderColor: isSelected ? token.colorPrimary : token.colorBorder,
+                      background: isSelected ? token.colorFillContentHover : token.colorBgContainerDisabled,
+                      color: token.colorTextBase,
+                    }}
                     className={`group w-full bg-[#F7F8FA] rounded-md flex flex-col gap-2 justify-between p-4 hover:bg-[#E8EAF0] hover:shadow-lg hover:-translate-y-1 hover:font-bold  animation-all duration-300 cursor-pointer ${isSelected ? 'shadow-lg bg-[#E8EAF0] -translate-y-1 font-bold' : ''}`}
                     onClick={() => {
                       setSelectedId(item.id);
@@ -368,7 +392,10 @@ const DrawerContent = (props: IProps) => {
           </Checkbox.Group>
         </div>
       </ConfigProvider>
-      <div className='w-full h-12 p-2 border-t bg-white absolute bottom-0 left-0  flex items-center justify-end gap-2'>
+      <div
+        className='w-full h-12 p-2 border-t absolute bottom-0 left-0 flex items-center justify-end gap-2'
+        style={{ background: token.colorBgContainer, borderColor: token.colorBorder }}
+      >
         <Button type='primary'>修改</Button>
         <Button
           variant='outlined'
