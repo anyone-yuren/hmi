@@ -485,13 +485,45 @@ export default function RectDrawer() {
   //兼容移动端
   useEffect(() => {
     if (!stageRef.current) return;
-    const stage = stageRef.current!;
+    const stage = stageRef.current;
     const hammer = new Hammer(stage.container());
-    hammer.on('pinchmove', (e) => {
-      e.preventDefault();
-      handleWheel(e as unknown as KonvaEventObject<WheelEvent>);
+
+    hammer.get('pinch').set({ enable: true });
+
+    let lastScale = 1;
+
+    hammer.on('pinchstart', (e) => {
+      lastScale = stage.scaleX(); // 记录当前缩放
     });
-  }, [stageRef.current]);
+
+    hammer.on('pinchmove', (e) => {
+      if (!stage) return;
+      const pointer = stage.getPointerPosition();
+      if (!pointer) return;
+
+      const oldScale = lastScale;
+      const newScale = lastScale * e.scale; // 根据 pinch 缩放比例更新
+
+      const mousePointTo = {
+        x: (pointer.x - stage.x()) / oldScale,
+        y: (pointer.y - stage.y()) / oldScale,
+      };
+
+      stage.scale({ x: newScale, y: newScale });
+      stage.position({
+        x: pointer.x - mousePointTo.x * newScale,
+        y: pointer.y - mousePointTo.y * newScale,
+      });
+
+      stage.batchDraw();
+      setScale(newScale);
+    });
+
+    return () => {
+      hammer.destroy();
+    };
+  }, []);
+
   return (
     <div
       className={`w-full h-full flex flex-col !absolute left-0 top-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}

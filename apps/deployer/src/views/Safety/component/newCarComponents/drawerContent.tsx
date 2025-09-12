@@ -234,15 +234,15 @@ const DrawerContent = (props: IProps) => {
             <Line1px />
           </p>
           <div className='flex flex-row gap-2 items-center'>
-            <p className='text-xs text-nowrap'>前进</p>
+            <p className='text-xs text-nowrap shrink-0'>前进</p>
             <Input type='number' />
           </div>
           <div className='flex flex-row gap-2 items-center'>
-            <p className='text-xs flex-1 text-nowrap'>后退</p>
+            <p className='text-xs flex-1 text-nowrap shrink-0'>后退</p>
             <Input type='number' />
           </div>
           <div className='flex flex-row gap-2 items-center'>
-            <p className='text-xs text-nowrap'>自旋</p>
+            <p className='text-xs text-nowrap shrink-0'>自旋</p>
             <Input type='number' />
           </div>
         </div>
