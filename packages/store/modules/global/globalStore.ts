@@ -19,6 +19,9 @@ interface State {
   // 显示充电弹窗
   showChargingDialog: Boolean;
   setShowChargingDialog: (v: Boolean) => void;
+
+  closeChargingTime: number; // 关闭充电弹窗的时间
+  setCloseChargingTime: (closeChargingTime: number) => void;
 }
 export const useGlobalStore = create<State>()(
   persist(
@@ -67,6 +70,10 @@ export const useGlobalStore = create<State>()(
 
         showChargingDialog: false,
         setShowChargingDialog: (v) => set({ showChargingDialog: v }),
+
+        closeChargingTime: 0,
+        setCloseChargingTime: (closeChargingTime: number) =>
+          set({ closeChargingTime }),
       };
     },
     {

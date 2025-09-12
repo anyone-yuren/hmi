@@ -201,7 +201,6 @@ const Running = (props: Props) => {
             <h4 className='text-xs font-bold cursor-pointer'>
               <Popconfirm
                 placement='topRight'
-                // title={'维保条件：时长：180天，行走公里数：1000公里'}
                 title={
                   <>
                     <div className='flex items-center gap-2'>

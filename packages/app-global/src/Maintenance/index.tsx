@@ -1,6 +1,6 @@
 import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
-import { Button } from 'antd';
+import { App, Button } from 'antd';
 import { useTheme } from 'antd-style';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,7 @@ import Sensor from './components/sensor';
 import { getMaintenanceData, resetMaintenance } from './services';
 const Maintenance = () => {
   const { t, i18n } = useTranslation();
+  const { modal } = App.useApp();
   const {
     data,
     loading,
@@ -52,7 +53,18 @@ const Maintenance = () => {
       {resetLoading ? <LoadingReset /> : null}
       {token === 'admin' && (
         <div className='absolute bottom-8 left-8 z-10'>
-          <Button type={'primary'} onClick={() => reset()}>
+          <Button
+            type={'primary'}
+            onClick={() => {
+              modal.confirm({
+                okText: t('common.confirm'),
+                content: t('是否确认回复出厂设置'),
+                onOk: () => {
+                  reset();
+                },
+              });
+            }}
+          >
             {t('common.maintenance.resetAll')}
           </Button>
         </div>

@@ -74,8 +74,6 @@ const VehicleControl = () => {
     }),
   );
 
-  console.log('robotIsensorStatus', robotIsensorStatus);
-
   // 根据auto_manual_status值返回不同图标值
   const mamualStatusIcon = useMemo(() => {
     switch (robotIsensorStatus.auto_manual_status) {

@@ -45,21 +45,32 @@ const GlobalHeader = () => {
   const responsive = useResponsive();
   const [modal, contextHolder] = Modal.useModal();
   const { styles } = useStyles();
-  const { powerStatus, setPowerStatus } = useVehicleStore(
+  const { powerStatus, setPowerStatus, systemDateTime } = useVehicleStore(
     useShallow((state) => {
       return {
         powerStatus: state.powerStatus,
         setPowerStatus: state.setPowerStatus,
+        systemDateTime: state.systemDateTime,
       };
     }),
   );
-  const { token, setToken, setAvgType, showChargingDialog, setShowChargingDialog } = useGlobalStore(
+  const {
+    token,
+    setToken,
+    setAvgType,
+    showChargingDialog,
+    setShowChargingDialog,
+    setCloseChargingTime,
+    closeChargingTime,
+  } = useGlobalStore(
     useShallow((state) => ({
       token: state.token,
       setToken: state.setToken,
       setAvgType: state.setAvgType,
       showChargingDialog: state.showChargingDialog,
       setShowChargingDialog: state.setShowChargingDialog,
+      setCloseChargingTime: state.setCloseChargingTime,
+      closeChargingTime: state.closeChargingTime,
     })),
   );
 
@@ -73,17 +84,24 @@ const GlobalHeader = () => {
 
   // 设置十分钟定时器
   useEffect(() => {
-    if (powerStatus.charge_status === 3) {
+    if (powerStatus.charge_status === 3 && !closeChargingTime) {
       setShowChargingDialog(true);
-      const timer = setTimeout(
-        () => {
-          setShowChargingDialog(true);
-        },
-        10 * 60 * 1000,
-      );
-      return () => clearTimeout(timer);
+      // const timer = setTimeout(
+      //   () => {
+      //     setShowChargingDialog(true);
+      //   },
+      //   10 * 60 * 1000,
+      // );
+      // return () => clearTimeout(timer);
     }
-  }, [powerStatus.charge_status]);
+  }, [powerStatus.charge_status, closeChargingTime]);
+
+  useEffect(() => {
+    if (closeChargingTime && systemDateTime) {
+      const diff = Number(systemDateTime) - closeChargingTime;
+      diff > 10 * 60 * 1000 && setCloseChargingTime(0);
+    }
+  }, [systemDateTime, closeChargingTime]);
 
   return (
     <div className='flex flex-col h-full items-center justify-between px-4 py-2 text-white '>
@@ -191,9 +209,11 @@ const GlobalHeader = () => {
         <ChargingAnimation
           onClick={() => {
             setShowChargingDialog(false);
+            setCloseChargingTime(new Date().getTime());
             setPowerStatus({
+              ...powerStatus,
               charge_status: 0,
-              power: 0,
+              // power: 0,
             });
           }}
         />
