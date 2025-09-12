@@ -5,9 +5,10 @@ import React from 'react';
 import CargoSpace from '@/views/Vision/components/settingPart/cargoSpace/index';
 import { useTranslation } from 'react-i18next';
 import Safety from './index';
+import NewSafety from './safety';
 const SafetyHome = () => {
   const { t } = useTranslation();
-  const [value, setValue] = React.useState(1);
+  const [value, setValue] = React.useState(3);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -16,12 +17,14 @@ const SafetyHome = () => {
   const template: any = {
     1: <Safety />,
     2: <CargoSpace />,
+    3: <NewSafety />,
   };
   return (
     <div className='w-full h-full flex flex-col bg-white text-black'>
       <Tabs className='pt-[20px] pl-[20px]' value={value} onChange={handleChange} textColor='inherit'>
         <Tab label={t('deployer.safety.title')} value={1} />
         <Tab label={t('deployer.vision.placeSpaceCheck')} value={2} />
+        <Tab label={t('deployer.safety.title') + 2} value={3} />
       </Tabs>
       <div className='flex-1'>{template[value]}</div>
     </div>

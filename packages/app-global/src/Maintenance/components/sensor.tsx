@@ -103,15 +103,17 @@ const Sensor = (props: SensorProps) => {
                 }}
               >
                 <div>
-                  {data?.History?.filter((_, index) => expendAll || index === data.History.length - 1)?.map(
-                    (item: any, index: number) => {
-                      return (
-                        <div key={'sensor' + index} className='flex gap-2'>
-                          {item?.Date ?? '-'}
-                        </div>
-                      );
-                    },
-                  )}
+                  {data?.History?.length
+                    ? data?.History?.filter((_, index) => expendAll || index === data.History.length - 1)?.map(
+                        (item: any, index: number) => {
+                          return (
+                            <div key={'sensor' + index} className='flex gap-2'>
+                              {item?.Date ?? '-'}
+                            </div>
+                          );
+                        },
+                      )
+                    : '-'}
                 </div>
                 {data?.History?.length > 1 && (
                   <div>

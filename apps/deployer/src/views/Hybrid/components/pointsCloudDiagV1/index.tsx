@@ -27,6 +27,7 @@ export default function PointsCloudDiag() {
 
   // 将强度映射到红橙黄绿青蓝紫
   const getColorFromIntensity = (intensity: number) => {
+    return `hsl(0, 100%, 50%)`;
     if (minIntensity === 0 && maxIntensity === 0) return `hsl(0, 100%, 50%)`;
     const normalized = (intensity - minIntensity) / (maxIntensity - minIntensity); // 归一化到 0-1
     const hue = normalized * 300; // 映射到 HSL 的 0-300（红橙黄绿青蓝紫）

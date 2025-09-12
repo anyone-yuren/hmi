@@ -77,12 +77,12 @@ const SlamHandles = (props: any) => {
       }
       setCoverFloorData('grid_map', res?.grid_map);
       setMapLoading(false);
-      const stage = hybirdStage.getStage();
-      hybirdStage.to({
-        x: stage!.width() / 2,
-        y: stage!.height() / 2,
-        duration: 1,
-      });
+      // const stage = hybirdStage.getStage();
+      // hybirdStage.to({
+      //   x: stage!.width() / 2,
+      //   y: stage!.height() / 2,
+      //   duration: 1,
+      // });
     },
   });
 
@@ -91,6 +91,7 @@ const SlamHandles = (props: any) => {
     onSuccess: (res: any) => {
       debugger;
       if (res.error_code !== 10000) {
+        setMapLoading(false);
         useErrorMessage(res.error_description, res.solution);
         return;
       }
@@ -216,9 +217,11 @@ const SlamHandles = (props: any) => {
   //     target: () => delRef.current,
   //   },
   // ];
-  React.useEffect(() => {
-    // setOpenTour(true);
-  }, []);
+  // React.useEffect(() => {
+  //   // setOpenTour(true);
+  //   console.log('agvPosition', agvPosition);
+  //   hybirdStage && handleClick();
+  // }, [hybirdStage]);
 
   const handleClick = () => {
     hybirdStage.to({
@@ -242,7 +245,6 @@ const SlamHandles = (props: any) => {
       },
     });
   };
-
   return (
     <>
       <div className=' p-2 absolute bottom-2 left-2 flex flex-col'>
@@ -282,7 +284,6 @@ const SlamHandles = (props: any) => {
               }}
               className='flex-1 flex  gap-1 items-center justify-center text-sm'
             >
-              {/* <Icon fontSize={24} icon="mdi:delete-circle-outline"></Icon> */}
               {t('deployer.hybrid.deleteMap')}
             </HandleButton>
           </>
@@ -315,25 +316,27 @@ const SlamHandles = (props: any) => {
           <div className={`absolute bottom-2 ${showFloor ? 'right-[190px]' : 'right-2'} p-2 flex flex-col`}>
             <div className='rounded-sm shadow-md bg-white px-2 !text-right' style={{ textAlign: 'right' }}>
               {floorData?.grid_map ? (
-                <FormControlLabel
-                  value='end'
-                  control={<Switch color='primary' />}
-                  label={t('deployer.hybrid.autoReLocation')}
-                  onChange={(e) => {
-                    handleButtonClick('hybird');
-                  }}
-                  checked={beginPose}
-                  sx={{
-                    '& MuiFormControlLabel-root': {
-                      margin: 0,
-                    },
-                    '& .MuiFormControlLabel-label': {
-                      color: '#333', // 修改标签的颜色
-                      fontSize: '0.875rem',
-                    },
-                  }}
-                  labelPlacement='start'
-                />
+                system_status === 9 ? null : (
+                  <FormControlLabel
+                    value='end'
+                    control={<Switch color='primary' />}
+                    label={t('deployer.hybrid.autoReLocation')}
+                    onChange={(e) => {
+                      handleButtonClick('hybird');
+                    }}
+                    checked={beginPose}
+                    sx={{
+                      '& MuiFormControlLabel-root': {
+                        margin: 0,
+                      },
+                      '& .MuiFormControlLabel-label': {
+                        color: '#333', // 修改标签的颜色
+                        fontSize: '0.875rem',
+                      },
+                    }}
+                    labelPlacement='start'
+                  />
+                )
               ) : null}
             </div>
             <Divider orientation='vertical' variant='middle' flexItem />

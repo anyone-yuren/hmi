@@ -139,6 +139,11 @@ const Mapping = () => {
 
   const { getCodeMsg, useErrorMessage } = useHttpCode();
 
+  const isSameFloor = useMemo(() => {
+    console.log('robot_current_status.floor_number', robot_current_status.floor_number, floor);
+    return robot_current_status.floor_number == floor;
+  }, [robot_current_status.floor_number, floor]);
+
   const changeHybird = (event: SelectChangeEvent) => {
     const newAlignment = event.target.value as string;
     if (!newAlignment) return;
@@ -320,6 +325,14 @@ const Mapping = () => {
                       icon: <SwapHorizIcon fontSize='large' />,
                       label: t('deployer.hybrid.switch'),
                       onClick: () => {
+                        if (robot_current_status.floor_number === value) {
+                          toast.error('已在当前楼层');
+                          return;
+                        }
+                        if (floor !== value) {
+                          toast.error('请先预览当前楼层');
+                          return;
+                        }
                         modal.confirm({
                           title: t('deployer.hybrid.confirmSwitch'),
                           content: t('deployer.hybrid.confirmSwitchFloorTip'),
@@ -390,43 +403,50 @@ const Mapping = () => {
           >
             <Paper className='flex items-baseline flex-col justify-between absolute  w-[220px] z-[999] text-black p-2 left-2 top-2'>
               {wsState === 1 ? (
-                <>
-                  <HybirdStatus />
-                  <PositionView />
+                isSameFloor ? (
                   <>
-                    <Divider sx={{ width: '100%', margin: '10px 0' }} />
-                    <FormControl variant='standard' sx={{ width: '100%' }}>
-                      <Select
-                        size='small'
-                        value={alignment}
-                        onChange={changeHybird}
-                        label={t('deployer.hybrid.navigationType')}
-                        sx={{
-                          '& .MuiSelect-select': {
-                            color: 'black',
-                            fontSize: '14px',
-                            // position: 'relative',
-                            // zIndex: 1000,
-                          },
-                          '& .MuiPaper-root': {
-                            zIndex: 1000,
-                          },
-                        }}
-                      >
-                        {isShowNavigation(navigationType, 'REFLECTOR') ? (
-                          <MenuItem value='reflector'>{t('deployer.hybrid.reflectorsNavigation')}</MenuItem>
-                        ) : null}
-                        {isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? (
-                          <MenuItem value='slam'>{t('deployer.hybrid.slamNavigation')}</MenuItem>
-                        ) : null}
-                        {isShowNavigation(navigationType, 'LIDAR_SLAM_3D') ? (
-                          <MenuItem value='slam'>{t('3D SLAM')}</MenuItem>
-                        ) : null}
-                      </Select>
-                    </FormControl>
+                    <HybirdStatus />
+                    <PositionView />
+                    <>
+                      <Divider sx={{ width: '100%', margin: '10px 0' }} />
+                      <FormControl variant='standard' sx={{ width: '100%' }}>
+                        <Select
+                          size='small'
+                          value={alignment}
+                          onChange={changeHybird}
+                          label={t('deployer.hybrid.navigationType')}
+                          sx={{
+                            '& .MuiSelect-select': {
+                              color: 'black',
+                              fontSize: '14px',
+                              // position: 'relative',
+                              // zIndex: 1000,
+                            },
+                            '& .MuiPaper-root': {
+                              zIndex: 1000,
+                            },
+                          }}
+                        >
+                          {isShowNavigation(navigationType, 'REFLECTOR') ? (
+                            <MenuItem value='reflector'>{t('deployer.hybrid.reflectorsNavigation')}</MenuItem>
+                          ) : null}
+                          {isShowNavigation(navigationType, 'LIDAR_SLAM_2D') ? (
+                            <MenuItem value='slam'>{t('deployer.hybrid.slamNavigation')}</MenuItem>
+                          ) : null}
+                          {isShowNavigation(navigationType, 'LIDAR_SLAM_3D') ? (
+                            <MenuItem value='slam'>{t('3D SLAM')}</MenuItem>
+                          ) : null}
+                        </Select>
+                      </FormControl>
+                    </>
+                    {<OnlinePoint />}
                   </>
-                  {<OnlinePoint />}
-                </>
+                ) : (
+                  <div>
+                    <div>正在预览楼层{floor}</div>
+                    <div>当前车辆在楼层{robot_current_status.floor_number}</div>
+                  </div>
+                )
               ) : (
                 <div className='flex items-center justify-between w-full'>
                   <div>{wsStateHashmap.text[wsState]}</div>
@@ -526,10 +546,34 @@ const Mapping = () => {
           )}
 
           {alignment === 'slam' &&
+          isSameFloor &&
           (isShowNavigation(navigationType, 'LIDAR_SLAM_2D') || isShowNavigation(navigationType, 'LIDAR_SLAM_3D')) &&
           listData?.floor_list?.length ? (
             <SlamHandle floor={floor} hide={!listData?.floor_list?.length}></SlamHandle>
           ) : null}
+
+          {!isSameFloor && (
+            <div className='absolute left-2 bottom-2 flex flex-col gap-1'>
+              <Button
+                variant='contained'
+                style={{ color: 'white' }}
+                onClick={async () => {
+                  await postSwitchFloor(floor);
+                }}
+              >
+                切换楼层
+              </Button>
+              <Button
+                variant='contained'
+                style={{ color: 'white' }}
+                onClick={() => {
+                  setFloor(robot_current_status?.floor_number);
+                }}
+              >
+                取消预览
+              </Button>
+            </div>
+          )}
 
           {/* 导航切换区域 */}
           <div className='absolute bottom-2 right-2 left-2 flex flex-col gap-2 z-50'>
