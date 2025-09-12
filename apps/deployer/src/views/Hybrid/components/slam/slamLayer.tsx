@@ -15,6 +15,7 @@ const SlamLayer = () => {
     hybirdStage,
     setStagePos,
     setStageScale,
+    agvPosition,
   } = useHybirdStore(
     useShallow((state) => ({
       floorMapData: state.floorData,
@@ -24,6 +25,7 @@ const SlamLayer = () => {
       hybirdStage: state.hybirdStage,
       setStagePos: state.setStagePos,
       setStageScale: state.setStageScale,
+      agvPosition: state.agvPosition,
     })),
   );
   const { floor_number = 0, system_status = 0 } = robot_current_status;
@@ -43,8 +45,37 @@ const SlamLayer = () => {
     setStageScale(1);
   };
 
+  // 初始化定位到车辆  切换地图定位到车辆
+  useUpdateEffect(() => {
+    console.log(hybirdStage, map_to_cad, grid_map);
+    if (typeof hybirdStage === 'string') return;
+    hybirdStage &&
+      hybirdStage.to({
+        x: 0 - agvPosition?.x / 50 + hybirdStage.width()! / 2,
+        y: agvPosition?.y / 50 + hybirdStage.height()! / 2,
+        duration: 1,
+        onFinish: () => {
+          const tween = new Konva.Tween({
+            node: hybirdStage,
+            duration: 0.3, // 缓慢缩放的持续时间
+            scaleX: 1, // 新的横向缩放比例
+            scaleY: 1, // 新的纵向缩放比例
+            easing: Konva.Easings.EaseInOut, // 缓动效果
+            onFinish: () => {
+              tween.destroy();
+              // 处理画线不完整问题
+              setStagePos({ x: 0, y: 0 });
+              setStageScale(0.8);
+            },
+          });
+
+          tween.play();
+        },
+      });
+  }, [hybirdStage, map_to_cad, grid_map]);
   // 定位到中心
   useUpdateEffect(() => {
+    return;
     if (
       !image ||
       !hybirdStage ||

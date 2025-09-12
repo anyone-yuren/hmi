@@ -135,7 +135,6 @@ const InitStage = (props: IProps) => {
       hammer.destroy();
     };
   }, [stageRef.current]);
-
   return (
     <>
       {loading && <PageLoading></PageLoading>}

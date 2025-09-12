@@ -31,7 +31,7 @@ export const useGlobalStore = create<State>()(
         setCacheSave: (cacheSave: boolean) => set({ cacheSave }),
         showThree: false,
         setShowThree: (showThree: boolean) => set({ showThree }),
-        token: "",
+        token: "admin",
         timer: null, // 初始化定时器为null
         setToken: (token: string) => {
           // 清除已有定时器

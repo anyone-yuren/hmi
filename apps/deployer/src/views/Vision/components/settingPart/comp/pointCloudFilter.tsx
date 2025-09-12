@@ -392,7 +392,7 @@ const PointCloudFilter = (props: IProps) => {
                               >
                                 <RemoveCircleOutlineIcon sx={{ color: 'black', fontSize: '25px' }} />
                               </LongPressIconButton>
-                              <div className='flex-1 relative flex'>
+                              <div className='flex-1 relative flex items-center'>
                                 <Slider
                                   className='relative z-[2]'
                                   aria-label={key}

@@ -81,12 +81,12 @@ const StatusPanel = (prop) => {
                   }}
                 >
                   <Badge
-                    status={obsInfo.sensor_sources?.includes(item?.id) ? 'processing' : 'default'}
-                    color={obsInfo.sensor_sources?.includes(item?.id) ? 'red' : '#999'}
+                    status={obsInfo.sensor_names?.includes(item?.id) ? 'processing' : 'default'}
+                    color={obsInfo.sensor_names?.includes(item?.id) ? 'red' : '#999'}
                     styles={{
                       indicator: {
-                        width: obsInfo.sensor_sources?.includes(item?.id) ? 12 : 8,
-                        height: obsInfo.sensor_sources?.includes(item?.id) ? 12 : 8,
+                        width: obsInfo.sensor_names?.includes(item?.id) ? 12 : 8,
+                        height: obsInfo.sensor_names?.includes(item?.id) ? 12 : 8,
                       },
                     }}
                   />

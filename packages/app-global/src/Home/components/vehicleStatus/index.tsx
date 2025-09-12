@@ -30,6 +30,8 @@ const VehicleInfo = () => {
         return t('deployer.hybrid.reflectors');
       case 2:
         return 'SLAM';
+      case 3:
+        return '3D SLAM';
       case 5:
         return t('deployer.hybrid.qrCode');
       default:
