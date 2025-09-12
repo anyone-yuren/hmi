@@ -208,7 +208,7 @@ const DrawerContent = (props: IProps) => {
               return (
                 <div
                   key={item.id}
-                  className='group flex items-center justify-between hover:shadow-sm hover:-translate-y-0.5 hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
+                  className='group flex items-center justify-between hover:shadow-sm  hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
                 >
                   <Checkbox
                     style={{ color: token.colorTextBase }}
@@ -255,7 +255,7 @@ const DrawerContent = (props: IProps) => {
               style={{
                 background: token.colorBgContainerDisabled,
               }}
-              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '
+              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
             >
               <p className='text-md'>传感器1</p>
               <Switch />
@@ -264,7 +264,7 @@ const DrawerContent = (props: IProps) => {
               style={{
                 background: token.colorBgContainerDisabled,
               }}
-              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '
+              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
             >
               <p className='text-md'>传感器2</p>
               <Switch />
@@ -273,7 +273,7 @@ const DrawerContent = (props: IProps) => {
               style={{
                 background: token.colorBgContainerDisabled,
               }}
-              className=' rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '
+              className=' rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
             >
               <p className='text-md'>传感器3</p>
               <Switch />
@@ -337,7 +337,7 @@ const DrawerContent = (props: IProps) => {
                       background: isSelected ? token.colorFillContentHover : token.colorBgContainerDisabled,
                       color: token.colorTextBase,
                     }}
-                    className={`group w-full bg-[#F7F8FA] rounded-md flex flex-col gap-2 justify-between p-4 hover:bg-[#E8EAF0] hover:shadow-lg hover:-translate-y-1 hover:font-bold  animation-all duration-300 cursor-pointer ${isSelected ? 'shadow-lg bg-[#E8EAF0] -translate-y-1 font-bold' : ''}`}
+                    className={`group w-full bg-[#F7F8FA] rounded-md flex flex-col gap-2 justify-between p-4 hover:bg-[#E8EAF0] hover:shadow-lg  hover:font-bold  animation-all duration-300 cursor-pointer ${isSelected ? 'shadow-lg bg-[#E8EAF0]  font-bold' : ''}`}
                     onClick={() => {
                       setSelectedId(item.id);
                       setSelectRect(item);
