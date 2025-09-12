@@ -11,16 +11,18 @@ const HYBRID_URL = import.meta.env.DEV
   : `ws://${currentHost}:10009`; // 生产环境使用真实地址
 
 export const useVehicle = () => {
-  const { setPowerStatus, setSeniorPoints, setAutoManualStatus, setChargePileStatus, setSignal } = useVehicleStore(
-    useShallow((state) => ({
-      setPowerStatus: state.setPowerStatus,
-      setSeniorPoints: state.setSeniorPoints,
-      setAutoManualStatus: state.setAutoManualStatus,
-      // 电池
-      setChargePileStatus: state.setChargePileStatus,
-      setSignal: state.setSignal,
-    })),
-  );
+  const { setPowerStatus, setSeniorPoints, setAutoManualStatus, setChargePileStatus, setSignal, setSystemDateTime } =
+    useVehicleStore(
+      useShallow((state) => ({
+        setPowerStatus: state.setPowerStatus,
+        setSeniorPoints: state.setSeniorPoints,
+        setAutoManualStatus: state.setAutoManualStatus,
+        // 电池
+        setChargePileStatus: state.setChargePileStatus,
+        setSignal: state.setSignal,
+        setSystemDateTime: state.setSystemDateTime,
+      })),
+    );
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
@@ -37,6 +39,7 @@ export const useVehicle = () => {
             power: Math.round(data?.power),
             charge_status: Math.round(data?.charge_status),
           });
+          setSystemDateTime(data?.timestamp);
         }
       }
       if (e?.data?.includes('/sirius/topics/robot_status_isensor')) {

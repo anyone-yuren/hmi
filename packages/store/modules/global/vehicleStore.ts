@@ -20,6 +20,9 @@ interface State {
     power: number;
     charge_status: number;
   }) => any;
+  systemDateTime?: string;
+  setSystemDateTime: (systemDateTime: string) => void;
+  // 高级点位
   seniorPoints: any[];
   setSeniorPoints: (seniorPoints: any[]) => void;
   auto_manual_status: number;
@@ -86,6 +89,13 @@ export const useVehicleStore = create<State>()(
         const { cacheSave } = useGlobalStore.getState();
         if (cacheSave) {
           set({ signal });
+        }
+      },
+      systemDateTime: "",
+      setSystemDateTime: (systemDateTime: string) => {
+        const { cacheSave } = useGlobalStore.getState();
+        if (cacheSave && !isEqual(systemDateTime, get().systemDateTime)) {
+          set({ systemDateTime });
         }
       },
     }),
