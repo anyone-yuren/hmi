@@ -56,7 +56,7 @@ export default function PointsCloudDiag() {
               key={index}
               x={point.x / 50}
               y={0 - point.y / 50}
-              radius={1}
+              radius={1.8}
               fill={getColorFromIntensity(point.intensity)}
             ></Circle>
           );

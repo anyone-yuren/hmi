@@ -47,7 +47,7 @@ const SlamLayer = () => {
 
   // 初始化定位到车辆  切换地图定位到车辆
   useUpdateEffect(() => {
-    console.log(hybirdStage, map_to_cad, grid_map);
+    console.log('开始定位到车', agvPosition, hybirdStage, map_to_cad, grid_map);
     if (typeof hybirdStage === 'string') return;
     hybirdStage &&
       hybirdStage.to({
