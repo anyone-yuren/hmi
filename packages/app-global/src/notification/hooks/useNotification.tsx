@@ -94,7 +94,7 @@ export const useNotification = () => {
       obsMsg.current = toast({
         title: t('common.obsError.title'),
         description: getObsMsg(obsInfo),
-        closable: false,
+        closable: true,
         // button: {
         //   label: t('common.obsError.view'),
         //   onClick: () => {},

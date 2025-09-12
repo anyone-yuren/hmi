@@ -489,31 +489,33 @@ export default function RectDrawer() {
         {/* 避障信息 */}
         {/* <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} /> */}
         <div className='header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4'>
-          <Button
-            size='small'
-            className='text-current shrink-0'
-            icon={<MenuOutlined />}
-            onClick={() => setShow(!show)}
-          />
-          <p className='shrink-0'>
-            当前避障方案：
-            <span
-              className={`px-4 py-1 ${
-                !isDark
-                  ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
-                  : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_70%)]'
-              } font-bold`}
-            >
-              1212
-              <FormOutlined
-                className='ml-2 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all'
-                onClick={() => setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
-              />
-            </span>
-          </p>
+          <div className='flex items-center gap-4 min-w-0'>
+            <Button
+              size='small'
+              className='text-current shrink-0'
+              icon={<MenuOutlined />}
+              onClick={() => setShow(!show)}
+            />
+            <p className='shrink-0'>
+              当前避障方案：
+              <span
+                className={`px-4 py-1 ${
+                  !isDark
+                    ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
+                    : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_70%)]'
+                } font-bold`}
+              >
+                1212
+                <FormOutlined
+                  className='ml-2 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all'
+                  onClick={() => setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
+                />
+              </span>
+            </p>
+          </div>
 
           {/* 关键部分 */}
-          <div className='flex-1 flex items-center gap-2 min-w-0'>
+          {/* <div className='flex-1 flex items-center gap-2 min-w-0'>
             <p className='shrink-0'>避障策略：</p>
             <div className='flex-1 overflow-x-auto flex flex-row gap-2 scrollbar-hide min-w-0 '>
               {strategyTpye.map((item) => (
@@ -526,7 +528,7 @@ export default function RectDrawer() {
                 </p>
               ))}
             </div>
-          </div>
+          </div> */}
           <Switch
             checkedChildren={<SunOutlined />}
             unCheckedChildren={<MoonOutlined />}
@@ -536,7 +538,12 @@ export default function RectDrawer() {
         </div>
         <div className='flex-1 w-full relative'>
           <div className='h-full flex'>
-            <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} show={show} animateEnd={reRenderLineGridFn} />
+            <ObsInfoPanel
+              setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
+              show={show}
+              isDark={isDark}
+              animateEnd={reRenderLineGridFn}
+            />
             <div className='relative h-full flex-1 min-w-0' ref={ref}>
               <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
               <div className='p-2 flex items-center gap-3 absolute bottom-0 left-0 right-0'>

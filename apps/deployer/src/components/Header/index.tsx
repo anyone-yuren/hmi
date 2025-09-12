@@ -11,6 +11,7 @@ import { GlobalNotification, LoginDialog, triggerLoginModal } from '@gbeata/app-
 import { useGlobalStore, useVehicleStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
 import { createStyles } from 'antd-style';
+import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
@@ -45,11 +46,12 @@ const GlobalHeader = () => {
   const responsive = useResponsive();
   const [modal, contextHolder] = Modal.useModal();
   const { styles } = useStyles();
-  const { powerStatus, setPowerStatus } = useVehicleStore(
+  const { powerStatus, setPowerStatus, systemDateTime } = useVehicleStore(
     useShallow((state) => {
       return {
         powerStatus: state.powerStatus,
         setPowerStatus: state.setPowerStatus,
+        systemDateTime: state.systemDateTime,
       };
     }),
   );
@@ -113,6 +115,7 @@ const GlobalHeader = () => {
           <SvgIcon name='unknowUser' size={28} />
         )}
       </div>
+      <p className='text-xs text-center font-bold mb-2'>{dayjs(systemDateTime).format('YYYY-MM-DD HH:mm:ss')}</p>
       <div className='flex flex-col items-center gap-2'>
         <BarBattery level={40} height={24} />
         <Signal />
