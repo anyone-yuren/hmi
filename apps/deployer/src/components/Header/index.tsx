@@ -115,7 +115,7 @@ const GlobalHeader = () => {
           <SvgIcon name='unknowUser' size={28} />
         )}
       </div>
-      <p className='text-xs text-center font-bold mb-2'>{dayjs(systemDateTime).format('YYYY-MM-DD HH:mm:ss')}</p>
+      <p className='text-xs text-center font-bold mb-2'>{dayjs(systemDateTime).format('YYYY/MM/DD HH:mm:ss')}</p>
       <div className='flex flex-col items-center gap-2'>
         <BarBattery level={40} height={24} />
         <Signal />
