@@ -17,6 +17,7 @@ export function toast(
         title={toast.title}
         description={toast.description}
         className={toast.className}
+        closable={toast.closable}
         button={{
           label: toast.button?.label,
           onClick: () => console.log('Button clicked'),
@@ -32,7 +33,7 @@ export function toast(
 
 /** A fully custom toast that still maintains the animations and interactions. */
 function Toast(props: ToastProps) {
-  const { title, description, button, id } = props;
+  const { title, description, button, id, closable = true } = props;
   return (
     <div
       className={`flex rounded-lg bg-[#facc15] shadow-lg ring-1 ring-black/5 w-full min-w-[500px] mx-auto items-center p-4 ${props.className}`}
@@ -51,7 +52,9 @@ function Toast(props: ToastProps) {
           fontSize: '36px !important',
         }}
       /> */}
-      <CloseIcon onClick={() => sonnerToast.dismiss(id)} fontSize='large' className='absolute top-2 right-2 ' />
+      {closable && (
+        <CloseIcon onClick={() => sonnerToast.dismiss(id)} fontSize='large' className='absolute top-2 right-2 ' />
+      )}
 
       {button?.label ? (
         <div className='ml-5 shrink-0 rounded-md text-sm font-medium '>
@@ -75,6 +78,7 @@ interface ToastProps {
   title: string | ReactNode;
   description: string | ReactNode;
   className?: string;
+  closable?: boolean;
   button?: {
     label: string;
     onClick: () => void;

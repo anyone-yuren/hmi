@@ -17,6 +17,7 @@ interface IProps {
   children: any;
   onWheelCallback?: any;
   minScale?: number;
+  draggable?: boolean;
 }
 
 const InitStage = (props: IProps) => {
@@ -32,7 +33,7 @@ const InitStage = (props: IProps) => {
     })),
   );
 
-  const { size = null, children, onWheelCallback, minScale } = props;
+  const { size = null, children, onWheelCallback, minScale, draggable = true, ...rest } = props;
   const { stageRef, onWheel } = useStage({
     onWheelCallback,
     minScale: minScale,
@@ -143,7 +144,7 @@ const InitStage = (props: IProps) => {
           width={size?.width}
           height={size?.height}
           ref={stageRef}
-          draggable={!beginPose}
+          draggable={!beginPose && draggable}
           onWheel={onWheel}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
@@ -152,6 +153,7 @@ const InitStage = (props: IProps) => {
           onMouseDown={handleTouchStart}
           onMouseMove={handleTouchMove}
           onMouseUp={handleTouchEnd}
+          {...rest}
         >
           <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} />
           {children}
