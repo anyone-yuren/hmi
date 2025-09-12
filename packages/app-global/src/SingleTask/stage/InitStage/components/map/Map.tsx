@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Group, Image as KonvaImage } from 'react-konva';
+import { Group, Image as KonvaImage, Rect } from 'react-konva';
 import useImage from 'use-image';
 import CloudPoints from './CloudPoints';
 
@@ -32,7 +32,7 @@ const Map = (props: any) => {
   }, [floorMapData?.data]);
 
   const [image] = useImage(`data:image/png;base64,${cloudPoints?.data?.pic}`);
-  if (image) {
+  if (cloudPoints?.data?.pic && image) {
     imagesRef.current = image;
     prevData.current = cloudPoints;
   }
@@ -51,6 +51,16 @@ const Map = (props: any) => {
           offsetY={floorMapSize?.height}
           rotation={0 - (map_to_cad?.theta * 180) / Math.PI}
         ></KonvaImage>
+        <Rect
+          width={floorMapSize?.width} // 宽度与图片相同
+          height={floorMapSize?.height} // 高度与图片相同
+          x={map_to_cad?.x * 20} // X 坐标与图片相同
+          y={0 - map_to_cad?.y * 20} // Y 坐标与图片相同
+          offsetY={floorMapSize?.height} // 垂直偏移量与图片相同
+          rotation={0 - (map_to_cad?.theta * 180) / Math.PI} // 旋转角度与图片相同
+          stroke={'#00d1d1'} // 边框颜色
+          strokeWidth={1} // 边框宽度
+        />
         <CloudPoints></CloudPoints>
       </Group>
     </>
