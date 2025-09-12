@@ -1,15 +1,16 @@
+import { theme } from 'antd';
 import { motion } from 'framer-motion';
 import { SvgIcon } from 'ui';
 import { Line1px } from './drawerContent';
-
 interface ObsInfoPanelProps {
   setOpenUpdateObsDrawer?: (open: boolean) => void;
+  isDark?: boolean;
   show?: boolean;
-  animateEnd?: () => void;
 }
-
 const ObsInfoPanel = (props: ObsInfoPanelProps) => {
-  const { setOpenUpdateObsDrawer, show, animateEnd } = props;
+  const { show = true, isDark = false } = props;
+  const { token } = theme.useToken();
+  const { setOpenUpdateObsDrawer } = props;
   const strategyTpye = [
     { id: 1, name: '直线保持' },
     { id: 2, name: '叉臂下方区域保护叉臂下方区域保护' },
@@ -18,50 +19,71 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
     { id: 5, name: '末端路线自适应最小避障距离' },
     { id: 6, name: '末端路线屏蔽叉尖避障功能' },
   ];
-
   return (
     <motion.div
-      key='obs-panel'
-      initial={{ opacity: 0, width: 0 }}
-      animate={show ? { opacity: 1, width: 100 } : { opacity: 0, width: 0 }}
+      initial={{ opacity: 0, x: '-100%' }}
+      animate={show ? { opacity: 1, x: '0%' } : { opacity: 0, x: '-100%' }}
       transition={{ duration: 0.3 }}
-      onAnimationComplete={() => {
-        animateEnd && animateEnd();
-      }}
+      className='w-1/5 min-w-[240px] absolute z-10 p-2 flex flex-col gap-2 top-4 ml-4 shadow-md rounded-lg'
+      style={{ backgroundColor: token.colorBgElevated }}
     >
-      <div className='flex h-full flex-col gap-2 shadow-md overflow-hidden p-2 relative z-30'>
-        <p className='text-md text-center font-bold relative pb-2'>
-          避障信息
-          <Line1px />
-        </p>
-
-        <div className='flex flex-col gap-2'>
-          <div className='shadow-sm rounded-md flex flex-col justify-between items-center p-2 hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold transition-all duration-300'>
-            <p className='text-md text-nowrap'>车辆状态</p>
-            11
-          </div>
-          <div className='shadow-sm rounded-md flex flex-col justify-between items-center p-2 hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold transition-all duration-300'>
-            <p className='text-md text-nowrap'>避障类型</p>
-            11
-          </div>
-          <div className='shadow-sm rounded-md flex flex-col justify-between items-center p-2 hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold transition-all duration-300'>
-            <p className='text-md text-nowrap'>货物状态</p>
-            222
+      <p className='text-md font-bold relative pb-2'>
+        避障信息
+        <Line1px />
+      </p>
+      <div
+        className={`flex flex-col relative w-full rounded-lg overflow-hidden shadow-sm p-2 ${
+          isDark
+            ? '!bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'
+            : 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]  '
+        }`}
+        // style={{ aspectRatio: '4/3' }}
+      >
+        <div>
+          <p className='text-xs mb-2'>避障策略</p>
+          <div className='grid grid-cols-2 gap-1 max-h-16 overflow-y-auto'>
+            {strategyTpye.map((item) => {
+              return (
+                <div className='flex items-center justify-between p-1 shadow-sm hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold transition-all duration-300'>
+                  <p className='flex-1 truncate text-xs text-gray-500' title={item.name}>
+                    {item.name}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
-
-        <p className='text-md font-bold text-center relative pb-2'>
-          点云查看
-          <Line1px />
-        </p>
-
-        <div className='group p-2 flex flex-col rounded-b-lg items-center justify-center shadow-md hover:shadow-lg transition-all duration-300'>
-          <SvgIcon name='points' size={68} className='group-hover:scale-110 transition-all duration-300' />
-          <p className='text-xs opacity-60'>暂无使能传感器</p>
+      </div>
+      <div className='flex flex-col gap-2'>
+        <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+          <p className='text-md'>车辆状态</p>
+          11
         </div>
+        <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+          <p className='text-md'>避障类型</p>
+          11
+        </div>
+        <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+          <p className='text-md'>货物状态</p>
+          222
+        </div>
+      </div>
+      <p className='text-md font-bold relative pb-2'>
+        点云查看
+        <Line1px />
+      </p>
+      <div
+        className={`group h-40 flex flex-col rounded-b-lg items-center justify-center 
+  backdrop-blur-[6px] hover:shadow-lg animation-all duration-300 ${
+    isDark
+      ? 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_10%)]'
+      : 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
+  }`}
+      >
+        <SvgIcon name='points' size={128} className='group-hover:scale-110 animation-all duration-300' />
+        <p className='text-xs opacity-60'>暂无使能传感器</p>
       </div>
     </motion.div>
   );
 };
-
 export default ObsInfoPanel;
