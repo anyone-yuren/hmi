@@ -1,5 +1,4 @@
-import { AimOutlined, QuestionCircleOutlined, SwapOutlined } from '@ant-design/icons';
-import { Tooltip } from 'antd';
+import { AimOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import Konva from 'konva';
 
 interface IProps {
@@ -15,9 +14,6 @@ const Maphandles = (prop: IProps) => {
         onClick={centerOriginWithAnimation}
       />
       <QuestionCircleOutlined className='text-lg cursor-pointer hover:text-teal-400 active:text-teal-600 animation-all duration-150' />
-      <Tooltip title='切换避障方案' placement='right'>
-        <SwapOutlined className='text-lg cursor-pointer hover:text-teal-400 active:text-teal-600 animation-all duration-150' />
-      </Tooltip>
     </div>
   );
 };

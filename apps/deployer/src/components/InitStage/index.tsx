@@ -92,37 +92,24 @@ const InitStage = (props: IProps) => {
     });
 
     hammer.on('pinchmove', (e: any) => {
+      const pointer = stage.getPointerPosition(); // 获取当前指针位置
+      if (!pointer) return;
+      // 计算新的缩放比例
       const newScale = oldScale * e.scale;
-      const scaled = Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale));
-
-      // 捏合 1 点位
-      const pointer1 = {
-        x: e.pointers[0].clientX,
-        y: e.pointers[0].clientY,
+      const mousePointTo = {
+        x: (pointer.x - oldPos.x) / oldScale,
+        y: (pointer.y - oldPos.y) / oldScale,
       };
-      // 捏合 2 点位
-      const pointer2 = {
-        x: e.pointers[1].clientX,
-        y: e.pointers[1].clientY,
-      };
-      // 计算捏合中心点
-      const newCenter = {
-        x: (pointer1.x + pointer2.x) / 2,
-        y: (pointer1.y + pointer2.y) / 2,
-      };
-
-      // 计算新的位置
-      const newPosX = oldPos.x - (newCenter.x - oldPos.x) * (scaled / oldScale - 1);
-      const newPosY = oldPos.y - (newCenter.y - oldPos.y) * (scaled / oldScale - 1);
-
-      stage.stopDrag();
-      stage.draggable(false);
-      stage.scale({ x: scaled, y: scaled });
-      stage.position({ x: newPosX, y: newPosY });
-      setStagePos({ x: newPosX, y: newPosY });
-      stage.draggable(true);
-      setStageScale(scaled);
+      stage.scale({ x: newScale, y: newScale });
+      stage.position({
+        x: pointer.x - mousePointTo.x * newScale,
+        y: pointer.y - mousePointTo.y * newScale,
+      });
       stage.batchDraw();
+      // 限制缩放比例在最小值和最大值之间
+      if (newScale < (minScale || MIN_SCALE) || newScale > MAX_SCALE) return;
+      setStageScale(newScale);
+      setStagePos(stage.position());
     });
 
     hammer.on('pinchend', () => {

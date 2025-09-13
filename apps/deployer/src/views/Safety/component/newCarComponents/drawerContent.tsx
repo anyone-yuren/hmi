@@ -238,7 +238,7 @@ const DrawerContent = (props: IProps) => {
             <Input type='number' />
           </div>
           <div className='flex flex-row gap-2 items-center'>
-            <p className='text-xs flex-1 text-nowrap shrink-0'>后退</p>
+            <p className='text-xs text-nowrap shrink-0'>后退</p>
             <Input type='number' />
           </div>
           <div className='flex flex-row gap-2 items-center'>
