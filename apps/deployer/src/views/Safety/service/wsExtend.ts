@@ -10,12 +10,13 @@ function unzipText(str) {
 }
 
 export default function useHybirdWsExtend() {
-  const { setObsInfo, setSeniorPoints, setGoodsInfo, setTurnRegionData } = useSafetyStore(
+  const { setObsInfo, setSeniorPoints, setGoodsInfo, setTurnRegionData, setMotionStatus } = useSafetyStore(
     useShallow((store) => ({
       setObsInfo: store.setObsInfo,
       setSeniorPoints: store.setSeniorPoints,
       setGoodsInfo: store.setGoodsInfo,
       setTurnRegionData: store.setTurnRegionData,
+      setMotionStatus: store.setMotionStatus,
     })),
   );
 
@@ -39,6 +40,10 @@ export default function useHybirdWsExtend() {
     '/sirius/topics/safety_protect_region': (data: any) => {
       //转弯区域
       setTurnRegionData(data.points || []);
+    },
+    '/sirius/topics/task_status_motion': (data: any) => {
+      // 车辆状态
+      setMotionStatus(data.motion_state);
     },
   };
 }

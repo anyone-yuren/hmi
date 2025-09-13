@@ -190,7 +190,14 @@
     "refresh": "刷新",
     "safety": {
       "3dpoints": "3D点云",
-      "noDevice": "暂无使能传感器"
+      "back": "后退",
+      "error": "出错",
+      "forward": "前进",
+      "init": "初始化，未动",
+      "noDevice": "暂无使能传感器",
+      "spin": "自旋",
+      "stop": "停止",
+      "turn": "横移"
     },
     "save": "保存",
     "search": "查询",

@@ -1,9 +1,12 @@
-import { Drawer, theme } from 'antd';
+import { useObsError } from '@gbeata/app-global';
+import { Drawer, Tag, theme } from 'antd';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
+import { useShallow } from 'zustand/react/shallow';
 import useDrawerClassName from '../../hooks/useDrawerClassName';
+import { useSafetyStore } from '../../store/safety.store';
 import { Line1px } from './drawerContent';
 interface ObsInfoPanelProps {
   setOpenUpdateObsDrawer?: (open: boolean) => void;
@@ -17,6 +20,25 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
   const { show = true, isDark = false } = props;
   const { token } = theme.useToken();
   const { setOpenUpdateObsDrawer } = props;
+  const { motionStatus, obsInfo, goodsInfo } = useSafetyStore(
+    useShallow((store) => ({
+      motionStatus: store.motionStatus,
+      obsInfo: store.obsInfo,
+      goodsInfo: store.goodsInfo,
+    })),
+  );
+  console.log(obsInfo);
+
+  const { getObsMsg } = useObsError();
+  const iMotionStatus = [
+    t('common.safety.init'),
+    t('common.safety.stop'),
+    t('common.safety.forward'),
+    t('common.safety.back'),
+    t('common.safety.turn'),
+    t('common.safety.spin'),
+    t('common.safety.error'),
+  ];
   const strategyTpye = [
     { id: 1, name: '直线保持' },
     { id: 2, name: '叉臂下方区域保护叉臂下方区域保护' },
@@ -64,15 +86,21 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
         <div className='flex flex-col gap-2'>
           <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
             <p className='text-md'>车辆状态</p>
-            11
+            {iMotionStatus[motionStatus]}
           </div>
           <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
             <p className='text-md'>避障类型</p>
-            11
+            {getObsMsg(obsInfo.type)}
           </div>
           <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
             <p className='text-md'>货物状态</p>
-            222
+            {goodsInfo?.good_status ? (
+              <Tag className='!m-0' color='green'>
+                有货
+              </Tag>
+            ) : (
+              <Tag className='!m-0'>无货</Tag>
+            )}
           </div>
         </div>
         <p className='text-md font-bold relative pb-2'>

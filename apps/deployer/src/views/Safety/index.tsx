@@ -15,6 +15,7 @@ import CarModel from './component/newCarComponents/carModel';
 import DrawerContent from './component/newCarComponents/drawerContent';
 import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
+import WsContainer from './component/WsContainer';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
 type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
 
@@ -848,6 +849,9 @@ export default function RectDrawer() {
           />
         </Drawer>
       </ConfigProvider>
+      <WsContainer>
+        <></>
+      </WsContainer>
     </div>
   );
 }
