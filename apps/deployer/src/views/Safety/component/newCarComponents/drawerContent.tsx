@@ -287,7 +287,7 @@ const DrawerContent = (props: IProps) => {
           保护区域列表
           {!isBatchDelete ? (
             <MinusCircleOutlined
-              className={`${rects.length ? '' : 'hidden'}  cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300`}
+              className={`${rects.length ? '' : 'hidden'} text-lg cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300`}
               onClick={() => setIsBatchDelete(true)}
             />
           ) : (
@@ -299,19 +299,18 @@ const DrawerContent = (props: IProps) => {
                   transition={{ duration: 0.4, ease: 'easeOut' }}
                 >
                   <DeleteOutlined
-                    className='border p-[1px] rounded-full border-red-600 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all duration-300'
+                    className='border p-[2px] text-md rounded-full border-red-600 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all duration-300'
                     style={{
                       color: token.colorErrorActive,
-                      fontSize: '12px',
                     }}
                     onClick={handleBatchDelete}
                   />
                 </motion.div>
               ) : (
-                <StopOutlined className='opacity-60 cursor-not-allowed' />
+                <StopOutlined className='opacity-60 text-lg cursor-not-allowed' />
               )}
               <CloseCircleOutlined
-                className='cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300'
+                className='cursor-pointer opacity-60 text-lg hover:opacity-100 hover:scale-125 animation-all duration-300'
                 style={
                   {
                     // color: token.colorError,
