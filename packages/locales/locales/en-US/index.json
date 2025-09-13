@@ -190,7 +190,14 @@
     "refresh": "Refresh",
     "safety": {
       "3dpoints": "3D Point Cloud",
-      "noDevice": "No sensor enabled yet"
+      "back": "Back off",
+      "error": "Error",
+      "forward": "Forward",
+      "init": "Initialized, not moved",
+      "noDevice": "No sensor enabled yet",
+      "spin": "Spin",
+      "stop": "Stop",
+      "turn": "Traverse"
     },
     "save": "Save",
     "search": "Search",

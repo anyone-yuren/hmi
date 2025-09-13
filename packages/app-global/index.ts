@@ -7,6 +7,7 @@ import https, { get, post } from './src/https';
 import * as commonServices from './src/https/global';
 import Maintenance from './src/Maintenance';
 import GlobalNotification from './src/notification';
+import useObsError from './src/notification/hooks/useObsError';
 import SingleTask from './src/SingleTask';
 import { InitStage } from './src/SingleTask/stage/index';
 export {
@@ -23,4 +24,5 @@ export {
   SubAbout,
   SubCharging,
   triggerLoginModal,
+  useObsError,
 };

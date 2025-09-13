@@ -60,6 +60,7 @@ export const useSafety = () => {
             '/sirius/topics/compose_sensor_point',
             '/sirius/topics/goods_info',
             '/sirius/topics/safety_protect_region',
+            '/sirius/topics/task_status_motion',
           ],
         }),
       );
