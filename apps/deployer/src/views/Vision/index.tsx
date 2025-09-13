@@ -3,6 +3,7 @@ import { t } from 'i18next';
 import React, { memo } from 'react';
 import GlobalPanel from './components/GlobalPanel';
 import ModelPart from './components/modelPart/index';
+import CargoSpace from './components/settingPart/cargoSpace/index';
 import SettingPart from './components/settingPart/index';
 
 const Vision = () => {
@@ -37,10 +38,14 @@ const Vision = () => {
         <TabPanel value={value} index={1} dir={theme.direction}>
           <ModelPart />
         </TabPanel>
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          <CargoSpace />
+        </TabPanel>
       </div>
       <Tabs variant='fullWidth' value={value} onChange={handleChange}>
         <Tab sx={{ fontSize: 20 }} label={t('deployer.vision.paramSetting')} />
         <Tab sx={{ fontSize: 20 }} label={t('deployer.vision.modelLibrary')} />
+        {false && <Tab sx={{ fontSize: 20 }} label={t('deployer.vision.placeSpaceCheck')} />}
       </Tabs>
     </div>
   );

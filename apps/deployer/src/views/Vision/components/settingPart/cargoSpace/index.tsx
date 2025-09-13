@@ -96,7 +96,7 @@ const Setting = () => {
 
   return (
     <LightTheme>
-      <div className='text-black h-full flex gap-[10px] px-[40px]'>
+      <div className='text-black h-full flex gap-[10px] '>
         <div className='w-[350px] overflow-scroll'>
           <TextUpdateSwitchRow
             title={t('deployer.vision.isTurnOn')}

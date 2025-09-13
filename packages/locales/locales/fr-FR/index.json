@@ -149,7 +149,8 @@
       "workingTime": "durée de fonctionnement",
       "workingTimes": "Nombre d'opérations",
       "resetAll": "Réinitialiser tout",
-      "minute": "minute"
+      "minute": "minute",
+      "resetAllConfirm": "Confirmez-vous la restauration des paramètres d'usine"
     },
     "modify": "Modifier",
     "noData": "Aucune donnée disponible",
@@ -336,7 +337,16 @@
       "slamNavigation": "SLAM Navigation",
       "solution": "Solution",
       "switch": "Changer",
-      "unknown": "Inconnu"
+      "unknown": "Inconnu",
+      "isExistFloor": "Le véhicule est déjà au niveau actuel",
+      "reviewFloorTips": "Veuillez d'abord prévisualiser le niveau actuel",
+      "connecting": "Connexion en cours",
+      "connectFail": "La connexion a été interrompue",
+      "reviewFloor": "Prévisualisation du niveau en cours",
+      "vehicleExistFloor": "Le véhicule actuel est à l'étage",
+      "reconnect": "Reconnecter",
+      "switchFloor": "Changer d'étage",
+      "cancelView": "Annuler la prévisualisation"
     },
     "io": {
       "input": "Entrée",

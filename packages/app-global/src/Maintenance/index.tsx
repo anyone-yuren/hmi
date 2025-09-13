@@ -58,7 +58,7 @@ const Maintenance = () => {
             onClick={() => {
               modal.confirm({
                 okText: t('common.confirm'),
-                content: t('是否确认回复出厂设置'),
+                content: t('common.maintenance.resetAllConfirm'),
                 onOk: () => {
                   reset();
                 },

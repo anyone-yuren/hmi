@@ -9,6 +9,7 @@ import SecondaryPage, { SecondaryPaper } from '../../SecondaryPage';
 import CustomSelect from '../comp/customSelect';
 import CustomSwitch from '../comp/customSwitch';
 
+import CargoSpace from '@/views/Vision/components/settingPart/cargoSpace/index';
 import { getVisualPlaceRead, postVisualPlaceSave } from '../../../services/index';
 
 import * as React from 'react';
@@ -37,6 +38,7 @@ const VisionStock = () => {
     open: false,
     key: '',
   });
+
   const { data: visualPlace, mutate: setVisualPlace } = useRequest(getVisualPlaceRead, {});
 
   useAsyncEffect(async () => {
@@ -87,13 +89,34 @@ const VisionStock = () => {
     need_detect_shelf: <ShelfSetting />,
     need_detect_stack: <StackSetting />,
     need_detect_truck: <FlatWingSetting />,
+    place_space_check: <CargoSpace />,
   };
 
   return (
     <>
       <div className='flex flex-col items-center justify-center flex-1 basis-[45%] w-[50%] h-full overflow-hidden'>
         <div className='w-full bg-[#2c3645] rounded-[20px] p-[20px] overflow-hidden relative flex flex-col h-full overflow-y-auto'>
-          <div className='text-3xl '>{t('deployer.vision.place')}</div>
+          <div className='text-3xl flex items-center justify-between'>
+            <div>{t('deployer.vision.place')}</div>
+            <Button
+              size='small'
+              sx={{
+                color: 'white',
+                float: 'right',
+                whiteSpace: 'nowrap',
+              }}
+              variant='contained'
+              onClick={async () => {
+                setModalConfig({
+                  ...modalConfig,
+                  open: true,
+                  key: 'place_space_check',
+                });
+              }}
+            >
+              {t('deployer.vision.placeSpaceCheck')}
+            </Button>
+          </div>
           <div className='flex justify-between items-center w-full gap-[10px] mt-1'>
             {options?.slice(0, 2)?.map((option) => {
               return (

@@ -149,7 +149,8 @@
       "workingTime": "Running duration",
       "workingTimes": "Number of operations",
       "resetAll": "Reset All",
-      "minute": "Minute"
+      "minute": "Minute",
+      "resetAllConfirm": "Are you sure to confirm the factory reset"
     },
     "modify": "Modify",
     "noData": "No data",
@@ -336,7 +337,16 @@
       "slamNavigation": "SLAM Navigation",
       "solution": "Solution",
       "switch": "Switch",
-      "unknown": "Unknown"
+      "unknown": "Unknown",
+      "isExistFloor": "The vehicle is already on the current floor",
+      "reviewFloorTips": "Please preview the current floor first",
+      "connecting": "Connecting",
+      "connectFail": "Connection lost",
+      "reviewFloor": "Previewing floor",
+      "vehicleExistFloor": "Current vehicle is on this floor",
+      "reconnect": "Reconnect",
+      "switchFloor": "Switch floor",
+      "cancelView": "Cancel preview"
     },
     "io": {
       "input": "Input",
@@ -582,7 +592,7 @@
       "placeShelfLegendTips5": "Assuming that the fork cart puts goods on the shelf with an angle, the angle compensation parameter can be modified.",
       "placeShelfLegendTips6": "As shown in the figure below, 1° is off, so -1 should be filled in the angle compensation parameter.",
       "placeShelfLegendTips7": "Compensation rule: the larger the value, the counterclockwise rotation of the car.",
-      "placeSpaceCheck": "Putting goods into space detection",
+      "placeSpaceCheck": "Deliver space detection",
       "planning": "Planning",
       "plsInputNumber": "Please enter a positive integer",
       "plsSelectModel": "Please select a model first",

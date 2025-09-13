@@ -326,11 +326,11 @@ const Mapping = () => {
                       label: t('deployer.hybrid.switch'),
                       onClick: () => {
                         if (robot_current_status.floor_number === value) {
-                          toast.error('已在当前楼层');
+                          toast.error(t('deployer.hybrid.isExistFloor'));
                           return;
                         }
                         if (floor !== value) {
-                          toast.error('请先预览当前楼层');
+                          toast.error(t('deployer.hybrid.reviewFloorTips'));
                           return;
                         }
                         modal.confirm({
@@ -382,8 +382,8 @@ const Mapping = () => {
 
   const wsStateHashmap = {
     text: {
-      0: '连接中',
-      3: '连接已断开',
+      0: t('deployer.hybrid.connecting'),
+      3: t('deployer.hybrid.connectFail'),
     },
   };
   return (
@@ -443,8 +443,14 @@ const Mapping = () => {
                   </>
                 ) : (
                   <div>
-                    <div>正在预览楼层{floor}</div>
-                    <div>当前车辆在楼层{robot_current_status.floor_number}</div>
+                    <div>
+                      {t('deployer.hybrid.reviewFloor')}
+                      {floor}
+                    </div>
+                    <div>
+                      {t('deployer.hybrid.vehicleExistFloor')}
+                      {robot_current_status.floor_number}
+                    </div>
                   </div>
                 )
               ) : (
@@ -462,7 +468,7 @@ const Mapping = () => {
                       }}
                       size='small'
                     >
-                      重新连接
+                      {t('deployer.hybrid.reconnect')}
                     </Button>
                   )}
                 </div>
@@ -561,7 +567,7 @@ const Mapping = () => {
                   await postSwitchFloor(floor);
                 }}
               >
-                切换楼层
+                {t('deployer.hybrid.switchFloor')}
               </Button>
               <Button
                 variant='contained'
@@ -570,7 +576,7 @@ const Mapping = () => {
                   setFloor(robot_current_status?.floor_number);
                 }}
               >
-                取消预览
+                {t('deployer.hybrid.cancelView')}
               </Button>
             </div>
           )}

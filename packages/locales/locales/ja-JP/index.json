@@ -149,7 +149,8 @@
       "workingTime": "運行時間",
       "workingTimes": "作動回数",
       "resetAll": "すべてリセット",
-      "minute": "分"
+      "minute": "分",
+      "resetAllConfirm": "工場出荷時の設定に戻すことを確認しますか"
     },
     "modify": "修正",
     "noData": "データはまだありません",
@@ -336,7 +337,16 @@
       "slamNavigation": "SLAM导航",
       "solution": "解決する",
       "switch": "切换",
-      "unknown": "不明"
+      "unknown": "不明",
+      "isExistFloor": "すでに現在のフロアにいます",
+      "reviewFloorTips": "まず現在のフロアをプレビューしてください",
+      "connecting": "接続中",
+      "connectFail": "接続が切断されました",
+      "reviewFloor": "フロアをプレビュー中",
+      "vehicleExistFloor": "現在の車両がいるフロア",
+      "reconnect": "再接続",
+      "switchFloor": "フロアを切り替え",
+      "cancelView": "プレビューをキャンセル"
     },
     "io": {
       "input": "インプット",

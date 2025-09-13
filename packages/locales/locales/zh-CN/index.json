@@ -149,7 +149,8 @@
       "workingTime": "运行时长",
       "workingTimes": "工作次数",
       "resetAll": "恢复出厂设置",
-      "minute": "分钟"
+      "minute": "分钟",
+      "resetAllConfirm": "是否确认恢复出厂设置"
     },
     "modify": "修改",
     "noData": "暂无数据",
@@ -336,7 +337,16 @@
       "slamNavigation": "SLAM导航",
       "solution": "解决方案",
       "switch": "切换",
-      "unknown": "未知"
+      "unknown": "未知",
+      "isExistFloor": "已在当前楼层",
+      "reviewFloorTips": "请先预览当前楼层",
+      "connecting": "连接中",
+      "connectFail": "连接已断开",
+      "reviewFloor": "正在预览楼层",
+      "vehicleExistFloor": "当前车辆在楼层",
+      "reconnect": "重新连接",
+      "switchFloor": "切换楼层",
+      "cancelView": "取消预览"
     },
     "io": {
       "input": "输入",
