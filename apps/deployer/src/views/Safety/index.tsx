@@ -1,10 +1,8 @@
 import { LineGrid } from '@/components/InitStage/components/LineGrid';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
-import { FormOutlined, MenuOutlined, MoonOutlined, SunOutlined, SwapOutlined } from '@ant-design/icons';
 import { useSize } from 'ahooks';
-import { Button, ConfigProvider, Drawer, Select, Switch, theme } from 'antd';
+import { ConfigProvider, Drawer, theme } from 'antd';
 import { useResponsive, useTheme } from 'antd-style';
-import { AnimatePresence, motion } from 'framer-motion';
 import Hammer from 'hammerjs';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
@@ -15,6 +13,7 @@ import CarModel from './component/newCarComponents/carModel';
 import DrawerContent from './component/newCarComponents/drawerContent';
 import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
+import SafetyHeader from './component/newCarComponents/safetyHeader';
 import WsContainer from './component/WsContainer';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
 type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
@@ -495,17 +494,6 @@ export default function RectDrawer() {
 
   const stageStyle = useMemo(() => ({ cursor: isDrawing ? 'crosshair' : 'default' }), [isDrawing]);
 
-  const strategyTpye = [
-    { id: 1, name: '直线保持' },
-    { id: 2, name: '叉臂下方区域保护叉臂下方区域保护' },
-    { id: 3, name: '放货空间检测' },
-    { id: 4, name: '取货防护' },
-    { id: 5, name: '末端路线自适应最小避障距离' },
-    { id: 6, name: '末端路线屏蔽叉尖避障功能' },
-  ];
-  const rootRef = useRef(null);
-  const [showSelect, setShowSelect] = useState(false);
-
   //兼容移动端
   useEffect(() => {
     const stage = stageRef.current;
@@ -544,38 +532,6 @@ export default function RectDrawer() {
       reRenderLineGridFn();
     });
 
-    // // 双指缩放
-    // hammer.on('pinchstart', (ev) => {
-    //   lastCenter = ev.center;
-    //   lastDist = ev.scale;
-    // });
-
-    // hammer.on('pinchmove', (ev) => {
-    //   if (!lastCenter) return;
-    //   const oldScale = stage.scaleX();
-    //   const scale = oldScale * (ev.scale / lastDist);
-
-    //   const mousePointTo = {
-    //     x: (lastCenter.x - stage.x()) / oldScale,
-    //     y: (lastCenter.y - stage.y()) / oldScale,
-    //   };
-
-    //   stage.scale({ x: scale, y: scale });
-
-    //   const newPos = {
-    //     x: lastCenter.x - mousePointTo.x * scale,
-    //     y: lastCenter.y - mousePointTo.y * scale,
-    //   };
-
-    //   stage.position(newPos);
-    //   stage.batchDraw();
-    // });
-
-    // hammer.on('pinchend', () => {
-    //   lastCenter = null;
-    //   lastDist = 0;
-    // });
-
     return () => {
       hammer.destroy();
     };
@@ -590,84 +546,16 @@ export default function RectDrawer() {
           algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         }}
       >
+        <SafetyHeader
+          isDark={isDark}
+          setIsDark={setIsDark}
+          show={show}
+          setShow={setShow}
+          setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
+        />
         {/* 避障信息 */}
         {/* <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} /> */}
-        <div className='header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4' ref={rootRef}>
-          <div className='flex items-center gap-4 min-w-0'>
-            <Button
-              size='small'
-              className='text-current shrink-0'
-              icon={<MenuOutlined />}
-              onClick={() => setShow(!show)}
-            />
-            <p className='shrink-0'>
-              当前避障方案：
-              <span
-                className={`px-4 py-1 ${
-                  !isDark
-                    ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
-                    : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_70%)]'
-                } font-bold`}
-              >
-                1212
-                <FormOutlined
-                  className='ml-2 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all'
-                  onClick={() => setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
-                />
-              </span>
-            </p>
-            <AnimatePresence mode='wait'>
-              {!showSelect ? (
-                <motion.div
-                  key='button'
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Button
-                    className='text-current shrink-0 !py-[1px] box-content'
-                    type='dashed'
-                    size='small'
-                    icon={<SwapOutlined />}
-                    onClick={() => setShowSelect(true)}
-                  >
-                    切换避障
-                  </Button>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key='select'
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Select
-                    size={responsive?.xs ? 'small' : 'middle'}
-                    className='h-7'
-                    style={{ width: responsive?.xs ? 120 : 160 }}
-                    defaultValue='避障策略'
-                    options={[
-                      { label: '避障策略', value: '避障策略' },
-                      { label: '避障策略2', value: '避障策略2' },
-                    ]}
-                    onChange={(value) => {
-                      console.log('选择了避障策略：', value);
-                      setShowSelect(false);
-                    }}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-          <Switch
-            checkedChildren={<SunOutlined />}
-            unCheckedChildren={<MoonOutlined />}
-            value={isDark}
-            onChange={setIsDark}
-          />
-        </div>
+
         <div className='flex-1 w-full relative'>
           <div className='h-full flex'>
             <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} show={show} isDark={isDark} />

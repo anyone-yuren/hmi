@@ -27,7 +27,6 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
       goodsInfo: store.goodsInfo,
     })),
   );
-  console.log(obsInfo);
 
   const { getObsMsg } = useObsError();
   const iMotionStatus = [
