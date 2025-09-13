@@ -1,3 +1,4 @@
+import Safety3D from '@/views/Safety/safety';
 import { Drawer, theme } from 'antd';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
@@ -105,7 +106,9 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
         }}
         width={'calc(100% - 120px)'}
         onClose={() => setOpen(false)}
-      ></Drawer>
+      >
+        <Safety3D />
+      </Drawer>
     </>
   );
 };

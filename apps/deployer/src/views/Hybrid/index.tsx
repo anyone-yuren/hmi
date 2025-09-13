@@ -434,7 +434,7 @@ const Mapping = () => {
                             <MenuItem value='slam'>{t('deployer.hybrid.slamNavigation')}</MenuItem>
                           ) : null}
                           {isShowNavigation(navigationType, 'LIDAR_SLAM_3D') ? (
-                            <MenuItem value='slam'>{t('3D SLAM')}</MenuItem>
+                            <MenuItem value='slam'>{'3D SLAM'}</MenuItem>
                           ) : null}
                         </Select>
                       </FormControl>
