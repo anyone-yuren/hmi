@@ -19,6 +19,7 @@ import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRe
 type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
 
 export default function RectDrawer() {
+  const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const { token } = theme.useToken();
   const antdTheme = useTheme();
   const stageRef = useRef<Konva.Stage>(null);
@@ -34,7 +35,29 @@ export default function RectDrawer() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(null);
   const [preview, setPreview] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
-  const [rects, setRects] = useState<Array<{ id: string; x: number; y: number; width: number; height: number }>>([]);
+  const [rects, setRects] = useState<Array<{ id: string; x: number; y: number; width: number; height: number }>>([
+    {
+      id: 'rect_1757730358977',
+      x: -479.3291688305644,
+      y: -443.44736089214314,
+      width: 278.3291688305644,
+      height: 152.88503639988755,
+    },
+    {
+      id: 'rect_1757730361831',
+      x: 201,
+      y: -470.8882648613537,
+      width: 262.64865227673,
+      height: 156.80516553834622,
+    },
+    {
+      id: 'rect_1757730364464',
+      x: -480.6902019382337,
+      y: 242.57523833812138,
+      width: 309.6902019382337,
+      height: 184.24606950755685,
+    },
+  ]);
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [isUseFullRect, setIsUseFullRect] = useState(false);
   const [scale, setScale] = useState(1);
@@ -456,7 +479,7 @@ export default function RectDrawer() {
       x: width / 2,
       y: height / 2,
       onFinish: () => {
-        setScale(0.99);
+        setScale(0.5);
         setReRenderLineGrid(!reRenderLineGrid);
       },
     });
@@ -484,40 +507,73 @@ export default function RectDrawer() {
 
   //兼容移动端
   useEffect(() => {
-    if (!stageRef.current) return;
     const stage = stageRef.current;
+    if (!stage) return;
+
+    if (!isMobile) {
+      // PC 端：禁用 Hammer，直接返回
+      return;
+    }
+
     const hammer = new Hammer(stage.container());
 
+    // 允许双指缩放
     hammer.get('pinch').set({ enable: true });
+    // 允许单指拖拽
+    hammer.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
-    let lastScale = 1;
+    let lastCenter = null;
+    let lastDist = 0;
+    let lastPan = { x: 0, y: 0 };
 
-    hammer.on('pinchstart', (e) => {
-      lastScale = stage.scaleX(); // 记录当前缩放
+    // 单指平移
+    hammer.on('panstart', () => {
+      const pos = stage.position();
+      lastPan = { x: pos.x, y: pos.y };
     });
 
-    hammer.on('pinchmove', (e) => {
-      if (!stage) return;
-      const pointer = stage.getPointerPosition();
-      if (!pointer) return;
-
-      const oldScale = lastScale;
-      const newScale = lastScale * e.scale; // 根据 pinch 缩放比例更新
-
-      const mousePointTo = {
-        x: (pointer.x - stage.x()) / oldScale,
-        y: (pointer.y - stage.y()) / oldScale,
-      };
-
-      stage.scale({ x: newScale, y: newScale });
+    hammer.on('panmove', (ev) => {
       stage.position({
-        x: pointer.x - mousePointTo.x * newScale,
-        y: pointer.y - mousePointTo.y * newScale,
+        x: lastPan.x + ev.deltaX,
+        y: lastPan.y + ev.deltaY,
       });
-
       stage.batchDraw();
-      setScale(newScale);
     });
+    hammer.on('panend', () => {
+      reRenderLineGridFn();
+    });
+
+    // // 双指缩放
+    // hammer.on('pinchstart', (ev) => {
+    //   lastCenter = ev.center;
+    //   lastDist = ev.scale;
+    // });
+
+    // hammer.on('pinchmove', (ev) => {
+    //   if (!lastCenter) return;
+    //   const oldScale = stage.scaleX();
+    //   const scale = oldScale * (ev.scale / lastDist);
+
+    //   const mousePointTo = {
+    //     x: (lastCenter.x - stage.x()) / oldScale,
+    //     y: (lastCenter.y - stage.y()) / oldScale,
+    //   };
+
+    //   stage.scale({ x: scale, y: scale });
+
+    //   const newPos = {
+    //     x: lastCenter.x - mousePointTo.x * scale,
+    //     y: lastCenter.y - mousePointTo.y * scale,
+    //   };
+
+    //   stage.position(newPos);
+    //   stage.batchDraw();
+    // });
+
+    // hammer.on('pinchend', () => {
+    //   lastCenter = null;
+    //   lastDist = 0;
+    // });
 
     return () => {
       hammer.destroy();
@@ -617,13 +673,23 @@ export default function RectDrawer() {
             <div className='relative h-full flex-1 min-w-0' ref={ref}>
               <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
               <div className='p-2 flex items-center gap-3 absolute bottom-0 left-0 right-0'>
-                <span className='text-sm opacity-80'>左键拖拽绘制矩形；按住 Shift 约束为正方形；Esc 取消。</span>
-                <span className='ml-auto text-sm opacity-60'>当前缩放：{Math.round(scale * 100)}%</span>
+                {isMobile ? (
+                  <div className='text-sm opacity-80'>绘制与编辑安全区域，请使用PC进行操作</div>
+                ) : (
+                  <>
+                    <span className='text-sm opacity-80'>左键拖拽绘制矩形；按住 Shift 约束为正方形；Esc 取消。</span>
+                    <span className='ml-auto text-sm opacity-60'>当前缩放：{Math.round(scale * 100)}%</span>
+                  </>
+                )}
               </div>
               <Stage
                 ref={stageRef}
+                scale={{ x: 0.5, y: 0.5 }}
                 width={size?.width}
                 height={size?.height}
+                onTouchStart={handleMouseDown}
+                onTouchMove={handleMouseMove}
+                onTouchEnd={handleMouseUp}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
