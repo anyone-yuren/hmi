@@ -89,7 +89,7 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
           onClick={() => setOpen(true)}
         >
           <SvgIcon name='points' size={128} className='group-hover:scale-110 animation-all duration-300' />
-          <p className='text-xs opacity-60'>暂无使能传感器</p>
+          <p className='text-xs opacity-60'>{t('common.safety.noDevice')}</p>
         </div>
       </motion.div>
       <Drawer
