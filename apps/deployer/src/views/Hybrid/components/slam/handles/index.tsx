@@ -73,6 +73,7 @@ const SlamHandles = (props: any) => {
     onSuccess: (res: any) => {
       if (res.error_code !== 10000) {
         useErrorMessage(res.error_description, res.solution);
+        setMapLoading(false);
         return;
       }
       setCoverFloorData('grid_map', res?.grid_map);

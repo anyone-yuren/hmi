@@ -215,10 +215,10 @@ const Mapping = () => {
   }, [wsState]);
 
   const handleChange = (newValue: number) => {
-    if (robot_current_status.system_status !== 0) {
-      toast.warning(t('deployer.hybrid.plsCancelAction'));
-      return;
-    }
+    // if (robot_current_status.system_status !== 0) {
+    //   toast.warning(t('deployer.hybrid.plsCancelAction'));
+    //   return;
+    // }
     setFloor(newValue);
   };
 
