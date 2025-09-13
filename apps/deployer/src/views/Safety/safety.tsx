@@ -152,7 +152,7 @@ const Safety = () => {
           <meshStandardMaterial color='#00d1d1' />
         </mesh>
         <mesh geometry={spaceGeo} material={grayMaterial} position={spaceGeoPosition}></mesh>
-        {false && (
+        {true && (
           <RandomPoints
             count={20000}
             range={12}
@@ -161,7 +161,7 @@ const Safety = () => {
             spaceGeoPosition={spaceGeoPosition}
           />
         )}
-        {true && (
+        {false && (
           <RandomCirclePoints
             count={20000}
             range={12}
