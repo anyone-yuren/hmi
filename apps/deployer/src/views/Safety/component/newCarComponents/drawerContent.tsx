@@ -9,11 +9,12 @@ import {
   StopOutlined,
   WalletOutlined,
 } from '@ant-design/icons';
-import { App, Button, Checkbox, Input, Popover, Segmented, Switch, theme, Tooltip } from 'antd';
+import { App, Button, Checkbox, Form, Input, Popover, Segmented, Switch, theme, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
 import Konva from 'konva';
 import { useEffect, useRef, useState } from 'react';
 import { SvgIcon } from 'ui';
+import Accordion from './accrodion';
 import RenderStrategyTpye from './renderStrategyTpye';
 export const Line1px = () => {
   return (
@@ -37,6 +38,8 @@ const DrawerContent = (props: IProps) => {
   const { useToken } = theme;
   const { modal } = App.useApp();
   const { token } = useToken();
+  const [form] = Form.useForm();
+  const setting = {};
   const strategyTpye = [
     {
       id: 1,
@@ -198,90 +201,182 @@ const DrawerContent = (props: IProps) => {
           },
         }}
       > */}
-      <div className='flex flex-col gap-2'>
-        <p className='text-md font-bold relative pb-2'>
-          避障策略
-          <Line1px />
-        </p>
-
-        <Checkbox.Group className='grid grid-cols-1  p-2 rounded-md' value={['2', '3']}>
-          {strategyTpye.length === 0 && <p className='text-xs text-gray-500'>暂无数据</p>}
-          {strategyTpye.map((item) => {
-            return (
-              <div
-                key={item.id}
-                className='group flex items-center justify-between hover:shadow-sm  hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
-              >
-                <Checkbox
-                  style={{ color: token.colorTextBase }}
-                  value={item.id.toString()}
-                  disabled={![2, 3].includes(item.id)}
-                >
-                  {item.name}
-                </Checkbox>
-                <Popover trigger='hover' content={<RenderStrategyTpye data={item} />} align={{ offset: [-8, -0] }}>
-                  <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
-                </Popover>
-              </div>
-            );
-          })}
-        </Checkbox.Group>
-      </div>
-      <div className='flex flex-col gap-2'>
+      <Form form={form}>
         <div className='flex flex-col gap-2'>
           <p className='text-md font-bold relative pb-2'>
-            停车距离
+            避障策略
             <Line1px />
           </p>
-          <div className='flex flex-row gap-2 items-center'>
-            <p className='text-xs text-nowrap shrink-0'>前进</p>
-            <Input type='number' />
-          </div>
-          <div className='flex flex-row gap-2 items-center'>
-            <p className='text-xs text-nowrap shrink-0'>后退</p>
-            <Input type='number' />
-          </div>
-          <div className='flex flex-row gap-2 items-center'>
-            <p className='text-xs text-nowrap shrink-0'>自旋</p>
-            <Input type='number' />
-          </div>
+
+          <Checkbox.Group className='grid grid-cols-1  p-2 rounded-md' value={['2', '3']}>
+            {strategyTpye.length === 0 && <p className='text-xs text-gray-500'>暂无数据</p>}
+            {strategyTpye.map((item) => {
+              return (
+                <div
+                  key={item.id}
+                  className='group flex items-center justify-between hover:shadow-sm  hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
+                >
+                  <Checkbox
+                    style={{ color: token.colorTextBase }}
+                    value={item.id.toString()}
+                    disabled={![2, 3].includes(item.id)}
+                  >
+                    {item.name}
+                  </Checkbox>
+                  <Popover trigger='hover' content={<RenderStrategyTpye data={item} />} align={{ offset: [-8, -0] }}>
+                    <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
+                  </Popover>
+                </div>
+              );
+            })}
+          </Checkbox.Group>
         </div>
-      </div>
-      <div className='flex flex-col gap-2'>
-        <p className='text-md font-bold relative pb-2'>
-          传感器控制
-          <Line1px />
-        </p>
         <div className='flex flex-col gap-2'>
-          <div
-            style={{
-              background: token.colorBgContainerDisabled,
-            }}
-            className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-          >
-            <p className='text-md'>传感器1</p>
-            <Switch />
-          </div>
-          <div
-            style={{
-              background: token.colorBgContainerDisabled,
-            }}
-            className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-          >
-            <p className='text-md'>传感器2</p>
-            <Switch />
-          </div>
-          <div
-            style={{
-              background: token.colorBgContainerDisabled,
-            }}
-            className=' rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-          >
-            <p className='text-md'>传感器3</p>
-            <Switch />
+          <div className='flex flex-col gap-2'>
+            <p className='text-md font-bold relative py-2'>
+              停车距离
+              <Line1px />
+            </p>
+            <div>
+              <div className='flex flex-col gap-2'>
+                <p className='text-xs text-nowrap shrink-0'>前进停车距离</p>
+                <Form.Item
+                  className='!mb-0 flex-1'
+                  name='forward_stop_distance'
+                  rules={[{ required: true, message: '请输入' }]}
+                >
+                  <Input type='number' />
+                </Form.Item>
+              </div>
+              <div className='flex flex-col gap-2'>
+                <p className='text-xs text-nowrap shrink-0'>后退停车距离</p>
+                <Form.Item
+                  className='!mb-0 flex-1'
+                  name='backward_stop_distance'
+                  rules={[{ required: true, message: '请输入' }]}
+                >
+                  <Input type='number' />
+                </Form.Item>
+              </div>
+              <div className='flex flex-col gap-2'>
+                <p className='text-xs text-nowrap shrink-0'>自旋</p>
+                <Form.Item
+                  className='!mb-0 flex-1'
+                  name='spin_stop_distance'
+                  rules={[{ required: true, message: '请输入' }]}
+                >
+                  <Input type='number' />
+                </Form.Item>
+              </div>
+              <div className='flex flex-col gap-2'>
+                <p className='text-xs text-nowrap shrink-0 min-w-[150px]'>离地高度</p>
+                <Form.Item
+                  className='!mb-0 flex-1'
+                  name='ground_filter_height'
+                  rules={[{ required: true, message: '请输入' }]}
+                >
+                  <Input type='number' />
+                </Form.Item>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
+        <Accordion title={<p className='text-md font-bold relative py-2'>点云传感器</p>} defaultOpen={false}>
+          <div className='flex flex-col gap-2'>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
+            >
+              <p className='text-md'>传感器1</p>
+              <Switch />
+            </div>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
+            >
+              <p className='text-md'>传感器2</p>
+              <Switch />
+            </div>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className=' rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
+            >
+              <p className='text-md'>传感器3</p>
+              <Switch />
+            </div>
+          </div>
+        </Accordion>
+        <Accordion title={<p className='text-md font-bold relative py-2'>IO信号</p>} defaultOpen={false}>
+          <div className='flex flex-col gap-2'>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
+            >
+              <p className='text-md'>传感器1</p>
+              <Switch />
+            </div>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
+            >
+              <p className='text-md'>传感器2</p>
+              <Switch />
+            </div>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className=' rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
+            >
+              <p className='text-md'>传感器3</p>
+              <Switch />
+            </div>
+          </div>
+        </Accordion>
+        <Accordion title={<p className='text-md font-bold relative py-2'>CE雷达信号</p>} defaultOpen={false}>
+          <div className='flex flex-col gap-2'>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
+            >
+              <p className='text-md'>传感器1</p>
+              <Switch />
+            </div>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
+            >
+              <p className='text-md'>传感器2</p>
+              <Switch />
+            </div>
+            <div
+              style={{
+                background: token.colorBgContainerDisabled,
+              }}
+              className=' rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
+            >
+              <p className='text-md'>传感器3</p>
+              <Switch />
+            </div>
+          </div>
+        </Accordion>
+      </Form>
+
       <div className='flex flex-col gap-2'>
         <p className='flex justify-between items-center text-md font-bold relative pb-2'>
           保护区域列表
@@ -393,7 +488,9 @@ const DrawerContent = (props: IProps) => {
         className='w-full h-12 p-2 border-t absolute bottom-0 left-0 flex items-center justify-end gap-2'
         style={{ background: token.colorBgContainer, borderColor: token.colorBorder }}
       >
-        <Button type='primary'>修改</Button>
+        <Button type='primary' onClick={() => form.validateFields()}>
+          修改
+        </Button>
         <Button
           variant='outlined'
           color='red'
