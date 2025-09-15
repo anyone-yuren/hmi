@@ -478,6 +478,8 @@ export default function RectDrawer() {
       easing: Konva.Easings.EaseInOut,
       x: width / 2,
       y: height / 2,
+      scaleX: 0.5,
+      scaleY: 0.5,
       onFinish: () => {
         setScale(0.5);
         setReRenderLineGrid(!reRenderLineGrid);
@@ -573,7 +575,7 @@ export default function RectDrawer() {
               </div>
               <Stage
                 ref={stageRef}
-                scale={{ x: 0.5, y: 0.5 }}
+                // scale={{ x: 0.5, y: 0.5 }}
                 width={size?.width}
                 height={size?.height}
                 onTouchStart={handleMouseDown}
