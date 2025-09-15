@@ -13,6 +13,8 @@ export interface IPoint {
   state?: number;
   x: number;
   y: number;
+  offsetX: number;
+  offsetY: number;
 }
 export interface IVehicle {
   id: string;

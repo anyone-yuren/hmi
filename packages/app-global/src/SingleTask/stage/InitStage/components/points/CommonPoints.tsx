@@ -16,6 +16,7 @@ const CommonPoints = (props: IMapPointsProps) => {
   const [textSizeHashMap, setTextSizeHashMap] = useState<Record<IPoint['id'], any>>({});
   const textFontSize = 4;
   useEffect(() => {}, [commonTextProps]);
+
   return (
     <>
       {points?.map((point: IPoint) => {
@@ -54,7 +55,7 @@ const CommonPoints = (props: IMapPointsProps) => {
                 text={point.id}
                 fill={'black'}
                 fontSize={textFontSize}
-                offsetX={(textSizeHashMap[point.id]?.width || 2) / 2}
+                offsetX={(textSizeHashMap[point.id]?.width || 2) / 2 + 0.5}
                 offsetY={(textSizeHashMap[point.id]?.height || 2) + commonTextProps?.height / 2}
                 {...commonTextProps}
               ></Text>
@@ -66,6 +67,14 @@ const CommonPoints = (props: IMapPointsProps) => {
               perfectDrawEnabled={false}
               {...commonProps}
             />
+            {point.offsetX != null && point.offsetY && (
+              <Circle
+                radius={0.8} // 小圆点半径
+                fill={'red'} // 红色填充
+                x={0} // 相对于 Group 的位置
+                y={0} // 相对于 Group 的位置
+              />
+            )}
           </Group>
         );
       })}

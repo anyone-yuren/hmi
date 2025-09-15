@@ -215,10 +215,10 @@ const Mapping = () => {
   }, [wsState]);
 
   const handleChange = (newValue: number) => {
-    if (robot_current_status.system_status !== 0) {
-      toast.warning(t('deployer.hybrid.plsCancelAction'));
-      return;
-    }
+    // if (robot_current_status.system_status !== 0) {
+    //   toast.warning(t('deployer.hybrid.plsCancelAction'));
+    //   return;
+    // }
     setFloor(newValue);
   };
 
@@ -434,7 +434,7 @@ const Mapping = () => {
                             <MenuItem value='slam'>{t('deployer.hybrid.slamNavigation')}</MenuItem>
                           ) : null}
                           {isShowNavigation(navigationType, 'LIDAR_SLAM_3D') ? (
-                            <MenuItem value='slam'>{t('3D SLAM')}</MenuItem>
+                            <MenuItem value='slam'>{'3D SLAM'}</MenuItem>
                           ) : null}
                         </Select>
                       </FormControl>

@@ -135,7 +135,7 @@ const Setting = () => {
               ))}
             </CustomSelect>
           </TextUpdateRow>
-          <PointCloudFilter type={'place_space_detect'} background={'white'} titleColor={'black'}></PointCloudFilter>
+          <PointCloudFilter type={'place_space_detect'}></PointCloudFilter>
 
           {[
             { title: t('deployer.vision.extraForkLift'), key: 'extra_height' },

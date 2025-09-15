@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from 'react';
-import { Group, Image as KonvaImage, Rect, Text } from 'react-konva';
+import { Circle, Group, Image as KonvaImage, Rect, Text } from 'react-konva';
 import packageImageUrl from '../../../assets/points/package.png';
 
 import { IPoint } from '../../index.d';
@@ -68,6 +68,14 @@ const StoragePoints = (props: IMapPointsProps) => {
                 {...storageProps}
               ></KonvaImage>
             )}
+            {storage.offsetX != null && storage.offsetY && (
+              <Circle
+                radius={0.8} // 小圆点半径
+                fill={'red'} // 红色填充
+                x={0} // 相对于 Group 的位置
+                y={0} // 相对于 Group 的位置
+              />
+            )}
             {storageTextVisible && (
               <Text
                 ref={(refs: any) => {
@@ -86,7 +94,7 @@ const StoragePoints = (props: IMapPointsProps) => {
                     });
                 }}
                 text={storage.id}
-                fill={'black'}
+                fill={'#3e86ff'}
                 fontSize={textFontSize}
                 offsetY={(textSizeHashMap[storage.id]?.height || 2) / 2 - 0.5}
                 offsetX={(textSizeHashMap[storage.id]?.width || 2) / 2}

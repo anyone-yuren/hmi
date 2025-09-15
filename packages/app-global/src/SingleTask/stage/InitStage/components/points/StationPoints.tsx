@@ -1,6 +1,6 @@
 import { useAsyncEffect } from 'ahooks';
 import { memo, useState } from 'react';
-import { Group, Image as KonvaImage, Text } from 'react-konva';
+import { Circle, Group, Image as KonvaImage, Text } from 'react-konva';
 import chargeImages from '../../../assets/points/charge.png';
 import parkingImages from '../../../assets/points/parking.png';
 import { IPoint } from '../../index.d';
@@ -87,12 +87,20 @@ const StationPoints = (props: IMapPointsProps) => {
                     });
                 }}
                 text={station.id}
-                fill={'black'}
+                fill={'white'}
                 fontSize={textFontSize}
                 offsetX={(textSizeHashMap[station.id]?.width || 2) / 2}
                 offsetY={(textSizeHashMap[station.id]?.height || 2) + (stationProps?.height || 0) / 2}
                 {...stationTextProps}
               ></Text>
+            )}
+            {station.offsetX != null && station.offsetY && (
+              <Circle
+                radius={0.8} // 小圆点半径
+                fill={'red'} // 红色填充
+                x={0} // 相对于 Group 的位置
+                y={0} // 相对于 Group 的位置
+              />
             )}
           </Group>
         );

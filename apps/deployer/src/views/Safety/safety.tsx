@@ -63,6 +63,36 @@ const RandomPoints = memo(({ count = 1000, range = 10, spaceGeo, color = '#fffff
     </points>
   );
 });
+
+const RandomCirclePoints = memo(({ count = 1000, range = 10, spaceGeo, spaceGeoPosition }) => {
+  const spheres = useMemo(() => {
+    const sphereGeometry = new THREE.SphereGeometry(0.02, 10, 10); // 小球体几何体
+    const boundingBox = new THREE.Box3().setFromBufferAttribute(
+      spaceGeo.getAttribute('position') as THREE.BufferAttribute,
+    );
+    boundingBox.translate(spaceGeoPosition);
+
+    const spheresArray = [];
+    for (let i = 0; i < count; i++) {
+      const x = (Math.random() - 0.5) * range;
+      const y = (Math.random() - 0.5) * range;
+      const z = (Math.random() - 0.5) * range;
+
+      const position = new THREE.Vector3(x, y, z);
+      const color = boundingBox.containsPoint(position) ? 'red' : 'black'; // 判断颜色
+
+      spheresArray.push(
+        <mesh key={i} position={[x, y, z]}>
+          <primitive object={sphereGeometry} />
+          <meshBasicMaterial color={color} />
+        </mesh>,
+      );
+    }
+    return spheresArray;
+  }, [count, range, spaceGeo, spaceGeoPosition]);
+
+  return <group>{spheres}</group>;
+});
 const Safety = () => {
   const { t } = useTranslation();
   const [scale, setScale] = useState(1);
@@ -122,7 +152,25 @@ const Safety = () => {
           <meshStandardMaterial color='#00d1d1' />
         </mesh>
         <mesh geometry={spaceGeo} material={grayMaterial} position={spaceGeoPosition}></mesh>
-        <RandomPoints count={20000} range={12} color='black' spaceGeo={spaceGeo} spaceGeoPosition={spaceGeoPosition} />
+        {true && (
+          <RandomPoints
+            count={20000}
+            range={12}
+            color='black'
+            spaceGeo={spaceGeo}
+            spaceGeoPosition={spaceGeoPosition}
+          />
+        )}
+        {false && (
+          <RandomCirclePoints
+            count={20000}
+            range={12}
+            color='black'
+            spaceGeo={spaceGeo}
+            spaceGeoPosition={spaceGeoPosition}
+          />
+        )}
+
         <CameraController />
         <Ground />
         <GizmoHelper alignment='bottom-right' margin={[80, 80]}>

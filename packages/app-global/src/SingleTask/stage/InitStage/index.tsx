@@ -190,14 +190,13 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
     const stage: any = stageRef.current?.getStage();
 
     const scale = Math.min(size.width / floorMapSize?.width, size.height / floorMapSize?.height);
-    // 这两个左边需要区分是缩放x还是缩放y,要重新定。等换另外的图再搞。
+    // 这两个坐标需要区分是缩放x还是缩放y,要重新定。等换另外的图再搞。
     const map_to_cad_x = map_to_cad?.x * 20 + (size.width - floorMapSize?.width * scale) / 2;
     const map_to_cad_y = 0 - map_to_cad?.y * 20 + size?.height;
 
-    // 4. 应用缩放和偏移量
     stage.scale({ x: scale, y: scale });
     stage.position({ x: map_to_cad_x, y: map_to_cad_y });
-    stage.batchDraw(); // 立即刷新 Stage
+    stage.batchDraw();
   }, [points, floorMapData, size, moveToTarget]);
 
   useEffect(() => {

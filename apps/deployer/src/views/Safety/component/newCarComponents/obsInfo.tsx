@@ -1,3 +1,4 @@
+import Safety3D from '@/views/Safety/safety';
 import { useObsError } from '@gbeata/app-global';
 import { Drawer, Tag, theme } from 'antd';
 import { motion } from 'framer-motion';
@@ -132,7 +133,9 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
         }}
         width={'calc(100% - 120px)'}
         onClose={() => setOpen(false)}
-      ></Drawer>
+      >
+        <Safety3D />
+      </Drawer>
     </>
   );
 };
