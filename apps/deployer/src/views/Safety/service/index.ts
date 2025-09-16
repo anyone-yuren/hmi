@@ -33,3 +33,5 @@ export const postSubscription = (data: any) => {
 export const postUnSubscription = (data: any) => {
   return post('/topics/unsubscription', data);
 };
+
+export const getConfig_h7 = () => get('/robot_config/driver_param/config_h7', {}, '10009');

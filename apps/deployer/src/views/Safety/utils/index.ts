@@ -21,3 +21,27 @@ export const getRect = (points: number[]) => {
     height: Math.abs(points[2] - points[0]),
   };
 };
+
+// 将h7数据转换成数组
+export const extractKeyValue = (obj: {
+  io_input_config?: Record<string, any[]>;
+  io_output_config?: Record<string, any[]>;
+}): { key: string; value: any }[] => {
+  const result: { key: string; value: any }[] = [];
+
+  // 处理 io_input_config
+  if (obj.io_input_config) {
+    for (const [key, arr] of Object.entries(obj.io_input_config)) {
+      result.push({ key, value: arr[2] });
+    }
+  }
+
+  // 处理 io_output_config
+  if (obj.io_output_config) {
+    for (const [key, arr] of Object.entries(obj.io_output_config)) {
+      result.push({ key, value: arr[2] });
+    }
+  }
+
+  return result;
+};

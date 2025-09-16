@@ -8,11 +8,16 @@ import {
   StopOutlined,
   WalletOutlined,
 } from '@ant-design/icons';
+import { useRequest } from 'ahooks';
 import { App, Button, Checkbox, Form, Input, Popover, Segmented, Switch, theme, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
+import YAML from 'js-yaml';
 import Konva from 'konva';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
+import { getConfig_h7 } from '../../service';
+import { extractKeyValue } from '../../utils';
 import Accordion from './accrodion';
 import RenderStrategyTpye from './renderStrategyTpye';
 export const Line1px = () => {
@@ -34,11 +39,41 @@ interface IProps {
   isDark: boolean;
 }
 const DrawerContent = (props: IProps) => {
+  const io_sensor_list = ['obstacle_stop_right', 'pe_charge_input'];
   const { useToken } = theme;
   const { modal } = App.useApp();
   const { token } = useToken();
   const [form] = Form.useForm();
-  const setting = {};
+  const { i18n } = useTranslation();
+  const {
+    data: IoResponse,
+    mutate: updateIoResponse,
+    run: getIoResponse,
+    loading,
+  } = useRequest<any, any>(getConfig_h7, {
+    onSuccess: (response) => {
+      updateIoResponse(YAML.load(response)); // 倒反天罡
+    },
+  });
+
+  const ioInputConfig = useMemo(() => {
+    if (!IoResponse?.io_input_config) return;
+
+    const ioAttr = extractKeyValue(IoResponse);
+    // 根据io_sensor_list 过滤ioAttr
+    // 只保留 io_sensor_list 里面的 key
+    const filtered = ioAttr.filter((item) => {
+      if (io_sensor_list.includes(item.key)) {
+        return item;
+      }
+    });
+    return filtered;
+  }, [IoResponse, io_sensor_list]);
+
+  useEffect(() => {
+    getIoResponse();
+  }, [i18n.language]);
+
   const strategyTpye = [
     {
       id: 1,
@@ -191,15 +226,6 @@ const DrawerContent = (props: IProps) => {
 
   return (
     <div className='flex flex-col gap-4'>
-      {/* <ConfigProvider
-        theme={{
-          // algorithm: theme.defaultAlgorithm,
-          token: {
-            colorText: '#000',
-            colorTextSecondary: '#000',
-          },
-        }}
-      > */}
       <Form form={form}>
         <div className='flex flex-col gap-2'>
           <Tooltip placement='topRight' title='修改避障策略参数，请使用roboToolkit'>
@@ -228,6 +254,32 @@ const DrawerContent = (props: IProps) => {
                   <Popover trigger='hover' content={<RenderStrategyTpye data={item} />} align={{ offset: [-8, -0] }}>
                     <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
                   </Popover>
+                </div>
+              );
+            })}
+          </Checkbox.Group>
+        </div>
+        <div className='flex flex-col gap-2'>
+          <Tooltip placement='topRight' title='修改关联IO信号，请使用roboToolkit'>
+            <p className='text-md font-bold relative py-2 flex justify-between items-center'>
+              IO信号
+              <ExclamationCircleOutlined className='text-md' />
+              <Line1px />
+            </p>
+          </Tooltip>
+
+          <Checkbox.Group
+            className={`grid grid-cols-1 rounded-md p-2 bg-black/10 ${isDark && '!bg-white/10'}`}
+            value={['2', '3']}
+          >
+            {IoResponse?.length === 0 && !loading && <p className='text-xs text-gray-500'>暂无数据</p>}
+            {ioInputConfig?.map((item) => {
+              return (
+                <div
+                  key={item.key}
+                  className='group flex items-center justify-between hover:shadow-sm  hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
+                >
+                  {item.value}
                 </div>
               );
             })}
@@ -285,37 +337,6 @@ const DrawerContent = (props: IProps) => {
         </div>
 
         <Accordion title={<p className='text-md font-bold relative py-2'>点云传感器</p>} defaultOpen={false}>
-          <div className='flex flex-col gap-2'>
-            <div
-              style={{
-                background: token.colorBgContainerDisabled,
-              }}
-              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-            >
-              <p className='text-md'>传感器1</p>
-              <Switch />
-            </div>
-            <div
-              style={{
-                background: token.colorBgContainerDisabled,
-              }}
-              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-            >
-              <p className='text-md'>传感器2</p>
-              <Switch />
-            </div>
-            <div
-              style={{
-                background: token.colorBgContainerDisabled,
-              }}
-              className=' rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-            >
-              <p className='text-md'>传感器3</p>
-              <Switch />
-            </div>
-          </div>
-        </Accordion>
-        <Accordion title={<p className='text-md font-bold relative py-2'>IO信号</p>} defaultOpen={false}>
           <div className='flex flex-col gap-2'>
             <div
               style={{
