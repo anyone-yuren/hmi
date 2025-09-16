@@ -22,10 +22,16 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               叉臂下方保护区域: <span>{strategyData?.rectangle}</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+              叉臂下方保护启用高度阈值: <span>{strategyData?.min_forkarm_height_to_open_this}</span>
+            </div>
+            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               叉臂下方起始保护高度: <span>{strategyData?.height_start} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               叉臂下方裁剪高度: <span>{strategyData?.forkarm_height_cut} mm</span>
+            </div>
+            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+              叉臂下方保护启用距离目标阈值: <span>{strategyData?.min_distance_to_task_point_close_this} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联传感器:
@@ -41,6 +47,9 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+              放货检测启用高度阈值: <span>{strategyData?.min_forkarm_height_to_open_this} mm</span>
+            </div>
+            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               保护区域长方体: <span>{strategyData?.cuboid}</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
@@ -52,7 +61,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               </div>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              放货空间检测距离: <span>{strategyData?.min_distance_to_task_point_open_this} mm</span>
+              放货检测启用距离目标阈值: <span>{strategyData?.min_distance_to_task_point_open_this} mm</span>
             </div>
           </div>
         );
@@ -60,7 +69,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              叉臂下方保护区域: <span>{strategyData?.rectangle}</span>
+              保护区域: <span>{strategyData?.rectangle}</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联传感器:
@@ -71,7 +80,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               </div>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              取货叉尖保护距离: <span>{strategyData?.min_distance_to_task_point_open_this} mm</span>
+              取货叉尖保护启用距离目标阈值: <span>{strategyData?.min_distance_to_task_point_open_this} mm</span>
             </div>
           </div>
         );
@@ -112,7 +121,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               叉臂前移超限屏蔽光电避障: <span>{strategyData?.empty_load_protect_rectangle} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              关联IO:
+              关联IO信号:
               <div className='fle flex-wrap gap-1'>
                 {strategyData?.associated_io_sensor_list?.map((item) => {
                   return <span key={item}>{item} </span>;
@@ -148,7 +157,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               </div>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              关联IO:
+              关联IO信号:
               <div className='fle flex-wrap gap-1'>
                 {strategyData?.associated_io_sensor_list?.map((item) => {
                   return <span key={item}>{item} </span>;

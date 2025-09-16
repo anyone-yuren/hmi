@@ -90,8 +90,10 @@ const DrawerContent = (props: IProps) => {
       data: {
         // 叉臂下方区域保护
         rectangle: [0, 1, 2, 3], //叉臂下方保护区域
+        min_forkarm_height_to_open_this: 100, //叉臂下方保护区域最小高度
         height_start: 100, //叉臂下方起始保护高度
         forkarm_height_cut: 300, //叉臂下方裁剪高度
+        min_distance_to_task_point_close_this: 1000, //叉臂下方保护区域最小距离
         associated_sensor_list: ['tail_lidar', 'perception_3d_lidar'], //关联传感器frame_id
       },
     },
@@ -99,9 +101,10 @@ const DrawerContent = (props: IProps) => {
       id: 3,
       name: '放货空间检测',
       data: {
+        min_forkarm_height_to_open_this: 100, //放货检测启用高度阈值
         cuboid: [0, 1, 2, 2, 3, 4], //保护区域长方体
         associated_sensor_list: ['tail_lidar', 'perception_3d_lidar'], //关联传感器frame_id
-        min_distance_to_task_point_open_this: 1000,
+        min_distance_to_task_point_open_this: 1000, //放货检测启用距离目标阈值
       },
     },
     {
