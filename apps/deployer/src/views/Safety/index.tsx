@@ -1,8 +1,9 @@
 import { LineGrid } from '@/components/InitStage/components/LineGrid';
+import PanelLoading from '@/components/PanelLoading';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
-import { useSize } from 'ahooks';
+import { useRequest, useSize } from 'ahooks';
 import { ConfigProvider, Drawer, theme } from 'antd';
-import { useResponsive, useTheme } from 'antd-style';
+import { useResponsive } from 'antd-style';
 import Hammer from 'hammerjs';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
@@ -15,13 +16,12 @@ import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
 import WsContainer from './component/WsContainer';
+import { safetyConfig } from './service';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
 type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
 
 export default function RectDrawer() {
   const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  const { token } = theme.useToken();
-  const antdTheme = useTheme();
   const stageRef = useRef<Konva.Stage>(null);
   const layerRef = useRef<Konva.Layer>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -539,10 +539,13 @@ export default function RectDrawer() {
     };
   }, []);
 
+  const { data: obstacleData, loading: obstacleDataLoading, run: refreshObstacleData } = useRequest(safetyConfig);
+
   return (
     <div
       className={`w-full h-full flex flex-col !absolute left-0 top-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}
     >
+      {obstacleDataLoading && <PanelLoading isDark={isDark} />}
       <ConfigProvider
         theme={{
           algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
