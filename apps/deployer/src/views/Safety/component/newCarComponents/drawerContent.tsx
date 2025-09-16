@@ -1,6 +1,4 @@
 import {
-  ArrowRightOutlined,
-  ArrowUpOutlined,
   CloseCircleOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
@@ -460,14 +458,14 @@ const DrawerContent = (props: IProps) => {
                   <div className='w-full rounded-md grid-cols-2 grid gap-2'>
                     {/* 左上角坐标 */}
                     <p className='text-xs opacity-50 flex gap-2 animation-all duration-300 border-r border-dashed hover:border-[#333]'>
-                      <ArrowUpOutlined className='-rotate-45' />
+                      <SvgIcon name='buttomright' className='transform scale-x-[-1] scale-y-[-1]' />
                       <span>
                         (x:{Math.round(item.x)}, y:{Math.round(item.y)})
                       </span>
                     </p>
                     {/* 右下角坐标 */}
                     <p className='text-xs opacity-50 flex gap-2'>
-                      <ArrowRightOutlined className='rotate-45' />
+                      <SvgIcon name='buttomright' />
                       <span>
                         (x:{Math.round(item.x + item.width)}, y:{Math.round(item.y + item.height)})
                       </span>
