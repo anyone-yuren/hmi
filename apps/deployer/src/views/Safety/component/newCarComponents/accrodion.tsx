@@ -1,4 +1,5 @@
 // Accordion.tsx
+import { RightOutlined } from '@ant-design/icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 
@@ -40,7 +41,7 @@ export default function Accordion({ id, title, children, defaultOpen = false, cl
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             style={{ display: 'inline-block' }}
           >
-            ▶
+            <RightOutlined />
           </motion.span>
           <Line1px />
         </div>

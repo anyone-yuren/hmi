@@ -3,6 +3,7 @@ import {
   ArrowUpOutlined,
   CloseCircleOutlined,
   DeleteOutlined,
+  ExclamationCircleOutlined,
   InfoCircleOutlined,
   MinusCircleOutlined,
   PauseOutlined,
@@ -203,12 +204,15 @@ const DrawerContent = (props: IProps) => {
       > */}
       <Form form={form}>
         <div className='flex flex-col gap-2'>
-          <p className='text-md font-bold relative pb-2'>
-            避障策略
-            <Line1px />
-          </p>
+          <Tooltip placement='topRight' title='修改避障策略参数，请使用roboToolkit'>
+            <p className='text-md font-bold relative pb-2 flex justify-between items-center'>
+              避障策略
+              <ExclamationCircleOutlined className='text-md' />
+              <Line1px />
+            </p>
+          </Tooltip>
 
-          <Checkbox.Group className='grid grid-cols-1  p-2 rounded-md' value={['2', '3']}>
+          <Checkbox.Group className='grid grid-cols-1  rounded-md' value={['2', '3']}>
             {strategyTpye.length === 0 && <p className='text-xs text-gray-500'>暂无数据</p>}
             {strategyTpye.map((item) => {
               return (
@@ -237,7 +241,7 @@ const DrawerContent = (props: IProps) => {
               停车距离
               <Line1px />
             </p>
-            <div>
+            <div className='flex flex-col gap-2'>
               <div className='flex flex-col gap-2'>
                 <p className='text-xs text-nowrap shrink-0'>前进停车距离</p>
                 <Form.Item

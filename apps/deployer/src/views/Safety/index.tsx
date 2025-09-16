@@ -688,7 +688,7 @@ export default function RectDrawer() {
                       key={idx}
                       points={line.points}
                       stroke='rgba(0,150,136,0.8)'
-                      strokeWidth={1.5}
+                      strokeWidth={2.5}
                       dash={[6, 4]}
                       listening={false}
                     />

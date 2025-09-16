@@ -17,7 +17,7 @@ export const getRect = (points: number[]) => {
   return {
     x: 0 - points[1],
     y: 0 - points[0],
-    width: 0 - (points[3] - points[1]),
-    height: 0 - (points[2] - points[0]),
+    width: Math.abs(points[3] - points[1]),
+    height: Math.abs(points[2] - points[0]),
   };
 };
