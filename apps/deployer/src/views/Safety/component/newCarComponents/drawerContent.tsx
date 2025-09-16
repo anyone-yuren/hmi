@@ -1,3 +1,4 @@
+import PanelLoading from '@/components/PanelLoading';
 import {
   CloseCircleOutlined,
   DeleteOutlined,
@@ -51,6 +52,7 @@ const DrawerContent = (props: IProps) => {
     run: getIoResponse,
     loading,
   } = useRequest<any, any>(getConfig_h7, {
+    manual: true,
     onSuccess: (response) => {
       updateIoResponse(YAML.load(response)); // 倒反天罡
     },
@@ -269,9 +271,10 @@ const DrawerContent = (props: IProps) => {
           </Tooltip>
 
           <Checkbox.Group
-            className={`grid grid-cols-1 rounded-md p-2 bg-black/10 ${isDark && '!bg-white/10'}`}
+            className={`grid grid-cols-1 rounded-md relative p-2 bg-black/10 ${isDark && '!bg-white/10'}`}
             value={['2', '3']}
           >
+            {loading ? <PanelLoading isDark={isDark} /> : null}
             {IoResponse?.length === 0 && !loading && <p className='text-xs text-gray-500'>暂无数据</p>}
             {ioInputConfig?.map((item) => {
               return (

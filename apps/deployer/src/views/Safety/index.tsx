@@ -724,6 +724,7 @@ export default function RectDrawer() {
           classNames={{
             body: `mb-12`,
           }}
+          destroyOnHidden
         >
           <DrawerContent
             rects={rects}
