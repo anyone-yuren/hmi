@@ -11,10 +11,15 @@ interface IProps {
   setOpenUpdateObsDrawer: (open: boolean) => void;
   show: boolean;
   setShow: (open: boolean) => void;
+  obsData: any[];
+  loading: boolean;
 }
 const SafetyHeader = (props: IProps) => {
-  const { isDark, setOpenUpdateObsDrawer, setIsDark, show, setShow } = props;
+  const { isDark, setOpenUpdateObsDrawer, setIsDark, show, setShow, obsData, loading } = props;
+
   const [showSelect, setShowSelect] = useState(false);
+  // const { data: obstacleData, loading: obstacleDataLoading, run: refreshObstacleData } = useRequest(safetyConfig);
+
   const responsive = useResponsive();
   const { obsInfo } = useSafetyStore(
     useShallow((store) => {
@@ -33,17 +38,15 @@ const SafetyHeader = (props: IProps) => {
         <p className='shrink-0'>
           当前避障方案：
           <span
-            className={`px-4 py-1 ${
+            className={`px-4 py-1 cursor-pointer ${
               !isDark
                 ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
                 : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_70%)]'
             } font-bold`}
+            onClick={() => obsData?.length && setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
           >
             {obsInfo?.scheme_id ?? '-'}
-            <FormOutlined
-              className='ml-2 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all'
-              onClick={() => setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
-            />
+            <FormOutlined className='ml-2 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all' />
           </span>
         </p>
         <AnimatePresence mode='wait'>
@@ -59,6 +62,8 @@ const SafetyHeader = (props: IProps) => {
                 className='text-current shrink-0 !py-[1px] box-content'
                 type='dashed'
                 size='small'
+                loading={loading}
+                disabled={obsData?.length === 0}
                 icon={<SwapOutlined />}
                 onClick={() => setShowSelect(true)}
               >
@@ -78,12 +83,11 @@ const SafetyHeader = (props: IProps) => {
                 className='h-7'
                 style={{ width: responsive?.xs ? 120 : 160 }}
                 defaultValue='避障策略'
-                options={[
-                  { label: '避障策略', value: '避障策略' },
-                  { label: '避障策略2', value: '避障策略2' },
-                ]}
+                options={obsData?.map((item) => ({
+                  label: item.scheme_id,
+                  value: item.scheme_id,
+                }))}
                 onChange={(value) => {
-                  console.log('选择了避障策略：', value);
                   setShowSelect(false);
                 }}
               />
