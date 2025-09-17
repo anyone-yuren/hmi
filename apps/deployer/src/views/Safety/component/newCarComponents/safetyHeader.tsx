@@ -43,7 +43,7 @@ const SafetyHeader = (props: IProps) => {
                 ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
                 : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_70%)]'
             } font-bold`}
-            onClick={() => obsData?.length && setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
+            onClick={() => setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
           >
             {obsInfo?.scheme_id ?? '-'}
             <FormOutlined className='ml-2 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all' />

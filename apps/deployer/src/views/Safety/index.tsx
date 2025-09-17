@@ -138,7 +138,7 @@ export default function RectDrawer() {
 
   // 绘制 - MouseDown
   const handleMouseDown = useCallback((e: KonvaEventObject<MouseEvent>) => {
-    if (!obstacleData?.data?.length) return;
+    if (!noData) return;
     if (e.target === e.target.getStage()) setSelectedId(null);
     if (e.target instanceof Konva.Rect && e.target.parent?.attrs?.className === 'rect') {
       setSelectedId(e.target.id());
@@ -538,6 +538,16 @@ export default function RectDrawer() {
 
   const { data: obstacleData, loading: obstacleDataLoading, run: refreshObstacleData } = useRequest(safetyConfig);
 
+  // 定义一个state控制无数据不可操作。
+  const [noData, setNoData] = useState(true);
+  // useEffect(() => {
+  //   if (obstacleData?.data?.length) {
+  //     setNoData(true);
+  //   } else {
+  //     setNoData(false);
+  //   }
+  // }, [obstacleData]);
+
   return (
     <div
       className={`w-full h-full flex flex-col !absolute left-0 top-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}
@@ -577,7 +587,6 @@ export default function RectDrawer() {
               </div>
               <Stage
                 ref={stageRef}
-                // scale={{ x: 0.5, y: 0.5 }}
                 width={size?.width}
                 height={size?.height}
                 onTouchStart={handleMouseDown}
@@ -626,14 +635,14 @@ export default function RectDrawer() {
                         strokeWidth={selectedId === r.id ? 1.5 : 2}
                         dash={[4, 4]}
                         fill={'rgba(255,211,61,0.2)'}
-                        draggable
+                        draggable={noData}
                         onTransform={handleTransform}
                         onTransformStart={handleTransformStart}
                         onTransformEnd={handleTransformEnd}
                         onDragMove={handleDragMove}
                         onDragEnd={handleDragEnd}
-                        onClick={() => setSelectedId(r.id)}
-                        onTap={() => setSelectedId(r.id)}
+                        onClick={() => noData && setSelectedId(r.id)}
+                        onTap={() => noData && setSelectedId(r.id)}
                         onDragStart={(e) => {
                           const node = e.target as Konva.Rect;
                           node.setAttrs({

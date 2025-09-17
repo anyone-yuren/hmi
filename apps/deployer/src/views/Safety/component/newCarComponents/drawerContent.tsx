@@ -278,7 +278,19 @@ const DrawerContent = (props: IProps) => {
             value={['2', '3']}
           >
             {loading ? <PanelLoading isDark={isDark} /> : null}
-            {IoResponse?.length === 0 && !loading && <p className='text-xs text-gray-500'>暂无数据</p>}
+            {!IoResponse?.length && !loading && (
+              <div
+                className={`group w-full h-20 py-4 rounded-lg flex flex-row items-center justify-center ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
+  backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
+              >
+                <SvgIcon
+                  className='group-hover:scale-110 animation-all duration-300'
+                  name='servicerror'
+                  size={80}
+                ></SvgIcon>
+                <p className='opacity-60 text-xs'>请求失败，请重试！</p>
+              </div>
+            )}
             {ioInputConfig?.map((item) => {
               return (
                 <div
@@ -487,14 +499,14 @@ const DrawerContent = (props: IProps) => {
                     <p className='text-xs opacity-50 flex gap-2 animation-all duration-300 border-r border-dashed hover:border-[#333]'>
                       <SvgIcon name='buttomright' className='transform scale-x-[-1] scale-y-[-1]' />
                       <span>
-                        (x:{Math.round(item.x)}, y:{Math.round(item.y)})
+                        (x:{0 - Math.round(item.y)}, y:{0 - Math.round(item.x)})
                       </span>
                     </p>
                     {/* 右下角坐标 */}
                     <p className='text-xs opacity-50 flex gap-2'>
                       <SvgIcon name='buttomright' />
                       <span>
-                        (x:{Math.round(item.x + item.width)}, y:{Math.round(item.y + item.height)})
+                        (x:{0 - Math.round(item.y + item.height)}, y:{0 - Math.round(item.x + item.width)})
                       </span>
                     </p>
                   </div>
@@ -517,7 +529,13 @@ const DrawerContent = (props: IProps) => {
         className='w-full h-12 p-2 border-t absolute bottom-0 left-0 flex items-center justify-end gap-2'
         style={{ background: token.colorBgContainer, borderColor: token.colorBorder }}
       >
-        <Button type='primary' onClick={() => form.validateFields()}>
+        <Button
+          type='primary'
+          onClick={async () => {
+            await form.validateFields();
+            console.log(rects);
+          }}
+        >
           修改
         </Button>
         <Button
