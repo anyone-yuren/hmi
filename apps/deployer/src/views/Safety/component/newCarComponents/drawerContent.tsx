@@ -17,7 +17,7 @@ import Konva from 'konva';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
-import { getConfig_h7 } from '../../service';
+import { getConfig_h7, getDeviceList } from '../../service';
 import { extractKeyValue } from '../../utils';
 import Accordion from './accrodion';
 import RenderStrategyTpye from './renderStrategyTpye';
@@ -38,6 +38,7 @@ interface IProps {
   reRenderLineGrid: boolean;
   setOpenUpdateObsDrawer: (value: boolean) => void;
   isDark: boolean;
+  currentObsInfo: Record<string, any>;
 }
 const DrawerContent = (props: IProps) => {
   const io_sensor_list = ['obstacle_stop_right', 'pe_charge_input'];
@@ -166,6 +167,7 @@ const DrawerContent = (props: IProps) => {
     setRects,
     setOpenUpdateObsDrawer,
     isDark,
+    currentObsInfo,
   } = props;
   const [selectRect, setSelectRect] = useState<{
     id: string;
@@ -180,6 +182,31 @@ const DrawerContent = (props: IProps) => {
   const [isBatchDelete, setIsBatchDelete] = useState(false);
   // 多选的值
   const [checkedList, setCheckedList] = useState<string[]>([]);
+
+  const { data: deviceList } = useRequest(getDeviceList);
+
+  const [initFormValue, setInitalValue] = useState(currentObsInfo ?? {});
+
+  console.log('deviceList', deviceList);
+  const serviceLanguage = useMemo(() => {
+    return i18n.language;
+  }, [i18n.language]);
+
+  const memoDeviceList = useMemo(() => {
+    if (!deviceList) return null;
+    return deviceList?.data
+      ? deviceList.data.map((item) => (
+          <Checkbox
+            key={item.name}
+            value={item.name}
+            style={{ background: token.colorBgContainerDisabled }}
+            className='rounded-md flex items-center justify-between p-2 hover:bg-black/20 hover:shadow-lg hover:font-bold transition-all duration-300'
+          >
+            <p className='text-md'>{serviceLanguage.includes('zh') ? item.ch_name : item.name}</p>
+          </Checkbox>
+        ))
+      : null;
+  }, [currentObsInfo, deviceList?.data, serviceLanguage]);
 
   // 滚动到选中的 item
   useEffect(() => {
@@ -231,7 +258,7 @@ const DrawerContent = (props: IProps) => {
 
   return (
     <div className='flex flex-col gap-4'>
-      <Form form={form}>
+      <Form form={form} initialValues={initFormValue}>
         <div className='flex flex-col gap-2'>
           <Tooltip placement='topRight' title='修改避障策略参数，请使用roboToolkit'>
             <p className='text-md font-bold relative pb-2 flex justify-between items-center'>
@@ -274,11 +301,22 @@ const DrawerContent = (props: IProps) => {
           </Tooltip>
 
           <Checkbox.Group
-            className={`grid grid-cols-1 rounded-md relative p-2 bg-black/10 ${isDark && '!bg-white/10'} min-h-20`}
-            value={['2', '3']}
+            className={`grid grid-cols-1 rounded-md relative p-2 bg-black/10 ${isDark && '!bg-white/10'} min-h-10`}
           >
             {loading ? <PanelLoading isDark={isDark} /> : null}
-            {IoResponse?.length === 0 && !loading && <p className='text-xs text-gray-500'>暂无数据</p>}
+            {!ioInputConfig?.length && !loading && (
+              <div
+                className={`group w-full h-20 py-4 rounded-lg flex flex-row items-center justify-center ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
+  backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
+              >
+                <SvgIcon
+                  className='group-hover:scale-110 animation-all duration-300'
+                  name='servicerror'
+                  size={80}
+                ></SvgIcon>
+                <p className='opacity-60 text-xs'>请求失败，请重试！</p>
+              </div>
+            )}
             {ioInputConfig?.map((item) => {
               return (
                 <div
@@ -343,35 +381,11 @@ const DrawerContent = (props: IProps) => {
         </div>
 
         <Accordion title={<p className='text-md font-bold relative py-2'>点云传感器</p>} defaultOpen={false}>
-          <div className='flex flex-col gap-2'>
-            <div
-              style={{
-                background: token.colorBgContainerDisabled,
-              }}
-              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-            >
-              <p className='text-md'>传感器1</p>
-              <Switch />
-            </div>
-            <div
-              style={{
-                background: token.colorBgContainerDisabled,
-              }}
-              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-            >
-              <p className='text-md'>传感器2</p>
-              <Switch />
-            </div>
-            <div
-              style={{
-                background: token.colorBgContainerDisabled,
-              }}
-              className=' rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-            >
-              <p className='text-md'>传感器3</p>
-              <Switch />
-            </div>
-          </div>
+          <Form.Item className='mb-0' name='sensor_enable'>
+            <Checkbox.Group className='grid w-full'>
+              <div className='flex flex-col gap-2 mt-2'>{memoDeviceList}</div>
+            </Checkbox.Group>
+          </Form.Item>
         </Accordion>
         <Accordion title={<p className='text-md font-bold relative py-2'>CE雷达信号</p>} defaultOpen={false}>
           <div className='flex flex-col gap-2'>
@@ -487,14 +501,14 @@ const DrawerContent = (props: IProps) => {
                     <p className='text-xs opacity-50 flex gap-2 animation-all duration-300 border-r border-dashed hover:border-[#333]'>
                       <SvgIcon name='buttomright' className='transform scale-x-[-1] scale-y-[-1]' />
                       <span>
-                        (x:{Math.round(item.x)}, y:{Math.round(item.y)})
+                        (x:{0 - Math.round(item.y)}, y:{0 - Math.round(item.x)})
                       </span>
                     </p>
                     {/* 右下角坐标 */}
                     <p className='text-xs opacity-50 flex gap-2'>
                       <SvgIcon name='buttomright' />
                       <span>
-                        (x:{Math.round(item.x + item.width)}, y:{Math.round(item.y + item.height)})
+                        (x:{0 - Math.round(item.y + item.height)}, y:{0 - Math.round(item.x + item.width)})
                       </span>
                     </p>
                   </div>
@@ -517,7 +531,15 @@ const DrawerContent = (props: IProps) => {
         className='w-full h-12 p-2 border-t absolute bottom-0 left-0 flex items-center justify-end gap-2'
         style={{ background: token.colorBgContainer, borderColor: token.colorBorder }}
       >
-        <Button type='primary' onClick={() => form.validateFields()}>
+        <Button
+          type='primary'
+          onClick={async () => {
+            await form.validateFields();
+            const formValue = form.getFieldsValue();
+            const sendFormData = { ...initFormValue, ...formValue };
+            console.log(sendFormData);
+          }}
+        >
           修改
         </Button>
         <Button

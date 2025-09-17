@@ -25,7 +25,8 @@ export default function useHybirdWsExtend() {
   return {
     '/sirius/topics/safety_obs_info': (data: any) => {
       // 这里不做阈值处理
-      setObsInfo(data);
+      const { timestamp, ...rest } = data;
+      setObsInfo(rest);
     },
     '/sirius/topics/compose_sensor_point': (data: any) => {
       // 避障点云
