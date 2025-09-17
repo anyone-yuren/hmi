@@ -15,6 +15,7 @@ import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
 import WsContainer from './component/WsContainer';
 import { safetyConfig } from './service';
+import { useSafetyStore } from './store/safety.store';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
 
 export default function RectDrawer() {
@@ -538,6 +539,9 @@ export default function RectDrawer() {
 
   const { data: obstacleData, loading: obstacleDataLoading, run: refreshObstacleData } = useRequest(safetyConfig);
 
+  // 当前避障信息
+  const [currentObsInfo, setCurrentObsInfo] = useState<any>(null);
+
   // 定义一个state控制无数据不可操作。
   const [noData, setNoData] = useState(true);
   // useEffect(() => {
@@ -547,6 +551,24 @@ export default function RectDrawer() {
   //     setNoData(false);
   //   }
   // }, [obstacleData]);
+
+  // 根据推送的避障方案，从避障列表过滤出当前避障信息/
+  const { obsInfo } = useSafetyStore(
+    useShallow((store) => {
+      return {
+        obsInfo: store.obsInfo,
+      };
+    }),
+  );
+
+  useEffect(() => {
+    if (obsInfo?.scheme_id && obstacleData?.data?.length) {
+      const currentObs = obstacleData?.data?.find((item) => item.scheme_id === obsInfo?.scheme_id);
+      if (currentObs) {
+        setCurrentObsInfo(currentObs);
+      }
+    }
+  }, [obsInfo?.scheme_id, obstacleData?.data]);
 
   return (
     <div
@@ -748,6 +770,7 @@ export default function RectDrawer() {
             reRenderLineGrid={reRenderLineGrid}
             setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
             isDark={isDark}
+            currentObsInfo={currentObsInfo} // 当前避障数据
           />
         </Drawer>
       </ConfigProvider>
