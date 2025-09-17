@@ -187,25 +187,41 @@ const DrawerContent = (props: IProps) => {
 
   const [initFormValue, setInitalValue] = useState(currentObsInfo ?? {});
 
-  console.log('deviceList', deviceList);
   const serviceLanguage = useMemo(() => {
     return i18n.language;
   }, [i18n.language]);
 
   const memoDeviceList = useMemo(() => {
-    if (!deviceList) return null;
-    return deviceList?.data
-      ? deviceList.data.map((item) => (
-          <Checkbox
-            key={item.name}
-            value={item.name}
-            style={{ background: token.colorBgContainerDisabled }}
-            className='rounded-md flex items-center justify-between p-2 hover:bg-black/20 hover:shadow-lg hover:font-bold transition-all duration-300'
-          >
-            <p className='text-md'>{serviceLanguage.includes('zh') ? item.ch_name : item.name}</p>
-          </Checkbox>
-        ))
-      : null;
+    if (!deviceList)
+      return (
+        <div
+          className={`group w-full h-20 py-4 rounded-lg flex flex-row items-center justify-center ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
+  backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
+        >
+          <SvgIcon className='group-hover:scale-110 animation-all duration-300' name='servicerror' size={80}></SvgIcon>
+          <p className='opacity-60 text-xs'>请求失败，请重试！</p>
+        </div>
+      );
+    return deviceList?.data ? (
+      deviceList.data.map((item) => (
+        <Checkbox
+          key={item.name}
+          value={item.name}
+          style={{ background: token.colorBgContainerDisabled }}
+          className='rounded-md flex items-center justify-between p-2 hover:bg-black/20 hover:shadow-lg hover:font-bold transition-all duration-300'
+        >
+          <p className='text-md'>{serviceLanguage.includes('zh') ? item.ch_name : item.name}</p>
+        </Checkbox>
+      ))
+    ) : (
+      <div
+        className={`group w-full h-40 py-4 rounded-lg flex flex-col items-center justify-center ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
+  backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
+      >
+        <SvgIcon className='group-hover:scale-110 animation-all duration-300' name='noArea' size={128}></SvgIcon>
+        <p className='opacity-60 text-xs'>暂无传感器数据，请添加</p>
+      </div>
+    );
   }, [currentObsInfo, deviceList?.data, serviceLanguage]);
 
   // 滚动到选中的 item
