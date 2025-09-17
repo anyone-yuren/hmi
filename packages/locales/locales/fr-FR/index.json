@@ -190,7 +190,14 @@
     "refresh": "rafraîchir",
     "safety": {
       "3dpoints": "Nuage de points 3D",
-      "noDevice": "Aucun capteur n'a encore activé"
+      "back": "Reculer",
+      "error": "Erreur",
+      "forward": "Avancer",
+      "init": "Initialisation, sans mouvement",
+      "noDevice": "Aucun capteur n'a encore activé",
+      "spin": "Rotation sur soi-même",
+      "stop": "arrêt",
+      "turn": "Déplacement latéral"
     },
     "save": "Enregistrer",
     "search": "Requête",

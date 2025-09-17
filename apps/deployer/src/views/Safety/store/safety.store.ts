@@ -1,7 +1,6 @@
-import { isEqual } from "lodash";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
-import _ from "lodash";
+import { isEqual } from 'lodash';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface State {
   setting: boolean;
@@ -29,6 +28,9 @@ interface State {
   // 转弯区域数据
   turnRegionData: any;
   setTurnRegionData: (data: any) => void;
+  // 车辆状态
+  motionStatus: number;
+  setMotionStatus: (data: any) => void;
 }
 
 export const useSafetyStore = create<State>()(
@@ -63,10 +65,12 @@ export const useSafetyStore = create<State>()(
       setCloudCategory: (data) => set({ cloudCategory: data }),
       turnRegionData: [],
       setTurnRegionData: (data) => set({ turnRegionData: data }),
+      motionStatus: 0,
+      setMotionStatus: (data) => set({ motionStatus: data }),
     }),
     {
-      name: "safety-store",
+      name: 'safety-store',
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+    },
+  ),
 );
