@@ -274,7 +274,7 @@ const DrawerContent = (props: IProps) => {
           </Tooltip>
 
           <Checkbox.Group
-            className={`grid grid-cols-1 rounded-md relative p-2 bg-black/10 ${isDark && '!bg-white/10'}`}
+            className={`grid grid-cols-1 rounded-md relative p-2 bg-black/10 ${isDark && '!bg-white/10'} min-h-20`}
             value={['2', '3']}
           >
             {loading ? <PanelLoading isDark={isDark} /> : null}

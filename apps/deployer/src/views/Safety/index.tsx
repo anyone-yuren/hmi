@@ -1,9 +1,7 @@
 import { LineGrid } from '@/components/InitStage/components/LineGrid';
-import PanelLoading from '@/components/PanelLoading';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
 import { useRequest, useSize } from 'ahooks';
 import { ConfigProvider, Drawer, theme } from 'antd';
-import { useResponsive } from 'antd-style';
 import Hammer from 'hammerjs';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
@@ -18,7 +16,6 @@ import SafetyHeader from './component/newCarComponents/safetyHeader';
 import WsContainer from './component/WsContainer';
 import { safetyConfig } from './service';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
-type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
 
 export default function RectDrawer() {
   const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -27,7 +24,6 @@ export default function RectDrawer() {
   const ref = useRef<HTMLDivElement>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
   const size = useSize(ref);
-  const responsive = useResponsive();
   const [isDark, setIsDark] = useState(false);
   const { setStageScale } = useHybirdStore(useShallow((store) => ({ setStageScale: store.setStageScale })));
   const [show, setShow] = useState(true);
@@ -142,6 +138,7 @@ export default function RectDrawer() {
 
   // 绘制 - MouseDown
   const handleMouseDown = useCallback((e: KonvaEventObject<MouseEvent>) => {
+    if (!obstacleData?.data?.length) return;
     if (e.target === e.target.getStage()) setSelectedId(null);
     if (e.target instanceof Konva.Rect && e.target.parent?.attrs?.className === 'rect') {
       setSelectedId(e.target.id());
@@ -545,7 +542,7 @@ export default function RectDrawer() {
     <div
       className={`w-full h-full flex flex-col !absolute left-0 top-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}
     >
-      {obstacleDataLoading && <PanelLoading isDark={isDark} />}
+      {/* {obstacleDataLoading && <PanelLoading isDark={isDark} />} */}
       <ConfigProvider
         theme={{
           algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
@@ -557,6 +554,8 @@ export default function RectDrawer() {
           show={show}
           setShow={setShow}
           setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
+          obsData={obstacleData?.data ?? []}
+          loading={obstacleDataLoading}
         />
         {/* 避障信息 */}
         {/* <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} /> */}
