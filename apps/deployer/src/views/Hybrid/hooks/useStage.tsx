@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useHybirdStore } from '../store/hybird.store';
 export const useStageEvents = () => {
-  const { setVehiclePosition, setStartTouch, setShowAgv, setStagePos, showAgv } = useHybirdStore(
+  const { setVehiclePosition, setStartTouch, setShowAgv, setStagePos, showAgv, setIsDrag } = useHybirdStore(
     useShallow((store) => {
       return {
         setVehiclePosition: store.setVehiclePosition,
@@ -13,6 +13,7 @@ export const useStageEvents = () => {
         showAgv: store.showAgv,
         setShowAgv: store.setShowAgv,
         setStagePos: store.setStagePos,
+        setIsDrag: store.setIsDrag,
       };
     }),
   );
@@ -51,6 +52,7 @@ export const useStageEvents = () => {
 
     startTouch.current = pos;
     setStartTouch(pos);
+    setIsDrag(true);
   };
 
   // 处理触摸移动事件
@@ -81,6 +83,7 @@ export const useStageEvents = () => {
     // 隐藏AGV
     setShowAgv(false);
     setVehiclePosition({});
+    setIsDrag(false);
   };
 
   const handleDragMove = (e: Konva.KonvaEventObject<TouchEvent>) => {

@@ -32,6 +32,7 @@ const HybirdStatus = () => {
     system_status: number;
     floor_number: number;
   } = robot_current_status || {};
+
   return (
     <MenuList className='w-full'>
       <MenuItem sx={{ padding: '4px' }}>

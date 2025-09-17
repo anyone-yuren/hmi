@@ -22,16 +22,18 @@ interface IProps {
 
 const InitStage = (props: IProps) => {
   const { handleTouchMove, handleTouchStart, handleTouchEnd, handleDragMove } = useStageEvents();
-  const { mapLoading, setHybirdStage, beginPose, setRadarVisible, setStageScale, setStagePos } = useHybirdStore(
-    useShallow((state) => ({
-      mapLoading: state.mapLoading,
-      setHybirdStage: state.setHybirdStage,
-      beginPose: state.beginPose,
-      setRadarVisible: state.setRadarVisible,
-      setStageScale: state.setStageScale,
-      setStagePos: state.setStagePos,
-    })),
-  );
+  const { mapLoading, setHybirdStage, beginPose, setRadarVisible, setStageScale, setStagePos, setIsDrag } =
+    useHybirdStore(
+      useShallow((state) => ({
+        mapLoading: state.mapLoading,
+        setHybirdStage: state.setHybirdStage,
+        beginPose: state.beginPose,
+        setRadarVisible: state.setRadarVisible,
+        setStageScale: state.setStageScale,
+        setStagePos: state.setStagePos,
+        setIsDrag: state.setIsDrag,
+      })),
+    );
 
   const { size = null, children, onWheelCallback, minScale, draggable = true, ...rest } = props;
   const { stageRef, onWheel } = useStage({

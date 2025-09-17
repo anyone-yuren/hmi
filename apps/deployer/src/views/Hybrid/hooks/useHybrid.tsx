@@ -21,6 +21,7 @@ export const useHybrid = () => {
     reconnectInterval: 5000,
     onMessage: (message) => {
       !hasMessage && setHasMessage(true);
+
       // !hasMessage && message.data.indexOf('robot_current_status') > -1 && setHasMessage(true);
       if (message.data.includes('subscribe')) {
         return;
@@ -30,6 +31,7 @@ export const useHybrid = () => {
       if (!uri?.[1]) {
         return;
       }
+
       const data = { uri: uri[1] };
       let overwrite = false;
       if (!hashMap[data?.uri]) {
@@ -47,7 +49,6 @@ export const useHybrid = () => {
         hashMap[data?.uri].data = message.data;
         hashMap[data?.uri].time = now;
       }
-
       if (overwrite) {
         const render_data = message ? YAML.load(message.data) : {};
         webSocketEventHashMap[data?.uri] && webSocketEventHashMap[data?.uri](render_data);

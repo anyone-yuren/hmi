@@ -6,6 +6,34 @@ import { useTranslation } from 'react-i18next';
 import * as THREE from 'three';
 import CameraController from './component/cameraController';
 import Ground from './component/ground';
+
+const mock = {
+  rectangle_list: [
+    {
+      id: 1,
+      name: 'head',
+      rectangle: [0, -500, 500, 500], // 车头左上右下坐标
+      is_active: false,
+      associated_device: 0,
+    },
+    {
+      id: 2,
+      name: 'forkarm',
+      rectangle: [-1000, -300, 0, 300], // 叉臂左上右下坐标
+      is_active: true,
+      associated_device: 1,
+    },
+  ],
+  // 叉臂高度订阅 /sirius/topics/robot_status_forkarm data?.z , 点云在obsInfo的推送里
+  strategy_under_fork_protection: {
+    rectangle: [-1000, -500, -200, 500],
+    min_forkarm_height_to_open_this: 500,
+    height_start: 100, // 叉臂离地基础高度
+    forkarm_height_cut: 300, // 叉臂上方裁剪高度, 保护区域高度需要叉臂高度减去height_start和forkarm_height_cut
+    min_distance_to_task_point_close_this: 1500,
+    associated_sensor_list: ['Lidar3d_17'],
+  },
+};
 const generateRandomPoints = (
   count: number,
   range: number,

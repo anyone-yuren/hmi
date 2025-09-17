@@ -101,6 +101,9 @@ interface State {
   setQrCodeData: (data: any) => void;
   wsState: any;
   setWsState: (data: any) => void;
+
+  isDrag: boolean;
+  setIsDrag: (bol: boolean) => void;
 }
 
 export const useHybirdStore = create<State>()(
@@ -225,6 +228,8 @@ export const useHybirdStore = create<State>()(
       setQrCodeData: (data: any) => set({ qrCodeData: data }),
       wsState: 0,
       setWsState: (data: any) => set({ wsState: data }),
+      isDrag: false,
+      setIsDrag: (bol: boolean) => set({ isDrag: bol }),
     }),
     {
       name: 'hybird-store',

@@ -14,12 +14,13 @@ function degreesToRadians(degrees: number) {
 }
 const ChangePose = (props: { floor: number }) => {
   const { useErrorMessage } = useHttpCode();
-  const { startTouch, vehiclePosition, beginPose, showAgv } = useHybirdStore(
+  const { startTouch, vehiclePosition, beginPose, showAgv, setMapLoading } = useHybirdStore(
     useShallow((store) => ({
       startTouch: store.startTouch,
       vehiclePosition: store.vehiclePosition,
       beginPose: store.beginPose,
       showAgv: store.showAgv,
+      setMapLoading: store.setMapLoading,
     })),
   );
 
@@ -42,6 +43,7 @@ const ChangePose = (props: { floor: number }) => {
   const { imageObj } = useStageEvents();
   useEffect(() => {
     if (!showAgv && beginPose && vehiclePosition.x) {
+      setMapLoading(true);
       runInitPose({
         floor_number: props.floor,
         pose: {
@@ -49,7 +51,13 @@ const ChangePose = (props: { floor: number }) => {
           pose_y: 0 - vehiclePosition.y / 20,
           pose_angle: degreesToRadians(renderAngleText),
         },
-      });
+      })
+        .then(() => {
+          setMapLoading(false);
+        })
+        .catch(() => {
+          setMapLoading(false);
+        });
     }
   }, [showAgv, beginPose, vehiclePosition, renderAngleText]);
   return (

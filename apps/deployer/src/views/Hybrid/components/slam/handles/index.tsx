@@ -90,7 +90,6 @@ const SlamHandles = (props: any) => {
   const { runAsync: runExtendMapping, loading: extendLoading } = useRequest(extendMapping, {
     manual: true,
     onSuccess: (res: any) => {
-      debugger;
       if (res.error_code !== 10000) {
         setMapLoading(false);
         useErrorMessage(res.error_description, res.solution);
@@ -133,6 +132,7 @@ const SlamHandles = (props: any) => {
     // setSelectedButton(buttonName);
     // 新增和扩展地图要关闭重定位的状态
     if (buttonName === 'add') {
+      setMapLoading(true);
       await runAdd({ floor_number: floor, cmd_type: 1 });
       setAddSlamMappingData({});
       setShowPointCloud(true);
@@ -175,6 +175,7 @@ const SlamHandles = (props: any) => {
     }
     // 扩展地图
     if (buttonName === 'slamExtend') {
+      setMapLoading(true);
       await runExtendMapping({ floor_number: floor, cmd_type: 1 });
       setAddSlamMappingData({});
       setShowPointCloud(true);

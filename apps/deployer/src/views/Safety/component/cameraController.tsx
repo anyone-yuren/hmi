@@ -10,6 +10,7 @@ const CameraController = memo(() => {
       zoomSpeed={5}
       rotateSpeed={1}
       dynamicDampingFactor={0.1}
+      noPan={true}
     />
   );
 });

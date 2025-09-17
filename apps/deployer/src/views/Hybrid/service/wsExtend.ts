@@ -30,6 +30,7 @@ export default function useHybirdWsExtend() {
     setRobotCurrentStatus,
     setScanHead,
     setWsState,
+    isDrag,
   } = useHybirdStore(
     useShallow((store) => ({
       robotCurrentStatus: store.robot_current_status,
@@ -54,6 +55,7 @@ export default function useHybirdWsExtend() {
       setAgvPosition: store.setAgvPosition,
       setScanHead: store.setScanHead,
       setWsState: store.setWsState,
+      isDrag: store.isDrag,
     })),
   );
 
@@ -102,7 +104,7 @@ export default function useHybirdWsExtend() {
       if (typeof ary === 'string') {
         ary = JSON.parse(ary);
       }
-      setPointCloudV1Data(ary || []);
+      !isDrag && setPointCloudV1Data(ary || []);
     },
     '/navigation/current_qrcode_info': (data: any) => {
       setQrCodeData(data);
@@ -125,6 +127,7 @@ export default function useHybirdWsExtend() {
     },
 
     '/navigation/robot_current_status': (data: any) => {
+      console.log('wss robot_current_status', data, robotCurrentStatus);
       // 当前车辆导航信息
       if (!isEqual(data, robotCurrentStatus)) {
         setRobotCurrentStatus(data);
@@ -132,7 +135,7 @@ export default function useHybirdWsExtend() {
     },
     '/navigation/scan_head': (data: any) => {
       // 获取定位点云
-      setScanHead(data);
+      !isDrag && setScanHead(data);
     },
     setWebsocketState: (state) => {
       setWsState(state);

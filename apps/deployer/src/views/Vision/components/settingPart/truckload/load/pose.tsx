@@ -29,8 +29,12 @@ const Pose = () => {
       key: 'offset_right',
     },
     {
-      label: t('deployer.vision.storageStopDist'),
-      key: 'offset_x',
+      label: t('deployer.vision.storageStopDist') + `(${t('deployer.vision.left')})`,
+      key: 'offset_x_left',
+    },
+    {
+      label: t('deployer.vision.storageStopDist') + `(${t('deployer.vision.right')})`,
+      key: 'offset_x_right',
     },
     {
       label: t('deployer.vision.angleCompensation'),
@@ -49,6 +53,8 @@ const Pose = () => {
     });
     obj['offset_left'] = params['offset_y'].value[0];
     obj['offset_right'] = params['offset_y'].value[1];
+    obj['offset_x_left'] = params['offset_x'].value[0];
+    obj['offset_x_right'] = params['offset_x'].value[1];
     setUpdateHashMap(obj);
   }, [pickResponse]);
   const validateInitParams = (params: any) => {
@@ -73,6 +79,7 @@ const Pose = () => {
       params[key].value = updateHashMap[key];
     });
     params.offset_y.value = [updateHashMap.offset_left, updateHashMap.offset_right];
+    params.offset_x.value = [updateHashMap.offset_x_left, updateHashMap.offset_x_right];
     await save(params);
     toast.success(t('common.actionSuccess'));
   };

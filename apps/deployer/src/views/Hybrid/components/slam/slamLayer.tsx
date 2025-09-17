@@ -141,6 +141,7 @@ const SlamLayer = () => {
   const [addImage, setAddImage] = useState(null);
 
   useEffect(() => {
+    console.log('新增和扩建的地图', addSlamBuilding);
     if (addSlamBuilding && addSlamBuilding?.pic) {
       const img = new window.Image();
       img.src = `data:image/png;base64,${addSlamBuilding.pic}`;

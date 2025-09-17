@@ -559,7 +559,7 @@ const Mapping = () => {
           ) : null}
 
           {!isSameFloor && (
-            <div className='absolute left-2 bottom-2 flex flex-col gap-1'>
+            <div className='absolute left-4 bottom-4 flex flex-col gap-4'>
               <Button
                 variant='contained'
                 style={{ color: 'white' }}

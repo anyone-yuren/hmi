@@ -366,7 +366,7 @@ const Setting = (props: any) => {
 
     await saveVisionPickSetting(params);
     toast.success(t('common.actionSuccess'));
-    props?.['__open'] && props?.['__open'](false);
+    // props?.['__open'] && props?.['__open'](false);
   };
 
   return (
