@@ -5,7 +5,7 @@ const CameraController = memo(() => {
   return (
     <TrackballControls
       noZoom={false}
-      minDistance={1}
+      minDistance={0.1}
       maxDistance={1000}
       zoomSpeed={5}
       rotateSpeed={1}

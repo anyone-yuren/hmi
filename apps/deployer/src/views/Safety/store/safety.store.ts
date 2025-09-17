@@ -31,6 +31,9 @@ interface State {
   // 车辆状态
   motionStatus: number;
   setMotionStatus: (data: any) => void;
+
+  forksHeight: number;
+  setForksHeight: (data: number) => void;
 }
 
 export const useSafetyStore = create<State>()(
@@ -67,6 +70,8 @@ export const useSafetyStore = create<State>()(
       setTurnRegionData: (data) => set({ turnRegionData: data }),
       motionStatus: 0,
       setMotionStatus: (data) => set({ motionStatus: data }),
+      forksHeight: 0,
+      setForksHeight: (data) => set({ forksHeight: data }),
     }),
     {
       name: 'safety-store',

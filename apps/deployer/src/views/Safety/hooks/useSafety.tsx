@@ -10,9 +10,9 @@ const HYBRID_URL = import.meta.env.DEV
 
 const hashMap: any = {};
 export const useSafety = () => {
-  const hybirdWsExtend = useSafetyWsExtend();
+  const safetyWsExtend = useSafetyWsExtend();
   const webSocketEventHashMap: any = {
-    ...hybirdWsExtend,
+    ...safetyWsExtend,
   };
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
     reconnectLimit: 10,
@@ -61,6 +61,7 @@ export const useSafety = () => {
             '/sirius/topics/goods_info',
             '/sirius/topics/safety_protect_region',
             '/sirius/topics/task_status_motion',
+            '/sirius/topics/robot_status_forkarm',
           ],
         }),
       );

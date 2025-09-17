@@ -10,15 +10,17 @@ function unzipText(str) {
 }
 
 export default function useHybirdWsExtend() {
-  const { setObsInfo, setSeniorPoints, setGoodsInfo, setTurnRegionData, setMotionStatus } = useSafetyStore(
-    useShallow((store) => ({
-      setObsInfo: store.setObsInfo,
-      setSeniorPoints: store.setSeniorPoints,
-      setGoodsInfo: store.setGoodsInfo,
-      setTurnRegionData: store.setTurnRegionData,
-      setMotionStatus: store.setMotionStatus,
-    })),
-  );
+  const { setObsInfo, setSeniorPoints, setGoodsInfo, setTurnRegionData, setMotionStatus, setForksHeight } =
+    useSafetyStore(
+      useShallow((store) => ({
+        setObsInfo: store.setObsInfo,
+        setSeniorPoints: store.setSeniorPoints,
+        setGoodsInfo: store.setGoodsInfo,
+        setTurnRegionData: store.setTurnRegionData,
+        setMotionStatus: store.setMotionStatus,
+        setForksHeight: store.setForksHeight,
+      })),
+    );
 
   return {
     '/sirius/topics/safety_obs_info': (data: any) => {
@@ -44,6 +46,10 @@ export default function useHybirdWsExtend() {
     '/sirius/topics/task_status_motion': (data: any) => {
       // 车辆状态
       setMotionStatus(data.motion_state);
+    },
+    '/sirius/topics/robot_status_forkarm': (data: any) => {
+      // 叉臂高度 data?.z 后面看看要不要加判断
+      setForksHeight(data?.z || 0);
     },
   };
 }
