@@ -1,5 +1,6 @@
 import SafetyCoordinate from '@/components/InitStage/components/safetyCoordinate';
 import { Layer, Rect } from 'react-konva';
+import { getRect } from '../../utils';
 import VehicleImg from './vehicleImg';
 
 const CarModel = () => {
@@ -23,32 +24,39 @@ const CarModel = () => {
     },
   ];
 
-  // 将对角坐标转为 Konva.Rect 需要的格式
-  const getRectFromDiagonal = (coords: { x: number; y: number }[]) => {
-    const [p1, p2] = coords;
-    const x = Math.min(p1.x, p2.x);
-    const y = Math.min(p1.y, p2.y);
-    const width = Math.abs(p1.x - p2.x);
-    const height = Math.abs(p1.y - p2.y);
-    return { x, y, width, height };
-  };
+  const rectangle_list = [
+    {
+      id: 1,
+      name: 'head',
+      rectangle: [500, 500, 0, -500],
+      is_active: false,
+      associated_device: 0,
+    },
+    {
+      id: 2,
+      name: 'forkarm',
+      rectangle: [0, 300, -1000, -300],
+      is_active: true,
+      associated_device: 1,
+    },
+  ];
 
   return (
     <Layer name='car'>
       <VehicleImg />
-      {carRects.map((rect) => {
-        const { x, y, width, height } = getRectFromDiagonal(rect.diagonalCoordinates);
+      {rectangle_list?.map((rect) => {
+        const { x, y, width, height } = getRect(rect.rectangle);
 
         // 不同机制用不同颜色区分
         let fill = 'rgba(0,188,212,0.4)'; // 默认 BODY 青色
-        if (rect.associated_mechanism === 'BODY') {
+        if (rect.name === 'forkarm') {
           fill = 'rgba(0,188,212,0.6)'; // 叉臂红色
         }
 
         return (
           <Rect
             key={rect.id}
-            name={`car-${rect.associated_mechanism.toLowerCase()}`}
+            name={`car-${rect.name.toLowerCase()}`}
             x={x}
             y={y}
             width={width}

@@ -1,8 +1,27 @@
 import { useAgvType } from '@/hooks/useAgvType';
 import { useEffect, useState } from 'react';
 import { Group, Image } from 'react-konva';
+import { getRect } from '../../utils';
 
 const VehicleImg = () => {
+  const rectangle_list = [
+    {
+      id: 1,
+      name: 'head',
+      rectangle: [500, 500, 0, -500],
+      is_active: false,
+      associated_device: 0,
+    },
+    {
+      id: 2,
+      name: 'forkarm',
+      rectangle: [0, 300, -1000, -300],
+      is_active: true,
+      associated_device: 1,
+    },
+  ];
+  const headerRect = getRect(rectangle_list[0].rectangle);
+  const forkarmRect = getRect(rectangle_list[1].rectangle);
   const agvType = useAgvType();
   const [img, setImg] = useState<HTMLImageElement | null>(null);
 
@@ -26,11 +45,12 @@ const VehicleImg = () => {
       {img && (
         <Image
           image={img} // ✅ 必须是 HTMLImageElement
-          x={-200}
-          y={-400}
+          x={headerRect.x}
+          y={headerRect.y}
           opacity={0.8}
-          width={400}
-          height={800}
+          width={headerRect.width}
+          height={headerRect.height + forkarmRect.height}
+          // height={headerRect.height}
         />
       )}
     </Group>

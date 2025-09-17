@@ -1,8 +1,7 @@
 import { LineGrid } from '@/components/InitStage/components/LineGrid';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
-import { useSize } from 'ahooks';
+import { useRequest, useSize } from 'ahooks';
 import { ConfigProvider, Drawer, theme } from 'antd';
-import { useResponsive, useTheme } from 'antd-style';
 import Hammer from 'hammerjs';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
@@ -15,19 +14,16 @@ import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
 import WsContainer from './component/WsContainer';
+import { safetyConfig } from './service';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
-type SnapLine = { points: number[]; orientation: 'vertical' | 'horizontal' };
 
 export default function RectDrawer() {
   const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  const { token } = theme.useToken();
-  const antdTheme = useTheme();
   const stageRef = useRef<Konva.Stage>(null);
   const layerRef = useRef<Konva.Layer>(null);
   const ref = useRef<HTMLDivElement>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
   const size = useSize(ref);
-  const responsive = useResponsive();
   const [isDark, setIsDark] = useState(false);
   const { setStageScale } = useHybirdStore(useShallow((store) => ({ setStageScale: store.setStageScale })));
   const [show, setShow] = useState(true);
@@ -142,6 +138,7 @@ export default function RectDrawer() {
 
   // 绘制 - MouseDown
   const handleMouseDown = useCallback((e: KonvaEventObject<MouseEvent>) => {
+    if (!obstacleData?.data?.length) return;
     if (e.target === e.target.getStage()) setSelectedId(null);
     if (e.target instanceof Konva.Rect && e.target.parent?.attrs?.className === 'rect') {
       setSelectedId(e.target.id());
@@ -478,6 +475,8 @@ export default function RectDrawer() {
       easing: Konva.Easings.EaseInOut,
       x: width / 2,
       y: height / 2,
+      scaleX: 0.5,
+      scaleY: 0.5,
       onFinish: () => {
         setScale(0.5);
         setReRenderLineGrid(!reRenderLineGrid);
@@ -537,10 +536,13 @@ export default function RectDrawer() {
     };
   }, []);
 
+  const { data: obstacleData, loading: obstacleDataLoading, run: refreshObstacleData } = useRequest(safetyConfig);
+
   return (
     <div
       className={`w-full h-full flex flex-col !absolute left-0 top-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}
     >
+      {/* {obstacleDataLoading && <PanelLoading isDark={isDark} />} */}
       <ConfigProvider
         theme={{
           algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
@@ -552,6 +554,8 @@ export default function RectDrawer() {
           show={show}
           setShow={setShow}
           setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
+          obsData={obstacleData?.data ?? []}
+          loading={obstacleDataLoading}
         />
         {/* 避障信息 */}
         {/* <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} /> */}
@@ -573,7 +577,7 @@ export default function RectDrawer() {
               </div>
               <Stage
                 ref={stageRef}
-                scale={{ x: 0.5, y: 0.5 }}
+                // scale={{ x: 0.5, y: 0.5 }}
                 width={size?.width}
                 height={size?.height}
                 onTouchStart={handleMouseDown}
@@ -595,7 +599,7 @@ export default function RectDrawer() {
                       {selectedId === r.id && (
                         <>
                           <Text
-                            text={`(${Math.round(r.x)}, ${Math.round(r.y)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
+                            text={`(${0 - Math.round(r.y)}, ${0 - Math.round(r.x)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
                             x={Math.round(r.x)}
                             y={Math.round(r.y) - 12} // 显示在矩形上方
                             fontSize={10}
@@ -604,7 +608,7 @@ export default function RectDrawer() {
                           />
                           {/* 显示右下角坐标 */}
                           <Text
-                            text={`(${Math.round(r.x + r.width)}, ${Math.round(r.y + r.height)})`}
+                            text={`(${0 - Math.round(r.y + r.height)}, ${0 - Math.round(r.x + r.width)})`}
                             x={Math.round(r.x + r.width)}
                             y={Math.round(r.y + r.height)}
                             fontSize={10}
@@ -646,7 +650,7 @@ export default function RectDrawer() {
                   {preview && (
                     <Group name='preview'>
                       <Text
-                        text={`(${Math.round(preview.x)}, ${Math.round(preview.y)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
+                        text={`(${0 - Math.round(preview.y)}, ${0 - Math.round(preview.x)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
                         x={Math.round(preview.x)}
                         y={Math.round(preview.y) - 10}
                         fontSize={10}
@@ -654,7 +658,7 @@ export default function RectDrawer() {
                       />
                       {/* 显示右下角坐标 */}
                       <Text
-                        text={`(${Math.round(preview.x + preview.width)}, ${Math.round(preview.y + preview.height)})`}
+                        text={`(${0 - Math.round(preview.y + preview.height)}, ${0 - Math.round(preview.x + preview.width)})`}
                         x={Math.round(preview.x + preview.width)}
                         y={Math.round(preview.y + preview.height)}
                         fontSize={10}
@@ -686,7 +690,7 @@ export default function RectDrawer() {
                       key={idx}
                       points={line.points}
                       stroke='rgba(0,150,136,0.8)'
-                      strokeWidth={1.5}
+                      strokeWidth={2.5}
                       dash={[6, 4]}
                       listening={false}
                     />
@@ -722,6 +726,7 @@ export default function RectDrawer() {
           classNames={{
             body: `mb-12`,
           }}
+          destroyOnHidden
         >
           <DrawerContent
             rects={rects}

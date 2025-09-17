@@ -89,7 +89,7 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
   const customizeRenderEmpty = () => (
     <div style={{ textAlign: 'center' }}>
       <SvgIcon name='ic_content' size={120} />
-      <p>{t('global.noData')}</p>
+      <p>{t('common.noData')}</p>
     </div>
   );
 
