@@ -75,6 +75,7 @@ const DrawerContent = (props: IProps) => {
 
   useEffect(() => {
     getIoResponse();
+    getDevice();
   }, [i18n.language]);
 
   const strategyTpye = [
@@ -183,7 +184,13 @@ const DrawerContent = (props: IProps) => {
   // 多选的值
   const [checkedList, setCheckedList] = useState<string[]>([]);
 
-  const { data: deviceList } = useRequest(getDeviceList);
+  const {
+    data: deviceList,
+    run: getDevice,
+    loading: loadingDevice,
+  } = useRequest(getDeviceList, {
+    manual: true,
+  });
 
   const [initFormValue, setInitalValue] = useState(currentObsInfo ?? {});
 
@@ -195,8 +202,9 @@ const DrawerContent = (props: IProps) => {
     if (!deviceList)
       return (
         <div
-          className={`group w-full h-20 py-4 rounded-lg flex flex-row items-center justify-center ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
+          className={`group w-full h-20 py-4 cursor-pointer rounded-lg flex flex-row items-center justify-center ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
   backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
+          onClick={() => getDevice()}
         >
           <SvgIcon className='group-hover:scale-110 animation-all duration-300' name='servicerror' size={80}></SvgIcon>
           <p className='opacity-60 text-xs'>请求失败，请重试！</p>
@@ -222,7 +230,7 @@ const DrawerContent = (props: IProps) => {
         <p className='opacity-60 text-xs'>暂无传感器数据，请添加</p>
       </div>
     );
-  }, [currentObsInfo, deviceList?.data, serviceLanguage]);
+  }, [currentObsInfo, deviceList?.data, serviceLanguage, loadingDevice]);
 
   // 滚动到选中的 item
   useEffect(() => {
@@ -330,7 +338,9 @@ const DrawerContent = (props: IProps) => {
                   name='servicerror'
                   size={80}
                 ></SvgIcon>
-                <p className='opacity-60 text-xs'>请求失败，请重试！</p>
+                <p className='opacity-60 text-xs' onClick={() => getIoResponse()}>
+                  请求失败，请重试！
+                </p>
               </div>
             )}
             {ioInputConfig?.map((item) => {
@@ -400,6 +410,7 @@ const DrawerContent = (props: IProps) => {
           <Form.Item className='mb-0' name='sensor_enable'>
             <Checkbox.Group className='grid w-full'>
               <div className='flex flex-col gap-2 mt-2'>{memoDeviceList}</div>
+              {loadingDevice ? <PanelLoading isDark={isDark} /> : null}
             </Checkbox.Group>
           </Form.Item>
         </Accordion>
