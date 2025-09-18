@@ -29,9 +29,11 @@ const SafetyHeader = (props: IProps) => {
     }),
   );
 
+  console.log('obsInfo', obsInfo);
+
   return (
     <div
-      className={`header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4 ${obsInfo.type ? '' : 'hidden'}`}
+      className={`header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4 ${!obsInfo.type ? '' : 'hidden'}`}
     >
       <div className='flex items-center gap-4 min-w-0'>
         <Button size='small' className='text-current shrink-0' icon={<MenuOutlined />} onClick={() => setShow(!show)} />
@@ -82,7 +84,7 @@ const SafetyHeader = (props: IProps) => {
                 size={responsive?.xs ? 'small' : 'middle'}
                 className='h-7'
                 style={{ width: responsive?.xs ? 120 : 160 }}
-                defaultValue='避障策略'
+                defaultValue={obsInfo?.scheme_id ?? '-'}
                 options={obsData?.map((item) => ({
                   label: item.scheme_id,
                   value: item.scheme_id,

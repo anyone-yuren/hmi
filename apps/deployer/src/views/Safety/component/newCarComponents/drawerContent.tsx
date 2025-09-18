@@ -10,15 +10,16 @@ import {
   WalletOutlined,
 } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
-import { App, Button, Checkbox, Form, Input, Popover, Segmented, Switch, theme, Tooltip } from 'antd';
+import { App, Button, Checkbox, Form, Input, Popover, Segmented, theme, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
 import YAML from 'js-yaml';
 import Konva from 'konva';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { SvgIcon } from 'ui';
-import { getConfig_h7, getDeviceList } from '../../service';
-import { extractKeyValue } from '../../utils';
+import { getConfig_h7, getDeviceList, updateSafety } from '../../service';
+import { extractKeyValue, getRectPoints } from '../../utils';
 import Accordion from './accrodion';
 import RenderStrategyTpye from './renderStrategyTpye';
 export const Line1px = () => {
@@ -39,6 +40,7 @@ interface IProps {
   setOpenUpdateObsDrawer: (value: boolean) => void;
   isDark: boolean;
   currentObsInfo: Record<string, any>;
+  strategyList: Record<string, Record<string, any>>;
 }
 const DrawerContent = (props: IProps) => {
   const io_sensor_list = ['obstacle_stop_right', 'pe_charge_input'];
@@ -59,10 +61,20 @@ const DrawerContent = (props: IProps) => {
     },
   });
 
+  const { run: update, loading: uploadLoading } = useRequest(updateSafety, {
+    manual: true,
+    onSuccess: (res) => {
+      if (res?.code === 200) {
+        toast.success('更新成功', {
+          position: 'bottom-center',
+        });
+      }
+    },
+  });
+
   const ioInputConfig = useMemo(() => {
     if (!IoResponse?.io_input_config) return;
-
-    const ioAttr = extractKeyValue(IoResponse);
+    const { result: ioAttr, inputConfig, outputConfig } = extractKeyValue(IoResponse);
     // 根据io_sensor_list 过滤ioAttr
     // 只保留 io_sensor_list 里面的 key
     const filtered = ioAttr.filter((item) => {
@@ -70,7 +82,7 @@ const DrawerContent = (props: IProps) => {
         return item;
       }
     });
-    return filtered;
+    return { filtered, inputConfig, outputConfig };
   }, [IoResponse, io_sensor_list]);
 
   useEffect(() => {
@@ -78,85 +90,94 @@ const DrawerContent = (props: IProps) => {
     getDevice();
   }, [i18n.language]);
 
-  const strategyTpye = [
-    {
+  const strategyListName = {
+    strategy_line_keep: '直线保持',
+    strategy_under_fork_protection: '叉臂下方区域保护',
+    strategy_place_cargo_space_protection: '放货空间检测',
+    strategy_pick_cargo_fork_tip_protection: '取货防护',
+    strategy_end_path_adaptive_reduce_range: '末端路线自适应最小避障距离',
+    strategy_top_protection: '顶部安全防护',
+    strategy_door_frame_move_protection: '屏蔽门架光电避障功能',
+    strategy_end_path_close_protection: '末端路线屏蔽叉尖避障功能',
+    strategy_amr_load_protection: 'AMR负载防护',
+  };
+
+  const strategyTpye = {
+    strategy_line_keep: {
+      steer_angle_tolerance: 15,
       id: 1,
-      name: '直线保持',
-      data: {
-        steer_angle_tolerance: 15, //舵轮打角判定阈值
-      },
     },
-    {
+    strategy_under_fork_protection: {
       id: 2,
-      name: '叉臂下方区域保护',
-      data: {
-        // 叉臂下方区域保护
-        rectangle: [0, 1, 2, 3], //叉臂下方保护区域
-        min_forkarm_height_to_open_this: 100, //叉臂下方保护区域最小高度
-        height_start: 100, //叉臂下方起始保护高度
-        forkarm_height_cut: 300, //叉臂下方裁剪高度
-        min_distance_to_task_point_close_this: 1000, //叉臂下方保护区域最小距离
-        associated_sensor_list: ['tail_lidar', 'perception_3d_lidar'], //关联传感器frame_id
-      },
+      rectangle: [-1000, -500, -200, 500],
+      min_forkarm_height_to_open_this: 500,
+      height_start: 100,
+      forkarm_height_cut: 300,
+      min_distance_to_task_point_close_this: 1500,
+      associated_sensor_list: ['Lidar3d_17'],
     },
-    {
+    strategy_place_cargo_space_protection: {
       id: 3,
-      name: '放货空间检测',
-      data: {
-        min_forkarm_height_to_open_this: 100, //放货检测启用高度阈值
-        cuboid: [0, 1, 2, 2, 3, 4], //保护区域长方体
-        associated_sensor_list: ['tail_lidar', 'perception_3d_lidar'], //关联传感器frame_id
-        min_distance_to_task_point_open_this: 1000, //放货检测启用距离目标阈值
-      },
+      min_forkarm_height_to_open_this: 500,
+      cuboid: [1500, -500, -200, 1900, 500, 200],
+      associated_sensor_list: ['Lidar3d_17'],
+      min_distance_to_task_point_open_this: 1000,
     },
-    {
+    strategy_pick_cargo_fork_tip_protection: {
       id: 4,
-      name: '取货防护',
-      data: {
-        rectangle: [0, 1, 2, 3],
-        associated_sensor_list: ['tail_lidar', 'perception_3d_lidar'], //关联传感器frame_id
-        min_distance_to_task_point_open_this: 1000, //使能取货叉尖保护距离
-      },
+      rectangles: [
+        [0, 1, 2, 3],
+        [4, 5, 6, 7],
+      ],
+      associated_sensor_list: ['tip_camera', 'perception_3d_lidar'],
+      min_distance_to_task_point_open_this: 1000,
     },
-    {
+    strategy_end_path_adaptive_reduce_range: {
       id: 5,
-      name: '末端路线自适应最小避障距离',
-      data: {
-        forward_min_protect_distance: 150, //前进最小避障距离
-        backward_min_protect_distance: 100, //后退最小避障距离
-      },
+      forward_min_protect_distance: 150,
+      backward_min_protect_distance: 100,
     },
-    {
+    strategy_top_protection: {
       id: 6,
-      name: '顶部安全防护',
-      data: {
-        empty_load_protect_rectangle: [0, 1, 2, 3], //空载防护区域
-        full_load_protect_rectangle: [0, 1, 2, 3], //负载防护区域
-        associated_sensor_list: ['top_lidar'], //关联传感器frame_id
-      },
+      empty_load_protect_cuboid: [400, -300, 2100, 1100, 300, 2400],
+      full_load_protect_cuboid: [400, -300, 2100, 1100, 300, 2400],
+      associated_sensor_list: ['head'],
     },
-    {
+    strategy_door_frame_move_protection: {
       id: 7,
-      name: '屏蔽门架光电避障功能',
-      data: {
-        fork_forward_protect_distance: 1000, //叉臂前移超限屏蔽光电避障
-        fork_lateral_move_protect_distance: 0, //叉臂横移超限屏蔽光电避障
-        associated_io_sensor_list: ['pe_tip_left', 'pe_tip_right'], //关联IO
-      },
+      fork_forward_protect_distance: 1000,
+      fork_lateral_move_protect_distance: 0,
+      associated_io_sensor_list: ['pe_tip_left', 'pe_tip_right'],
     },
-    {
+    strategy_end_path_close_protection: {
       id: 8,
-      name: '末端路线屏蔽叉尖避障功能',
-      data: {
-        pick_cargo_pe_close_distance: 400, //屏蔽光电避障功能（取货）
-        place_cargo_pe_close_distance: 400, //屏蔽光电避障功能（放货）
-        pick_cargo_pc_close_distance: 400, //屏蔽点云避障功能（取货）
-        place_cargo_pc_close_distance: 400, //屏蔽点云避障功能（放货）
-        associated_io_sensor_list: ['pe_tip_left', 'pe_tip_right'], //关联IO
-        associated_pc_sensor_list: ['tip_camera', 'perception_3d_lidar'], //关联传感器frame_id
-      },
+      list: [
+        {
+          id: 1,
+          pick_cargo_pe_close_distance: 400,
+          place_cargo_pe_close_distance: 400,
+          pick_cargo_pc_close_distance: 400,
+          place_cargo_pc_close_distance: 400,
+          associated_io_sensor_list: ['pe_tip_left', 'pe_tip_right'],
+          associated_pc_sensor_list: ['tip_camera', 'perception_3d_lidar'],
+        },
+        {
+          id: 2,
+          pick_cargo_pe_close_distance: 400,
+          place_cargo_pe_close_distance: 400,
+          pick_cargo_pc_close_distance: 400,
+          place_cargo_pc_close_distance: 400,
+          associated_io_sensor_list: ['pe_tip_left', 'pe_tip_right'],
+          associated_pc_sensor_list: ['tip_camera', 'perception_3d_lidar'],
+        },
+      ],
     },
-  ];
+    strategy_amr_load_protection: {
+      id: 9,
+      rack_leg_diameter: 40,
+      amr_height: 300,
+    },
+  };
   const {
     rects,
     setSelectedId,
@@ -169,6 +190,7 @@ const DrawerContent = (props: IProps) => {
     setOpenUpdateObsDrawer,
     isDark,
     currentObsInfo,
+    strategyList,
   } = props;
   const [selectRect, setSelectRect] = useState<{
     id: string;
@@ -183,6 +205,9 @@ const DrawerContent = (props: IProps) => {
   const [isBatchDelete, setIsBatchDelete] = useState(false);
   // 多选的值
   const [checkedList, setCheckedList] = useState<string[]>([]);
+
+  // 避障策略数据
+  const [propStrategyList, _] = useState(strategyList ?? strategyTpye);
 
   const {
     data: deviceList,
@@ -216,7 +241,7 @@ const DrawerContent = (props: IProps) => {
           key={item.name}
           value={item.name}
           style={{ background: token.colorBgContainerDisabled }}
-          className='rounded-md flex items-center justify-between p-2 hover:bg-black/20 hover:shadow-lg hover:font-bold transition-all duration-300'
+          className='rounded-md p-2 hover:bg-black/20 hover:shadow-lg hover:font-bold transition-all duration-300'
         >
           <p className='text-md'>{serviceLanguage.includes('zh') ? item.ch_name : item.name}</p>
         </Checkbox>
@@ -280,6 +305,8 @@ const DrawerContent = (props: IProps) => {
     });
   };
 
+  console.log(currentObsInfo);
+
   return (
     <div className='flex flex-col gap-4'>
       <Form form={form} initialValues={initFormValue}>
@@ -292,20 +319,20 @@ const DrawerContent = (props: IProps) => {
             </p>
           </Tooltip>
 
-          <Checkbox.Group className='grid grid-cols-1  rounded-md' value={['2', '3']}>
-            {strategyTpye.length === 0 && <p className='text-xs text-gray-500'>暂无数据</p>}
-            {strategyTpye.map((item) => {
+          <Checkbox.Group className='grid grid-cols-1  rounded-md' value={currentObsInfo?.strategy_list}>
+            {Object.keys(propStrategyList).length === 0 && <p className='text-xs text-gray-500'>暂无数据</p>}
+            {Object.keys(propStrategyList).map((item) => {
               return (
                 <div
-                  key={item.id}
+                  key={item}
                   className='group flex items-center justify-between hover:shadow-sm  hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
                 >
                   <Checkbox
                     style={{ color: token.colorTextBase }}
-                    value={item.id.toString()}
-                    disabled={![2, 3].includes(item.id)}
+                    value={propStrategyList[item]?.id}
+                    disabled={!currentObsInfo?.strategy_list.includes(propStrategyList[item].id)}
                   >
-                    {item.name}
+                    {strategyListName[item]}
                   </Checkbox>
                   <Popover trigger='hover' content={<RenderStrategyTpye data={item} />} align={{ offset: [-8, -0] }}>
                     <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
@@ -318,7 +345,7 @@ const DrawerContent = (props: IProps) => {
         <div className='flex flex-col gap-2'>
           <Tooltip placement='topRight' title='修改关联IO信号，请使用roboToolkit'>
             <p className='text-md font-bold relative py-2 flex justify-between items-center'>
-              IO信号
+              IO信号（输入）
               <ExclamationCircleOutlined className='text-md' />
               <Line1px />
             </p>
@@ -328,7 +355,7 @@ const DrawerContent = (props: IProps) => {
             className={`grid grid-cols-1 rounded-md relative p-2 bg-black/10 ${isDark && '!bg-white/10'} min-h-10`}
           >
             {loading ? <PanelLoading isDark={isDark} /> : null}
-            {!ioInputConfig?.length && !loading && (
+            {!ioInputConfig?.inputConfig?.length && !loading && (
               <div
                 className={`group w-full h-20 py-4 rounded-lg flex flex-row items-center justify-center ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
   backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
@@ -343,10 +370,59 @@ const DrawerContent = (props: IProps) => {
                 </p>
               </div>
             )}
-            {ioInputConfig?.map((item) => {
+            {ioInputConfig?.inputConfig?.map((item) => {
+              if (!currentObsInfo) return;
+              console.log(currentObsInfo?.i_sensor_list?.includes(item?.key));
+
+              return (
+                <div
+                  key={item?.key}
+                  style={{
+                    display: currentObsInfo?.i_sensor_list?.includes(item?.key) ? 'flex' : 'none',
+                  }}
+                  className='group flex items-center justify-between hover:shadow-sm  hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
+                >
+                  {item.value}
+                </div>
+              );
+            })}
+          </Checkbox.Group>
+        </div>
+        <div className='flex flex-col gap-2'>
+          <Tooltip placement='topRight' title='修改关联IO信号，请使用roboToolkit'>
+            <p className='text-md font-bold relative py-2 flex justify-between items-center'>
+              IO信号（输出）
+              <ExclamationCircleOutlined className='text-md' />
+              <Line1px />
+            </p>
+          </Tooltip>
+
+          <Checkbox.Group
+            className={`grid grid-cols-1 rounded-md relative p-2 bg-black/10 ${isDark && '!bg-white/10'} min-h-10`}
+          >
+            {loading ? <PanelLoading isDark={isDark} /> : null}
+            {!ioInputConfig?.outputConfig?.length && !loading && (
+              <div
+                className={`group w-full h-20 py-4 rounded-lg flex flex-row items-center justify-center ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
+  backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
+              >
+                <SvgIcon
+                  className='group-hover:scale-110 animation-all duration-300'
+                  name='servicerror'
+                  size={80}
+                ></SvgIcon>
+                <p className='opacity-60 text-xs' onClick={() => getIoResponse()}>
+                  请求失败，请重试！
+                </p>
+              </div>
+            )}
+            {ioInputConfig?.outputConfig?.map((item) => {
               return (
                 <div
                   key={item.key}
+                  style={{
+                    display: currentObsInfo?.o_sensor_list?.includes(item?.key) ? 'flex' : 'none',
+                  }}
                   className='group flex items-center justify-between hover:shadow-sm  hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
                 >
                   {item.value}
@@ -407,43 +483,12 @@ const DrawerContent = (props: IProps) => {
         </div>
 
         <Accordion title={<p className='text-md font-bold relative py-2'>点云传感器</p>} defaultOpen={false}>
-          <Form.Item className='mb-0' name='sensor_enable'>
+          <Form.Item className='mb-0' name='pc_sensor_list'>
             <Checkbox.Group className='grid w-full'>
               <div className='flex flex-col gap-2 mt-2'>{memoDeviceList}</div>
               {loadingDevice ? <PanelLoading isDark={isDark} /> : null}
             </Checkbox.Group>
           </Form.Item>
-        </Accordion>
-        <Accordion title={<p className='text-md font-bold relative py-2'>CE雷达信号</p>} defaultOpen={false}>
-          <div className='flex flex-col gap-2'>
-            <div
-              style={{
-                background: token.colorBgContainerDisabled,
-              }}
-              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-            >
-              <p className='text-md'>传感器1</p>
-              <Switch />
-            </div>
-            <div
-              style={{
-                background: token.colorBgContainerDisabled,
-              }}
-              className='rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-            >
-              <p className='text-md'>传感器2</p>
-              <Switch />
-            </div>
-            <div
-              style={{
-                background: token.colorBgContainerDisabled,
-              }}
-              className=' rounded-md flex items-center justify-between p-2 cursor-pointer hover:bg-black/20 hover:shadow-lg  hover:font-bold  animation-all duration-300 '
-            >
-              <p className='text-md'>传感器3</p>
-              <Switch />
-            </div>
-          </div>
         </Accordion>
       </Form>
 
@@ -560,11 +605,22 @@ const DrawerContent = (props: IProps) => {
       >
         <Button
           type='primary'
+          disabled={uploadLoading}
+          loading={uploadLoading}
           onClick={async () => {
             await form.validateFields();
             const formValue = form.getFieldsValue();
-            const sendFormData = { ...initFormValue, ...formValue };
-            console.log(sendFormData);
+            const protectAreas = rects.map((item, index) => {
+              return {
+                id: item.id,
+                name: 'head',
+                rectangle: getRectPoints(item.x, item.y, item.width, item.height),
+              };
+            });
+            const sendFormData = { ...initFormValue, ...formValue, protect_areas: protectAreas };
+            const res = await update({
+              ...sendFormData,
+            });
           }}
         >
           修改
