@@ -20,6 +20,10 @@ export const updateSafety = (data: any) => {
   return post('/robot_config/control_param/config_safety', data);
 };
 
+// 获取可活动机构列表
+export const getActiveDevices = (): Promise<Result<[]>> => {
+  return get('/mwrobot/config/get_active_devices');
+};
 export const getDeviceList = (): Promise<Result<[]>> => {
   return get('/mwrobot/config/get_device_info');
 };
