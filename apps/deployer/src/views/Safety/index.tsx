@@ -532,7 +532,7 @@ export default function RectDrawer() {
   useEffect(() => {
     if (currentObsInfo?.protect_areas?.length) {
       const newRects = currentObsInfo?.protect_areas?.map((item) => {
-        return { ...getRect(item.rectangle), id: item.id, name: item.name };
+        return { ...getRect(item.rectangle), id: item.id, associated_device: item.associated_device };
       });
       setRects(newRects);
     }

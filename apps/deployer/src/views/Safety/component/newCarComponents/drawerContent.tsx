@@ -2,15 +2,14 @@ import PanelLoading from '@/components/PanelLoading';
 import {
   CloseCircleOutlined,
   DeleteOutlined,
+  EllipsisOutlined,
   ExclamationCircleOutlined,
   InfoCircleOutlined,
   MinusCircleOutlined,
-  PauseOutlined,
   StopOutlined,
-  WalletOutlined,
 } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
-import { App, Button, Checkbox, Form, Input, Popover, Segmented, theme, Tooltip } from 'antd';
+import { App, Button, Checkbox, Dropdown, Form, Input, Popover, Space, theme, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
 import YAML from 'js-yaml';
 import Konva from 'konva';
@@ -18,7 +17,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { SvgIcon } from 'ui';
-import { getConfig_h7, getDeviceList, updateSafety } from '../../service';
+import useActiveDevice from '../../hooks/useActiveDevice';
+import { getActiveDevices, getConfig_h7, getDeviceList, updateSafety } from '../../service';
 import { extractKeyValue, getRectPoints } from '../../utils';
 import Accordion from './accrodion';
 import RenderStrategyTpye from './renderStrategyTpye';
@@ -49,6 +49,7 @@ const DrawerContent = (props: IProps) => {
   const { token } = useToken();
   const [form] = Form.useForm();
   const { i18n } = useTranslation();
+  const activeDevice = useActiveDevice();
   const {
     data: IoResponse,
     mutate: updateIoResponse,
@@ -71,6 +72,11 @@ const DrawerContent = (props: IProps) => {
       }
     },
   });
+
+  // 获取可活动机构数据
+  const { run: getActiveDevicesRun, data: activeDevices } = useRequest(getActiveDevices);
+
+  console.log(activeDevices);
 
   const ioInputConfig = useMemo(() => {
     if (!IoResponse?.io_input_config) return;
@@ -554,9 +560,30 @@ const DrawerContent = (props: IProps) => {
                     setSelectRect(item);
                   }}
                 >
-                  <p className='text-sm flex items-center justify-between'>
+                  <p className='text-sm flex items-center justify-between gap-2'>
                     {isBatchDelete ? <Checkbox value={item.id}>{item.id}</Checkbox> : item.id}
-                    <Tooltip title='关联机构'>
+                    <Dropdown
+                      menu={{
+                        items: activeDevice.map((item) => ({ key: String(item.value), label: item.label })),
+                        onClick: (e) => {
+                          setRects((prev) =>
+                            prev.map((item) =>
+                              item.id === selectedId ? { ...item, associated_device: Number(e.key) } : item,
+                            ),
+                          );
+                        },
+                        selectedKeys: [item?.associated_device && String(item?.associated_device)],
+                      }}
+                    >
+                      <a onClick={(e) => e.preventDefault()}>
+                        <Space>
+                          {activeDevice.find((device) => device.value === item.associated_device)?.label ?? '-'}
+                          <EllipsisOutlined />
+                        </Space>
+                      </a>
+                    </Dropdown>
+                    {/* <Select className='w-1/2' placeholder='关联机构' options={activeDevice}></Select> */}
+                    {/* <Tooltip title='关联机构'>
                       <Segmented
                         size={'small'}
                         className='hover:shadow-lg animation-all duration-300'
@@ -566,7 +593,7 @@ const DrawerContent = (props: IProps) => {
                           { value: 'dark', icon: <PauseOutlined /> },
                         ]}
                       />
-                    </Tooltip>
+                    </Tooltip> */}
                   </p>
                   <div className='w-full rounded-md grid-cols-2 grid gap-2'>
                     {/* 左上角坐标 */}
@@ -613,7 +640,7 @@ const DrawerContent = (props: IProps) => {
             const protectAreas = rects.map((item, index) => {
               return {
                 id: item.id,
-                name: 'head',
+                associated_device: item?.associated_device,
                 rectangle: getRectPoints(item.x, item.y, item.width, item.height),
               };
             });
