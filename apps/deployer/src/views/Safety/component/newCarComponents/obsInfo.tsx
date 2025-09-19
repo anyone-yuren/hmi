@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
+import { useStrategyListName } from '../../hooks/useActiveDevice';
 import useDrawerClassName from '../../hooks/useDrawerClassName';
 import { useSafetyStore } from '../../store/safety.store';
 import { Line1px } from './drawerContent';
@@ -13,12 +14,14 @@ interface ObsInfoPanelProps {
   setOpenUpdateObsDrawer?: (open: boolean) => void;
   isDark?: boolean;
   show?: boolean;
+  currentObsData: any;
+  strategyList: any;
 }
 const ObsInfoPanel = (props: ObsInfoPanelProps) => {
   const { t } = useTranslation();
   const classNames = useDrawerClassName();
   const [open, setOpen] = useState(false);
-  const { show = true, isDark = false } = props;
+  const { show = true, isDark = false, currentObsData = {}, strategyList } = props;
   const { token } = theme.useToken();
   const { setOpenUpdateObsDrawer } = props;
   const { motionStatus, obsInfo, goodsInfo } = useSafetyStore(
@@ -28,7 +31,15 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
       goodsInfo: store.goodsInfo,
     })),
   );
+  const { strategy_list = [] } = currentObsData;
 
+  const strategyNames = Object.keys(strategyList).filter((item) => {
+    if (strategy_list.includes(strategyList[item].id)) {
+      return item;
+    }
+  });
+
+  const strategyListName = useStrategyListName();
   const { getObsMsg } = useObsError();
   const iMotionStatus = [
     t('common.safety.init'),
@@ -39,14 +50,11 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
     t('common.safety.spin'),
     t('common.safety.error'),
   ];
-  const strategyTpye = [
-    { id: 1, name: '直线保持' },
-    { id: 2, name: '叉臂下方区域保护叉臂下方区域保护' },
-    { id: 3, name: '放货空间检测' },
-    { id: 4, name: '取货防护' },
-    { id: 5, name: '末端路线自适应最小避障距离' },
-    { id: 6, name: '末端路线屏蔽叉尖避障功能' },
-  ];
+  const strategyTpye = strategyNames.map((item) => {
+    return {
+      name: strategyListName[item],
+    };
+  });
   return (
     <>
       <motion.div
@@ -71,7 +79,7 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
           <div>
             <p className='text-xs mb-2'>避障策略</p>
             <div className='grid grid-cols-2 gap-1 max-h-16 overflow-y-auto'>
-              {strategyTpye.map((item) => {
+              {strategyTpye.map((item, index) => {
                 return (
                   <div className='flex items-center justify-between p-1 shadow-sm hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold transition-all duration-300'>
                     <p className='flex-1 truncate text-xs text-gray-500' title={item.name}>

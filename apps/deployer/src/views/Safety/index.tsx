@@ -604,7 +604,13 @@ export default function RectDrawer() {
 
         <div className='flex-1 w-full relative'>
           <div className='h-full flex'>
-            <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} show={show} isDark={isDark} />
+            <ObsInfoPanel
+              strategyList={strategyList}
+              currentObsData={currentObsInfo}
+              setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
+              show={show}
+              isDark={isDark}
+            />
             <div className='relative h-full flex-1 min-w-0' ref={ref}>
               <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
               <div className='p-2 flex items-center gap-3 absolute bottom-0 left-0 right-0'>

@@ -17,7 +17,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { SvgIcon } from 'ui';
-import useActiveDevice from '../../hooks/useActiveDevice';
+import useActiveDevice, { useStrategyListName } from '../../hooks/useActiveDevice';
 import { getActiveDevices, getConfig_h7, getDeviceList, updateSafety } from '../../service';
 import { extractKeyValue, getRectPoints } from '../../utils';
 import Accordion from './accrodion';
@@ -76,8 +76,6 @@ const DrawerContent = (props: IProps) => {
   // 获取可活动机构数据
   const { run: getActiveDevicesRun, data: activeDevices } = useRequest(getActiveDevices);
 
-  console.log(activeDevices);
-
   const ioInputConfig = useMemo(() => {
     if (!IoResponse?.io_input_config) return;
     const { result: ioAttr, inputConfig, outputConfig } = extractKeyValue(IoResponse);
@@ -96,17 +94,7 @@ const DrawerContent = (props: IProps) => {
     getDevice();
   }, [i18n.language]);
 
-  const strategyListName = {
-    strategy_line_keep: '直线保持',
-    strategy_under_fork_protection: '叉臂下方区域保护',
-    strategy_place_cargo_space_protection: '放货空间检测',
-    strategy_pick_cargo_fork_tip_protection: '取货防护',
-    strategy_end_path_adaptive_reduce_range: '末端路线自适应最小避障距离',
-    strategy_top_protection: '顶部安全防护',
-    strategy_door_frame_move_protection: '屏蔽门架光电避障功能',
-    strategy_end_path_close_protection: '末端路线屏蔽叉尖避障功能',
-    strategy_amr_load_protection: 'AMR负载防护',
-  };
+  const strategyListName = useStrategyListName();
 
   const strategyTpye = {
     strategy_line_keep: {

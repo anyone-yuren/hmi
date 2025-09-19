@@ -29,8 +29,6 @@ const SafetyHeader = (props: IProps) => {
     }),
   );
 
-  console.log('obsInfo', obsInfo);
-
   return (
     <div
       className={`header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4 ${!obsInfo.type ? '' : 'hidden'}`}
