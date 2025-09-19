@@ -283,7 +283,8 @@ const SingleTask = () => {
         )}
 
         <div ref={ref} className='flex-1 w-full h-full min-h-[300px]'>
-          {pointsDict?.points.length ? (
+          {/* 放开点位的判断显示,没有点位就展示图片 */}
+          {true || pointsDict?.points.length ? (
             <InitStage
               ref={stageRef}
               infiniteView={true}

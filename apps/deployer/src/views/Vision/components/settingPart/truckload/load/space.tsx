@@ -81,8 +81,8 @@ const Space = () => {
     const params: any = { ...(spaceResponse?.data || {}) };
     const obj = { ...updateHashMap };
     if (!params['offset_y']) return;
-    obj['offset_y_left'] = params['offset_y'].value[0];
-    obj['offset_y_right'] = params['offset_y'].value[1];
+    obj['offset_y_left'] = params['offset_y']?.value?.[0];
+    obj['offset_y_right'] = params['offset_y']?.value?.[1];
     setUpdateHashMap(obj);
   }, [spaceResponse]);
 

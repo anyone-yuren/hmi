@@ -56,10 +56,10 @@ const Sideway = () => {
     const params: any = { ...(pickResponse?.data || {}) };
     const obj = { ...updateHashMap };
     if (!params['offset_y'] || !params['offset_x']) return;
-    obj['offset_y_left'] = params['offset_y'].value[0];
-    obj['offset_y_right'] = params['offset_y'].value[1];
-    obj['offset_x_left'] = params['offset_x'].value[0];
-    obj['offset_x_right'] = params['offset_x'].value[1];
+    obj['offset_y_left'] = params['offset_y']?.value?.[0];
+    obj['offset_y_right'] = params['offset_y']?.value?.[1];
+    obj['offset_x_left'] = params['offset_x']?.value?.[0];
+    obj['offset_x_right'] = params['offset_x']?.value?.[1];
     setUpdateHashMap(obj);
   }, [pickResponse]);
 

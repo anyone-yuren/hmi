@@ -8,11 +8,11 @@ export const addFloor = (num: any) => {
   });
 };
 
-export const getFootPrint = (): Promise<Result<any>> => {
+export const getFootPrint = (): Promise<any> => {
   return get('/sirius/topics/safety_foot_print');
 };
 
-export const safetyConfig = (): Promise<Result<[]>> => {
+export const safetyConfig = (): Promise<any> => {
   return get('/robot_config/control_param/config_safety');
 };
 
@@ -20,7 +20,7 @@ export const updateSafety = (data: any) => {
   return post('/robot_config/control_param/config_safety', data);
 };
 
-export const getDeviceList = (): Promise<Result<[]>> => {
+export const getDeviceList = (): Promise<[]> => {
   return get('/mwrobot/config/get_device_info');
 };
 

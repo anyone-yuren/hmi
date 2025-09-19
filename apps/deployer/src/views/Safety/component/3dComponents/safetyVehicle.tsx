@@ -21,8 +21,8 @@ function SafetyVehicle(props: any) {
     const vehicle = vehicleRect.find((item) => item.name === 'head');
     const forks = vehicleRect.find((item) => item.name === 'forkarm');
 
-    const vehiclePoints = generateRectanglePoints(vehicle.rectangle);
-    const forksPoints = generateRectanglePoints(forks.rectangle);
+    const vehiclePoints = generateRectanglePoints(vehicle?.rectangle);
+    const forksPoints = generateRectanglePoints(forks?.rectangle);
 
     // 计算车辆的尺寸和位置
     const vehicleWidth = Math.abs(vehiclePoints[1][0] - vehiclePoints[0][0]);

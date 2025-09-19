@@ -51,10 +51,10 @@ const Pose = () => {
     ary?.map((key: string) => {
       obj[key] = params[key].value;
     });
-    obj['offset_left'] = params['offset_y'].value[0];
-    obj['offset_right'] = params['offset_y'].value[1];
-    obj['offset_x_left'] = params['offset_x'].value[0];
-    obj['offset_x_right'] = params['offset_x'].value[1];
+    obj['offset_left'] = params['offset_y']?.value?.[0];
+    obj['offset_right'] = params['offset_y']?.value?.[1];
+    obj['offset_x_left'] = params['offset_x']?.value?.[0];
+    obj['offset_x_right'] = params['offset_x']?.value?.[1];
     setUpdateHashMap(obj);
   }, [pickResponse]);
   const validateInitParams = (params: any) => {

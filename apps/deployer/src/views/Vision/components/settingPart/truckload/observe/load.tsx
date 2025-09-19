@@ -35,8 +35,8 @@ const Load = () => {
   ];
   useEffect(() => {
     setUpdateHashMap({
-      offset_left: unloadResponse?.data?.offset_y?.value[0],
-      offset_right: unloadResponse?.data?.offset_y?.value[1],
+      offset_left: unloadResponse?.data?.offset_y?.value?.[0],
+      offset_right: unloadResponse?.data?.offset_y?.value?.[1],
       offset_angle: unloadResponse?.data?.offset_angle?.value,
     });
   }, [unloadResponse]);

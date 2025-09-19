@@ -9,8 +9,13 @@ export const pixelToMeter = (pixel: number) => {
 
 // 把两个点转换成矩形
 export const generateRectanglePoints = (coords) => {
-  if (coords.length !== 4) {
-    throw new Error('参数必须是包含4个数字的数组 [x1, y1, x2, y2]');
+  if (!coords || coords.length !== 4) {
+    return [
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+    ];
   }
 
   const [x1, y1, x2, y2] = coords;

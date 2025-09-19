@@ -24,10 +24,10 @@ function SafetyPointCloud(props) {
 
   const pointsData = useMemo(() => {
     const points: number[] = [];
-    for (let i = 0; i < 2500; i++) {
-      const x = (Math.random() - 0.5) * 2;
-      const y = (Math.random() - 0.5) * 2;
-      const z = Math.random() * 1;
+    for (let i = 0; i < 15000; i++) {
+      const x = (Math.random() - 0.5) * 4;
+      const y = (Math.random() - 0.5) * 4;
+      const z = Math.random() * 2;
       points.push(x, y, z);
     }
     return new Float32Array(points);

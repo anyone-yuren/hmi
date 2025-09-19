@@ -60,8 +60,8 @@ const Sideway = () => {
     ary?.map((key: string) => {
       obj[key] = params[key].value;
     });
-    obj['offset_left'] = params['offset_y'].value[0];
-    obj['offset_right'] = params['offset_y'].value[1];
+    obj['offset_left'] = params['offset_y']?.value?.[0];
+    obj['offset_right'] = params['offset_y']?.value?.[1];
     setUpdateHashMap(obj);
   }, [sidewayResponse]);
   const validateInitParams = (params: any) => {

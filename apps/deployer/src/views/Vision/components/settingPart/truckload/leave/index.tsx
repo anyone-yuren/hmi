@@ -61,8 +61,8 @@ const Leave = () => {
     ary?.map((key: string) => {
       obj[key] = params[key].value;
     });
-    obj['offset_y_left'] = params['offset_y'].value[0];
-    obj['offset_y_right'] = params['offset_y'].value[1];
+    obj['offset_y_left'] = params['offset_y']?.value?.[0];
+    obj['offset_y_right'] = params['offset_y']?.value?.[1];
     setUpdateHashMap(obj);
   }, [leaveResponse]);
   const validateInitParams = (params: any) => {

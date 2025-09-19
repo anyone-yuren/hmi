@@ -1,9 +1,14 @@
+import { useRequest } from 'ahooks';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useShallow } from 'zustand/react/shallow';
 import SafetyBase from './component/3dComponents/safetyBase';
 import SafetyCanvas from './component/3dComponents/safetyCanvas';
 import SafetyObsLines from './component/3dComponents/safetyObsLines';
 import SafetyPointCloud from './component/3dComponents/safetyPointCloud';
 import SafetyVehicle from './component/3dComponents/safetyVehicle';
+import { safetyConfig } from './service/index';
+import { useSafetyStore } from './store/safety.store';
 const mock = {
   rectangle_list: [
     {
@@ -72,18 +77,50 @@ const mock = {
 
 const Safety = () => {
   const { t } = useTranslation();
+  const { data: config } = useRequest(safetyConfig);
+  const { obsInfo } = useSafetyStore(
+    useShallow((store) => ({
+      obsInfo: store.obsInfo,
+    })),
+  );
+
+  const vehicleOutline = useMemo(() => {
+    if (
+      !config?.data ||
+      !config?.data?.vehicle_outline?.rectangle_list ||
+      !config?.data?.vehicle_outline?.rectangle_list.length
+    ) {
+      return [];
+    }
+    return config?.data?.vehicle_outline?.rectangle_list;
+  }, [config]);
+
+  const forksUnderOutline = useMemo(() => {
+    if (!config?.data || !config?.data?.strategy_list || !config?.data?.strategy_list?.strategy_under_fork_protection) {
+      return {};
+    }
+    return config?.data?.strategy_list?.strategy_under_fork_protection;
+  }, [config]);
+
+  const activeSchemeList = useMemo(() => {
+    if (
+      obsInfo?.scheme_id === undefined ||
+      !config?.data ||
+      !config?.data?.obs_scheme ||
+      !config?.data?.obs_scheme?.scheme_list ||
+      !config?.data?.obs_scheme?.scheme_list?.length
+    ) {
+      return [];
+    }
+    const obj = config?.data?.obs_scheme?.scheme_list.find((item: any) => item.scheme_id === 1);
+    return obj?.protect_areas || [];
+  }, [obsInfo, config]);
   return (
     <SafetyCanvas>
       <SafetyBase></SafetyBase>
-      <SafetyVehicle
-        vehicleRect={mock.rectangle_list}
-        forksUnderRect={mock.strategy_under_fork_protection}
-      ></SafetyVehicle>
-      <SafetyObsLines lines={mock.scheme_list?.[0].protect_areas}></SafetyObsLines>
-      <SafetyPointCloud
-        projectArea={mock.scheme_list?.[0].protect_areas}
-        forksUnderRect={mock.strategy_under_fork_protection}
-      ></SafetyPointCloud>
+      <SafetyVehicle vehicleRect={vehicleOutline} forksUnderRect={forksUnderOutline}></SafetyVehicle>
+      <SafetyObsLines lines={activeSchemeList}></SafetyObsLines>
+      <SafetyPointCloud projectArea={activeSchemeList} forksUnderRect={forksUnderOutline}></SafetyPointCloud>
     </SafetyCanvas>
   );
 };
