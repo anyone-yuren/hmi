@@ -150,15 +150,18 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
       stage.scale({ x: scale, y: scale });
       setCurrentScale(scale);
       moveToTarget?.scale && setMapRationView(1 / moveToTarget?.scale);
-      stage.position({
+      const target = {
         x: -moveToTarget.x * scale + size.width / 2,
         y: -moveToTarget.y * scale + size.height / 2,
-      });
+      };
+      stage.position(target);
     }
   }, [moveToTarget]);
 
   // 得动动脑子计算
   useUpdateEffect(() => {
+    // 不需要初始化定位的相关逻辑，直接定位到车
+    return;
     if (!size.height || !size.width) return;
     const { x, y } = initMapCenter;
     if (x === null && y === null) return;
@@ -238,6 +241,19 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
     ]);
     setMapRationView(1 / scaleX);
   }, [currentScale, touchendSign]);
+
+  const moveToVehicle = (position) => {
+    const scale = 3;
+    const stage: any = stageRef.current?.getStage();
+    stage.scale({ x: scale, y: scale });
+    setCurrentScale(scale);
+    moveToTarget?.scale && setMapRationView(1 / moveToTarget?.scale);
+    const target = {
+      x: -position.x * scale * 20 + size.width / 2,
+      y: position.y * scale * 20 + size.height / 2,
+    };
+    stage.position(target);
+  };
 
   return (
     <div className='relative'>
@@ -328,7 +344,7 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
 
         {/* 车应该在线上 */}
         <Layer name='vehicle' listening={false}>
-          <Vehicles ref={vehicleRef}></Vehicles>
+          <Vehicles ref={vehicleRef} moveToVehicle={moveToVehicle}></Vehicles>
         </Layer>
 
         <Layer name='activePoints'>

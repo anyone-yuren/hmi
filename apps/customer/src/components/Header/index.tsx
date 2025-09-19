@@ -10,6 +10,7 @@ import { GlobalNotification, LoginDialog, triggerLoginModal } from '@gbeata/app-
 import { useGlobalStore, useVehicleStore } from '@gbeata/store';
 import { createStyles } from 'antd-style';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
 
@@ -77,6 +78,7 @@ const GlobalHeader = () => {
               title: t('common.logoutTip'),
               onOk: () => {
                 setToken('');
+                toast.success(t('common.actionSuccess'));
               },
             });
           }

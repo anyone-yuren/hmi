@@ -1,4 +1,4 @@
-import { forwardRef, memo, useImperativeHandle } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSingleTaskStore } from '../../../../store/singleTask.store';
 import NewAgv from './NewAgv';
@@ -19,6 +19,10 @@ const Vehicles = forwardRef((props: any, ref) => {
     },
   }));
 
+  useEffect(() => {
+    props.moveToVehicle(agvPosition);
+  }, []);
+
   return (
     <>
       <NewAgv
@@ -27,7 +31,7 @@ const Vehicles = forwardRef((props: any, ref) => {
         y={-agvPosition.y * 20}
         offsetX={0}
         offsetY={0}
-        stroke='white'
+        stroke='yellow'
       ></NewAgv>
       {false && (
         <Vehicle
