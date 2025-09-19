@@ -29,11 +29,9 @@ const SafetyHeader = (props: IProps) => {
     }),
   );
 
-  console.log('obsInfo', obsInfo);
-
   return (
     <div
-      className={`header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4 ${!obsInfo.type ? '' : 'hidden'}`}
+      className={`header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4 ${obsInfo.type && obsData.length ? '' : 'hidden'}`}
     >
       <div className='flex items-center gap-4 min-w-0'>
         <Button size='small' className='text-current shrink-0' icon={<MenuOutlined />} onClick={() => setShow(!show)} />

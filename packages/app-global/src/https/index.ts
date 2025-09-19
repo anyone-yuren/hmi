@@ -1,7 +1,7 @@
 import { useGlobalStore } from '@gbeata/store';
-import { message } from 'antd';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { t } from 'i18next';
+import { toast } from 'sonner';
 import ErrorMessageManager from './errorMessage';
 // 统一的响应枚举
 export enum ResultEnum {
@@ -75,7 +75,10 @@ instance.interceptors.response.use(
     }
     // 登录超时
     if (code === ResultEnum.TIMEOUT) {
-      message.error(msg);
+      // message.error(msg);
+      toast.error(msg, {
+        position: 'top-center',
+      });
       // 可以跳转登录页或者清空 token
       localStorage.removeItem('token');
       // window.location.href = '/login';
@@ -83,7 +86,9 @@ instance.interceptors.response.use(
     }
 
     // 其他错误
-    message.error(msg || t('common.http.error'));
+    toast.error(msg || t('common.http.error'), {
+      position: 'top-center',
+    });
     return Promise.reject(msg || t('common.http.error'));
   },
   (error) => {
@@ -91,15 +96,21 @@ instance.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          message.error(t('common.http.withoutAuth'));
+          toast.error(t('common.http.withoutAuth'), {
+            position: 'top-center',
+          });
           localStorage.removeItem('token');
           window.location.href = '/login';
           break;
         case 403:
-          message.error(t('common.http.refused'));
+          toast.error(t('common.http.refused'), {
+            position: 'top-center',
+          });
           break;
         case 404:
-          message.error(t('common.http.notFound'));
+          toast.error(t('common.http.notFound'), {
+            position: 'top-center',
+          });
           break;
         case 500:
           // message.error(t('common.http.serverError'));
@@ -107,12 +118,16 @@ instance.interceptors.response.use(
           manager.push(t('common.http.serverError'));
           break;
         default:
-          message.error(error.response.data.message || t('common.http.fail'));
+          toast.error(error?.response?.data?.message || t('common.http.fail'), {
+            position: 'top-center',
+          });
       }
     } else if (error.request) {
       manager.push(t('common.http.timeout'));
     } else {
-      message.error(t('common.http.fail'));
+      toast.error(t('common.http.fail'), {
+        position: 'top-center',
+      });
     }
     return Promise.reject(error);
   },

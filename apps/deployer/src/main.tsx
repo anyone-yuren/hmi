@@ -7,12 +7,14 @@ import App from './app';
 import './index.css';
 
 import GlobalProvider from '@/components/GlobalProvider';
+import { Toaster } from 'sonner';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <GlobalProvider>
       {/* <RouterProvider router={router} /> */}
       <App />
+      <Toaster richColors visibleToasts={2} expand={true} />
     </GlobalProvider>
   </React.StrictMode>,
 );
