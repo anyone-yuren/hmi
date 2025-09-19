@@ -571,11 +571,10 @@ export default function RectDrawer() {
 
   // 设置当前选中的避障策略
   useEffect(() => {
-    // if (obsInfo?.scheme_id && memoObstacleData?.obs_scheme?.scheme_list?.length) {
-    if (memoObstacleData?.obs_scheme?.scheme_list?.length) {
+    if (obsInfo?.scheme_id && memoObstacleData?.obs_scheme?.scheme_list?.length) {
       const currentObs = memoObstacleData?.obs_scheme?.scheme_list?.find(
-        // (item) => item.scheme_id === obsInfo?.scheme_id,
-        (item) => item.id === 1,
+        (item) => item.scheme_id === obsInfo?.scheme_id,
+        // (item) => item.scheme_id === 1,
       );
       if (currentObs) {
         setCurrentObsInfo(currentObs);
