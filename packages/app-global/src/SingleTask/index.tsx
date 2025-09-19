@@ -55,7 +55,7 @@ const SingleTask = () => {
   const [PopUp, setPopUp] = useState(false);
   const [moveToTarget, setMoveToTarget] = useState({ x: null, y: null });
 
-  const { data: pointsData }: Record<string, any> = useRequest(getPointList, {});
+  const { data: pointsData, loading }: Record<string, any> = useRequest(getPointList, {});
   const { data: linesList } = useRequest(() => getLineList(), {});
 
   const { data: taskMode, runAsync: getMapTaskMode }: Record<string, any> = useRequest(getTaskMode, {});
@@ -148,8 +148,8 @@ const SingleTask = () => {
       point.type === 6 && charges.push(newPoint);
       (point.type === 1 || point.type === 4) && locations.push(newPoint);
     }
-    return { hashMap, points, charges, locations };
-  }, [pointsData, offsetHashMap]);
+    return { hashMap, points, charges, locations, render: !loading };
+  }, [pointsData, offsetHashMap, loading]);
 
   const lines = useMemo(() => {
     const ary: any = [];
@@ -284,7 +284,7 @@ const SingleTask = () => {
 
         <div ref={ref} className='flex-1 w-full h-full min-h-[300px]'>
           {/* 放开点位的判断显示,没有点位就展示图片 */}
-          {true || pointsDict?.points.length ? (
+          {pointsDict.render ? (
             <InitStage
               ref={stageRef}
               infiniteView={true}

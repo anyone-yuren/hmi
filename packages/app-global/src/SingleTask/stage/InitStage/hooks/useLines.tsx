@@ -1,6 +1,6 @@
 import { useThrottleEffect } from 'ahooks';
 import { useState } from 'react';
-import { newCalcSplinePoints } from '../components/lines/utils';
+import { lineControlsHashmap } from '../components/lines/utils';
 
 const useLines = (props: any) => {
   const { lines, lineProps, lineVisible, boundary = [], scale, visibleConfig = {} } = props;
@@ -40,10 +40,14 @@ const useLines = (props: any) => {
         const { start, end, id } = line;
         const key = `${start}-${end}`,
           reverseKey = `${end}-${start}`;
-        const points = newCalcSplinePoints({
+        // const points = newCalcSplinePoints({
+        //   ary: line.controlPoint,
+        //   length: line.length,
+        //   type: line.type,
+        // });
+        const points = lineControlsHashmap[line.type]({
           ary: line.controlPoint,
           length: line.length,
-          type: line.type,
         });
         line.controls = points;
         line.simpleControls = getFirstAndLast(line.controlPoint).flatMap((item: any) => {
