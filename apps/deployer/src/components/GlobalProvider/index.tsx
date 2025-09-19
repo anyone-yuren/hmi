@@ -4,7 +4,6 @@ import { unmountGlobalLoading } from '@gbeata/utils';
 import { createTheme, ThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useTranslation } from 'react-i18next';
-import { Toaster } from 'sonner';
 import { GlobalConfig } from 'ui';
 interface GlobalProviderProps {
   children: ReactNode;
@@ -36,7 +35,7 @@ const GlobalProvider: FC<GlobalProviderProps> = ({ children }) => {
       }}
     >
       {/* 如果要右对齐，使用 justify-end */}
-      <Toaster className='flex justify-center ' richColors visibleToasts={2} expand={true} />
+      {/* <Toaster richColors visibleToasts={2} expand={true} /> */}
       <CssBaseline />
       <ThemeProvider theme={darkTheme}>
         <Fragment>

@@ -584,7 +584,7 @@ export default function RectDrawer() {
 
   return (
     <div
-      className={`w-full h-full flex flex-col !absolute left-0 top-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}
+      className={`w-full h-full flex flex-col !absolute left-0 top-0 bottom-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}
     >
       {/* {obstacleDataLoading && <PanelLoading isDark={isDark} />} */}
       <ConfigProvider

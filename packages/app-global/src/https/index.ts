@@ -118,7 +118,7 @@ instance.interceptors.response.use(
           manager.push(t('common.http.serverError'));
           break;
         default:
-          toast.error(error.response.data.message || t('common.http.fail'), {
+          toast.error(error?.response?.data?.message || t('common.http.fail'), {
             position: 'top-center',
           });
       }

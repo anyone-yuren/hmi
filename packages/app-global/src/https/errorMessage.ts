@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { toast } from 'sonner';
 class ErrorMessageManager {
   private queue: string[];
   private timer: any;
@@ -20,7 +20,9 @@ class ErrorMessageManager {
     if (this.queue.length === 0) return;
     const uniqueQueue = [...new Set(this.queue)];
     uniqueQueue.forEach((msg) => {
-      message.error(msg);
+      toast.error(msg, {
+        position: 'top-center',
+      });
     });
     this.queue = [];
     this.timer = null;
