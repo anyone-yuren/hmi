@@ -640,7 +640,7 @@ const DrawerContent = (props: IProps) => {
             const protectAreas = rects.map((item, index) => {
               return {
                 id: item.id,
-                associated_device: item?.associated_device,
+                associated_device: item?.associated_device ?? 1,
                 rectangle: getRectPoints(item.x, item.y, item.width, item.height),
               };
             });
