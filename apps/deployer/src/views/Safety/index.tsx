@@ -220,7 +220,10 @@ export default function RectDrawer() {
     const { rect: snappedRect, isSnapped, isIntersecting } = validateRect(preview, carRects, rects, snap);
     setIsIntersecting(isIntersecting);
     if (snappedRect.width > 1 && snappedRect.height > 1 && isSnapped && !isIntersecting) {
-      setRects((prev) => [...prev, { id: Math.max(...rects.map((item) => item.id)) + 1, ...snappedRect }]);
+      setRects((prev) => [
+        ...prev,
+        { id: prev.length ? Math.max(...prev.map((item) => item.id)) + 1 : 1, ...snappedRect },
+      ]);
     }
     setIsDrawing(false);
     setStartPoint(null);
@@ -568,11 +571,10 @@ export default function RectDrawer() {
 
   // 设置当前选中的避障策略
   useEffect(() => {
-    // if (obsInfo?.scheme_id && memoObstacleData?.obs_scheme?.scheme_list?.length) {
-    if (memoObstacleData?.obs_scheme?.scheme_list?.length) {
+    if (obsInfo?.scheme_id && memoObstacleData?.obs_scheme?.scheme_list?.length) {
       const currentObs = memoObstacleData?.obs_scheme?.scheme_list?.find(
-        // (item) => item.scheme_id === obsInfo?.scheme_id,
-        (item) => item.scheme_id === 1,
+        (item) => item.scheme_id === obsInfo?.scheme_id,
+        // (item) => item.scheme_id === 1,
       );
       if (currentObs) {
         setCurrentObsInfo(currentObs);
@@ -604,7 +606,14 @@ export default function RectDrawer() {
 
         <div className='flex-1 w-full relative'>
           <div className='h-full flex'>
-            <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} show={show} isDark={isDark} />
+            <ObsInfoPanel
+              strategyList={strategyList}
+              currentObsData={currentObsInfo}
+              setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
+              show={show}
+              isDark={isDark}
+              loading={obstacleDataLoading}
+            />
             <div className='relative h-full flex-1 min-w-0' ref={ref}>
               <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
               <div className='p-2 flex items-center gap-3 absolute bottom-0 left-0 right-0'>

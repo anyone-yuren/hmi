@@ -3,25 +3,14 @@ import { useEffect, useState } from 'react';
 import { Group, Image } from 'react-konva';
 import { getRect } from '../../utils';
 
-const VehicleImg = () => {
-  const rectangle_list = [
-    {
-      id: 1,
-      name: 'head',
-      rectangle: [500, 500, 0, -500],
-      is_active: false,
-      associated_device: 0,
-    },
-    {
-      id: 2,
-      name: 'forkarm',
-      rectangle: [0, 300, -1000, -300],
-      is_active: true,
-      associated_device: 1,
-    },
-  ];
-  const headerRect = getRect(rectangle_list[0].rectangle);
-  const forkarmRect = getRect(rectangle_list[1].rectangle);
+const VehicleImg = (props: {
+  rectangleList: { id: number; name: string; rectangle: number[]; is_active: boolean; associated_device: number }[];
+}) => {
+  const { rectangleList = [] } = props;
+  const [a, b, c, d] = rectangleList[0]?.rectangle;
+  const headerRect = getRect([c, d, a, b]);
+  const [a1, b1, c1, d1] = rectangleList[1]?.rectangle;
+  const forkarmRect = getRect([c1, d1, a1, b1]);
   const agvType = useAgvType();
   const [img, setImg] = useState<HTMLImageElement | null>(null);
 
