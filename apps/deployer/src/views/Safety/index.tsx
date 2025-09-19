@@ -15,6 +15,8 @@ import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
 import WsContainer from './component/WsContainer';
 import { safetyConfig } from './service';
+import { useSafetyStore } from './store/safety.store';
+import { getRect } from './utils';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
 
 export default function RectDrawer() {
@@ -32,27 +34,13 @@ export default function RectDrawer() {
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(null);
   const [preview, setPreview] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
   const [rects, setRects] = useState<Array<{ id: string; x: number; y: number; width: number; height: number }>>([
-    {
-      id: 'rect_1757730358977',
-      x: -479.3291688305644,
-      y: -443.44736089214314,
-      width: 278.3291688305644,
-      height: 152.88503639988755,
-    },
-    {
-      id: 'rect_1757730361831',
-      x: 201,
-      y: -470.8882648613537,
-      width: 262.64865227673,
-      height: 156.80516553834622,
-    },
-    {
-      id: 'rect_1757730364464',
-      x: -480.6902019382337,
-      y: 242.57523833812138,
-      width: 309.6902019382337,
-      height: 184.24606950755685,
-    },
+    // {
+    //   id: 'rect_1757730364464',
+    //   x: -480.6902019382337,
+    //   y: 242.57523833812138,
+    //   width: 309.6902019382337,
+    //   height: 184.24606950755685,
+    // },
   ]);
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [isUseFullRect, setIsUseFullRect] = useState(false);
@@ -138,7 +126,7 @@ export default function RectDrawer() {
 
   // 绘制 - MouseDown
   const handleMouseDown = useCallback((e: KonvaEventObject<MouseEvent>) => {
-    if (!obstacleData?.data?.length) return;
+    if (!noData) return;
     if (e.target === e.target.getStage()) setSelectedId(null);
     if (e.target instanceof Konva.Rect && e.target.parent?.attrs?.className === 'rect') {
       setSelectedId(e.target.id());
@@ -232,7 +220,7 @@ export default function RectDrawer() {
     const { rect: snappedRect, isSnapped, isIntersecting } = validateRect(preview, carRects, rects, snap);
     setIsIntersecting(isIntersecting);
     if (snappedRect.width > 1 && snappedRect.height > 1 && isSnapped && !isIntersecting) {
-      setRects((prev) => [...prev, { id: `rect_${Date.now()}`, ...snappedRect }]);
+      setRects((prev) => [...prev, { id: Math.max(...rects.map((item) => item.id)) + 1, ...snappedRect }]);
     }
     setIsDrawing(false);
     setStartPoint(null);
@@ -538,6 +526,60 @@ export default function RectDrawer() {
 
   const { data: obstacleData, loading: obstacleDataLoading, run: refreshObstacleData } = useRequest(safetyConfig);
 
+  // 当前避障信息
+  const [currentObsInfo, setCurrentObsInfo] = useState<any>(null);
+
+  useEffect(() => {
+    if (currentObsInfo?.protect_areas?.length) {
+      const newRects = currentObsInfo?.protect_areas?.map((item) => {
+        return { ...getRect(item.rectangle), id: item.id, associated_device: item.associated_device };
+      });
+      setRects(newRects);
+    }
+  }, [currentObsInfo]);
+
+  // 定义一个state控制无数据不可操作。
+  const [noData, setNoData] = useState(true);
+  // useEffect(() => {
+  //   if (obstacleData?.data?.length) {
+  //     setNoData(true);
+  //   } else {
+  //     setNoData(false);
+  //   }
+  // }, [obstacleData]);
+
+  // 拆解避障数据包
+  const memoObstacleData = useMemo(() => {
+    return obstacleData?.data ?? null;
+  }, [obstacleData?.data]);
+  // 避障策略列表
+  const strategyList = useMemo(() => {
+    return memoObstacleData?.strategy_list ?? null;
+  }, [memoObstacleData?.strategy_list]);
+
+  // 根据推送的避障方案，从避障列表过滤出当前避障信息/
+  const { obsInfo } = useSafetyStore(
+    useShallow((store) => {
+      return {
+        obsInfo: store.obsInfo,
+      };
+    }),
+  );
+
+  // 设置当前选中的避障策略
+  useEffect(() => {
+    // if (obsInfo?.scheme_id && memoObstacleData?.obs_scheme?.scheme_list?.length) {
+    if (memoObstacleData?.obs_scheme?.scheme_list?.length) {
+      const currentObs = memoObstacleData?.obs_scheme?.scheme_list?.find(
+        // (item) => item.scheme_id === obsInfo?.scheme_id,
+        (item) => item.scheme_id === 1,
+      );
+      if (currentObs) {
+        setCurrentObsInfo(currentObs);
+      }
+    }
+  }, [obsInfo?.scheme_id, memoObstacleData?.obs_scheme?.scheme_list]);
+
   return (
     <div
       className={`w-full h-full flex flex-col !absolute left-0 top-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}
@@ -554,7 +596,7 @@ export default function RectDrawer() {
           show={show}
           setShow={setShow}
           setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
-          obsData={obstacleData?.data ?? []}
+          obsData={memoObstacleData?.obs_scheme?.scheme_list ?? []}
           loading={obstacleDataLoading}
         />
         {/* 避障信息 */}
@@ -577,7 +619,6 @@ export default function RectDrawer() {
               </div>
               <Stage
                 ref={stageRef}
-                // scale={{ x: 0.5, y: 0.5 }}
                 width={size?.width}
                 height={size?.height}
                 onTouchStart={handleMouseDown}
@@ -590,7 +631,7 @@ export default function RectDrawer() {
                 style={stageStyle}
               >
                 <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
-                <CarModel />
+                <CarModel vehicleOutline={memoObstacleData?.vehicle_outline} />
                 <Layer ref={layerRef}>
                   {/* 绘制矩形 */}
                   {rects.map((r) => (
@@ -626,14 +667,14 @@ export default function RectDrawer() {
                         strokeWidth={selectedId === r.id ? 1.5 : 2}
                         dash={[4, 4]}
                         fill={'rgba(255,211,61,0.2)'}
-                        draggable
+                        draggable={noData}
                         onTransform={handleTransform}
                         onTransformStart={handleTransformStart}
                         onTransformEnd={handleTransformEnd}
                         onDragMove={handleDragMove}
                         onDragEnd={handleDragEnd}
-                        onClick={() => setSelectedId(r.id)}
-                        onTap={() => setSelectedId(r.id)}
+                        onClick={() => noData && setSelectedId(r.id)}
+                        onTap={() => noData && setSelectedId(r.id)}
                         onDragStart={(e) => {
                           const node = e.target as Konva.Rect;
                           node.setAttrs({
@@ -739,6 +780,8 @@ export default function RectDrawer() {
             reRenderLineGrid={reRenderLineGrid}
             setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
             isDark={isDark}
+            currentObsInfo={currentObsInfo} // 当前避障数据
+            strategyList={strategyList} // 策略数据
           />
         </Drawer>
       </ConfigProvider>

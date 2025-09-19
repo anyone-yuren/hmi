@@ -30,6 +30,8 @@ interface State {
   // 电池
   charge_pile_status: CHARGE_PILE_STATUS;
   setChargePileStatus: (charge_pile_status: CHARGE_PILE_STATUS) => void;
+  rcsIsOnline: boolean;
+  setRcsIsOnline: (rcsIsOnline: boolean) => void;
 
   // 信号强度
   signal: number;
@@ -97,6 +99,10 @@ export const useVehicleStore = create<State>()(
         if (cacheSave && !isEqual(systemDateTime, get().systemDateTime)) {
           set({ systemDateTime });
         }
+      },
+      rcsIsOnline: false,
+      setRcsIsOnline: (rcsIsOnline: boolean) => {
+        set({ rcsIsOnline });
       },
     }),
     {

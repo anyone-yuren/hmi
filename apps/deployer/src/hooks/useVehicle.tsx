@@ -11,18 +11,26 @@ const HYBRID_URL = import.meta.env.DEV
   : `ws://${currentHost}:10009`; // 生产环境使用真实地址
 
 export const useVehicle = () => {
-  const { setPowerStatus, setSeniorPoints, setAutoManualStatus, setChargePileStatus, setSignal, setSystemDateTime } =
-    useVehicleStore(
-      useShallow((state) => ({
-        setPowerStatus: state.setPowerStatus,
-        setSeniorPoints: state.setSeniorPoints,
-        setAutoManualStatus: state.setAutoManualStatus,
-        // 电池
-        setChargePileStatus: state.setChargePileStatus,
-        setSignal: state.setSignal,
-        setSystemDateTime: state.setSystemDateTime,
-      })),
-    );
+  const {
+    setPowerStatus,
+    setSeniorPoints,
+    setAutoManualStatus,
+    setChargePileStatus,
+    setSignal,
+    setSystemDateTime,
+    setRcsIsOnline,
+  } = useVehicleStore(
+    useShallow((state) => ({
+      setPowerStatus: state.setPowerStatus,
+      setSeniorPoints: state.setSeniorPoints,
+      setAutoManualStatus: state.setAutoManualStatus,
+      // 电池
+      setChargePileStatus: state.setChargePileStatus,
+      setSignal: state.setSignal,
+      setSystemDateTime: state.setSystemDateTime,
+      setRcsIsOnline: state.setRcsIsOnline,
+    })),
+  );
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
     reconnectLimit: Infinity, // 改为无限重连
     reconnectInterval: 5000,
@@ -58,6 +66,12 @@ export const useVehicle = () => {
           setSignal(data);
         }
       }
+      if (e?.data?.includes('/sirius/topics/rcs_info')) {
+        const data = JSON.parse(e?.data);
+        if (data) {
+          setRcsIsOnline(data?.is_online);
+        }
+      }
     },
   });
 
@@ -71,6 +85,7 @@ export const useVehicle = () => {
             '/sirius/topics/robot_status_isensor',
             '/sirius/topics/charge_pile_status',
             '/sirius/topics/robot_status_signal',
+            '/sirius/topics/rcs_info',
           ],
         }),
       );

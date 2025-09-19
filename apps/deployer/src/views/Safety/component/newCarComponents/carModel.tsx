@@ -1,45 +1,19 @@
 import SafetyCoordinate from '@/components/InitStage/components/safetyCoordinate';
+import { useMemo } from 'react';
 import { Layer, Rect } from 'react-konva';
 import { getRect } from '../../utils';
 import VehicleImg from './vehicleImg';
+interface IProps {
+  vehicleOutline: {
+    rectangle_list: any[];
+  };
+}
 
-const CarModel = () => {
-  // 车体数据
-  const carRects = [
-    {
-      id: 1,
-      diagonalCoordinates: [
-        { x: 200, y: -100 },
-        { x: -200, y: -400 },
-      ],
-      associated_mechanism: 'BODY',
-    },
-    {
-      id: 2,
-      diagonalCoordinates: [
-        { x: -170, y: 400 },
-        { x: 170, y: -100 },
-      ],
-      associated_mechanism: 'FORKARM-LEFT',
-    },
-  ];
-
-  const rectangle_list = [
-    {
-      id: 1,
-      name: 'head',
-      rectangle: [500, 500, 0, -500],
-      is_active: false,
-      associated_device: 0,
-    },
-    {
-      id: 2,
-      name: 'forkarm',
-      rectangle: [0, 300, -1000, -300],
-      is_active: true,
-      associated_device: 1,
-    },
-  ];
+const CarModel = (props: IProps) => {
+  const { vehicleOutline } = props;
+  const rectangle_list = useMemo(() => {
+    return vehicleOutline?.rectangle_list || [];
+  }, [vehicleOutline]);
 
   return (
     <Layer name='car'>

@@ -29,9 +29,11 @@ const SafetyHeader = (props: IProps) => {
     }),
   );
 
+  console.log('obsInfo', obsInfo);
+
   return (
     <div
-      className={`header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4 ${obsInfo.type ? '' : 'hidden'}`}
+      className={`header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4 ${!obsInfo.type ? '' : 'hidden'}`}
     >
       <div className='flex items-center gap-4 min-w-0'>
         <Button size='small' className='text-current shrink-0' icon={<MenuOutlined />} onClick={() => setShow(!show)} />
@@ -43,7 +45,7 @@ const SafetyHeader = (props: IProps) => {
                 ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
                 : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_70%)]'
             } font-bold`}
-            onClick={() => obsData?.length && setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
+            onClick={() => setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
           >
             {obsInfo?.scheme_id ?? '-'}
             <FormOutlined className='ml-2 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all' />
@@ -82,7 +84,7 @@ const SafetyHeader = (props: IProps) => {
                 size={responsive?.xs ? 'small' : 'middle'}
                 className='h-7'
                 style={{ width: responsive?.xs ? 120 : 160 }}
-                defaultValue='避障策略'
+                defaultValue={obsInfo?.scheme_id ?? '-'}
                 options={obsData?.map((item) => ({
                   label: item.scheme_id,
                   value: item.scheme_id,
