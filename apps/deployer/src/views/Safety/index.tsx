@@ -220,7 +220,10 @@ export default function RectDrawer() {
     const { rect: snappedRect, isSnapped, isIntersecting } = validateRect(preview, carRects, rects, snap);
     setIsIntersecting(isIntersecting);
     if (snappedRect.width > 1 && snappedRect.height > 1 && isSnapped && !isIntersecting) {
-      setRects((prev) => [...prev, { id: Math.max(...rects.map((item) => item.id)) + 1, ...snappedRect }]);
+      setRects((prev) => [
+        ...prev,
+        { id: prev.length ? Math.max(...prev.map((item) => item.id)) + 1 : 1, ...snappedRect },
+      ]);
     }
     setIsDrawing(false);
     setStartPoint(null);
@@ -572,7 +575,7 @@ export default function RectDrawer() {
     if (memoObstacleData?.obs_scheme?.scheme_list?.length) {
       const currentObs = memoObstacleData?.obs_scheme?.scheme_list?.find(
         // (item) => item.scheme_id === obsInfo?.scheme_id,
-        (item) => item.scheme_id === 1,
+        (item) => item.id === 1,
       );
       if (currentObs) {
         setCurrentObsInfo(currentObs);

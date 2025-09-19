@@ -110,6 +110,8 @@ const DrawerContent = (props: IProps) => {
     currentObsInfo,
     strategyList,
   } = props;
+
+  console.log(currentObsInfo);
   const [selectRect, setSelectRect] = useState<{
     id: string;
     x: number;
@@ -390,7 +392,7 @@ const DrawerContent = (props: IProps) => {
                 <p className='text-xs text-nowrap shrink-0'>自旋</p>
                 <Form.Item
                   className='!mb-0 flex-1'
-                  name='spin_stop_distance'
+                  name='rotate_stop_distance'
                   rules={[{ required: true, message: '请输入' }]}
                 >
                   <Input type='number' />
