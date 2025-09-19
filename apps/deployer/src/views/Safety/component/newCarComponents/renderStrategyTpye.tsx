@@ -1,21 +1,24 @@
 import { useMemo } from 'react';
+import { SvgIcon } from 'ui';
 
 interface RenderStrategyTpyeProps {
   data: any;
+  isDark: boolean;
+  idStrategyEndPathCloseProtection: number;
 }
 const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
-  const { data } = props;
+  const { data, isDark, idStrategyEndPathCloseProtection } = props;
   const renderPopupContent = useMemo(() => {
     if (!data) return null;
-    const { id, data: strategyData } = data;
-    switch (id) {
-      case 1:
+    const { name, ...strategyData } = data;
+    switch (name) {
+      case 'strategy_line_keep':
         return (
           <>
             <div className='text-xs text-gray-500'>舵轮打角判定阈值: {strategyData?.steer_angle_tolerance}°</div>
           </>
         );
-      case 2:
+      case 'strategy_under_fork_protection':
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
@@ -43,7 +46,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
             </div>
           </div>
         );
-      case 3:
+      case 'strategy_place_cargo_space_protection':
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
@@ -65,11 +68,11 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
             </div>
           </div>
         );
-      case 4:
+      case 'strategy_pick_cargo_fork_tip_protection':
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              保护区域: <span>{strategyData?.rectangle}</span>
+              保护区域: <span>{strategyData?.rectangles}</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联传感器:
@@ -84,7 +87,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
             </div>
           </div>
         );
-      case 5:
+      case 'strategy_end_path_adaptive_reduce_range':
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
@@ -95,11 +98,11 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
             </div>
           </div>
         );
-      case 6:
+      case 'strategy_top_protection':
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              空载防护区域: <span>{strategyData?.empty_load_protect_rectangle}</span>
+              空载防护区域: <span>{strategyData?.empty_load_protect_cuboid}</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联传感器:
@@ -110,15 +113,15 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               </div>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              负载防护区域: <span>{strategyData?.full_load_protect_rectangle} </span>
+              负载防护区域: <span>{strategyData?.full_load_protect_cuboid} </span>
             </div>
           </div>
         );
-      case 7:
+      case 'strategy_door_frame_move_protection':
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              叉臂前移超限屏蔽光电避障: <span>{strategyData?.empty_load_protect_rectangle} mm</span>
+              叉臂前移超限屏蔽光电避障: <span>{strategyData?.fork_forward_protect_distance} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联IO信号:
@@ -133,40 +136,70 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
             </div>
           </div>
         );
-      case 8:
-        return (
-          <div className='flex flex-col gap-1'>
-            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              屏蔽光电避障功能（取货）: <span>{strategyData?.pick_cargo_pe_close_distance} mm</span>
-            </div>
-            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              屏蔽光电避障功能（放货）: <span>{strategyData?.place_cargo_pe_close_distance} mm</span>
-            </div>
-            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              屏蔽点云避障功能（取货）: <span>{strategyData?.pick_cargo_pc_close_distance} mm</span>
-            </div>
-            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              屏蔽点云避障功能（放货）: <span>{strategyData?.place_cargo_pc_close_distance} mm</span>
-            </div>
-            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              关联传感器:
-              <div className='fle flex-wrap gap-1'>
-                {strategyData?.associated_pc_sensor_list?.map((item) => {
-                  return <span key={item}>{item} </span>;
-                })}
+      case 'strategy_end_path_close_protection':
+        return strategyData?.list?.length ? (
+          strategyData.list.map((child, index) => (
+            <div>
+              <p>子策略 {index + 1}</p>
+              <div
+                className={`flex flex-col gap-1 mb-2 ${idStrategyEndPathCloseProtection === index + 1 ? 'bg-black/5' : ''}`}
+              >
+                <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+                  屏蔽光电避障功能（取货）: <span>{child?.pick_cargo_pe_close_distance} mm</span>
+                </div>
+                <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+                  屏蔽光电避障功能（放货）: <span>{child?.place_cargo_pe_close_distance} mm</span>
+                </div>
+                <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+                  屏蔽点云避障功能（取货）: <span>{child?.pick_cargo_pc_close_distance} mm</span>
+                </div>
+                <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+                  屏蔽点云避障功能（放货）: <span>{child?.place_cargo_pc_close_distance} mm</span>
+                </div>
+                <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+                  关联传感器:
+                  <div className='fle flex-wrap gap-1'>
+                    {child?.associated_pc_sensor_list?.map((item) => {
+                      return <span key={item}>{item}</span>;
+                    })}
+                  </div>
+                </div>
+                <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+                  关联IO信号:
+                  <div className='fle flex-wrap gap-1'>
+                    {strategyData?.associated_io_sensor_list?.map((item) => {
+                      return <span key={item}>{item} </span>;
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
-            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              关联IO信号:
-              <div className='fle flex-wrap gap-1'>
-                {strategyData?.associated_io_sensor_list?.map((item) => {
-                  return <span key={item}>{item} </span>;
-                })}
-              </div>
-            </div>
+          ))
+        ) : (
+          <div
+            className={`group w-full h-20 py-4 cursor-pointer rounded-lg flex flex-row items-center justify-center ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
+          backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
+          >
+            <SvgIcon
+              className='group-hover:scale-110 animation-all duration-300'
+              name='servicerror'
+              size={80}
+            ></SvgIcon>
+            <p className='opacity-60 text-xs'>暂无数据</p>
           </div>
         );
 
+      case 'strategy_amr_load_protection':
+        return (
+          <div className='flex flex-col gap-1'>
+            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+              料架支腿过滤半径: <span>{strategyData?.rack_leg_diameter} mm</span>
+            </div>
+            <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
+              车体高度: <span>{strategyData?.amr_height} mm</span>
+            </div>
+          </div>
+        );
       default:
         return null;
     }

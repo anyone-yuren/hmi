@@ -1,3 +1,4 @@
+import PanelLoading from '@/components/PanelLoading';
 import Safety3D from '@/views/Safety/safety';
 import { useObsError } from '@gbeata/app-global';
 import { Drawer, Tag, theme } from 'antd';
@@ -16,14 +17,14 @@ interface ObsInfoPanelProps {
   show?: boolean;
   currentObsData: any;
   strategyList: any;
+  loading: boolean;
 }
 const ObsInfoPanel = (props: ObsInfoPanelProps) => {
   const { t } = useTranslation();
   const classNames = useDrawerClassName();
   const [open, setOpen] = useState(false);
-  const { show = true, isDark = false, currentObsData = {}, strategyList } = props;
+  const { show = true, isDark = false, currentObsData, strategyList, loading } = props;
   const { token } = theme.useToken();
-  const { setOpenUpdateObsDrawer } = props;
   const { motionStatus, obsInfo, goodsInfo } = useSafetyStore(
     useShallow((store) => ({
       motionStatus: store.motionStatus,
@@ -31,6 +32,33 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
       goodsInfo: store.goodsInfo,
     })),
   );
+  const strategyListName = useStrategyListName();
+  const { getObsMsg } = useObsError();
+  if (loading) {
+    return (
+      <>
+        <PanelLoading />
+      </>
+    );
+  }
+
+  if (!currentObsData) {
+    return (
+      <div
+        className={`group h-40 flex flex-col rounded-b-lg items-center justify-center 
+  backdrop-blur-[6px] hover:shadow-lg animation-all duration-300 ${
+    isDark
+      ? 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_10%)]'
+      : 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
+  }`}
+        onClick={() => setOpen(true)}
+      >
+        <SvgIcon name='points' size={128} className='group-hover:scale-110 animation-all duration-300' />
+        <p className='text-xs opacity-60'>{t('common.safety.noDevice')}</p>
+      </div>
+    );
+  }
+
   const { strategy_list = [] } = currentObsData;
 
   const strategyNames = Object.keys(strategyList).filter((item) => {
@@ -39,8 +67,6 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
     }
   });
 
-  const strategyListName = useStrategyListName();
-  const { getObsMsg } = useObsError();
   const iMotionStatus = [
     t('common.safety.init'),
     t('common.safety.stop'),

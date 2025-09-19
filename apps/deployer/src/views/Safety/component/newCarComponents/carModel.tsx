@@ -19,7 +19,8 @@ const CarModel = (props: IProps) => {
     <Layer name='car'>
       <VehicleImg />
       {rectangle_list?.map((rect) => {
-        const { x, y, width, height } = getRect(rect.rectangle);
+        const [a, b, c, d] = rect.rectangle;
+        const { x, y, width, height } = getRect([c, d, a, b]);
 
         // 不同机制用不同颜色区分
         let fill = 'rgba(0,188,212,0.4)'; // 默认 BODY 青色

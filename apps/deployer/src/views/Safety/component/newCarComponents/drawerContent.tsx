@@ -96,82 +96,6 @@ const DrawerContent = (props: IProps) => {
 
   const strategyListName = useStrategyListName();
 
-  const strategyTpye = {
-    strategy_line_keep: {
-      steer_angle_tolerance: 15,
-      id: 1,
-    },
-    strategy_under_fork_protection: {
-      id: 2,
-      rectangle: [-1000, -500, -200, 500],
-      min_forkarm_height_to_open_this: 500,
-      height_start: 100,
-      forkarm_height_cut: 300,
-      min_distance_to_task_point_close_this: 1500,
-      associated_sensor_list: ['Lidar3d_17'],
-    },
-    strategy_place_cargo_space_protection: {
-      id: 3,
-      min_forkarm_height_to_open_this: 500,
-      cuboid: [1500, -500, -200, 1900, 500, 200],
-      associated_sensor_list: ['Lidar3d_17'],
-      min_distance_to_task_point_open_this: 1000,
-    },
-    strategy_pick_cargo_fork_tip_protection: {
-      id: 4,
-      rectangles: [
-        [0, 1, 2, 3],
-        [4, 5, 6, 7],
-      ],
-      associated_sensor_list: ['tip_camera', 'perception_3d_lidar'],
-      min_distance_to_task_point_open_this: 1000,
-    },
-    strategy_end_path_adaptive_reduce_range: {
-      id: 5,
-      forward_min_protect_distance: 150,
-      backward_min_protect_distance: 100,
-    },
-    strategy_top_protection: {
-      id: 6,
-      empty_load_protect_cuboid: [400, -300, 2100, 1100, 300, 2400],
-      full_load_protect_cuboid: [400, -300, 2100, 1100, 300, 2400],
-      associated_sensor_list: ['head'],
-    },
-    strategy_door_frame_move_protection: {
-      id: 7,
-      fork_forward_protect_distance: 1000,
-      fork_lateral_move_protect_distance: 0,
-      associated_io_sensor_list: ['pe_tip_left', 'pe_tip_right'],
-    },
-    strategy_end_path_close_protection: {
-      id: 8,
-      list: [
-        {
-          id: 1,
-          pick_cargo_pe_close_distance: 400,
-          place_cargo_pe_close_distance: 400,
-          pick_cargo_pc_close_distance: 400,
-          place_cargo_pc_close_distance: 400,
-          associated_io_sensor_list: ['pe_tip_left', 'pe_tip_right'],
-          associated_pc_sensor_list: ['tip_camera', 'perception_3d_lidar'],
-        },
-        {
-          id: 2,
-          pick_cargo_pe_close_distance: 400,
-          place_cargo_pe_close_distance: 400,
-          pick_cargo_pc_close_distance: 400,
-          place_cargo_pc_close_distance: 400,
-          associated_io_sensor_list: ['pe_tip_left', 'pe_tip_right'],
-          associated_pc_sensor_list: ['tip_camera', 'perception_3d_lidar'],
-        },
-      ],
-    },
-    strategy_amr_load_protection: {
-      id: 9,
-      rack_leg_diameter: 40,
-      amr_height: 300,
-    },
-  };
   const {
     rects,
     setSelectedId,
@@ -201,7 +125,7 @@ const DrawerContent = (props: IProps) => {
   const [checkedList, setCheckedList] = useState<string[]>([]);
 
   // 避障策略数据
-  const [propStrategyList, _] = useState(strategyList ?? strategyTpye);
+  const [propStrategyList, _] = useState(strategyList ?? {});
 
   const {
     data: deviceList,
@@ -328,7 +252,17 @@ const DrawerContent = (props: IProps) => {
                   >
                     {strategyListName[item]}
                   </Checkbox>
-                  <Popover trigger='hover' content={<RenderStrategyTpye data={item} />} align={{ offset: [-8, -0] }}>
+                  <Popover
+                    trigger='hover'
+                    content={
+                      <RenderStrategyTpye
+                        data={{ ...propStrategyList[item], name: item, list: propStrategyList[item] }}
+                        isDark={isDark}
+                        idStrategyEndPathCloseProtection={currentObsInfo?.id_strategy_end_path_close_protection}
+                      />
+                    }
+                    align={{ offset: [-8, -0] }}
+                  >
                     <InfoCircleOutlined className='opacity-20 group-hover:opacity-100 animation-all duration-500 cursor-pointer hover:text-teal-500 hover:shadow-lg' />
                   </Popover>
                 </div>
@@ -366,7 +300,7 @@ const DrawerContent = (props: IProps) => {
             )}
             {ioInputConfig?.inputConfig?.map((item) => {
               if (!currentObsInfo) return;
-              console.log(currentObsInfo?.i_sensor_list?.includes(item?.key));
+              console.log(currentObsInfo?.io_sensor_list?.includes(item?.key));
 
               return (
                 <div
@@ -415,7 +349,7 @@ const DrawerContent = (props: IProps) => {
                 <div
                   key={item.key}
                   style={{
-                    display: currentObsInfo?.o_sensor_list?.includes(item?.key) ? 'flex' : 'none',
+                    display: currentObsInfo?.close_ce_lidar_list?.includes(item?.key) ? 'flex' : 'none',
                   }}
                   className='group flex items-center justify-between hover:shadow-sm  hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
                 >

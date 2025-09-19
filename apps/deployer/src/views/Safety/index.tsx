@@ -610,6 +610,7 @@ export default function RectDrawer() {
               setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
               show={show}
               isDark={isDark}
+              loading={obstacleDataLoading}
             />
             <div className='relative h-full flex-1 min-w-0' ref={ref}>
               <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
