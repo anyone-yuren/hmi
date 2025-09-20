@@ -33,15 +33,7 @@ export default function RectDrawer() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(null);
   const [preview, setPreview] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
-  const [rects, setRects] = useState<Array<{ id: number; x: number; y: number; width: number; height: number }>>([
-    // {
-    //   id: 'rect_1757730364464',
-    //   x: -480.6902019382337,
-    //   y: 242.57523833812138,
-    //   width: 309.6902019382337,
-    //   height: 184.24606950755685,
-    // },
-  ]);
+  const [rects, setRects] = useState<Array<{ id: number; x: number; y: number; width: number; height: number }>>([]);
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [isUseFullRect, setIsUseFullRect] = useState(false);
   const [scale, setScale] = useState(1);
@@ -580,6 +572,23 @@ export default function RectDrawer() {
     }
   }, [obsInfo?.scheme_id, memoObstacleData?.obs_scheme?.scheme_list]);
 
+  // 设置避障方案更新，与弹窗取消后，还原初始化避障方案。
+  const refreshCurrentObsInfo = (scheme_id) => {
+    if (scheme_id) {
+      const currentObs = memoObstacleData?.obs_scheme?.scheme_list?.find((item) => item.scheme_id === scheme_id);
+      if (currentObs) {
+        setCurrentObsInfo({ ...currentObs });
+        // 居中
+        centerOriginWithAnimation();
+      }
+    } else {
+      // 根据当前避障方案，刷新当前避障信息
+      if (obsInfo?.scheme_id) {
+        refreshCurrentObsInfo(obsInfo?.scheme_id);
+      }
+    }
+  };
+
   return (
     <div
       className={`w-full h-full flex flex-col !absolute left-0 top-0 bottom-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}
@@ -789,6 +798,7 @@ export default function RectDrawer() {
             isDark={isDark}
             currentObsInfo={currentObsInfo} // 当前避障数据
             strategyList={strategyList} // 策略数据
+            refreshCurrentObsInfo={refreshCurrentObsInfo}
           />
         </Drawer>
       </ConfigProvider>
