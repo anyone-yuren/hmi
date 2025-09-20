@@ -112,7 +112,7 @@ const Safety = () => {
     ) {
       return [];
     }
-    const obj = config?.data?.obs_scheme?.scheme_list.find((item: any) => item.scheme_id === 1);
+    const obj = config?.data?.obs_scheme?.scheme_list.find((item: any) => item.scheme_id === obsInfo?.scheme_id);
     return obj?.protect_areas || [];
   }, [obsInfo, config]);
   return (

@@ -33,6 +33,7 @@ export default function useHybirdWsExtend() {
       if (data.points) {
         // const decompressedData = unzipText(data.points);
         const decompressedData = typeof data?.point_cloud === 'object' ? data?.points : unzipText(data?.points);
+        console.log('避障点云数据长度', decompressedData);
         setSeniorPoints(decompressedData ?? []);
       }
     },

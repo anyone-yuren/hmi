@@ -75,23 +75,23 @@ const OnlinePoint = () => {
               size='small'
               onClick={() => {
                 MwConfirm.confirm({
-                  title: t('上线') as string,
-                  content: t('是否上线'),
+                  title: t('deployer.hybrid.online') as string,
+                  content: t('deployer.hybrid.isOnline'),
                   onOk: async () => {
                     const res: any = await run({
                       cmd_type: 3,
                       point_id: item.point_id,
                     });
                     if (res.error_code === 10000) {
-                      toast.success(t('上线成功'));
+                      toast.success(t('common.actionSuccess'));
                     } else {
-                      toast.error(t('上线失败'));
+                      toast.error(t('common.actionFail'));
                     }
                   },
                 });
               }}
             >
-              {t('上线')}
+              {t('deployer.hybrid.online')}
             </Button>
             <Button
               type='link'
@@ -100,17 +100,17 @@ const OnlinePoint = () => {
               onClick={() => {
                 MwConfirm.confirm({
                   title: t('common.delete') as string,
-                  content: t('是否删除'),
+                  content: t('deployer.hybrid.isDelete'),
                   onOk: async () => {
                     const res: any = await run({
                       cmd_type: 2,
                       point_id: item.point_id,
                     });
                     if (res.error_code === 10000) {
-                      toast.success(t('删除成功'));
+                      toast.success(t('common.actionSuccess'));
                       getLinePoint();
                     } else {
-                      toast.error(t('删除失败'));
+                      toast.error(t('common.actionFail'));
                     }
                   },
                 });

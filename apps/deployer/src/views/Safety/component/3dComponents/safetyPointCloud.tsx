@@ -1,5 +1,5 @@
 import { useSafetyStore } from '@/views/Safety/store/safety.store';
-import { memo, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { getProjectArea } from '../../utils/index';
@@ -32,6 +32,10 @@ function SafetyPointCloud(props) {
     }
     return new Float32Array(points);
   }, []);
+
+  useEffect(() => {
+    console.log('查看点云', seniorPoints);
+  }, [seniorPoints]);
 
   const isPointInRectangle = (point: THREE.Vector3, rectangle: number[]) => {
     const [x1, y1, x2, y2] = rectangle;
