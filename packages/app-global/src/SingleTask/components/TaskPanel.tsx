@@ -15,7 +15,7 @@ import EmptyBox from '../components/Empty';
 import PointsAdd from './SvgIcon/PointsAdd';
 
 import { useAsyncEffect, useRequest } from 'ahooks';
-import { Action, SwipeAction } from '../components/SwiperAction';
+import { Action } from '../components/SwiperAction';
 import { cancelTask, createTask, deleteTemplate, getTasks, getTemplate } from '../services/index';
 import DeleteIcon from './SvgIcon/DeleteIcon';
 import StartIcon from './SvgIcon/StartIcon';
@@ -187,18 +187,20 @@ const TaskPanel = forwardRef((props: any, ref) => {
       task: (list: any) => {
         return list?.map((taskItem: ITaskItem) => {
           return (
-            <SwipeAction
-              key={taskItem?.task_group_id}
-              rightActions={rightActions}
-              closeOnAction={false}
-              onMove={() => {
-                move.current = true;
-              }}
-              onAction={() => {
-                handleTaskDelete(taskItem);
-              }}
-            >
-              <TaskItem
+            // <SwipeAction
+            //   key={taskItem?.task_group_id}
+            //   rightActions={rightActions}
+            //   closeOnAction={false}
+            //   onMove={() => {
+            //     move.current = true;
+            //   }}
+            //   onAction={() => {
+            //     handleTaskDelete(taskItem);
+            //   }}
+            // >
+            <TaskItem>
+              <div
+                className='flex-1 flex flex-col justify-center'
                 onClick={() => {
                   handleTaskOption && handleTaskOption(taskItem, 'task');
                 }}
@@ -222,28 +224,40 @@ const TaskPanel = forwardRef((props: any, ref) => {
                     {t('deployer.singleTask.gapTime')}: {taskItem?.task_interval}
                   </span>
                 </div>
-              </TaskItem>
-            </SwipeAction>
+              </div>
+              <div className='flex items-center pl-2'>
+                <DeleteIcon
+                  fontSize={18}
+                  isActive
+                  onClick={() => {
+                    handleTaskDelete(taskItem);
+                  }}
+                ></DeleteIcon>
+              </div>
+            </TaskItem>
+            // </SwipeAction>
           );
         });
       },
       template: (list: any) => {
         return list?.map((template: any) => {
           return (
-            <SwipeAction
-              key={template?.name}
-              rightActions={[...runActions, ...rightActions]}
-              closeOnAction={false}
-              onMove={() => {
-                move.current = true;
-              }}
-              onAction={(object: any) => {
-                const { key } = object;
-                key === 'delete' && handleTaskDelete(template);
-                key === 'start' && handleTaskStart(template);
-              }}
-            >
-              <TaskItem
+            // <SwipeAction
+            //   key={template?.name}
+            //   rightActions={[...runActions, ...rightActions]}
+            //   closeOnAction={false}
+            //   onMove={() => {
+            //     move.current = true;
+            //   }}
+            //   onAction={(object: any) => {
+            //     const { key } = object;
+            //     key === 'delete' && handleTaskDelete(template);
+            //     key === 'start' && handleTaskStart(template);
+            //   }}
+            // >
+            <TaskItem>
+              <div
+                className='flex-1 flex flex-col justify-center'
                 onClick={() => {
                   handleTaskOption && handleTaskOption(template, 'template');
                 }}
@@ -257,8 +271,25 @@ const TaskPanel = forwardRef((props: any, ref) => {
                     {t('deployer.singleTask.gapTime')}: {template?.task_interval}
                   </span>
                 </div>
-              </TaskItem>
-            </SwipeAction>
+              </div>
+              <div className='flex items-center gap-2 pl-2'>
+                <StartIcon
+                  fontSize={18}
+                  isActive
+                  onClick={() => {
+                    handleTaskStart(template);
+                  }}
+                ></StartIcon>
+                <DeleteIcon
+                  fontSize={18}
+                  isActive
+                  onClick={() => {
+                    handleTaskDelete(template);
+                  }}
+                ></DeleteIcon>
+              </div>
+            </TaskItem>
+            // </SwipeAction>
           );
         });
       },

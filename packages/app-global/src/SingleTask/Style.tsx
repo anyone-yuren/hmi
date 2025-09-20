@@ -130,7 +130,7 @@ export const TaskItem = styled('div')(() => ({
   flexShrink: 0,
   width: '100%',
   display: 'flex',
-  flexDirection: 'column',
+  // flexDirection: 'column',
   justifyContent: 'center',
   '.title': {
     color: 'white',
