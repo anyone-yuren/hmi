@@ -1,3 +1,4 @@
+import ErrorPage from '@/components/ErrorPage';
 import { LineGrid } from '@/components/InitStage/components/LineGrid';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
 import { useRequest, useSize } from 'ahooks';
@@ -26,6 +27,7 @@ export default function RectDrawer() {
   const ref = useRef<HTMLDivElement>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
   const size = useSize(ref);
+  const [errorRequest, setErrorRequest] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const { setStageScale } = useHybirdStore(useShallow((store) => ({ setStageScale: store.setStageScale })));
   const [show, setShow] = useState(true);
@@ -517,7 +519,20 @@ export default function RectDrawer() {
     };
   }, []);
 
-  const { data: obstacleData, loading: obstacleDataLoading, run: refreshObstacleData } = useRequest(safetyConfig);
+  const {
+    data: obstacleData,
+    loading: obstacleDataLoading,
+    run: refreshObstacleData,
+  } = useRequest(safetyConfig, {
+    retryCount: 3,
+    retryInterval: 10000,
+    onSuccess: () => {
+      setErrorRequest(false);
+    },
+    onError: (e) => {
+      setErrorRequest(true);
+    },
+  });
 
   // 当前避障信息
   const [currentObsInfo, setCurrentObsInfo] = useState<any>(null);
@@ -574,6 +589,7 @@ export default function RectDrawer() {
 
   // 设置避障方案更新，与弹窗取消后，还原初始化避障方案。
   const refreshCurrentObsInfo = (scheme_id) => {
+    refreshObstacleData();
     if (scheme_id) {
       const currentObs = memoObstacleData?.obs_scheme?.scheme_list?.find((item) => item.scheme_id === scheme_id);
       if (currentObs) {
@@ -588,6 +604,12 @@ export default function RectDrawer() {
       }
     }
   };
+
+  // 请求失败页面
+
+  if (errorRequest) {
+    return <ErrorPage loading={obstacleDataLoading} refresh={refreshObstacleData} />;
+  }
 
   return (
     <div
