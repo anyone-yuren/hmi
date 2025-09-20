@@ -563,7 +563,7 @@ const DrawerContent = (props: IProps) => {
             const formValue = form.getFieldsValue();
             const protectAreas = rects.map((item, index) => {
               return {
-                id: item.id,
+                id: typeof item.id === 'string' ? Number(item.id) : item.id,
                 associated_device: item?.associated_device ?? 1,
                 rectangle: getRectPoints(item.x, item.y, item.width, item.height),
               };

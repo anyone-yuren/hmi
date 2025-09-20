@@ -18,7 +18,7 @@ import { safetyConfig } from './service';
 import { useSafetyStore } from './store/safety.store';
 import { getRect } from './utils';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
-
+const snap = 20;
 export default function RectDrawer() {
   const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const stageRef = useRef<Konva.Stage>(null);
@@ -33,7 +33,7 @@ export default function RectDrawer() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(null);
   const [preview, setPreview] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
-  const [rects, setRects] = useState<Array<{ id: string; x: number; y: number; width: number; height: number }>>([
+  const [rects, setRects] = useState<Array<{ id: number; x: number; y: number; width: number; height: number }>>([
     // {
     //   id: 'rect_1757730364464',
     //   x: -480.6902019382337,
@@ -109,7 +109,6 @@ export default function RectDrawer() {
       container.removeEventListener('mouseup', handleMouseUp);
     };
   }, []);
-  const snap = 2;
 
   // Esc 取消绘制
   useEffect(() => {
@@ -222,7 +221,7 @@ export default function RectDrawer() {
     if (snappedRect.width > 1 && snappedRect.height > 1 && isSnapped && !isIntersecting) {
       setRects((prev) => [
         ...prev,
-        { id: prev.length ? Math.max(...prev.map((item) => item.id)) + 1 : 1, ...snappedRect },
+        { id: '' + (prev.length ? Math.max(...prev.map((item) => item.id)) + 1 : 1), ...snappedRect },
       ]);
     }
     setIsDrawing(false);
@@ -251,7 +250,7 @@ export default function RectDrawer() {
       } = validateRect(
         rawRect,
         carRects,
-        rects.filter((r) => r.id !== id),
+        rects.filter((r) => String(r.id) !== id),
         snap,
       );
       setSnapLines(snapLines);
@@ -265,7 +264,7 @@ export default function RectDrawer() {
         node.fill('rgba(255,211,61,0.2)');
       }
 
-      setRects((prev) => prev.map((r) => (r.id === id ? { ...r, x: node.x(), y: node.y() } : r)));
+      setRects((prev) => prev.map((r) => (String(r.id) === id ? { ...r, x: node.x(), y: node.y() } : r)));
     },
     [rects],
   );
@@ -287,10 +286,9 @@ export default function RectDrawer() {
       const { isSnapped, isIntersecting } = validateRect(
         rawRect,
         carRects,
-        rects.filter((r) => r.id !== id),
+        rects.filter((r) => String(r.id) !== id),
         snap,
       );
-
       if (!isSnapped || isIntersecting) {
         new Konva.Tween({
           node,
@@ -299,7 +297,7 @@ export default function RectDrawer() {
           x: startPos.x,
           y: startPos.y,
           onFinish: () => {
-            setRects((prev) => prev.map((r) => (r.id === id ? { ...r, x: startPos.x, y: startPos.y } : r)));
+            setRects((prev) => prev.map((r) => (String(r.id) === id ? { ...r, x: startPos.x, y: startPos.y } : r)));
             // 移除 startPos 属性
             node.setAttrs({
               fill: 'rgba(255,211,61,0.2)',
@@ -344,7 +342,7 @@ export default function RectDrawer() {
       } = validateRect(
         rawRect,
         carRects,
-        rects.filter((r) => r.id !== id),
+        rects.filter((r) => String(r.id) !== id),
         snap,
       );
       setSnapLines(snapLines);
@@ -357,7 +355,7 @@ export default function RectDrawer() {
       node.fill(isIntersecting ? 'rgba(255,0,0,0.2)' : 'rgba(255,211,61,0.2)');
 
       // 更新 rects
-      setRects((prev) => prev.map((r) => (r.id === id ? { ...r, ...snappedRect } : r)));
+      setRects((prev) => prev.map((r) => (String(r.id) === id ? { ...r, ...snappedRect } : r)));
 
       // 清理 scale，避免累计缩放
       node.scaleX(1);
@@ -394,7 +392,7 @@ export default function RectDrawer() {
       const { isSnapped, isIntersecting } = validateRect(
         rawRect,
         carRects,
-        rects.filter((r) => r.id !== id),
+        rects.filter((r) => String(r.id) !== id),
         snap,
       );
 
@@ -652,7 +650,7 @@ export default function RectDrawer() {
                             text={`(${0 - Math.round(r.y)}, ${0 - Math.round(r.x)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
                             x={Math.round(r.x)}
                             y={Math.round(r.y) - 12} // 显示在矩形上方
-                            fontSize={10}
+                            fontSize={18}
                             fill={isDark ? '#fff' : '#000'}
                             listening={false} // 不可交互
                           />
@@ -661,13 +659,13 @@ export default function RectDrawer() {
                             text={`(${0 - Math.round(r.y + r.height)}, ${0 - Math.round(r.x + r.width)})`}
                             x={Math.round(r.x + r.width)}
                             y={Math.round(r.y + r.height)}
-                            fontSize={10}
+                            fontSize={18}
                             fill={isDark ? '#fff' : '#000'}
                           />
                         </>
                       )}
                       <Rect
-                        id={r.id}
+                        id={r.id + ''}
                         x={r.x}
                         y={r.y}
                         width={r.width}
@@ -703,7 +701,7 @@ export default function RectDrawer() {
                         text={`(${0 - Math.round(preview.y)}, ${0 - Math.round(preview.x)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
                         x={Math.round(preview.x)}
                         y={Math.round(preview.y) - 10}
-                        fontSize={10}
+                        fontSize={18}
                         fill={isDark ? '#fff' : '#000'}
                       />
                       {/* 显示右下角坐标 */}
@@ -711,7 +709,7 @@ export default function RectDrawer() {
                         text={`(${0 - Math.round(preview.y + preview.height)}, ${0 - Math.round(preview.x + preview.width)})`}
                         x={Math.round(preview.x + preview.width)}
                         y={Math.round(preview.y + preview.height)}
-                        fontSize={10}
+                        fontSize={18}
                         fill={isDark ? '#fff' : '#000'}
                       />
                       <Rect
@@ -740,8 +738,8 @@ export default function RectDrawer() {
                       key={idx}
                       points={line.points}
                       stroke='rgba(0,150,136,0.8)'
-                      strokeWidth={2.5}
-                      dash={[6, 4]}
+                      strokeWidth={2.5 / scale}
+                      dash={[6 / scale, 4 / scale]}
                       listening={false}
                     />
                   ))}

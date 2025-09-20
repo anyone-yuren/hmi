@@ -49,7 +49,7 @@ export function isSnappedToAnyCar(rect, carRects, snap = 1) {
 /**
  * 应用吸附
  */
-export function applySnap(rect, carRects, snap = 5, margin = 1) {
+export function applySnap(rect, carRects, snap = 5, margin = 0) {
   const newRect = { ...rect };
   const snapLines: { points: number[]; orientation: 'vertical' | 'horizontal' }[] = [];
   carRects.forEach((car) => {
