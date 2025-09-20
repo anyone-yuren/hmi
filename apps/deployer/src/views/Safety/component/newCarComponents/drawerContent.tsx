@@ -41,8 +41,25 @@ interface IProps {
   isDark: boolean;
   currentObsInfo: Record<string, any>;
   strategyList: Record<string, Record<string, any>>;
+  refreshCurrentObsInfo: (scheme_id: string | null) => void;
 }
 const DrawerContent = (props: IProps) => {
+  const {
+    rects,
+    setSelectedId,
+    selectedId,
+    stage,
+    size,
+    setReRenderLineGrid,
+    reRenderLineGrid,
+    setRects,
+    setOpenUpdateObsDrawer,
+    isDark,
+    currentObsInfo,
+    strategyList,
+    refreshCurrentObsInfo,
+  } = props;
+
   const io_sensor_list = ['obstacle_stop_right', 'pe_charge_input'];
   const { useToken } = theme;
   const { modal } = App.useApp();
@@ -61,6 +78,16 @@ const DrawerContent = (props: IProps) => {
       updateIoResponse(YAML.load(response)); // 倒反天罡
     },
   });
+
+  // 对比currentObsInfo与form.getFieldsValue()，是否有差异
+  const isFormChanged = () => {
+    const formValues = form.getFieldsValue();
+    // 判断rects与currentObsInfo的protect_areas是否有变更 暂时不写
+    return (
+      Object.keys(formValues).some((key) => formValues[key] !== currentObsInfo[key]) ||
+      rects.length !== currentObsInfo.protect_areas?.length
+    );
+  };
 
   const { run: update, loading: uploadLoading } = useRequest(updateSafety, {
     manual: true,
@@ -95,21 +122,6 @@ const DrawerContent = (props: IProps) => {
   }, [i18n.language]);
 
   const strategyListName = useStrategyListName();
-
-  const {
-    rects,
-    setSelectedId,
-    selectedId,
-    stage,
-    size,
-    setReRenderLineGrid,
-    reRenderLineGrid,
-    setRects,
-    setOpenUpdateObsDrawer,
-    isDark,
-    currentObsInfo,
-    strategyList,
-  } = props;
 
   console.log(currentObsInfo);
   const [selectRect, setSelectRect] = useState<{
@@ -563,7 +575,7 @@ const DrawerContent = (props: IProps) => {
             const formValue = form.getFieldsValue();
             const protectAreas = rects.map((item, index) => {
               return {
-                id: item.id,
+                id: typeof item.id === 'string' ? Number(item.id) : item.id,
                 associated_device: item?.associated_device ?? 1,
                 rectangle: getRectPoints(item.x, item.y, item.width, item.height),
               };
@@ -572,6 +584,7 @@ const DrawerContent = (props: IProps) => {
             const res = await update({
               ...sendFormData,
             });
+            setOpenUpdateObsDrawer(false);
           }}
         >
           修改
@@ -580,7 +593,19 @@ const DrawerContent = (props: IProps) => {
           variant='outlined'
           color='red'
           onClick={() => {
-            setOpenUpdateObsDrawer(false);
+            const hasChange = isFormChanged();
+            if (hasChange) {
+              modal.confirm({
+                title: '当前数据有变更，是否确认退出',
+                okText: '确认',
+                onOk: () => {
+                  refreshCurrentObsInfo(null);
+                  setOpenUpdateObsDrawer(false);
+                },
+              });
+            } else {
+              setOpenUpdateObsDrawer(false);
+            }
           }}
         >
           取消

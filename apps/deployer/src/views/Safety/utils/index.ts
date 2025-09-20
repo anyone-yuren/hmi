@@ -59,16 +59,16 @@ export const getProjectArea = (forksUnderRect, forksHeight) => {
 };
 // 根据左上角xy与宽高 生成一个【x1,y1,x2,y2】的数组
 export const getRectPoints = (x: number, y: number, width: number, height: number) => {
-  return [0 - Math.round(y), 0 - Math.round(x), 0 - Math.round(y + height), 0 - Math.round(x + width)];
+  return [0 - Math.round(y + height), 0 - Math.round(x + width), 0 - Math.round(y), 0 - Math.round(x)];
 };
 
 // 根据【x1,y1,x2,y2】数组 生成一个矩形
 export const getRect = (points: number[]) => {
   return {
-    x: 0 - points[1],
-    y: 0 - points[0],
-    width: Math.abs(points[3] - points[1]),
-    height: Math.abs(points[2] - points[0]),
+    x: 0 - points[3],
+    y: 0 - points[2],
+    width: Math.abs(points[1] - points[3]),
+    height: Math.abs(points[0] - points[2]),
   };
 };
 

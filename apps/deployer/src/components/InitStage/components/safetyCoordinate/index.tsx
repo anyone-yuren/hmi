@@ -10,20 +10,20 @@ const SafetyCoordinate = () => {
         points={[0, 0, -axisLength, 0]} // 反向箭头
         pointerLength={5}
         pointerWidth={6}
-        stroke='red'
+        stroke='green'
         strokeWidth={4}
       />
       {/* 标记X轴 */}
-      <Text y={-axisLength - 22} x={-4} fontSize={16} text='x (mm)' fill='green' stroke='green' strokeWidth={1}></Text>
+      <Text y={-axisLength - 22} x={-4} fontSize={16} text='x (mm)' fill='red' stroke='red' strokeWidth={1}></Text>
       <Arrow
         points={[0, 0, 0, -axisLength]} // 反向箭头
         pointerLength={5}
         pointerWidth={6}
-        stroke='green'
+        stroke='red'
         strokeWidth={4}
       />
       {/* 标记Y轴 */}
-      <Text y={-10} x={-axisLength - 64} fontSize={16} text='y (mm)' fill='red' stroke='red' strokeWidth={1}></Text>
+      <Text y={-10} x={-axisLength - 64} fontSize={16} text='y (mm)' fill='green' stroke='green' strokeWidth={1}></Text>
     </Group>
   );
 };

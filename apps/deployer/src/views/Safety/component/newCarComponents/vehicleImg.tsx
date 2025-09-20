@@ -8,9 +8,9 @@ const VehicleImg = (props: {
 }) => {
   const { rectangleList = [] } = props;
   const [a, b, c, d] = rectangleList[0]?.rectangle;
-  const headerRect = getRect([c, d, a, b]);
+  const headerRect = getRect(rectangleList[0]?.rectangle);
   const [a1, b1, c1, d1] = rectangleList[1]?.rectangle;
-  const forkarmRect = getRect([c1, d1, a1, b1]);
+  const forkarmRect = getRect(rectangleList[1]?.rectangle);
   const agvType = useAgvType();
   const [img, setImg] = useState<HTMLImageElement | null>(null);
 
