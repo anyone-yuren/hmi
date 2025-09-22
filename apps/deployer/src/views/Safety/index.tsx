@@ -16,7 +16,7 @@ import DrawerContent from './component/newCarComponents/drawerContent';
 import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
-import WsContainer from './component/WsContainer';
+import { useSafety } from './hooks/useSafety';
 import { getDeviceList, safetyConfig } from './service';
 import { useSafetyStore } from './store/safety.store';
 import { getRect } from './utils';
@@ -58,7 +58,7 @@ export default function RectDrawer() {
   const deviceTopic = useMemo(() => {
     return deviceList?.data?.map((item) => item.topic);
   }, [deviceList]);
-  // useSafety();
+  useSafety({ extraTopic: deviceTopic });
 
   const reRenderLineGridFn = () => {
     setReRenderLineGrid(!reRenderLineGrid);
@@ -837,11 +837,11 @@ export default function RectDrawer() {
           />
         </Drawer>
       </ConfigProvider>
-      {deviceTopic && (
+      {/* {deviceTopic && (
         <WsContainer extraTopic={deviceTopic}>
           <></>
         </WsContainer>
-      )}
+      )} */}
     </div>
   );
 }
