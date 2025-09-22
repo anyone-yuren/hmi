@@ -138,7 +138,9 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
           onClick={() => setOpen(true)}
         >
           <SvgIcon name='points' size={128} className='group-hover:scale-110 animation-all duration-300' />
-          <p className='text-xs opacity-60'>{t('common.safety.noDevice')}</p>
+          <p className='text-xs opacity-60'>
+            {currentObsData?.pc_sensor_list?.length ? '查看点云' : t('common.safety.noDevice')}
+          </p>
         </div>
       </motion.div>
       <Drawer

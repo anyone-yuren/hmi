@@ -58,6 +58,8 @@ export default function RectDrawer() {
   const deviceTopic = useMemo(() => {
     return deviceList?.data?.map((item) => item.topic);
   }, [deviceList]);
+  // useSafety();
+
   const reRenderLineGridFn = () => {
     setReRenderLineGrid(!reRenderLineGrid);
   };
@@ -617,7 +619,6 @@ export default function RectDrawer() {
   if (errorRequest) {
     return <ErrorPage loading={obstacleDataLoading} refresh={refreshObstacleData} />;
   }
-
   // 与车载约定，0就是未启动
   if (!obsInfo.type) {
     return <EmptyPage title={getObsMsg(obsInfo?.type ?? 0)} icon='rest' />;
