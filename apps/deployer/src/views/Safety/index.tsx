@@ -1,6 +1,8 @@
+import EmptyPage from '@/components/EmptyPage';
 import ErrorPage from '@/components/ErrorPage';
 import { LineGrid } from '@/components/InitStage/components/LineGrid';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
+import { useObsError } from '@gbeata/app-global';
 import { useRequest, useSize } from 'ahooks';
 import { ConfigProvider, Drawer, theme } from 'antd';
 import Hammer from 'hammerjs';
@@ -604,11 +606,17 @@ export default function RectDrawer() {
       }
     }
   };
+  const { getObsMsg } = useObsError();
 
   // 请求失败页面
 
   if (errorRequest) {
     return <ErrorPage loading={obstacleDataLoading} refresh={refreshObstacleData} />;
+  }
+
+  // 与车载约定，0就是未启动
+  if (!obsInfo.type) {
+    return <EmptyPage title={getObsMsg(obsInfo?.type ?? 0)} icon='rest' />;
   }
 
   return (

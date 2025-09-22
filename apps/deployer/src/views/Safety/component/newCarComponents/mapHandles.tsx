@@ -1,4 +1,4 @@
-import { AimOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { AimOutlined } from '@ant-design/icons';
 import Konva from 'konva';
 
 interface IProps {
@@ -13,7 +13,7 @@ const Maphandles = (prop: IProps) => {
         className='text-lg cursor-pointer hover:text-teal-400 active:text-teal-600 animation-all duration-150'
         onClick={centerOriginWithAnimation}
       />
-      <QuestionCircleOutlined className='text-lg cursor-pointer hover:text-teal-400 active:text-teal-600 animation-all duration-150' />
+      {/* <QuestionCircleOutlined className='text-lg cursor-pointer hover:text-teal-400 active:text-teal-600 animation-all duration-150' /> */}
     </div>
   );
 };
