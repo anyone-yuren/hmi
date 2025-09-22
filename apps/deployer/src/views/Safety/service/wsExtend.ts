@@ -10,17 +10,25 @@ function unzipText(str) {
 }
 
 export default function useHybirdWsExtend() {
-  const { setObsInfo, setSeniorPoints, setGoodsInfo, setTurnRegionData, setMotionStatus, setForksHeight } =
-    useSafetyStore(
-      useShallow((store) => ({
-        setObsInfo: store.setObsInfo,
-        setSeniorPoints: store.setSeniorPoints,
-        setGoodsInfo: store.setGoodsInfo,
-        setTurnRegionData: store.setTurnRegionData,
-        setMotionStatus: store.setMotionStatus,
-        setForksHeight: store.setForksHeight,
-      })),
-    );
+  const {
+    setObsInfo,
+    setSeniorPoints,
+    setGoodsInfo,
+    setTurnRegionData,
+    setMotionStatus,
+    setForksHeight,
+    setSensorPoints,
+  } = useSafetyStore(
+    useShallow((store) => ({
+      setObsInfo: store.setObsInfo,
+      setSeniorPoints: store.setSeniorPoints,
+      setGoodsInfo: store.setGoodsInfo,
+      setTurnRegionData: store.setTurnRegionData,
+      setMotionStatus: store.setMotionStatus,
+      setForksHeight: store.setForksHeight,
+      setSensorPoints: store.setSensorPoints,
+    })),
+  );
 
   return {
     '/sirius/topics/safety_obs_info': (data: any) => {
@@ -52,6 +60,11 @@ export default function useHybirdWsExtend() {
     '/sirius/topics/robot_status_forkarm': (data: any) => {
       // 叉臂高度 data?.z 后面看看要不要加判断
       setForksHeight(data?.z || 0);
+    },
+    '/set_sensor_points': (key, data) => {
+      const decompressedData = typeof data?.data === 'object' ? data?.data : JSON.parse(unzipText(data?.data || ''));
+      // console.log('避障点云数据长度', key, decompressedData.length);
+      setSensorPoints(key, decompressedData);
     },
   };
 }

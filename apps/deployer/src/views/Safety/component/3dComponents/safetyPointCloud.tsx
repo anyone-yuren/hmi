@@ -8,30 +8,43 @@ const mockHeight = 668;
 
 function SafetyPointCloud(props) {
   const { projectArea, forksUnderRect } = props;
-  const { seniorPoints, forksHeight } = useSafetyStore(
+  const { seniorPoints, forksHeight, sensorPoints } = useSafetyStore(
     useShallow((store) => ({
       seniorPoints: store.seniorPoints,
       forksHeight: store.forksHeight,
+      sensorPoints: store.sensorPoints,
     })),
   );
 
-  const [excludeOutsidePoints, setExcludeOutsidePoints] = useState(true);
+  const [excludeOutsidePoints, setExcludeOutsidePoints] = useState(false);
 
   const forksUnderProjectArea: any = useMemo(() => {
     if (!forksUnderRect) return null;
     return getProjectArea(forksUnderRect, mockHeight);
   }, [forksUnderRect, forksHeight]);
 
+  // const pointsData = useMemo(() => {
+  //   const points: number[] = [];
+  //   for (let i = 0; i < 15000; i++) {
+  //     const x = (Math.random() - 0.5) * 4;
+  //     const y = (Math.random() - 0.5) * 4;
+  //     const z = Math.random() * 2;
+  //     points.push(x, y, z);
+  //   }
+  //   return new Float32Array(points);
+  // }, []);
   const pointsData = useMemo(() => {
-    const points: number[] = [];
-    for (let i = 0; i < 15000; i++) {
-      const x = (Math.random() - 0.5) * 4;
-      const y = (Math.random() - 0.5) * 4;
-      const z = Math.random() * 2;
-      points.push(x, y, z);
+    const points: any = [];
+    const keys = Object.keys(sensorPoints);
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index];
+      for (let oindex = 0; oindex < sensorPoints[key].length; oindex++) {
+        const point = sensorPoints[key][oindex];
+        points.push(point.x, point.y, point.z);
+      }
     }
-    return new Float32Array(points);
-  }, []);
+    return points;
+  }, [sensorPoints]);
 
   useEffect(() => {
     console.log('查看点云', seniorPoints);

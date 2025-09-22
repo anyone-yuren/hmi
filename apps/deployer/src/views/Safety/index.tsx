@@ -17,7 +17,7 @@ import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
 import WsContainer from './component/WsContainer';
-import { safetyConfig } from './service';
+import { getDeviceList, safetyConfig } from './service';
 import { useSafetyStore } from './store/safety.store';
 import { getRect } from './utils';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
@@ -54,6 +54,10 @@ export default function RectDrawer() {
   /** -------------避障方案调整 start -------------- */
   const [openUpdateObsDrawer, setOpenUpdateObsDrawer] = useState(false);
 
+  const { data: deviceList = [] } = useRequest(getDeviceList);
+  const deviceTopic = useMemo(() => {
+    return deviceList?.data?.map((item) => item.topic);
+  }, [deviceList]);
   const reRenderLineGridFn = () => {
     setReRenderLineGrid(!reRenderLineGrid);
   };
@@ -832,9 +836,11 @@ export default function RectDrawer() {
           />
         </Drawer>
       </ConfigProvider>
-      <WsContainer>
-        <></>
-      </WsContainer>
+      {deviceTopic && (
+        <WsContainer extraTopic={deviceTopic}>
+          <></>
+        </WsContainer>
+      )}
     </div>
   );
 }

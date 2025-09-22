@@ -34,6 +34,9 @@ interface State {
 
   forksHeight: number;
   setForksHeight: (data: number) => void;
+
+  sensorPoints: {};
+  setSensorPoints: (key: string, data: any) => void;
 }
 
 export const useSafetyStore = create<State>()(
@@ -72,6 +75,8 @@ export const useSafetyStore = create<State>()(
       setMotionStatus: (data) => set({ motionStatus: data }),
       forksHeight: 0,
       setForksHeight: (data) => set({ forksHeight: data }),
+      sensorPoints: {},
+      setSensorPoints: (key, data) => set({ sensorPoints: { ...get().sensorPoints, [key]: data } }),
     }),
     {
       name: 'safety-store',

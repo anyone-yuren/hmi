@@ -9,7 +9,7 @@ const HYBRID_URL = import.meta.env.DEV
   : `ws://${currentHost}:10009`; // 生产环境使用真实地址
 
 const hashMap: any = {};
-export const useSafety = () => {
+export const useSafety = ({ extraTopic }) => {
   const safetyWsExtend = useSafetyWsExtend();
   const webSocketEventHashMap: any = {
     ...safetyWsExtend,
@@ -48,6 +48,10 @@ export const useSafety = () => {
         const render_data = message ? JSON.parse(message.data) : {};
         webSocketEventHashMap[data?.uri] && webSocketEventHashMap[data?.uri](render_data);
       }
+      if (extraTopic.includes(data?.uri)) {
+        const extra_render_data = message ? JSON.parse(message.data) : {};
+        webSocketEventHashMap['/set_sensor_points'](data?.uri, extra_render_data);
+      }
     },
   });
   useEffect(() => {
@@ -64,11 +68,13 @@ export const useSafety = () => {
             '/sirius/topics/task_status_motion',
             '/sirius/topics/robot_status_forkarm',
             '/pointcloud_head',
+            ...extraTopic,
           ],
         }),
       );
     }
-  }, [readyState, sendMessage]);
+    console.log('deviceTopic', extraTopic);
+  }, [readyState, sendMessage, extraTopic]);
   return {
     sendMessage,
     latestMessage,
