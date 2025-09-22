@@ -326,7 +326,7 @@ const DrawerContent = (props: IProps) => {
             })}
           </Checkbox.Group>
         </div>
-        <div className='flex flex-col gap-2'>
+        {/* <div className='flex flex-col gap-2'>
           <Tooltip placement='topRight' title='修改关联IO信号，请使用roboToolkit'>
             <p className='text-md font-bold relative py-2 flex justify-between items-center'>
               IO信号（输出）
@@ -368,7 +368,7 @@ const DrawerContent = (props: IProps) => {
               );
             })}
           </Checkbox.Group>
-        </div>
+        </div> */}
         <div className='flex flex-col gap-2'>
           <div className='flex flex-col gap-2'>
             <p className='text-md font-bold relative py-2'>
