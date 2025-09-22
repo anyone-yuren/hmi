@@ -237,8 +237,6 @@ const DrawerContent = (props: IProps) => {
     });
   };
 
-  console.log(currentObsInfo);
-
   return (
     <div className='flex flex-col gap-4'>
       <Form form={form} initialValues={initFormValue}>
@@ -314,13 +312,11 @@ const DrawerContent = (props: IProps) => {
             )}
             {ioInputConfig?.inputConfig?.map((item) => {
               if (!currentObsInfo) return;
-              console.log(currentObsInfo?.io_sensor_list?.includes(item?.key));
-
               return (
                 <div
                   key={item?.key}
                   style={{
-                    display: currentObsInfo?.i_sensor_list?.includes(item?.key) ? 'flex' : 'none',
+                    display: currentObsInfo?.io_sensor_list?.includes(item?.key) ? 'flex' : 'none',
                   }}
                   className='group flex items-center justify-between hover:shadow-sm  hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
                 >
@@ -330,7 +326,7 @@ const DrawerContent = (props: IProps) => {
             })}
           </Checkbox.Group>
         </div>
-        <div className='flex flex-col gap-2'>
+        {/* <div className='flex flex-col gap-2'>
           <Tooltip placement='topRight' title='修改关联IO信号，请使用roboToolkit'>
             <p className='text-md font-bold relative py-2 flex justify-between items-center'>
               IO信号（输出）
@@ -372,7 +368,7 @@ const DrawerContent = (props: IProps) => {
               );
             })}
           </Checkbox.Group>
-        </div>
+        </div> */}
         <div className='flex flex-col gap-2'>
           <div className='flex flex-col gap-2'>
             <p className='text-md font-bold relative py-2'>

@@ -16,7 +16,7 @@ import DrawerContent from './component/newCarComponents/drawerContent';
 import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
-import WsContainer from './component/WsContainer';
+import { useSafety } from './hooks/useSafety';
 import { safetyConfig } from './service';
 import { useSafetyStore } from './store/safety.store';
 import { getRect } from './utils';
@@ -53,6 +53,8 @@ export default function RectDrawer() {
   /** -------------鼠标右键 end -------------- */
   /** -------------避障方案调整 start -------------- */
   const [openUpdateObsDrawer, setOpenUpdateObsDrawer] = useState(false);
+
+  useSafety();
 
   const reRenderLineGridFn = () => {
     setReRenderLineGrid(!reRenderLineGrid);
@@ -613,7 +615,6 @@ export default function RectDrawer() {
   if (errorRequest) {
     return <ErrorPage loading={obstacleDataLoading} refresh={refreshObstacleData} />;
   }
-
   // 与车载约定，0就是未启动
   if (!obsInfo.type) {
     return <EmptyPage title={getObsMsg(obsInfo?.type ?? 0)} icon='rest' />;
@@ -832,9 +833,6 @@ export default function RectDrawer() {
           />
         </Drawer>
       </ConfigProvider>
-      <WsContainer>
-        <></>
-      </WsContainer>
     </div>
   );
 }
