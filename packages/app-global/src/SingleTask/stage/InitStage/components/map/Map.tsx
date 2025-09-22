@@ -2,7 +2,10 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Group, Image as KonvaImage, Rect } from 'react-konva';
 import useImage from 'use-image';
+import { useShallow } from 'zustand/react/shallow';
+import { useSingleTaskStore } from '../../../../store/singleTask.store';
 import CloudPoints from './CloudPoints';
+import RealTimePoints from './RealTimePoints';
 
 const Map = (props: any) => {
   const { floorMapData, cloudPoints } = props;
@@ -16,6 +19,12 @@ const Map = (props: any) => {
   const { t } = useTranslation();
   const imagesRef = useRef<any>(null);
   const prevData = useRef<any>(null);
+
+  const { showRealTimePoints } = useSingleTaskStore(
+    useShallow((state) => ({
+      showRealTimePoints: state.showRealTimePoints,
+    })),
+  );
 
   useEffect(() => {
     if (floorMapData?.data && Object.keys(floorMapData?.data).length) {
@@ -36,6 +45,10 @@ const Map = (props: any) => {
     imagesRef.current = image;
     prevData.current = cloudPoints;
   }
+
+  useEffect(() => {
+    console.log('showRealTimePoints', showRealTimePoints);
+  }, [showRealTimePoints]);
 
   return (
     <>
@@ -62,6 +75,7 @@ const Map = (props: any) => {
           strokeWidth={1} // 边框宽度
         />
         <CloudPoints></CloudPoints>
+        {showRealTimePoints && <RealTimePoints></RealTimePoints>}
       </Group>
     </>
   );

@@ -25,7 +25,7 @@ const ControlList = styled(List)<{ component?: React.ElementType }>({
   },
 });
 const OnlinePoint = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { setOnlineData } = useHybirdStore(
     useShallow((store) => {
       return {
@@ -124,7 +124,7 @@ const OnlinePoint = () => {
         <ListItemText primary={item.point_id} />
       </ListItem>
     ));
-  }, [linePoint]);
+  }, [linePoint, i18n.language]);
 
   const [newPoint, setNewPoint] = React.useState();
   const latestInputText = useLatest(newPoint);

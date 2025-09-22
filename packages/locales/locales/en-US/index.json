@@ -465,6 +465,7 @@
       "traffic": "Traffic",
       "turnRoundPoint": "Turnaround point",
       "uploadMap": "Update map",
+      "visiblePoints": "Show point cloud",
       "visionPoint": "Vision point",
       "warehousePoint": "Flat warehouse point"
     },

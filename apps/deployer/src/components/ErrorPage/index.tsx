@@ -14,7 +14,7 @@ const ErrorPage = ({ loading, refresh }: IProps) => {
         </p>
         <p className='text-lg font-bold'>网络异常，请重试</p>
         <Button type='primary' loading={loading} onClick={refresh}>
-          重试
+          {loading ? '连接中' : '重试'}
         </Button>
       </div>
     </div>

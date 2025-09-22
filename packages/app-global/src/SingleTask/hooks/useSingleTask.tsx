@@ -1,7 +1,15 @@
 import { useWebSocket } from 'ahooks';
+import pako from 'pako';
 import { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSingleTaskStore } from '../store/singleTask.store';
+
+function unzipText(str) {
+  return pako.ungzip(
+    Uint8Array.from(atob(str), (c) => c.charCodeAt(0)),
+    { to: 'string' },
+  );
+}
 
 // 动态获取当前 host
 const currentHost = window.location.hostname;
@@ -18,17 +26,19 @@ const HYBRID_URL =
 
 export const useSingleTask = () => {
   const [count, setCount] = useState(1);
-  const { setAgvPosition, setRcsInfo, setRefreshTaskList, setCloudPoints, setRobotCurrentStatus } = useSingleTaskStore(
-    useShallow((state) => {
-      return {
-        setAgvPosition: state.setAgvPosition,
-        setRcsInfo: state.setRcsInfo,
-        setRefreshTaskList: state.setRefreshTaskList,
-        setCloudPoints: state.setCloudPoints,
-        setRobotCurrentStatus: state.setRobotCurrentStatus,
-      };
-    }),
-  );
+  const { setAgvPosition, setRcsInfo, setRefreshTaskList, setCloudPoints, setRobotCurrentStatus, setRealTimePoints } =
+    useSingleTaskStore(
+      useShallow((state) => {
+        return {
+          setAgvPosition: state.setAgvPosition,
+          setRcsInfo: state.setRcsInfo,
+          setRefreshTaskList: state.setRefreshTaskList,
+          setCloudPoints: state.setCloudPoints,
+          setRobotCurrentStatus: state.setRobotCurrentStatus,
+          setRealTimePoints: state.setRealTimePoints,
+        };
+      }),
+    );
   const { sendMessage, latestMessage, readyState } = useWebSocket(VEHICLE_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
@@ -69,6 +79,20 @@ export const useSingleTask = () => {
         const { timestamp, ...rest } = data;
         setCloudPoints(rest);
       }
+
+      if (data.uri == '/navigation/real_time_data/scan_head') {
+        let ary = [];
+        if (data?.isGzip) {
+          ary = unzipText(data?.point_cloud);
+        } else {
+          ary = data?.point_cloud;
+        }
+        if (typeof ary === 'string') {
+          ary = JSON.parse(ary);
+        }
+        setRealTimePoints(ary || []);
+        // !isDrag && setPointCloudV1Data(ary || []);
+      }
       if (data.uri == '/navigation/robot_status_localizer_result') {
         setAgvPosition({
           angel: data.pose.theta,
@@ -88,6 +112,7 @@ export const useSingleTask = () => {
             '/navigation/robot_current_status',
             '/navigation/scan_head',
             '/navigation/robot_status_localizer_result',
+            '/navigation/real_time_data/scan_head',
           ],
         }),
       );

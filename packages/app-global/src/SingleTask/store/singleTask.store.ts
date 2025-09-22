@@ -13,6 +13,10 @@ interface State {
   setCloudPoints: (cloudPoints: any) => void;
   robotCurrentStatus: any;
   setRobotCurrentStatus: (robotCurrentStatus: any) => void;
+  realTimePoints: any;
+  setRealTimePoints: (realTimePoints: any) => void;
+  showRealTimePoints: boolean;
+  setShowRealTimePoints: (showRealTimePoints: boolean) => void;
 }
 
 const storageOptions = {
@@ -56,6 +60,17 @@ const localAndMapStore = (
     if (!isEqual(robotCurrentStatus, get().robotCurrentStatus)) {
       set({ robotCurrentStatus });
     }
+  },
+  realTimePoints: [],
+  setRealTimePoints: (realTimePoints) => {
+    if (!isEqual(realTimePoints, get().realTimePoints)) {
+      set({ realTimePoints });
+    }
+  },
+
+  showRealTimePoints: true,
+  setShowRealTimePoints: (showRealTimePoints: boolean) => {
+    set({ showRealTimePoints });
   },
 });
 

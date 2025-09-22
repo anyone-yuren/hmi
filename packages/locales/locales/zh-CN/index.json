@@ -465,6 +465,7 @@
       "traffic": "交管",
       "turnRoundPoint": "掉头点",
       "uploadMap": "上传地图",
+      "visiblePoints": "显示点云",
       "visionPoint": "视觉点",
       "warehousePoint": "平库点"
     },

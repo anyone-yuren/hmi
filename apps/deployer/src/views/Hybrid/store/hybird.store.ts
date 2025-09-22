@@ -226,7 +226,7 @@ export const useHybirdStore = create<State>()(
       setOnlineData: (data: any) => set({ onlineData: data }),
       qrCodeData: {},
       setQrCodeData: (data: any) => set({ qrCodeData: data }),
-      wsState: 0,
+      wsState: 1,
       setWsState: (data: any) => set({ wsState: data }),
       isDrag: false,
       setIsDrag: (bol: boolean) => set({ isDrag: bol }),

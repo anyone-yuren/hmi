@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FileUpload } from '@mui/icons-material';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import GrainIcon from '@mui/icons-material/Grain';
 import StreamIcon from '@mui/icons-material/Stream';
 import { Menu, MenuItem, ThemeProvider, Tooltip } from '@mui/material';
 import { toast } from 'sonner';
@@ -28,6 +29,8 @@ const MapActionBar = forwardRef((props: any, ref) => {
     modeHashMap,
     getMapTaskMode,
     setOffsetVisible,
+    showRealTimePoints,
+    setShowRealTimePoints,
   } = props;
   const { t } = useTranslation();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -165,7 +168,6 @@ const MapActionBar = forwardRef((props: any, ref) => {
         >
           <Tooltip title={t('deployer.singleTask.setting')} placement='bottom'>
             <SettingsIcon fontSize={'large'} />
-            {/* <SettingIconWithoutLine fontSize={50} /> */}
           </Tooltip>
         </IconStyleButton>
 
@@ -195,12 +197,20 @@ const MapActionBar = forwardRef((props: any, ref) => {
         )}
         <IconStyleButton
           onClick={() => {
-            //
             setOffsetVisible(true);
           }}
         >
           <Tooltip title={t('deployer.singleTask.offsetTable')}>
             <StreamIcon fontSize={'large'} />
+          </Tooltip>
+        </IconStyleButton>
+        <IconStyleButton
+          onClick={() => {
+            setShowRealTimePoints(!showRealTimePoints);
+          }}
+        >
+          <Tooltip title={t('deployer.singleTask.visiblePoints')}>
+            <GrainIcon fontSize={'large'} style={{ color: showRealTimePoints ? 'red' : 'white' }} />
           </Tooltip>
         </IconStyleButton>
       </div>

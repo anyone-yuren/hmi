@@ -465,6 +465,7 @@
       "traffic": "交通管理",
       "turnRoundPoint": "ターンアラウンドポイント",
       "uploadMap": "マップのアップロード",
+      "visiblePoints": "表示ポイントクラウドを表示します",
       "visionPoint": "ビジョンポイント",
       "warehousePoint": "平庫ポイント"
     },

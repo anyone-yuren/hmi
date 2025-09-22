@@ -465,6 +465,7 @@
       "traffic": "Tube de jonction",
       "turnRoundPoint": "Point de demi-tour",
       "uploadMap": "Téléverser la carte",
+      "visiblePoints": "Afficher le nuage de points",
       "visionPoint": "Point de vision",
       "warehousePoint": "Point d'entrepôt plat"
     },

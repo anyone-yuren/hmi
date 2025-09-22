@@ -11,16 +11,16 @@ const HYBRID_URL = import.meta.env.DEV
 
 const hashMap: any = {};
 export const useHybrid = () => {
-  const hybirdWsExtend = useHybirdWsExtend();
-  const [hasMessage, setHasMessage] = useState(false);
+  const hybridWsExtend = useHybirdWsExtend();
+  const [isFirstConnect, setIsFirstConnect] = useState(true);
   const webSocketEventHashMap: any = {
-    ...hybirdWsExtend,
+    ...hybridWsExtend,
   };
   const { sendMessage, latestMessage, readyState, connect } = useWebSocket(HYBRID_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
     onMessage: (message) => {
-      !hasMessage && setHasMessage(true);
+      // !hasMessage && setHasMessage(true);
 
       // !hasMessage && message.data.indexOf('robot_current_status') > -1 && setHasMessage(true);
       if (message.data.includes('subscribe')) {
@@ -54,6 +54,12 @@ export const useHybrid = () => {
         webSocketEventHashMap[data?.uri] && webSocketEventHashMap[data?.uri](render_data);
       }
     },
+    onOpen: () => {
+      setIsFirstConnect(true);
+    },
+    onError: () => {
+      setIsFirstConnect(true);
+    },
   });
 
   useEffect(() => {
@@ -76,14 +82,15 @@ export const useHybrid = () => {
   }, [readyState]);
 
   useEffect(() => {
-    console.log('hasMessage', hasMessage, readyState);
-    if (readyState === 1 && hasMessage) {
-      hybirdWsExtend?.setWebsocketState(readyState);
+    console.log('hasMessage', isFirstConnect, readyState);
+    // if (!isFirstConnect) return;
+    if (readyState === 1) {
+      hybridWsExtend?.setWebsocketState(readyState);
     }
     if (readyState !== 1) {
-      hybirdWsExtend?.setWebsocketState(readyState);
+      hybridWsExtend?.setWebsocketState(readyState);
     }
-  }, [readyState, hasMessage]);
+  }, [readyState, isFirstConnect]);
   return {
     sendMessage,
     latestMessage,

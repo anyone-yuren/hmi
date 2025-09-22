@@ -43,6 +43,7 @@ import SlamHandle from './components/slam/handles';
 import SlamLayer from './components/slam/slamLayer';
 import { addFloor, delFloor, postFloorList, switchFloor } from './service';
 
+import ErrorPage from '@/components/ErrorPage';
 import DeleteIcon from '@/components/SvgIcon/DeleteIcon';
 import ExchangeIcon from '@/components/SvgIcon/ExchangeIcon';
 import { SwipeAction } from '@/components/SwiperAction';
@@ -119,6 +120,8 @@ const Mapping = () => {
   const [floor, setFloor] = React.useState(robot_current_status.floor_number || 1);
   const [floorButtonDisabled, setFloorButtonDisabled] = React.useState(true);
   const [alignment, setAlignment] = React.useState('slam');
+  const [isFirstConnect, setIsFirstConnect] = React.useState(true);
+
   const currentAddFloor = useRef(0);
   useEffect(() => {
     if (!robot_current_status?.navigation_type) {
@@ -140,7 +143,6 @@ const Mapping = () => {
   const { getCodeMsg, useErrorMessage } = useHttpCode();
 
   const isSameFloor = useMemo(() => {
-    console.log('robot_current_status.floor_number', robot_current_status.floor_number, floor);
     return robot_current_status.floor_number == floor;
   }, [robot_current_status.floor_number, floor]);
 
@@ -207,6 +209,10 @@ const Mapping = () => {
     },
   });
 
+  const isConnectSuccess = useMemo(() => {
+    return wsState === 1;
+  }, [wsState]);
+
   React.useEffect(() => {
     wsState === 1 && getFloors();
     return () => {
@@ -215,10 +221,6 @@ const Mapping = () => {
   }, [wsState]);
 
   const handleChange = (newValue: number) => {
-    // if (robot_current_status.system_status !== 0) {
-    //   toast.warning(t('deployer.hybrid.plsCancelAction'));
-    //   return;
-    // }
     setFloor(newValue);
   };
 
@@ -386,6 +388,24 @@ const Mapping = () => {
       3: t('deployer.hybrid.connectFail'),
     },
   };
+
+  useEffect(() => {
+    console.log('effect isConnectSuccess', isConnectSuccess);
+  }, [isConnectSuccess]);
+
+  if (!isConnectSuccess) {
+    return (
+      <WsContainer ref={wsRef}>
+        <ErrorPage
+          loading={wsState === 0}
+          refresh={() => {
+            wsRef?.current && wsRef?.current?.connect();
+          }}
+        />
+      </WsContainer>
+    );
+  }
+
   return (
     <>
       <WsContainer ref={wsRef}>
@@ -525,7 +545,7 @@ const Mapping = () => {
                   </Group>
                   <CanvaOnline />
                 </Layer>
-                <PointsCloudDiagV1 />
+                {<PointsCloudDiagV1 />}
               </InitStage>
             </Box>
           ) : (
