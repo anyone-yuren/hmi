@@ -1,14 +1,63 @@
 import { Tab, Tabs, useTheme } from '@mui/material';
-import { t } from 'i18next';
-import React, { memo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import GlobalPanel from './components/GlobalPanel';
 import ModelPart from './components/modelPart/index';
 import CargoSpace from './components/settingPart/cargoSpace/index';
 import SettingPart from './components/settingPart/index';
+import useVision from './hooks/useVision';
+
+import ErrorPage from '@/components/ErrorPage';
+import { useRequest, useUpdateEffect } from 'ahooks';
+import { useTranslation } from 'react-i18next';
+import { useShallow } from 'zustand/react/shallow';
+import { config_agv_info } from './services/index';
+import { useVisionStore } from './store/vision.store';
 
 const Vision = () => {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+
+  const { data: agvInfo, loading }: any = useRequest(() => config_agv_info(), {});
+  const { disconnect, sendMessage, readyState, connect } = useVision();
+  const { t } = useTranslation();
+
+  const { pointCloudParams, setChassis, pointsCloudHeart, pointsCloudKey } = useVisionStore(
+    useShallow((store: any) => ({
+      pointsCloudKey: store.pointsCloudKey,
+      pointCloudParams: store.pointCloudParams,
+      setChassis: store.setChassis,
+      pointsCloudHeart: store.pointsCloudHeart,
+    })),
+  );
+
+  const isConnectSuccess = useMemo(() => {
+    return readyState === 1;
+  }, [readyState]);
+
+  useEffect(() => {
+    agvInfo?.executor && setChassis(agvInfo?.executor);
+  }, [agvInfo]);
+
+  useUpdateEffect(() => {
+    readyState === 1 && sendMessage(JSON.stringify({ uri: '/cv_mwrobot/roi_dist', data: pointCloudParams }));
+  }, [pointCloudParams, readyState]);
+
+  useUpdateEffect(() => {
+    readyState === 1 &&
+      pointsCloudHeart > 0 &&
+      sendMessage(
+        JSON.stringify({
+          uri: '/cv_mwrobot/heartbeat',
+          data: { heart: pointsCloudHeart, key: pointsCloudKey },
+        }),
+      );
+  }, [pointsCloudHeart, readyState, pointsCloudKey]);
+
+  useEffect(() => {
+    return () => {
+      disconnect();
+    };
+  }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -29,6 +78,17 @@ const Vision = () => {
       </GlobalPanel>
     );
   };
+  if (!isConnectSuccess) {
+    return (
+      <ErrorPage
+        loading={readyState === 0}
+        refresh={() => {
+          connect();
+        }}
+      />
+    );
+  }
+
   return (
     <div className='flex gap-4 flex-col h-full p-[20px]'>
       <div className='flex-1 overflow-auto'>

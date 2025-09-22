@@ -28,7 +28,7 @@ export default function useHybirdWsExtend() {
       const { timestamp, ...rest } = data;
       setObsInfo(rest);
     },
-    '/sirius/topics/compose_sensor_point': (data: any) => {
+    '/sirius/topics/safety_compose_sensor_points': (data: any) => {
       // 避障点云
       if (data.points) {
         // const decompressedData = unzipText(data.points);

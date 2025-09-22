@@ -154,7 +154,7 @@ const TruckLoad = () => {
                     return (
                       <div
                         key={item.key}
-                        className={`my-[6px] p-2 w-full border-box bg-[#d8d8d8] bg-opacity-20 rounded-lg items-start justify-between text-lg`}
+                        className={`my-[6px] p-2 w-full flex flex-col border-box bg-[#d8d8d8] bg-opacity-20 rounded-lg items-start justify-between text-lg`}
                       >
                         <div>{item.label}</div>
                         <div className='flex gap-[10px] w-full justify-between'>

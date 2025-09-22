@@ -98,24 +98,6 @@ const VisionStock = () => {
         <div className='w-full bg-[#2c3645] rounded-[20px] p-[20px] overflow-hidden relative flex flex-col h-full overflow-y-auto'>
           <div className='text-3xl flex items-center justify-between'>
             <div>{t('deployer.vision.place')}</div>
-            <Button
-              size='small'
-              sx={{
-                color: 'white',
-                float: 'right',
-                whiteSpace: 'nowrap',
-              }}
-              variant='contained'
-              onClick={async () => {
-                setModalConfig({
-                  ...modalConfig,
-                  open: true,
-                  key: 'place_space_check',
-                });
-              }}
-            >
-              {t('deployer.vision.placeSpaceCheck')}
-            </Button>
           </div>
           <div className='flex justify-between items-center w-full gap-[10px] mt-1'>
             {options?.slice(0, 2)?.map((option) => {
@@ -161,6 +143,59 @@ const VisionStock = () => {
               );
             })}
           </div>
+          <div className='flex justify-between items-stretch w-full gap-[10px] mt-1'>
+            {/* <div className='flex-1'> */}
+            <VisionBox className={'pt-0'}>
+              <div className='mt-[5px]'>{t('deployer.vision.sensorBind')}</div>
+              <div className='flex justify-between items-center w-full'>
+                <div></div>
+                <CustomSelect
+                  size='small'
+                  variant='standard'
+                  value={updateHashMap.sensor_model}
+                  onChange={(event: any) => {
+                    setUpdateHashMap({
+                      __isSubmit: true,
+                      sensor_model: event.target.value,
+                    });
+                  }}
+                >
+                  {updateHashMap?.sensor_model_list?.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      <ListItemText primary={name} />
+                    </MenuItem>
+                  ))}
+                </CustomSelect>
+              </div>
+            </VisionBox>
+            {/* </div> */}
+            {/* <div className='flex-1 h-full'> */}
+            <VisionBox className={'pt-0'}>
+              <div className='mt-[5px]'>{t('deployer.vision.placeSpaceCheck')}</div>
+              <div className='flex justify-between items-center w-full'>
+                <div></div>
+                <Button
+                  size='small'
+                  sx={{
+                    color: 'white',
+                    float: 'right',
+                    whiteSpace: 'nowrap',
+                  }}
+                  variant='contained'
+                  onClick={async () => {
+                    setModalConfig({
+                      ...modalConfig,
+                      open: true,
+                      key: 'place_space_check',
+                    });
+                  }}
+                >
+                  {t('deployer.vision.paramSetting')}
+                </Button>
+              </div>
+            </VisionBox>
+            {/* </div> */}
+          </div>
           <div>
             <VisionBox>
               <div>{options[2].label}</div>
@@ -196,28 +231,30 @@ const VisionStock = () => {
             </VisionBox>
           </div>
 
-          <div className='mt-2 p-[12px] bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-center justify-between text-lg'>
-            <div>{t('deployer.vision.sensorBind')}</div>
-            <div>
-              <CustomSelect
-                size='small'
-                variant='standard'
-                value={updateHashMap.sensor_model}
-                onChange={(event: any) => {
-                  setUpdateHashMap({
-                    __isSubmit: true,
-                    sensor_model: event.target.value,
-                  });
-                }}
-              >
-                {updateHashMap?.sensor_model_list?.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    <ListItemText primary={name} />
-                  </MenuItem>
-                ))}
-              </CustomSelect>
+          {false && (
+            <div className='mt-2 p-[12px] bg-[#d8d8d8] bg-opacity-20 rounded-lg flex items-center justify-between text-lg'>
+              <div>{t('deployer.vision.sensorBind')}</div>
+              <div>
+                <CustomSelect
+                  size='small'
+                  variant='standard'
+                  value={updateHashMap.sensor_model}
+                  onChange={(event: any) => {
+                    setUpdateHashMap({
+                      __isSubmit: true,
+                      sensor_model: event.target.value,
+                    });
+                  }}
+                >
+                  {updateHashMap?.sensor_model_list?.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      <ListItemText primary={name} />
+                    </MenuItem>
+                  ))}
+                </CustomSelect>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 

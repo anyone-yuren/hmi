@@ -16,7 +16,7 @@ const useVision = () => {
     ...visionWsExtend,
   };
 
-  const { disconnect, sendMessage, readyState } = useWebSocket(VISION_URL, {
+  const { disconnect, sendMessage, readyState, connect } = useWebSocket(VISION_URL, {
     reconnectLimit: 100,
     reconnectInterval: 5000,
     onMessage: (message, isBinary) => {
@@ -45,6 +45,6 @@ const useVision = () => {
     },
   });
 
-  return { disconnect, sendMessage, readyState };
+  return { disconnect, sendMessage, readyState, connect };
 };
 export default useVision;
