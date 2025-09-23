@@ -106,6 +106,8 @@ function SafetyPointCloud(props) {
     return new THREE.PointsMaterial({
       vertexColors: true,
       size: 0.08,
+      depthWrite: false, // 禁用深度写入
+      depthTest: true, // 启用深度测试
     });
   }, []);
 
