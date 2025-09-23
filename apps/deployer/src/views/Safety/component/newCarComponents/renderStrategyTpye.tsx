@@ -140,9 +140,9 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
         return strategyData?.list?.length ? (
           strategyData.list.map((child, index) => (
             <div>
-              <p>子策略 {index + 1}</p>
+              <p>子策略 {child?.id}</p>
               <div
-                className={`flex flex-col gap-1 mb-2 ${idStrategyEndPathCloseProtection === index + 1 ? 'bg-black/5' : ''}`}
+                className={`flex flex-col gap-1 mb-2 ${idStrategyEndPathCloseProtection === child?.id ? 'bg-black/5' : ''}`}
               >
                 <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
                   屏蔽光电避障功能（取货）: <span>{child?.pick_cargo_pe_close_distance} mm</span>

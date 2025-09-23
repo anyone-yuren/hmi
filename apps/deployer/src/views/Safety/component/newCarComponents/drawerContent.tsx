@@ -66,7 +66,6 @@ const DrawerContent = (props: IProps) => {
   const { token } = useToken();
   const [form] = Form.useForm();
   const { i18n } = useTranslation();
-  const activeDevice = useActiveDevice();
   const {
     data: IoResponse,
     mutate: updateIoResponse,
@@ -102,6 +101,10 @@ const DrawerContent = (props: IProps) => {
 
   // 获取可活动机构数据
   const { run: getActiveDevicesRun, data: activeDevices } = useRequest(getActiveDevices);
+
+  const activeDevice = useActiveDevice(activeDevices?.data ?? []);
+
+  console.log(activeDevice);
 
   const ioInputConfig = useMemo(() => {
     if (!IoResponse?.io_input_config) return;
