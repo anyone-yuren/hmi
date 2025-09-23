@@ -96,7 +96,13 @@ const PointCloudFilter = (props: IProps) => {
   console.log('[shelf]: type', type);
 
   const showStorageCalibrationAssistant = useMemo(() => {
-    const ary = ['stack_pallet_position_detect', 'shelf_place_move_vehicle', 'stack_place_move_vehicle'];
+    const ary = [
+      'stack_pallet_position_detect',
+      'shelf_place_move_vehicle',
+      'stack_place_move_vehicle',
+      'tail_place_pallet_position_detect',
+      'shelf_pallet_position_detect',
+    ];
     return ary.includes(type);
   }, [type]);
 

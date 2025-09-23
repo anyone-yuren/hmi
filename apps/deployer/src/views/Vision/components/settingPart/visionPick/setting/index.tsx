@@ -56,8 +56,8 @@ const Setting = (props: any) => {
     __isInit: false,
     auto_para_tuning: false,
     // max_offset_value: [], // 分别对应左右，上下，前后、角度
-    // base_pallet_model_detect: true, // 模型列表是否启用
-    // pallet_model_list: [], //已经选择的模型列表
+    base_pallet_model_detect: true, // 模型列表是否启用
+    pallet_model_list: [], //已经选择的模型列表
     compensation: {
       front: [],
       left: [],
@@ -411,12 +411,12 @@ const Setting = (props: any) => {
               );
             })} */}
 
-            {/* <Title>{t("模型列表")}</Title>
+            <Title>{t('模型列表')}</Title>
             <TextUpdateRow>
-              <div>{t("是否启用")}</div>
+              <div>{t('是否启用')}</div>
               <div>
                 <CustomSwitch
-                  checked={updateHashMap["base_pallet_model_detect"]}
+                  checked={updateHashMap['base_pallet_model_detect']}
                   onChange={(event: any) => {
                     setUpdateHashMap({
                       base_pallet_model_detect: event.target.checked,
@@ -425,24 +425,24 @@ const Setting = (props: any) => {
                 />
               </div>
             </TextUpdateRow>
-            {updateHashMap["base_pallet_model_detect"] && (
+            {updateHashMap['base_pallet_model_detect'] && (
               <TextUpdateRow>
-                <div>{t("模型")}</div>
-                <div className="relative">
+                <div>{t('模型')}</div>
+                <div className='relative'>
                   <CustomSelect
                     multiple
-                    variant="standard"
+                    variant='standard'
                     value={updateHashMap?.pallet_model_list}
                     renderValue={(value: any) => {
                       return (
-                        <div className="flex flex-wrap">
+                        <div className='flex flex-wrap'>
                           {value?.map((item: any, index: number) => {
                             return (
                               <Chip
-                                key={item.id + (index + "")}
-                                className="mt-1 mr-10"
-                                label={modelHashMap?.[item] || "-"}
-                                size="small"
+                                key={item.id + (index + '')}
+                                className='mt-1 mr-10'
+                                label={modelHashMap?.[item] || '-'}
+                                size='small'
                               />
                             );
                           })}
@@ -461,11 +461,11 @@ const Setting = (props: any) => {
                         key={item.id}
                         value={item.id}
                         sx={{
-                          "&.Mui-selected": {
-                            backgroundColor: "#00d1d1ad", // 修改选中项的背景色
+                          '&.Mui-selected': {
+                            backgroundColor: '#00d1d1ad', // 修改选中项的背景色
                           },
-                          "&.Mui-selected:hover": {
-                            backgroundColor: "#00d1d1ad", // 修改选中项的背景色
+                          '&.Mui-selected:hover': {
+                            backgroundColor: '#00d1d1ad', // 修改选中项的背景色
                           },
                         }}
                       >
@@ -473,7 +473,7 @@ const Setting = (props: any) => {
                       </MenuItem>
                     ))}
                   </CustomSelect>
-                  {updateHashMap["pallet_model_list"]?.length > 0 && (
+                  {updateHashMap['pallet_model_list']?.length > 0 && (
                     <IconButton
                       onClick={() => {
                         setUpdateHashMap({
@@ -482,10 +482,10 @@ const Setting = (props: any) => {
                         });
                       }}
                       style={{
-                        position: "absolute",
+                        position: 'absolute',
                         right: 20,
-                        top: "50%",
-                        transform: "translateY(-50%)",
+                        top: '50%',
+                        transform: 'translateY(-50%)',
                       }}
                     >
                       <ClearIcon />
@@ -493,7 +493,7 @@ const Setting = (props: any) => {
                   )}
                 </div>
               </TextUpdateRow>
-            )} */}
+            )}
             {!vehicle?.isTrilateral ? (
               <>
                 <Title>{t('deployer.vision.compensationParams')}</Title>
@@ -605,21 +605,23 @@ const Setting = (props: any) => {
               );
             })}
 
-            <TextUpdateRow>
-              <div>{t('deployer.vision.forkWidthPallet')}</div>
-              <div>
-                <CustomSwitch
-                  checked={updateHashMap['base_pallet_model_detect_dist']}
-                  onChange={(event: any) => {
-                    setUpdateHashMap({
-                      base_pallet_model_detect_dist: event.target.checked,
-                    });
-                  }}
-                />
-              </div>
-            </TextUpdateRow>
+            {false && (
+              <TextUpdateRow>
+                <div>{t('deployer.vision.forkWidthPallet')}</div>
+                <div>
+                  <CustomSwitch
+                    checked={updateHashMap['base_pallet_model_detect_dist']}
+                    onChange={(event: any) => {
+                      setUpdateHashMap({
+                        base_pallet_model_detect_dist: event.target.checked,
+                      });
+                    }}
+                  />
+                </div>
+              </TextUpdateRow>
+            )}
 
-            {updateHashMap['base_pallet_model_detect_dist'] && (
+            {false && updateHashMap['base_pallet_model_detect_dist'] && (
               <>
                 <Title>{t('deployer.vision.aroundOffset')}</Title>
                 <TextUpdateRow>
@@ -710,7 +712,8 @@ const Setting = (props: any) => {
               </>
             )}
 
-            {updateHashMap['base_pallet_model_detect_dist'] &&
+            {false &&
+              updateHashMap['base_pallet_model_detect_dist'] &&
               updateHashMap?.['select_model']?.map((item: any, index: number) => {
                 return (
                   <TextUpdateRow
