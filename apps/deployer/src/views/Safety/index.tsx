@@ -672,13 +672,17 @@ export default function RectDrawer() {
                 ref={stageRef}
                 width={size?.width}
                 height={size?.height}
-                onTouchStart={handleMouseDown}
-                onTouchMove={handleMouseMove}
-                onTouchEnd={handleMouseUp}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onWheel={handleWheel}
+                onTouchStart={!isMobile ? handleMouseDown : undefined}
+                onTouchMove={!isMobile ? handleMouseMove : undefined}
+                onTouchEnd={!isMobile ? handleMouseUp : undefined}
+                onMouseDown={!isMobile ? handleMouseDown : undefined}
+                onMouseMove={!isMobile ? handleMouseMove : undefined}
+                onMouseUp={!isMobile ? handleMouseUp : undefined}
+                onWheel={!isMobile ? handleWheel : undefined}
+                draggable={isMobile}
+                onDragEnd={() => {
+                  setReRenderLineGrid(!reRenderLineGrid);
+                }}
                 style={stageStyle}
               >
                 <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
