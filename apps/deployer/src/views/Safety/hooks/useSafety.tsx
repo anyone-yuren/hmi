@@ -1,6 +1,9 @@
 import { useWebSocket } from 'ahooks';
 import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import useSafetyWsExtend from '../service/wsExtend';
+
+import { useSafetyStore } from '../store/safety.store';
 // 动态获取当前 host
 const currentHost = window.location.hostname;
 // 使用相对路径，Vite 会自动处理代理
@@ -9,8 +12,13 @@ const HYBRID_URL = import.meta.env.DEV
   : `ws://${currentHost}:10009`; // 生产环境使用真实地址
 
 const hashMap: any = {};
-export const useSafety = ({ extraTopic }) => {
+export const useSafety = () => {
   const safetyWsExtend = useSafetyWsExtend();
+  const { sensorPointsKey } = useSafetyStore(
+    useShallow((store) => ({
+      sensorPointsKey: store.sensorPointsKey,
+    })),
+  );
   const webSocketEventHashMap: any = {
     ...safetyWsExtend,
   };
@@ -48,7 +56,7 @@ export const useSafety = ({ extraTopic }) => {
         const render_data = message ? JSON.parse(message.data) : {};
         webSocketEventHashMap[data?.uri] && webSocketEventHashMap[data?.uri](render_data);
       }
-      if (extraTopic.includes(data?.uri)) {
+      if (sensorPointsKey.includes(data?.uri)) {
         const extra_render_data = message ? JSON.parse(message.data) : {};
         webSocketEventHashMap['/set_sensor_points'](data?.uri, extra_render_data);
       }
@@ -67,16 +75,12 @@ export const useSafety = ({ extraTopic }) => {
             '/sirius/topics/safety_protect_region',
             '/sirius/topics/task_status_motion',
             '/sirius/topics/robot_status_forkarm',
-            ...extraTopic,
+            ...sensorPointsKey,
           ],
         }),
       );
     }
-    console.log('deviceTopic', extraTopic);
-    return () => {
-      disconnect();
-    };
-  }, [readyState, sendMessage, extraTopic]);
+  }, [readyState, sendMessage, sensorPointsKey]);
   return {
     sendMessage,
     latestMessage,

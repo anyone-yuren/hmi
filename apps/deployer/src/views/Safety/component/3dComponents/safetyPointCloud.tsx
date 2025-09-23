@@ -20,7 +20,7 @@ function SafetyPointCloud(props) {
 
   const forksUnderProjectArea: any = useMemo(() => {
     if (!forksUnderRect) return null;
-    return getProjectArea(forksUnderRect, mockHeight);
+    return getProjectArea(forksUnderRect, forksHeight);
   }, [forksUnderRect, forksHeight]);
 
   // const pointsData = useMemo(() => {

@@ -7,7 +7,7 @@ import SafetyCanvas from './component/3dComponents/safetyCanvas';
 import SafetyObsLines from './component/3dComponents/safetyObsLines';
 import SafetyPointCloud from './component/3dComponents/safetyPointCloud';
 import SafetyVehicle from './component/3dComponents/safetyVehicle';
-import { safetyConfig } from './service/index';
+import { getDeviceList, safetyConfig } from './service/index';
 import { useSafetyStore } from './store/safety.store';
 const mock = {
   rectangle_list: [
@@ -78,13 +78,50 @@ const mock = {
 const Safety = () => {
   const { t } = useTranslation();
   const { data: config } = useRequest(safetyConfig);
-  const { obsInfo } = useSafetyStore(
+  const { obsInfo, setSensorPointsKey, clearSensorPoints } = useSafetyStore(
     useShallow((store) => ({
+      setSensorPointsKey: store.setSensorPointsKey,
+      clearSensorPoints: store.clearSensorPoints,
       obsInfo: store.obsInfo,
     })),
   );
+  const { data: deviceList = [] } = useRequest(getDeviceList);
 
-  useEffect(() => {}, [obsInfo, config]);
+  useEffect(() => {
+    clearSensorPoints();
+    setSensorPointsKey([]);
+  }, []);
+
+  useEffect(() => {
+    if (
+      !obsInfo?.scheme_id ||
+      !config?.data ||
+      !config?.data?.obs_scheme ||
+      !config?.data?.obs_scheme?.scheme_list ||
+      !config?.data?.strategy_list ||
+      !deviceList?.data
+    )
+      return;
+    // 激活的传感器和策略所需要的雷达列表
+    let sensorList: any = [];
+    const scheme_list = config?.data?.obs_scheme?.scheme_list;
+    // strategy_list
+    const strategy = config?.data?.strategy_list;
+    const scheme = scheme_list.find((item) => item.scheme_id === obsInfo.scheme_id);
+    if (scheme?.pc_sensor_list?.length) {
+      sensorList = [...sensorList, ...scheme?.pc_sensor_list];
+    }
+    Object.keys(strategy)?.map((item) => {
+      const pc_sensor_list = strategy?.[item]?.associated_pc_sensor_list;
+      const sensor_list = strategy?.[item]?.associated_sensor_list;
+      pc_sensor_list?.length && (sensorList = [...sensorList, ...pc_sensor_list]);
+      sensor_list?.length && (sensorList = [...sensorList, ...sensor_list]);
+    });
+    const list = deviceList?.data
+      ?.filter((item) => sensorList.includes(item.name))
+      ?.map((item, index) => item.topic || index);
+    setSensorPointsKey(list);
+  }, [obsInfo, config, deviceList]);
 
   const vehicleOutline = useMemo(() => {
     if (

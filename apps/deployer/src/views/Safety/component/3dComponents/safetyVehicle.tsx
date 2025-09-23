@@ -39,7 +39,7 @@ function SafetyVehicle(props: any) {
     const forksPosition = [
       (forksPoints[0][0] + forksPoints[1][0]) / 2, // X 中心点
       (forksPoints[0][1] + forksPoints[2][1]) / 2, // Y 中心点
-      mockHeight / 1000 + forkDepth / 2, // Z 中心点
+      forksHeight / 1000 + forkDepth / 2, // Z 中心点
     ];
 
     return {
@@ -61,7 +61,7 @@ function SafetyVehicle(props: any) {
   const forksUnderProjectArea: any = useMemo(() => {
     if (!forksUnderRect) return null;
     // 先用mockHeight来表示临时的叉臂高度
-    return getProjectArea(forksUnderRect, mockHeight);
+    return getProjectArea(forksUnderRect, forksHeight);
     // const projectRect = generateRectanglePoints(forksUnderRect.rectangle);
 
     // // 计算保护区域的尺寸
@@ -99,7 +99,7 @@ function SafetyVehicle(props: any) {
         geometry={new THREE.BoxGeometry(outlook.vehicle.width, outlook.vehicle.height, depth)}
         position={outlook.vehicle.position}
       >
-        <meshStandardMaterial color='#00d1d1' />
+        <meshStandardMaterial color='#00d1d1' transparent opacity={0.8} />
       </mesh>
 
       {/* 渲染叉臂立方体 */}

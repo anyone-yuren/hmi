@@ -40,6 +40,7 @@ interface State {
 
   sensorPoints: {};
   setSensorPoints: (key: string, data: any) => void;
+  clearSensorPoints: () => void;
 }
 
 export const useSafetyStore = create<State>()(
@@ -82,6 +83,7 @@ export const useSafetyStore = create<State>()(
       setSensorPointsKey: (data) => set({ sensorPointsKey: data }),
       sensorPoints: {},
       setSensorPoints: (key, data) => set({ sensorPoints: { ...get().sensorPoints, [key]: data } }),
+      clearSensorPoints: () => set({ sensorPoints: {} }),
     }),
     {
       name: 'safety-store',
