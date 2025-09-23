@@ -78,15 +78,17 @@ const mock = {
 const Safety = () => {
   const { t } = useTranslation();
   const { data: config } = useRequest(safetyConfig);
-  const { obsInfo, setSensorPointsKey } = useSafetyStore(
+  const { obsInfo, setSensorPointsKey, clearSensorPoints } = useSafetyStore(
     useShallow((store) => ({
       setSensorPointsKey: store.setSensorPointsKey,
+      clearSensorPoints: store.clearSensorPoints,
       obsInfo: store.obsInfo,
     })),
   );
   const { data: deviceList = [] } = useRequest(getDeviceList);
 
   useEffect(() => {
+    clearSensorPoints();
     setSensorPointsKey([]);
   }, []);
 

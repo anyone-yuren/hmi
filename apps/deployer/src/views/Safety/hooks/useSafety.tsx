@@ -56,7 +56,7 @@ export const useSafety = () => {
         const render_data = message ? JSON.parse(message.data) : {};
         webSocketEventHashMap[data?.uri] && webSocketEventHashMap[data?.uri](render_data);
       }
-      if (extraTopic.includes(data?.uri)) {
+      if (sensorPointsKey.includes(data?.uri)) {
         const extra_render_data = message ? JSON.parse(message.data) : {};
         webSocketEventHashMap['/set_sensor_points'](data?.uri, extra_render_data);
       }
