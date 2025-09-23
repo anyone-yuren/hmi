@@ -12,7 +12,7 @@ const HYBRID_URL = import.meta.env.DEV
   : `ws://${currentHost}:10009`; // 生产环境使用真实地址
 
 const hashMap: any = {};
-export const useSafety = ({ extraTopic }) => {
+export const useSafety = () => {
   const safetyWsExtend = useSafetyWsExtend();
   const { sensorPointsKey } = useSafetyStore(
     useShallow((store) => ({
