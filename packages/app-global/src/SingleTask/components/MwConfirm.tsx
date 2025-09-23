@@ -34,6 +34,7 @@ const MwModal = (props: any) => {
       PaperProps={{
         sx: {
           borderRadius: 2,
+          top: -150,
         },
       }}
       hideBackdrop

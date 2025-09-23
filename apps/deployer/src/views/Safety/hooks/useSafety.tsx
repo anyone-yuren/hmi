@@ -14,7 +14,7 @@ export const useSafety = ({ extraTopic }) => {
   const webSocketEventHashMap: any = {
     ...safetyWsExtend,
   };
-  const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
+  const { sendMessage, latestMessage, readyState, disconnect } = useWebSocket(HYBRID_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
     onMessage: (message) => {
@@ -67,13 +67,15 @@ export const useSafety = ({ extraTopic }) => {
             '/sirius/topics/safety_protect_region',
             '/sirius/topics/task_status_motion',
             '/sirius/topics/robot_status_forkarm',
-            '/pointcloud_head',
             ...extraTopic,
           ],
         }),
       );
     }
     console.log('deviceTopic', extraTopic);
+    return () => {
+      disconnect();
+    };
   }, [readyState, sendMessage, extraTopic]);
   return {
     sendMessage,

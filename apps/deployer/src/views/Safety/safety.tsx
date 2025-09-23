@@ -1,5 +1,5 @@
 import { useRequest } from 'ahooks';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import SafetyBase from './component/3dComponents/safetyBase';
@@ -83,6 +83,8 @@ const Safety = () => {
       obsInfo: store.obsInfo,
     })),
   );
+
+  useEffect(() => {}, [obsInfo, config]);
 
   const vehicleOutline = useMemo(() => {
     if (

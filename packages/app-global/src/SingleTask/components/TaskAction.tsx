@@ -480,7 +480,7 @@ const TaskAction = forwardRef((props: any, ref) => {
 });
 
 const InputGroupText = (props: any) => {
-  const { title, value, onChange, mode = 'numbers', inputLabel } = props;
+  const { title, value, onChange, mode = 'number', inputLabel } = props;
   const [newInputValue, setNewInputValue] = useState(value);
   const isMultiwayAgv = useMemo(() => {
     return false;
@@ -514,6 +514,7 @@ const InputGroupText = (props: any) => {
               onChange={(event) => {
                 onChange && onChange(event.target.value);
               }}
+              type={mode}
             ></TextField>
           )}
         </>

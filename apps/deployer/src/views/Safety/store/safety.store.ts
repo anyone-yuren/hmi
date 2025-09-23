@@ -35,6 +35,9 @@ interface State {
   forksHeight: number;
   setForksHeight: (data: number) => void;
 
+  sensorPointsKey: any[];
+  setSensorPointsKey: (data: any) => void;
+
   sensorPoints: {};
   setSensorPoints: (key: string, data: any) => void;
 }
@@ -75,6 +78,8 @@ export const useSafetyStore = create<State>()(
       setMotionStatus: (data) => set({ motionStatus: data }),
       forksHeight: 0,
       setForksHeight: (data) => set({ forksHeight: data }),
+      sensorPointsKey: [],
+      setSensorPointsKey: (data) => set({ sensorPointsKey: data }),
       sensorPoints: {},
       setSensorPoints: (key, data) => set({ sensorPoints: { ...get().sensorPoints, [key]: data } }),
     }),
