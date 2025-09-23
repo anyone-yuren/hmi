@@ -1,6 +1,9 @@
 import { useWebSocket } from 'ahooks';
 import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import useSafetyWsExtend from '../service/wsExtend';
+
+import { useSafetyStore } from '../store/safety.store';
 // 动态获取当前 host
 const currentHost = window.location.hostname;
 // 使用相对路径，Vite 会自动处理代理
@@ -11,6 +14,11 @@ const HYBRID_URL = import.meta.env.DEV
 const hashMap: any = {};
 export const useSafety = ({ extraTopic }) => {
   const safetyWsExtend = useSafetyWsExtend();
+  const { sensorPointsKey } = useSafetyStore(
+    useShallow((store) => ({
+      sensorPointsKey: store.sensorPointsKey,
+    })),
+  );
   const webSocketEventHashMap: any = {
     ...safetyWsExtend,
   };
@@ -67,16 +75,12 @@ export const useSafety = ({ extraTopic }) => {
             '/sirius/topics/safety_protect_region',
             '/sirius/topics/task_status_motion',
             '/sirius/topics/robot_status_forkarm',
-            ...extraTopic,
+            ...sensorPointsKey,
           ],
         }),
       );
     }
-    console.log('deviceTopic', extraTopic);
-    return () => {
-      disconnect();
-    };
-  }, [readyState, sendMessage, extraTopic]);
+  }, [readyState, sendMessage, sensorPointsKey]);
   return {
     sendMessage,
     latestMessage,
