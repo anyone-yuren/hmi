@@ -16,6 +16,7 @@ import DrawerContent from './component/newCarComponents/drawerContent';
 import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
+import { MAX_SCALE, MIN_SCALE } from './constants/config';
 import { useSafety } from './hooks/useSafety';
 import { safetyConfig } from './service';
 import { useSafetyStore } from './store/safety.store';
@@ -482,46 +483,54 @@ export default function RectDrawer() {
 
   //兼容移动端
   useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-
+    if (!stageRef.current) return;
+    const stage = stageRef.current!;
     if (!isMobile) {
       // PC 端：禁用 Hammer，直接返回
       return;
     }
-
     const hammer = new Hammer(stage.container());
 
-    // 允许双指缩放
     hammer.get('pinch').set({ enable: true });
-    // 允许单指拖拽
-    hammer.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
-    let lastCenter = null;
-    let lastDist = 0;
-    let lastPan = { x: 0, y: 0 };
+    let oldScale = stage.scaleX();
+    let oldPos = { x: 0, y: 0 };
 
-    // 单指平移
-    hammer.on('panstart', () => {
-      const pos = stage.position();
-      lastPan = { x: pos.x, y: pos.y };
+    hammer.on('pinchstart', () => {
+      oldScale = stage.scaleX();
+      oldPos = stage.position();
     });
 
-    hammer.on('panmove', (ev) => {
+    hammer.on('pinchmove', (e: any) => {
+      const pointer = stage.getPointerPosition(); // 获取当前指针位置
+      if (!pointer) return;
+      // 计算新的缩放比例
+      const newScale = oldScale * e.scale;
+      const mousePointTo = {
+        x: (pointer.x - oldPos.x) / oldScale,
+        y: (pointer.y - oldPos.y) / oldScale,
+      };
+      stage.scale({ x: newScale, y: newScale });
       stage.position({
-        x: lastPan.x + ev.deltaX,
-        y: lastPan.y + ev.deltaY,
+        x: pointer.x - mousePointTo.x * newScale,
+        y: pointer.y - mousePointTo.y * newScale,
       });
       stage.batchDraw();
+      // 限制缩放比例在最小值和最大值之间
+      if (newScale < MIN_SCALE || newScale > MAX_SCALE) return;
+      setStageScale(newScale);
     });
-    hammer.on('panend', () => {
-      reRenderLineGridFn();
+
+    hammer.on('pinchend', () => {
+      oldScale = stage.scaleX();
+      oldPos = stage.position();
     });
 
     return () => {
+      hammer.off('pinch');
       hammer.destroy();
     };
-  }, []);
+  }, [stageRef.current]);
 
   const {
     data: obstacleData,
