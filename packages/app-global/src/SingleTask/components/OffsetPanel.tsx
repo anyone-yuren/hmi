@@ -117,39 +117,43 @@ const OffsetPanel = forwardRef((props: any, ref) => {
           {(point, index) => {
             return (
               <TaskItem>
-                <div className='flex pt-[5px] justify-between items-center'>
-                  <div className='text-[18px]'>
-                    {t('deployer.singleTask.point')}: {point.point_id}
-                  </div>
-                  <div className='w-[70px] flex items-center justify-center gap-[20px]'>
-                    <div
-                      onClick={() => {
-                        handleUpdateOffset(point);
-                      }}
-                    >
-                      <EditIcon fontSize={20}></EditIcon>
+                <div className='flex flex-col w-full'>
+                  <div className='flex pt-[5px] justify-between items-center'>
+                    <div className='text-[18px]'>
+                      {t('deployer.singleTask.point')}: {point.point_id}
                     </div>
+                    <div className='w-[70px] flex items-center justify-center gap-[20px]'>
+                      <div
+                        onClick={() => {
+                          handleUpdateOffset(point);
+                        }}
+                      >
+                        <EditIcon fontSize={20}></EditIcon>
+                      </div>
 
-                    <DeleteIcon
-                      fontSize={20}
-                      isActive
-                      onClick={() => {
-                        handleDeleteOffset(point);
-                      }}
-                    ></DeleteIcon>
+                      <DeleteIcon
+                        fontSize={20}
+                        isActive
+                        onClick={() => {
+                          handleDeleteOffset(point);
+                        }}
+                      ></DeleteIcon>
+                    </div>
                   </div>
-                </div>
-                <div className='flex pb-[5px] pt-[3px] justify-between items-center text-[12px]'>
-                  <div>
-                    <span className='w-[80px] inline-block'>
-                      {t('deployer.singleTask.offset')}X: {point.x}
-                    </span>
-                    <span className='w-[80px] inline-block'>
-                      {t('deployer.singleTask.offset')}Y: {point.y}
-                    </span>
-                  </div>
-                  <div className='text-[#ccc]'>
-                    <span>{point.update_time ? dayjs.unix(point.update_time).format('YYYY-MM-DD HH:mm:ss') : '-'}</span>
+                  <div className='flex pb-[5px] pt-[3px] justify-between items-center text-[12px]'>
+                    <div>
+                      <span className='w-[80px] inline-block'>
+                        {t('deployer.singleTask.offset')}X: {point.x}
+                      </span>
+                      <span className='w-[80px] inline-block'>
+                        {t('deployer.singleTask.offset')}Y: {point.y}
+                      </span>
+                    </div>
+                    <div className='text-[#ccc]'>
+                      <span>
+                        {point.update_time ? dayjs.unix(point.update_time).format('YYYY-MM-DD HH:mm:ss') : '-'}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </TaskItem>
