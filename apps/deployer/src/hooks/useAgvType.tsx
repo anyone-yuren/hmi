@@ -80,8 +80,6 @@ export const useAgvType = () => {
       avgType: state.avgType,
     })),
   );
-  console.log(AGVTYPE_NAMES[avgType], '测试----');
-
   // 如果找不到对应值，就返回“未定义”
   return AGVTYPE_NAMES[avgType] ?? '未定义';
 };
