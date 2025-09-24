@@ -153,11 +153,13 @@ const Sensor = (props: SensorProps) => {
               )}
             </div>
           </div>
-          <div className='flex flex-col items-end'>
-            <h4 className='text-xs font-bold cursor-pointer'>
-              {t('common.maintenance.maintain')} <DoubleRightOutlined />
-            </h4>
-          </div>
+          {false && (
+            <div className='flex flex-col items-end'>
+              <h4 className='text-xs font-bold cursor-pointer'>
+                {t('common.maintenance.maintain')} <DoubleRightOutlined />
+              </h4>
+            </div>
+          )}
         </div>
 
         <div className='flex gap-3 justify-end'>
