@@ -66,7 +66,6 @@ const DrawerContent = (props: IProps) => {
   const { token } = useToken();
   const [form] = Form.useForm();
   const { i18n } = useTranslation();
-  const activeDevice = useActiveDevice();
   const {
     data: IoResponse,
     mutate: updateIoResponse,
@@ -102,6 +101,8 @@ const DrawerContent = (props: IProps) => {
 
   // 获取可活动机构数据
   const { run: getActiveDevicesRun, data: activeDevices } = useRequest(getActiveDevices);
+
+  const activeDevice = useActiveDevice(activeDevices?.data ?? []);
 
   const ioInputConfig = useMemo(() => {
     if (!IoResponse?.io_input_config) return;
@@ -271,6 +272,8 @@ const DrawerContent = (props: IProps) => {
                         data={{ ...propStrategyList[item], name: item, list: propStrategyList[item] }}
                         isDark={isDark}
                         idStrategyEndPathCloseProtection={currentObsInfo?.id_strategy_end_path_close_protection}
+                        ioInputConfig={ioInputConfig} // 转换后的IO数据
+                        pcSensorList={deviceList?.data ?? []}
                       />
                     }
                     align={{ offset: [-8, -0] }}
@@ -326,49 +329,6 @@ const DrawerContent = (props: IProps) => {
             })}
           </Checkbox.Group>
         </div>
-        {/* <div className='flex flex-col gap-2'>
-          <Tooltip placement='topRight' title='修改关联IO信号，请使用roboToolkit'>
-            <p className='text-md font-bold relative py-2 flex justify-between items-center'>
-              IO信号（输出）
-              <ExclamationCircleOutlined className='text-md' />
-              <Line1px />
-            </p>
-          </Tooltip>
-
-          <Checkbox.Group
-            className={`grid grid-cols-1 rounded-md relative p-2 bg-black/10 ${isDark && '!bg-white/10'} min-h-10`}
-          >
-            {loading ? <PanelLoading isDark={isDark} /> : null}
-            {!ioInputConfig?.outputConfig?.length && !loading && (
-              <div
-                className={`group w-full h-20 py-4 rounded-lg flex flex-row items-center justify-center ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
-  backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
-              >
-                <SvgIcon
-                  className='group-hover:scale-110 animation-all duration-300'
-                  name='servicerror'
-                  size={80}
-                ></SvgIcon>
-                <p className='opacity-60 text-xs' onClick={() => getIoResponse()}>
-                  请求失败，请重试！
-                </p>
-              </div>
-            )}
-            {ioInputConfig?.outputConfig?.map((item) => {
-              return (
-                <div
-                  key={item.key}
-                  style={{
-                    display: currentObsInfo?.close_ce_lidar_list?.includes(item?.key) ? 'flex' : 'none',
-                  }}
-                  className='group flex items-center justify-between hover:shadow-sm  hover:bg-[#c4c4c46e] rounded-md p-2 animation-all duration-300'
-                >
-                  {item.value}
-                </div>
-              );
-            })}
-          </Checkbox.Group>
-        </div> */}
         <div className='flex flex-col gap-2'>
           <div className='flex flex-col gap-2'>
             <p className='text-md font-bold relative py-2'>
