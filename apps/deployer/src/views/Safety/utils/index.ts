@@ -57,6 +57,7 @@ export const getProjectArea = (forksUnderRect, forksHeight) => {
     position: projectPosition,
   };
 };
+
 // 根据左上角xy与宽高 生成一个【x1,y1,x2,y2】的数组
 export const getRectPoints = (x: number, y: number, width: number, height: number) => {
   return [0 - Math.round(y + height), 0 - Math.round(x + width), 0 - Math.round(y), 0 - Math.round(x)];

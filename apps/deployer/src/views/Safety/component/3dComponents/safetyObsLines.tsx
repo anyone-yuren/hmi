@@ -3,8 +3,7 @@ import { memo, useMemo } from 'react';
 import { generateRectanglePoints } from '../../utils/index';
 
 function SafetyObsLines(props: any) {
-  const { lines } = props;
-
+  const { lines, color = 'yellow' } = props;
   // 提前处理点位数据
   const lineSegments = useMemo(() => {
     return lines.flatMap((line, index) => {
@@ -40,8 +39,9 @@ function SafetyObsLines(props: any) {
           <Line
             key={index}
             points={segment}
-            color='yellow'
+            color={color}
             lineWidth={2} // 设置线宽
+            depthTest={false}
           />
         );
       })}

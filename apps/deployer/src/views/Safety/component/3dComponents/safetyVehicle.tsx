@@ -3,10 +3,13 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { generateRectanglePoints, getProjectArea } from '../../utils/index';
+import SafetyObsLines from './safetyObsLines';
 
 const mockHeight = 685;
 function SafetyVehicle(props: any) {
-  const { vehicleRect, forksUnderRect } = props;
+  const { vehicleRect, forksUnderRect, distance } = props;
+  console.log('distance:[前，后]', distance);
+  if (!distance?.length) return null;
 
   const { forksHeight } = useSafetyStore(
     useShallow((store) => ({
@@ -41,7 +44,18 @@ function SafetyVehicle(props: any) {
       (forksPoints[0][1] + forksPoints[2][1]) / 2, // Y 中心点
       forksHeight / 1000 + forkDepth / 2, // Z 中心点
     ];
-
+    const [[], [rightVehicleXPoint, rightVehicleYPoint]] = [vehiclePoints[1], vehiclePoints[2]];
+    const [[], [rightForksXPoint, rightForksYPoint]] = [forksPoints[0], forksPoints[3]];
+    const rectangles = {
+      front: [
+        ...vehiclePoints[1]?.map((item) => item * 1000),
+        ...[rightVehicleXPoint * 1000 + distance[0], rightVehicleYPoint * 1000],
+      ],
+      forksUnder: [
+        ...forksPoints[0]?.map((item) => item * 1000),
+        ...[rightForksXPoint * 1000 - distance[1], rightForksYPoint * 1000],
+      ],
+    };
     return {
       vehicle: {
         points: vehiclePoints,
@@ -55,37 +69,14 @@ function SafetyVehicle(props: any) {
         height: forksHeightCalculated,
         position: forksPosition,
       },
+      rectangles,
     };
-  }, [vehicleRect, depth, forkDepth, forksHeight]);
+  }, [vehicleRect, depth, forkDepth, forksHeight, distance]);
 
   const forksUnderProjectArea: any = useMemo(() => {
     if (!forksUnderRect) return null;
     // 先用mockHeight来表示临时的叉臂高度
     return getProjectArea(forksUnderRect, forksHeight);
-    // const projectRect = generateRectanglePoints(forksUnderRect.rectangle);
-
-    // // 计算保护区域的尺寸
-    // const projectWidth = Math.abs(projectRect[1][0] - projectRect[0][0]); // 宽度
-    // const projectHeight = Math.abs(projectRect[2][1] - projectRect[0][1]); // 高度
-    // const projectDepth = Math.max(
-    //   (mockHeight - forksUnderRect.height_start - forksUnderRect.forkarm_height_cut) / 1000,
-    //   0,
-    // ); // 深度
-    // // 计算保护区域的位置
-    // const projectPosition = [
-    //   (projectRect[0][0] + projectRect[1][0]) / 2, // X 中心点
-    //   (projectRect[0][1] + projectRect[2][1]) / 2, // Y 中心点
-    //   forksUnderRect.height_start / 1000 + projectDepth / 2, // Z 中心点
-    // ];
-
-    // console.log('[safety]:保护区域', { projectWidth, projectHeight, projectDepth, projectPosition });
-
-    // return {
-    //   width: projectWidth,
-    //   height: projectHeight,
-    //   depth: projectDepth,
-    //   position: projectPosition,
-    // };
   }, [forksUnderRect, forksHeight]);
 
   useEffect(() => {
@@ -125,6 +116,10 @@ function SafetyVehicle(props: any) {
           <meshStandardMaterial color='#00d1d1' transparent opacity={0.6} />
         </mesh>
       )}
+      <SafetyObsLines
+        lines={[{ rectangle: outlook?.rectangles?.front }, { rectangle: outlook?.rectangles?.forksUnder }]}
+        color='green'
+      ></SafetyObsLines>
     </>
   );
 }

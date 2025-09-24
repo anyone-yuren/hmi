@@ -141,7 +141,7 @@ const Safety = () => {
     return config?.data?.strategy_list?.strategy_under_fork_protection;
   }, [config]);
 
-  const activeSchemeList = useMemo(() => {
+  const activeScheme: any = useMemo(() => {
     if (
       obsInfo?.scheme_id === undefined ||
       !config?.data ||
@@ -152,14 +152,21 @@ const Safety = () => {
       return [];
     }
     const obj = config?.data?.obs_scheme?.scheme_list.find((item: any) => item.scheme_id === obsInfo?.scheme_id);
-    return obj?.protect_areas || [];
+    return {
+      project_area: obj?.protect_areas || [],
+      project_distance: [obj?.backward_stop_distance || 0, obj?.forward_stop_distance || 0],
+    };
   }, [obsInfo, config]);
   return (
     <SafetyCanvas>
       <SafetyBase></SafetyBase>
-      <SafetyVehicle vehicleRect={vehicleOutline} forksUnderRect={forksUnderOutline}></SafetyVehicle>
-      <SafetyObsLines lines={activeSchemeList}></SafetyObsLines>
-      <SafetyPointCloud projectArea={activeSchemeList} forksUnderRect={forksUnderOutline}></SafetyPointCloud>
+      <SafetyVehicle
+        vehicleRect={vehicleOutline}
+        forksUnderRect={forksUnderOutline}
+        distance={activeScheme.project_distance}
+      ></SafetyVehicle>
+      <SafetyObsLines lines={activeScheme?.project_area || []}></SafetyObsLines>
+      <SafetyPointCloud projectArea={activeScheme.project_area} forksUnderRect={forksUnderOutline}></SafetyPointCloud>
     </SafetyCanvas>
   );
 };
