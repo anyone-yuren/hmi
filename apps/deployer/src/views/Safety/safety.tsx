@@ -1,5 +1,5 @@
 import { useRequest } from 'ahooks';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import SafetyBase from './component/3dComponents/safetyBase';
@@ -7,6 +7,7 @@ import SafetyCanvas from './component/3dComponents/safetyCanvas';
 import SafetyObsLines from './component/3dComponents/safetyObsLines';
 import SafetyPointCloud from './component/3dComponents/safetyPointCloud';
 import SafetyVehicle from './component/3dComponents/safetyVehicle';
+import WsContainer from './component/WsContainer';
 import { getDeviceList, safetyConfig } from './service/index';
 import { useSafetyStore } from './store/safety.store';
 const mock = {
@@ -86,10 +87,13 @@ const Safety = () => {
     })),
   );
   const { data: deviceList = [] } = useRequest(getDeviceList);
+  const [wsContainerVisible, setWsContainerVisible] = useState(false);
 
   useEffect(() => {
     clearSensorPoints();
     setSensorPointsKey([]);
+    const url = new URL(window.location.href);
+    url.hash.indexOf('safetyPointsCloud') > 0 && setWsContainerVisible(true);
   }, []);
 
   useEffect(() => {
@@ -161,16 +165,23 @@ const Safety = () => {
     };
   }, [obsInfo, config]);
   return (
-    <SafetyCanvas>
-      <SafetyBase></SafetyBase>
-      <SafetyVehicle
-        vehicleRect={vehicleOutline}
-        forksUnderRect={forksUnderOutline}
-        distance={activeScheme.project_distance}
-      ></SafetyVehicle>
-      <SafetyObsLines lines={activeScheme?.project_area || []}></SafetyObsLines>
-      <SafetyPointCloud projectArea={activeScheme.project_area} forksUnderRect={forksUnderOutline}></SafetyPointCloud>
-    </SafetyCanvas>
+    <>
+      <SafetyCanvas>
+        <SafetyBase></SafetyBase>
+        <SafetyVehicle
+          vehicleRect={vehicleOutline}
+          forksUnderRect={forksUnderOutline}
+          distance={activeScheme.project_distance}
+        ></SafetyVehicle>
+        <SafetyObsLines lines={activeScheme?.project_area || []}></SafetyObsLines>
+        <SafetyPointCloud projectArea={activeScheme.project_area} forksUnderRect={forksUnderOutline}></SafetyPointCloud>
+      </SafetyCanvas>
+      {wsContainerVisible && (
+        <WsContainer>
+          <></>
+        </WsContainer>
+      )}
+    </>
   );
 };
 export default Safety;
