@@ -3,6 +3,7 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
+import CloseIcon from '@mui/icons-material/Close';
 import LoadingButton from '../../comp/loadingButton';
 import ModelListSelect from '../../comp/modelListSelect';
 import PointCloudFilter from '../../comp/pointCloudFilter';
@@ -30,6 +31,7 @@ const PlaceMove = (props: IProps) => {
     first_floor_height: 0, // 第一层货物高度
     need_detect_height: false, // 托盘高度检测
     scene_storage: [], // 场景库位列表
+    close_loop_thresh: [], // 最大挪车次数
   });
   const { t } = useTranslation();
 
@@ -180,6 +182,75 @@ const PlaceMove = (props: IProps) => {
             <div>{updateHashMap?.['first_floor_height']}</div>
           </TextChangeRow>
 
+          <Title>{t('deployer.vision.maxMoveVehicleTime')}</Title>
+
+          {updateHashMap?.['close_loop_thresh']?.map((item: any, index: number) => {
+            return (
+              <div key={'close_loop_thresh' + index}>
+                <div className='flex'>
+                  <div className='flex-1 flex  items-center'>
+                    {t('deployer.vision.maxMoveVehicleTime') + (index + 1)}
+                    {/* <TextChangeRow
+                    key={'close_loop_thresh' + index}
+                    title={t('deployer.vision.minMoveVehicleThreshold') + (index + 1)}
+                    value={item}
+                    onChange={(value: string) => {
+                      const list = updateHashMap?.['close_loop_thresh'];
+                      list[index] = Number(value);
+                      changeUpdateHashMap('close_loop_thresh', list);
+                    }}
+                  >
+                    <div>{item || 0}</div>
+                  </TextChangeRow> */}
+                  </div>
+                  <div
+                    className='flex items-center justify-center'
+                    onClick={() => {
+                      const list = updateHashMap?.['close_loop_thresh'];
+                      list.splice(index, 1);
+                      changeUpdateHashMap('close_loop_thresh', list);
+                    }}
+                  >
+                    <CloseIcon fontSize={'small'}></CloseIcon>
+                  </div>
+                </div>
+                <div className='flex flex-col'>
+                  {[
+                    { title: t('deployer.vision.leftAndRight'), index: 0 },
+                    { title: t('deployer.vision.topAndBottom'), index: 1 },
+                    { title: t('deployer.vision.angle'), index: 2 },
+                  ]?.map((it, oindex) => {
+                    return (
+                      <TextChangeRow
+                        title={it.title}
+                        value={item[oindex]}
+                        onChange={(value: string) => {
+                          const list = updateHashMap?.['close_loop_thresh'];
+                          list[index][it.index] = Number(value);
+                          changeUpdateHashMap('close_loop_thresh', list);
+                        }}
+                      >
+                        <div>{item[oindex] || 0}</div>
+                      </TextChangeRow>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+          <LoadingButton
+            fullWidth
+            variant='contained'
+            sx={{ color: 'white', marginBottom: '40px' }}
+            onPress={() => {
+              const list = updateHashMap?.['close_loop_thresh'];
+              list.push([0, 0, 0]);
+              changeUpdateHashMap('close_loop_thresh', list);
+            }}
+          >
+            {t('common.add')}
+          </LoadingButton>
+
           <LoadingButton
             fullWidth
             variant='contained'
@@ -204,6 +275,7 @@ const PlaceMove = (props: IProps) => {
                       value: numberAry.includes(initState[key]?.type) ? Number(updateHashMap[key]) : updateHashMap[key],
                     };
               });
+              console.log('initState', initState, 'sendState', sendState);
               await save(sendState);
               toast.success(t('common.actionSuccess'));
             }}
