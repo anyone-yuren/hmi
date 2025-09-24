@@ -1,13 +1,28 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 
 interface RenderStrategyTpyeProps {
   data: any;
   isDark: boolean;
   idStrategyEndPathCloseProtection: number;
+  ioInputConfig: any;
+  pcSensorList: any[];
 }
 const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
-  const { data, isDark, idStrategyEndPathCloseProtection } = props;
+  const { data, isDark, idStrategyEndPathCloseProtection, ioInputConfig, pcSensorList } = props;
+  const { t, i18n } = useTranslation();
+  const serviceLanguage = useMemo(() => {
+    return i18n.language;
+  }, [i18n.language]);
+
+  const filterIoInput = (params: string[]) => {
+    return ioInputConfig?.inputConfig?.filter((item: { key: string }) => params.includes(item.key));
+  };
+  const filterDevices = (params: string[]) => {
+    return pcSensorList?.filter((item: { name: string }) => params.includes(item.name));
+  };
+
   const renderPopupContent = useMemo(() => {
     if (!data) return null;
     const { name, ...strategyData } = data;
@@ -39,8 +54,8 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联传感器:
               <div className='fle flex-wrap gap-1'>
-                {strategyData?.associated_sensor_list?.map((item) => {
-                  return <span key={item}>{item} </span>;
+                {filterDevices(strategyData?.associated_sensor_list)?.map((item) => {
+                  return <span key={item.key}>{serviceLanguage.includes('zh') ? item.ch_name : item.name} </span>;
                 })}
               </div>
             </div>
@@ -58,8 +73,8 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联传感器:
               <div className='fle flex-wrap gap-1'>
-                {strategyData?.associated_sensor_list?.map((item) => {
-                  return <span key={item}>{item} </span>;
+                {filterDevices(strategyData?.associated_sensor_list)?.map((item) => {
+                  return <span key={item.key}>{serviceLanguage.includes('zh') ? item.ch_name : item.name} </span>;
                 })}
               </div>
             </div>
@@ -77,8 +92,8 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联传感器:
               <div className='fle flex-wrap gap-1'>
-                {strategyData?.associated_sensor_list?.map((item) => {
-                  return <span key={item}>{item} </span>;
+                {filterDevices(strategyData?.associated_sensor_list)?.map((item) => {
+                  return <span key={item.key}>{serviceLanguage.includes('zh') ? item.ch_name : item.name} </span>;
                 })}
               </div>
             </div>
@@ -107,8 +122,8 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联传感器:
               <div className='fle flex-wrap gap-1'>
-                {strategyData?.associated_sensor_list?.map((item) => {
-                  return <span key={item}>{item} </span>;
+                {filterDevices(strategyData?.associated_sensor_list)?.map((item) => {
+                  return <span key={item.key}>{serviceLanguage.includes('zh') ? item.ch_name : item.name} </span>;
                 })}
               </div>
             </div>
@@ -126,8 +141,8 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联IO信号:
               <div className='fle flex-wrap gap-1'>
-                {strategyData?.associated_io_sensor_list?.map((item) => {
-                  return <span key={item}>{item} </span>;
+                {filterIoInput(strategyData?.associated_io_sensor_list)?.map((item) => {
+                  return <span key={item.key}>{item.value} </span>;
                 })}
               </div>
             </div>
@@ -159,16 +174,16 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
                 <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
                   关联传感器:
                   <div className='fle flex-wrap gap-1'>
-                    {child?.associated_pc_sensor_list?.map((item) => {
-                      return <span key={item}>{item}</span>;
+                    {filterDevices(child?.associated_pc_sensor_list)?.map((item) => {
+                      return <span key={item.key}>{serviceLanguage.includes('zh') ? item.ch_name : item.name} </span>;
                     })}
                   </div>
                 </div>
                 <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
                   关联IO信号:
                   <div className='fle flex-wrap gap-1'>
-                    {strategyData?.associated_io_sensor_list?.map((item) => {
-                      return <span key={item}>{item} </span>;
+                    {filterIoInput(child?.associated_io_sensor_list)?.map((item) => {
+                      return <span key={item.key}>{item.value} </span>;
                     })}
                   </div>
                 </div>
