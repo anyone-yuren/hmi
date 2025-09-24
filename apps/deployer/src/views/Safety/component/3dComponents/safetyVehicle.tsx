@@ -21,6 +21,7 @@ function SafetyVehicle(props: any) {
   const [forkDepth, setForkDepth] = useState(0.1);
 
   const outlook: any = useMemo(() => {
+    console.log('看看什么值在改变', vehicleRect, depth, forkDepth, forksHeight, distance);
     const vehicle = vehicleRect.find((item) => item.name === 'head');
     const forks = vehicleRect.find((item) => item.name === 'forkarm');
 
@@ -90,7 +91,7 @@ function SafetyVehicle(props: any) {
         geometry={new THREE.BoxGeometry(outlook.vehicle.width, outlook.vehicle.height, depth)}
         position={outlook.vehicle.position}
       >
-        <meshStandardMaterial color='#00d1d1' transparent opacity={0.8} />
+        <meshStandardMaterial color='#00d1d1' transparent opacity={0.8} depthTest={false} />
       </mesh>
 
       {/* 渲染叉臂立方体 */}
@@ -98,7 +99,7 @@ function SafetyVehicle(props: any) {
         geometry={new THREE.BoxGeometry(outlook.forks.width, outlook.forks.height, forkDepth)}
         position={outlook.forks.position}
       >
-        <meshStandardMaterial color='#00d1d1' />
+        <meshStandardMaterial color='#00d1d1' depthTest={false} />
       </mesh>
 
       {/* 渲染保护区域立方体 */}
@@ -113,7 +114,7 @@ function SafetyVehicle(props: any) {
           }
           position={forksUnderProjectArea.position}
         >
-          <meshStandardMaterial color='#00d1d1' transparent opacity={0.6} />
+          <meshStandardMaterial color='#00d1d1' transparent opacity={0.6} depthTest={false} />
         </mesh>
       )}
       <SafetyObsLines

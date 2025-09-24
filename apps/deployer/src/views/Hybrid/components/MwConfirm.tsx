@@ -5,6 +5,7 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 
 const MwModal = (props: any) => {
+  const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const { content, contentText = '', visible = false, title = '', onCancel, onOk } = props;
   const [open, setOpen] = React.useState(visible);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
@@ -34,6 +35,7 @@ const MwModal = (props: any) => {
       PaperProps={{
         sx: {
           borderRadius: 2,
+          top: isMobile ? -130 : null,
         },
       }}
       hideBackdrop
@@ -49,7 +51,7 @@ const MwModal = (props: any) => {
       >
         {title}
       </DialogTitle>
-      <DialogContent className='text-center' style={{ width: '400px', fontSize: '18px', color: '#666666' }}>
+      <DialogContent className='text-center' style={{ minWidth: '400px', fontSize: '18px', color: '#666666' }}>
         {content ? (
           content
         ) : (
@@ -102,7 +104,7 @@ interface IModalConfig {
 const confirm = (config: IModalConfig) => {
   // 把props传进去然后render到body上
   const container = document.createDocumentFragment();
-  const modal = ReactDOM.createRoot(container);
+  const modal = (ReactDOM as any).createRoot(container);
   modal.render(<MwModal visible={true} {...config}></MwModal>);
 };
 

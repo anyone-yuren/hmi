@@ -131,6 +131,7 @@ const Safety = () => {
     ) {
       return [];
     }
+    console.log('vehicleOutline是否在变');
     return config?.data?.vehicle_outline?.rectangle_list;
   }, [config]);
 
@@ -138,6 +139,7 @@ const Safety = () => {
     if (!config?.data || !config?.data?.strategy_list || !config?.data?.strategy_list?.strategy_under_fork_protection) {
       return {};
     }
+    console.log('forksUnderOutline是否在变');
     return config?.data?.strategy_list?.strategy_under_fork_protection;
   }, [config]);
 
@@ -152,6 +154,7 @@ const Safety = () => {
       return [];
     }
     const obj = config?.data?.obs_scheme?.scheme_list.find((item: any) => item.scheme_id === obsInfo?.scheme_id);
+    console.log('activeScheme一直在变???');
     return {
       project_area: obj?.protect_areas || [],
       project_distance: [obj?.backward_stop_distance || 0, obj?.forward_stop_distance || 0],
