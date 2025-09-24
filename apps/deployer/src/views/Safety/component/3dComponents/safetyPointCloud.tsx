@@ -1,11 +1,13 @@
 import { useSafetyStore } from '@/views/Safety/store/safety.store';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { getProjectArea } from '../../utils/index';
 
 const mockHeight = 668;
-
+const MIN_POINT_SIZE = 0.02;
+const MAX_POINT_SIZE = 0.14;
+const BASE_POINT_SIZE = 0.06;
 function SafetyPointCloud(props) {
   const { projectArea, forksUnderRect } = props;
   const { seniorPoints, forksHeight, sensorPoints } = useSafetyStore(
@@ -17,6 +19,7 @@ function SafetyPointCloud(props) {
   );
 
   const [excludeOutsidePoints, setExcludeOutsidePoints] = useState(false);
+  const shaderMaterialRef = useRef<THREE.ShaderMaterial>();
 
   const forksUnderProjectArea: any = useMemo(() => {
     if (!forksUnderRect) return null;
@@ -111,9 +114,52 @@ function SafetyPointCloud(props) {
     });
   }, []);
 
+  const shaderMaterial = useMemo(() => {
+    const mat = new THREE.ShaderMaterial({
+      vertexColors: true,
+      transparent: true,
+      depthTest: true,
+      depthWrite: false,
+      uniforms: {
+        uSize: { value: BASE_POINT_SIZE },
+        uPixelRatio: { value: window.devicePixelRatio || 1 },
+        uMaxSize: { value: MAX_POINT_SIZE },
+        uMinSize: { value: MIN_POINT_SIZE },
+      },
+      vertexShader: `
+        varying vec3 vColor;
+        uniform float uSize;
+        uniform float uPixelRatio;
+        uniform float uMaxSize;
+        uniform float uMinSize;
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          float dist = length(mvPosition.xyz);
+          float size = uSize * (1.0 / (0.02 * dist + 0.4));
+          size = clamp(size, uMinSize, uMaxSize);
+          gl_PointSize = size * (uPixelRatio * 60.0);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        void main() {
+          vec2 cxy = 2.0 * gl_PointCoord - 1.0;
+          float r = dot(cxy, cxy);
+          if (r > 1.0) discard;
+          float alpha = 1.0 - smoothstep(0.7, 1.0, r);
+          gl_FragColor = vec4(vColor, alpha);
+        }
+      `,
+    });
+    shaderMaterialRef.current = mat;
+    return mat;
+  }, []);
+
   return (
     <>
-      <points geometry={geometry} material={material} />
+      <points geometry={geometry} material={shaderMaterial} />
     </>
   );
 }
