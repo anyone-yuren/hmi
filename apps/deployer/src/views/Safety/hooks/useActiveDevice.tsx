@@ -1,11 +1,11 @@
-const useActiveDevice = () => {
+const useActiveDevice = (activeDevices: number[] = []) => {
   const activeDevice = [
     { value: 1, label: '叉臂' },
     { value: 2, label: '顶部雷达升降杆' },
     { value: 3, label: '自身' },
     { value: 4, label: '摇头机构' },
   ];
-  return activeDevice;
+  return activeDevice.filter((item) => activeDevices.includes(item.value));
 };
 
 export const useStrategyListName = () => {
