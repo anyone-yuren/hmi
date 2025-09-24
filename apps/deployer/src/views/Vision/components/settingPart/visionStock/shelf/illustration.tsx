@@ -232,7 +232,7 @@ const Illustration = (props: IProps) => {
         ></ImagesWidthTips>
       </div>
 
-      <ImagesWidthTips
+      {/* <ImagesWidthTips
         img={`shelf/shelf_stop_front_${vehicleImages.toLowerCase()}`}
         imageHeight={200}
         tipsProps={cssHashMap?.['shelf_stop_front']}
@@ -249,7 +249,7 @@ const Illustration = (props: IProps) => {
         title={t('deployer.vision.vehicleStopShelfDist')}
       >
         {t('deployer.vision.vehicleStopShelfDist')}
-      </ImagesWidthTips>
+      </ImagesWidthTips> */}
     </div>
   );
 };

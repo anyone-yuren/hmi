@@ -167,7 +167,7 @@ const Illustration = (props: IProps) => {
         </div>
       </div>
 
-      <ImagesWidthTips
+      {/* <ImagesWidthTips
         img={`${vehicleImages}_recenter`}
         imageHeight={100}
         tipsProps={{ top: '-20px' }}
@@ -184,7 +184,7 @@ const Illustration = (props: IProps) => {
         title={t('deployer.vision.stackStopFromShelf')}
       >
         {t('deployer.vision.stackStopFromShelf')}
-      </ImagesWidthTips>
+      </ImagesWidthTips> */}
     </div>
   );
 };

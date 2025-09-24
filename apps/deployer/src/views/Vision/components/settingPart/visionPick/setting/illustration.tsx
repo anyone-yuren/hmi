@@ -307,7 +307,7 @@ const Illustration = (props: any) => {
           </div>
           <CompensationTips></CompensationTips>
 
-          <ImagesWidthTips
+          {/* <ImagesWidthTips
             imageHeight={'100px'}
             title={t('deployer.vision.vehicleStartMidDist')}
             img={vehicleConfig[vehicleChassis]?.recenter}
@@ -331,7 +331,7 @@ const Illustration = (props: any) => {
             }
           >
             {t('deployer.vision.vehicleEndMidDist')}
-          </ImagesWidthTips>
+          </ImagesWidthTips> */}
         </div>
       </div>
     </>

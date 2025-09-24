@@ -5,6 +5,7 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 
 const MwModal = (props: any) => {
+  const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const { content, contentText = '', visible = false, title = '', onCancel, onOk } = props;
   const [open, setOpen] = React.useState(visible);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
@@ -34,7 +35,7 @@ const MwModal = (props: any) => {
       PaperProps={{
         sx: {
           borderRadius: 2,
-          top: -150,
+          top: isMobile ? -130 : null,
         },
       }}
       hideBackdrop

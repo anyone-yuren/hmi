@@ -64,8 +64,8 @@ const Setting = (props: any) => {
       right: [],
     }, // 补偿参数,除了K车（四项穿）都用front，K车用left和right
     need_detect_height: false, // 进叉高度识别(托盘车不显示该参数)
-    start_mid_dist: 0, // 车身回正时基准点到托盘前表面的距离
-    end_mid_dist: 0, // 停车后基准点到托盘前表面的距离
+    // start_mid_dist: 0, // 车身回正时基准点到托盘前表面的距离
+    // end_mid_dist: 0, // 停车后基准点到托盘前表面的距离
     extra_height: 0, // 执行视觉任务额外抬升叉臂的高度(托盘车不显示该参数)
     base_pallet_model_detect_dist: false, // 使用不同进叉深度叉取不同托盘
     select_model: [],
@@ -166,8 +166,8 @@ const Setting = (props: any) => {
 
   const routeKeyOptions = useMemo(() => {
     const options = [
-      { title: t('deployer.vision.vehicleStartMidDist'), key: 'start_mid_dist' },
-      { title: t('deployer.vision.vehicleEndMidDist'), key: 'end_mid_dist' },
+      // { title: t('deployer.vision.vehicleStartMidDist'), key: 'start_mid_dist' },
+      // { title: t('deployer.vision.vehicleEndMidDist'), key: 'end_mid_dist' },
       { title: t('deployer.vision.extraForkLift'), key: 'extra_height' },
     ];
     return vehicle?.isTrilateral

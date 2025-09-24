@@ -26,9 +26,9 @@ const PoseDetect = (props: IProps) => {
     pallet_model_list: [], // 选择的模型列表
     need_detect_height: true, // 放货高度识别
     extra_height: 0, // 额外抬升叉臂高度
-    start_mid_dist: 0, // 车身回正时基准点到托盘的距离
-    end_mid_dist: 0, // 停车后基准点到托盘的距离
-    back_mid_dist: 0, // 退出时车身行走的直线距离
+    // start_mid_dist: 0, // 车身回正时基准点到托盘的距离
+    // end_mid_dist: 0, // 停车后基准点到托盘的距离
+    // back_mid_dist: 0, // 退出时车身行走的直线距离
     first_floor_height: 0, // 第一层货物高度
     compensation: [],
     scene_storage: [], // 场景库位列表
@@ -182,11 +182,11 @@ const PoseDetect = (props: IProps) => {
             <div>{updateHashMap?.['first_floor_height']}</div>
           </TextChangeRow>
 
-          <Title>{t('deployer.vision.pathPlanning')}</Title>
+          {/* <Title>{t('deployer.vision.pathPlanning')}</Title> */}
           {[
-            { title: t('deployer.vision.vehicleBackDist'), key: 'back_mid_dist' },
-            { title: t('deployer.vision.vehicleStartMidDist'), key: 'start_mid_dist' },
-            { title: t('deployer.vision.vehicleEndMidDist'), key: 'end_mid_dist' },
+            // { title: t('deployer.vision.vehicleBackDist'), key: 'back_mid_dist' },
+            // { title: t('deployer.vision.vehicleStartMidDist'), key: 'start_mid_dist' },
+            // { title: t('deployer.vision.vehicleEndMidDist'), key: 'end_mid_dist' },
           ]?.map((item: any) => {
             const val = updateHashMap?.[item.key];
             return (
