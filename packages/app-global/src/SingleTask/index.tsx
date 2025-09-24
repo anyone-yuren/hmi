@@ -43,6 +43,7 @@ const initTaskActionRow = {
 };
 
 const SingleTask = () => {
+  const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const [activePoints, setActivePoints] = useState<IPoint['id'][]>([]);
   const [taskVisible, setTaskVisible] = useState(false);
   const [taskSettingVisible, setTaskSettingVisible] = useState(false);
@@ -441,7 +442,7 @@ const SingleTask = () => {
           open={offsetModalVisible}
           setOpen={setOffsetModalVisible}
           fullScreen={false}
-          sx={{ zIndex: 1213, width: '600px!important' }}
+          sx={{ zIndex: 1213, width: '600px!important', top: isMobile ? '230px!important' : null }}
         >
           <OffsetModal
             {...offsetModalConfig}
