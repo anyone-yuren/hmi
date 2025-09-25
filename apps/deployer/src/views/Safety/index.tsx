@@ -607,6 +607,10 @@ export default function RectDrawer() {
     }
   }, [obsInfo?.scheme_id, memoObstacleData?.obs_scheme?.scheme_list]);
 
+  const resetMap = () => {
+    setSelectedId('');
+  };
+
   // 设置避障方案更新，与弹窗取消后，还原初始化避障方案。
   const refreshCurrentObsInfo = (scheme_id) => {
     if (scheme_id) {
@@ -622,6 +626,7 @@ export default function RectDrawer() {
         refreshCurrentObsInfo(obsInfo?.scheme_id);
       }
     }
+    resetMap();
   };
   const { getObsMsg } = useObsError();
 
