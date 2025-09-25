@@ -3,7 +3,6 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { generateRectanglePoints, getProjectArea } from '../../utils/index';
-import SafetyObsLines from './safetyObsLines';
 
 const mockHeight = 685;
 function SafetyVehicle(props: any) {
@@ -45,18 +44,7 @@ function SafetyVehicle(props: any) {
       (forksPoints[0][1] + forksPoints[2][1]) / 2, // Y 中心点
       forksHeight / 1000 + forkDepth / 2, // Z 中心点
     ];
-    const [[], [rightVehicleXPoint, rightVehicleYPoint]] = [vehiclePoints[1], vehiclePoints[2]];
-    const [[], [rightForksXPoint, rightForksYPoint]] = [forksPoints[0], forksPoints[3]];
-    const rectangles = {
-      front: [
-        ...vehiclePoints[1]?.map((item) => item * 1000),
-        ...[rightVehicleXPoint * 1000 + distance[0], rightVehicleYPoint * 1000],
-      ],
-      forksUnder: [
-        ...forksPoints[0]?.map((item) => item * 1000),
-        ...[rightForksXPoint * 1000 - distance[1], rightForksYPoint * 1000],
-      ],
-    };
+
     return {
       vehicle: {
         points: vehiclePoints,
@@ -70,7 +58,6 @@ function SafetyVehicle(props: any) {
         height: forksHeightCalculated,
         position: forksPosition,
       },
-      rectangles,
     };
   }, [vehicleRect, depth, forkDepth, forksHeight, distance]);
 
@@ -117,10 +104,6 @@ function SafetyVehicle(props: any) {
           <meshStandardMaterial color='#00d1d1' transparent opacity={0.6} depthTest={false} />
         </mesh>
       )}
-      <SafetyObsLines
-        lines={[{ rectangle: outlook?.rectangles?.front }, { rectangle: outlook?.rectangles?.forksUnder }]}
-        color='green'
-      ></SafetyObsLines>
     </>
   );
 }

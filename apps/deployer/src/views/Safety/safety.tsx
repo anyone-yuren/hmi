@@ -10,6 +10,7 @@ import SafetyVehicle from './component/3dComponents/safetyVehicle';
 import WsContainer from './component/WsContainer';
 import { getDeviceList, safetyConfig } from './service/index';
 import { useSafetyStore } from './store/safety.store';
+import { generateRectanglePoints } from './utils/index';
 const mock = {
   rectangle_list: [
     {
@@ -109,7 +110,6 @@ const Safety = () => {
     // 激活的传感器和策略所需要的雷达列表
     let sensorList: any = [];
     const scheme_list = config?.data?.obs_scheme?.scheme_list;
-    // strategy_list
     const strategy = config?.data?.strategy_list;
     const scheme = scheme_list.find((item) => item.scheme_id === obsInfo.scheme_id);
     if (scheme?.pc_sensor_list?.length) {
@@ -135,7 +135,6 @@ const Safety = () => {
     ) {
       return [];
     }
-    console.log('vehicleOutline是否在变');
     return config?.data?.vehicle_outline?.rectangle_list;
   }, [config]);
 
@@ -158,12 +157,38 @@ const Safety = () => {
       return [];
     }
     const obj = config?.data?.obs_scheme?.scheme_list.find((item: any) => item.scheme_id === obsInfo?.scheme_id);
-    console.log('activeScheme一直在变???');
     return {
       project_area: obj?.protect_areas || [],
       project_distance: [obj?.backward_stop_distance || 0, obj?.forward_stop_distance || 0],
     };
   }, [obsInfo, config]);
+
+  const projectArea = useMemo(() => {
+    const vehicle = vehicleOutline.find((item) => item.name === 'head');
+    const forks = vehicleOutline.find((item) => item.name === 'forkarm');
+
+    const vehiclePoints = generateRectanglePoints(vehicle?.rectangle);
+    const forksPoints = generateRectanglePoints(forks?.rectangle);
+    const distance = activeScheme.project_distance || [0, 0];
+    const [[], [rightVehicleXPoint, rightVehicleYPoint]] = [vehiclePoints[1], vehiclePoints[2]];
+    const [[], [rightForksXPoint, rightForksYPoint]] = [forksPoints[0], forksPoints[3]];
+    const rectangles = {
+      front: [
+        ...vehiclePoints[1]?.map((item) => item * 1000),
+        ...[rightVehicleXPoint * 1000 + distance[0], rightVehicleYPoint * 1000],
+      ],
+      back: [
+        ...forksPoints[0]?.map((item) => item * 1000),
+        ...[rightForksXPoint * 1000 - distance[1], rightForksYPoint * 1000],
+      ],
+    };
+    return [
+      { rectangle: rectangles.front, color: 'green' },
+      { rectangle: rectangles.back, color: 'green' },
+      ...(activeScheme?.project_area || []),
+    ];
+  }, [vehicleOutline, activeScheme]);
+
   return (
     <>
       <SafetyCanvas>
@@ -173,8 +198,8 @@ const Safety = () => {
           forksUnderRect={forksUnderOutline}
           distance={activeScheme.project_distance}
         ></SafetyVehicle>
-        <SafetyObsLines lines={activeScheme?.project_area || []}></SafetyObsLines>
-        <SafetyPointCloud projectArea={activeScheme.project_area} forksUnderRect={forksUnderOutline}></SafetyPointCloud>
+        <SafetyObsLines lines={projectArea || []}></SafetyObsLines>
+        <SafetyPointCloud projectArea={projectArea} forksUnderRect={forksUnderOutline}></SafetyPointCloud>
       </SafetyCanvas>
       {wsContainerVisible && (
         <WsContainer>
