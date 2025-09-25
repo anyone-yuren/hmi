@@ -7,7 +7,7 @@ export const SubTaskContainer = styled('div')(() => ({
   margin: '0px 0px 0px 0px',
   display: 'flex',
   gap: '5px',
-  flexDirection: 'column',
+  // flexDirection: 'column',
   borderRadius: '10px',
   '.header': {
     display: 'flex',

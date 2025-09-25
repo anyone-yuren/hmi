@@ -18,6 +18,8 @@ import InputWidthKeyboard from './inputWithKeyboard';
 
 import { useSingleTaskStore } from '../store/singleTask.store';
 
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { Modal } from 'antd';
 import { useShallow } from 'zustand/react/shallow';
 import StartIcon from './SvgIcon/StartIcon';
@@ -69,7 +71,7 @@ const TaskAction = forwardRef((props: any, ref) => {
   const onValueChange = (key: string, index: number, value: any) => {
     const list = _.cloneDeep([...preTaskList]);
     if (key === 'task_type') {
-      list[index] = { ...initTaskActionRow, task_type: value };
+      list[index] = { ...initTaskActionRow, task_type: value, id: list[index]?.id };
     } else {
       list[index][key] = value;
     }
@@ -226,205 +228,231 @@ const TaskAction = forwardRef((props: any, ref) => {
         {preTaskList.map((task: any, index: number) => {
           return (
             <SubTaskContainer key={'task_action_' + task?.id}>
-              <PointCardContainer container alignItems={'center'} sx={{}}>
-                <Grid item xs>
-                  <PointOrLineBox
-                    key='left'
-                    title={task.task_type}
-                    subTitle={t('deployer.singleTask.plsSelectTaskType')}
-                    list={[
-                      { id: 'Pick', label: t('common.taskState.pickUp') },
-                      { id: 'Place', label: t('common.taskState.pickDown') },
-                      { id: 'Charge', label: t('common.taskState.charging') },
-                      { id: 'Null', label: t('common.taskState.moving') },
-                    ]}
-                    onChange={(type: any) => {
-                      onValueChange('task_type', index, type);
-                    }}
-                  ></PointOrLineBox>
-                </Grid>
-                <TaskArrow fontSize={20} Opacity={1} />
-                <Grid item xs>
-                  <PointOrLineBox
-                    key='right'
-                    title={task.task_point_id}
-                    subTitle={t('deployer.singleTask.plsSelectPoint')}
-                    list={pointsHash?.[task.task_type] || []}
-                    onChange={(id: any) => {
-                      onValueChange('task_point_id', index, id);
-                    }}
-                  ></PointOrLineBox>
-                </Grid>
+              <div className='flex flex-col gap-[5px]'>
                 <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: 30,
-                    gap: 10,
+                  className='flex-1 flex items-center justify-items-center bg-[#627881] rounded-[5px]'
+                  onClick={() => {
+                    if (index === 0) return;
+                    const newList = [...preTaskList];
+                    [newList[index], newList[index - 1]] = [newList[index - 1], newList[index]];
+                    setPreTaskList(newList);
                   }}
                 >
-                  <DeleteIcon
-                    fontSize={18}
-                    onClick={() => {
-                      if (preTaskList.length === 1) {
-                        setPreTaskList([{ ...initTaskActionRow }]);
-                      } else {
-                        handleDelete(index);
-                      }
-                    }}
-                  ></DeleteIcon>
+                  <ArrowUpwardIcon />
                 </div>
-              </PointCardContainer>
-
-              <div>
-                {(task.task_type === 'Pick' || task.task_type === 'Place') && (
-                  <>
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: '5px',
-                        paddingBottom: '5px',
+                <div
+                  className='flex-1 flex items-center justify-items-center mb-[5px] bg-[#627881] rounded-[5px]'
+                  onClick={() => {
+                    if (index === preTaskList.length - 1) return;
+                    const newList = [...preTaskList];
+                    [newList[index], newList[index + 1]] = [newList[index + 1], newList[index]];
+                    setPreTaskList(newList);
+                  }}
+                >
+                  <ArrowDownwardIcon />
+                </div>
+              </div>
+              <div className='flex-1 flex flex-col gap-[5px]'>
+                <PointCardContainer container alignItems={'center'}>
+                  <Grid item xs>
+                    <PointOrLineBox
+                      key='left'
+                      title={task.task_type}
+                      subTitle={t('deployer.singleTask.plsSelectTaskType')}
+                      list={[
+                        { id: 'Pick', label: t('common.taskState.pickUp') },
+                        { id: 'Place', label: t('common.taskState.pickDown') },
+                        { id: 'Charge', label: t('common.taskState.charging') },
+                        { id: 'Null', label: t('common.taskState.moving') },
+                      ]}
+                      onChange={(type: any) => {
+                        onValueChange('task_type', index, type);
                       }}
-                    >
-                      <InputGroup>
-                        <div className='title'>{t('deployer.singleTask.name')}</div>
-                        <MapTaskSelect
-                          size={'small'}
-                          variant={'outlined'}
-                          displayEmpty
-                          defaultValue={''}
-                          onChange={(event: any) => {
-                            const list = _.cloneDeep([...preTaskList]);
-                            const name = event.target.value;
-                            const [obj] = options.filter((item: any) => item.name === name);
-                            if (obj) {
-                              if (list[index]['task_type'] === 'Pick') {
-                                list[index]['task_low_height'] = obj.low_height;
-                                list[index]['task_high_height'] = obj.high_height;
-                              }
-                              if (list[index]['task_type'] === 'Place') {
-                                list[index]['task_low_height'] = obj.high_height;
-                                list[index]['task_high_height'] = obj.low_height;
-                              }
-                            }
-                            setPreTaskList(list);
-                          }}
-                        >
-                          {options?.length ? (
-                            options?.map((item: any) => {
-                              return <MenuItem value={item.name}>{`${item.name}`}</MenuItem>;
-                            })
-                          ) : (
-                            <MenuItem value={'no-data'} disabled>
-                              {t('common.noData')}
-                            </MenuItem>
-                          )}
-                        </MapTaskSelect>
-                      </InputGroup>
-                      <InputGroupText
-                        title={t('deployer.singleTask.forkInHeight')}
-                        value={task?.task_low_height}
-                        onChange={(val: number) => {
-                          onValueChange('task_low_height', index, val);
-                        }}
-                      ></InputGroupText>
-                      <InputGroupText
-                        title={t('deployer.singleTask.forkOutHeight')}
-                        value={task?.task_high_height}
-                        onChange={(val: number) => {
-                          onValueChange('task_high_height', index, val);
-                        }}
-                      ></InputGroupText>
+                    ></PointOrLineBox>
+                  </Grid>
+                  <TaskArrow fontSize={20} Opacity={1} />
+                  <Grid item xs>
+                    <PointOrLineBox
+                      key='right'
+                      title={task.task_point_id}
+                      subTitle={t('deployer.singleTask.plsSelectPoint')}
+                      list={pointsHash?.[task.task_type] || []}
+                      onChange={(id: any) => {
+                        onValueChange('task_point_id', index, id);
+                      }}
+                    ></PointOrLineBox>
+                  </Grid>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: 30,
+                      gap: 10,
+                    }}
+                  >
+                    <DeleteIcon
+                      fontSize={18}
+                      onClick={() => {
+                        if (preTaskList.length === 1) {
+                          setPreTaskList([{ ...initTaskActionRow }]);
+                        } else {
+                          handleDelete(index);
+                        }
+                      }}
+                    ></DeleteIcon>
+                  </div>
+                </PointCardContainer>
+
+                <div>
+                  {(task.task_type === 'Pick' || task.task_type === 'Place') && (
+                    <>
                       <div
-                        className='flex items-center justify-center w-[15px]'
-                        onClick={() => {
-                          onValueChange('expand', index, !task.expand);
+                        style={{
+                          display: 'flex',
+                          gap: '5px',
+                          paddingBottom: '5px',
                         }}
                       >
-                        <StartIcon
-                          fontSize={12}
-                          sx={{
-                            transform: !task.expand ? 'rotate(180deg)' : 'rotate(90deg)',
-                            transition: 'all 0.2s ease-in-out',
-                          }}
-                        />
-                      </div>
-                    </div>
-                    {task.expand && (
-                      <div className='flex gap-[5px] pb-[5px]'>
-                        {isKVehicle ? (
-                          <InputGroup>
-                            <div className='title'>{t('deployer.singleTask.forkDirection')}</div>
-                            <MapTaskSelect
-                              size={'small'}
-                              variant={'outlined'}
-                              displayEmpty
-                              defaultValue={''}
-                              onChange={(event: any) => {
-                                const name = event.target.value;
-                                onValueChange('fork_direction', index, name);
-                              }}
-                            >
-                              <MenuItem value={0}>{`${t('deployer.singleTask.front')}`}</MenuItem>
-                              <MenuItem value={1}>{`${t('deployer.singleTask.left')}`}</MenuItem>
-                              <MenuItem value={2}>{`${t('deployer.singleTask.right')}`}</MenuItem>
-                            </MapTaskSelect>
-                          </InputGroup>
-                        ) : (
-                          <InputGroupText
-                            title={t('deployer.singleTask.extraParams') + '1'}
-                            value={task?.params1}
-                            onChange={(val: number) => {
-                              onValueChange('params1', index, val);
+                        <InputGroup>
+                          <div className='title'>{t('deployer.singleTask.name')}</div>
+                          <MapTaskSelect
+                            size={'small'}
+                            variant={'outlined'}
+                            displayEmpty
+                            defaultValue={''}
+                            onChange={(event: any) => {
+                              const list = _.cloneDeep([...preTaskList]);
+                              const name = event.target.value;
+                              const [obj] = options.filter((item: any) => item.name === name);
+                              if (obj) {
+                                if (list[index]['task_type'] === 'Pick') {
+                                  list[index]['task_low_height'] = obj.low_height;
+                                  list[index]['task_high_height'] = obj.high_height;
+                                }
+                                if (list[index]['task_type'] === 'Place') {
+                                  list[index]['task_low_height'] = obj.high_height;
+                                  list[index]['task_high_height'] = obj.low_height;
+                                }
+                              }
+                              setPreTaskList(list);
                             }}
-                          ></InputGroupText>
-                        )}
+                          >
+                            {options?.length ? (
+                              options?.map((item: any) => {
+                                return <MenuItem value={item.name}>{`${item.name}`}</MenuItem>;
+                              })
+                            ) : (
+                              <MenuItem value={'no-data'} disabled>
+                                {t('common.noData')}
+                              </MenuItem>
+                            )}
+                          </MapTaskSelect>
+                        </InputGroup>
                         <InputGroupText
-                          title={t('deployer.singleTask.extraParams') + '2'}
-                          value={task?.params2}
+                          title={t('deployer.singleTask.forkInHeight')}
+                          value={task?.task_low_height}
                           onChange={(val: number) => {
-                            onValueChange('params2', index, val);
+                            onValueChange('task_low_height', index, val);
                           }}
                         ></InputGroupText>
-                        <div className='w-[15px]'></div>
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {task.task_type === 'Charge' && (
-                  <>
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: '5px',
-                        paddingBottom: '5px',
-                      }}
-                    >
-                      <InputGroup sx={{ flex: 1 }}>
-                        <div className='title'>{t('deployer.singleTask.chargeType')}</div>
-                        <MapTaskSelect
-                          variant={'outlined'}
-                          displayEmpty
-                          value={task?.task_charge_type}
-                          onChange={(event: any) => {
-                            onValueChange('task_charge_type', index, event.target.value);
+                        <InputGroupText
+                          title={t('deployer.singleTask.forkOutHeight')}
+                          value={task?.task_high_height}
+                          onChange={(val: number) => {
+                            onValueChange('task_high_height', index, val);
+                          }}
+                        ></InputGroupText>
+                        <div
+                          className='flex items-center justify-center w-[15px]'
+                          onClick={() => {
+                            onValueChange('expand', index, !task.expand);
                           }}
                         >
-                          <MenuItem value={1}>{t('deployer.singleTask.percentage')}</MenuItem>
-                          <MenuItem value={3}>{t('deployer.singleTask.time')}</MenuItem>
-                        </MapTaskSelect>
-                      </InputGroup>
-                      <InputGroupText
-                        title={t('deployer.singleTask.threshold') + (task.task_charge_type === 1 ? '(%)' : '(h)')}
-                        value={task?.threshold}
-                        onChange={(val: number) => {
-                          onValueChange('threshold', index, val);
+                          <StartIcon
+                            fontSize={12}
+                            sx={{
+                              transform: !task.expand ? 'rotate(180deg)' : 'rotate(90deg)',
+                              transition: 'all 0.2s ease-in-out',
+                            }}
+                          />
+                        </div>
+                      </div>
+                      {task.expand && (
+                        <div className='flex gap-[5px] pb-[5px]'>
+                          {isKVehicle ? (
+                            <InputGroup>
+                              <div className='title'>{t('deployer.singleTask.forkDirection')}</div>
+                              <MapTaskSelect
+                                size={'small'}
+                                variant={'outlined'}
+                                displayEmpty
+                                defaultValue={''}
+                                onChange={(event: any) => {
+                                  const name = event.target.value;
+                                  onValueChange('fork_direction', index, name);
+                                }}
+                              >
+                                <MenuItem value={0}>{`${t('deployer.singleTask.front')}`}</MenuItem>
+                                <MenuItem value={1}>{`${t('deployer.singleTask.left')}`}</MenuItem>
+                                <MenuItem value={2}>{`${t('deployer.singleTask.right')}`}</MenuItem>
+                              </MapTaskSelect>
+                            </InputGroup>
+                          ) : (
+                            <InputGroupText
+                              title={t('deployer.singleTask.extraParams') + '1'}
+                              value={task?.params1}
+                              onChange={(val: number) => {
+                                onValueChange('params1', index, val);
+                              }}
+                            ></InputGroupText>
+                          )}
+                          <InputGroupText
+                            title={t('deployer.singleTask.extraParams') + '2'}
+                            value={task?.params2}
+                            onChange={(val: number) => {
+                              onValueChange('params2', index, val);
+                            }}
+                          ></InputGroupText>
+                          <div className='w-[15px]'></div>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {task.task_type === 'Charge' && (
+                    <>
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '5px',
+                          paddingBottom: '5px',
                         }}
-                      ></InputGroupText>
-                    </div>
-                  </>
-                )}
+                      >
+                        <InputGroup sx={{ flex: 1 }}>
+                          <div className='title'>{t('deployer.singleTask.chargeType')}</div>
+                          <MapTaskSelect
+                            variant={'outlined'}
+                            displayEmpty
+                            value={task?.task_charge_type}
+                            onChange={(event: any) => {
+                              onValueChange('task_charge_type', index, event.target.value);
+                            }}
+                          >
+                            <MenuItem value={1}>{t('deployer.singleTask.percentage')}</MenuItem>
+                            <MenuItem value={3}>{t('deployer.singleTask.time')}</MenuItem>
+                          </MapTaskSelect>
+                        </InputGroup>
+                        <InputGroupText
+                          title={t('deployer.singleTask.threshold') + (task.task_charge_type === 1 ? '(%)' : '(h)')}
+                          value={task?.threshold}
+                          onChange={(val: number) => {
+                            onValueChange('threshold', index, val);
+                          }}
+                        ></InputGroupText>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </SubTaskContainer>
           );
