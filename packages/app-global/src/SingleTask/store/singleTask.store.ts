@@ -30,7 +30,7 @@ const localAndMapStore = (
   ) => void,
   get: () => State,
 ) => ({
-  agvPosition: {},
+  agvPosition: { x: 0, y: 0, angel: 0 },
   setAgvPosition: (position: any) => {
     if (!isEqual(position, get().agvPosition)) {
       set({ agvPosition: position });
