@@ -541,6 +541,7 @@ export default function RectDrawer() {
   } = useRequest(safetyConfig, {
     retryCount: 3,
     retryInterval: 10000,
+    manual: true,
     onSuccess: () => {
       setErrorRequest(false);
     },
@@ -548,6 +549,10 @@ export default function RectDrawer() {
       setErrorRequest(true);
     },
   });
+
+  useEffect(() => {
+    refreshObstacleData();
+  }, []);
 
   // 当前避障信息
   const [currentObsInfo, setCurrentObsInfo] = useState<any>(null);
@@ -604,7 +609,6 @@ export default function RectDrawer() {
 
   // 设置避障方案更新，与弹窗取消后，还原初始化避障方案。
   const refreshCurrentObsInfo = (scheme_id) => {
-    refreshObstacleData();
     if (scheme_id) {
       const currentObs = memoObstacleData?.obs_scheme?.scheme_list?.find((item) => item.scheme_id === scheme_id);
       if (currentObs) {
@@ -649,6 +653,7 @@ export default function RectDrawer() {
           setOpenUpdateObsDrawer={setOpenUpdateObsDrawer}
           obsData={memoObstacleData?.obs_scheme?.scheme_list ?? []}
           loading={obstacleDataLoading}
+          refreshCurrentObsInfo={refreshCurrentObsInfo}
         />
         {/* 避障信息 */}
         {/* <ObsInfoPanel setOpenUpdateObsDrawer={setOpenUpdateObsDrawer} /> */}
