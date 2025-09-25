@@ -9,7 +9,7 @@ import {
   StopOutlined,
 } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
-import { App, Button, Checkbox, Dropdown, Form, Input, Popover, Space, theme, Tooltip } from 'antd';
+import { App, Button, Checkbox, Dropdown, Form, InputNumber, Popover, Space, theme, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
 import YAML from 'js-yaml';
 import Konva from 'konva';
@@ -343,7 +343,7 @@ const DrawerContent = (props: IProps) => {
                   name='forward_stop_distance'
                   rules={[{ required: true, message: '请输入' }]}
                 >
-                  <Input type='number' />
+                  <InputNumber className='w-full' />
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
@@ -353,7 +353,7 @@ const DrawerContent = (props: IProps) => {
                   name='backward_stop_distance'
                   rules={[{ required: true, message: '请输入' }]}
                 >
-                  <Input type='number' />
+                  <InputNumber className='w-full' />
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
@@ -363,7 +363,7 @@ const DrawerContent = (props: IProps) => {
                   name='rotate_stop_distance'
                   rules={[{ required: true, message: '请输入' }]}
                 >
-                  <Input type='number' />
+                  <InputNumber className='w-full' />
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
@@ -373,7 +373,7 @@ const DrawerContent = (props: IProps) => {
                   name='ground_filter_height'
                   rules={[{ required: true, message: '请输入' }]}
                 >
-                  <Input type='number' />
+                  <InputNumber className='w-full' />
                 </Form.Item>
               </div>
             </div>
