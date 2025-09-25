@@ -13,9 +13,10 @@ interface IProps {
   setShow: (open: boolean) => void;
   obsData: any[];
   loading: boolean;
+  refreshCurrentObsInfo: (scheme_id: number) => void;
 }
 const SafetyHeader = (props: IProps) => {
-  const { isDark, setOpenUpdateObsDrawer, setIsDark, show, setShow, obsData, loading } = props;
+  const { isDark, setOpenUpdateObsDrawer, setIsDark, show, setShow, obsData, loading, refreshCurrentObsInfo } = props;
 
   const [showSelect, setShowSelect] = useState(false);
   // const { data: obstacleData, loading: obstacleDataLoading, run: refreshObstacleData } = useRequest(safetyConfig);
@@ -78,6 +79,7 @@ const SafetyHeader = (props: IProps) => {
               ) : (
                 <motion.div
                   key='select'
+                  className='flex items-center gap-2'
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
@@ -93,9 +95,23 @@ const SafetyHeader = (props: IProps) => {
                       value: item.scheme_id,
                     }))}
                     onChange={(value) => {
-                      setShowSelect(false);
+                      refreshCurrentObsInfo(value);
+                      // setShowSelect(false);
                     }}
                   />
+                  <Button
+                    className='text-current shrink-0 !py-[1px] box-content'
+                    type='dashed'
+                    size='small'
+                    loading={loading}
+                    disabled={obsData?.length === 0}
+                    onClick={() => {
+                      setShowSelect(false);
+                      refreshCurrentObsInfo();
+                    }}
+                  >
+                    取消
+                  </Button>
                 </motion.div>
               )}
             </AnimatePresence>

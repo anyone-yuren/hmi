@@ -12,9 +12,18 @@ interface IProps {
   header?: React.ReactNode;
 }
 
+export const useHashQuery = () => {
+  const { search } = useLocation();
+  const queryString = search.includes('?') ? search.split('?')[1] : '';
+  return new URLSearchParams(queryString);
+};
+
 export const PdaLayout = (props: IProps) => {
   const { title, header } = props;
   const { state } = useLocation();
+  const query = useHashQuery();
+  const client = query.get('client'); // "true"
+  debugger;
   const token = useTheme();
   const { setThemeMode } = useThemeMode();
   const { key = 'key' } = state || {};
@@ -24,7 +33,7 @@ export const PdaLayout = (props: IProps) => {
     <ThemeProvider appearance='dark'>
       <Layout className='h-full'>
         {/* <LayoutHeader title={title} /> */}
-        <Sider className='bg-black' width={120}>
+        <Sider className='bg-black' width={client ? 0 : 120}>
           {header}
         </Sider>
         <Content className='overflow-y-auto relative bg-[#162640]'>

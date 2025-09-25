@@ -124,7 +124,6 @@ const DrawerContent = (props: IProps) => {
 
   const strategyListName = useStrategyListName();
 
-  console.log(currentObsInfo);
   const [selectRect, setSelectRect] = useState<{
     id: string;
     x: number;
@@ -151,6 +150,7 @@ const DrawerContent = (props: IProps) => {
   });
 
   const [initFormValue, setInitalValue] = useState(currentObsInfo ?? {});
+  console.log(currentObsInfo.scheme_id);
 
   const serviceLanguage = useMemo(() => {
     return i18n.language;
