@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { GizmoHelper, GizmoViewport } from '@react-three/drei';
+import AxesHelper from './axesHelper';
 import CameraController from './cameraController';
 import Ground from './ground';
 
@@ -16,6 +17,7 @@ const SafetyBase = (props: any) => {
 
       <CameraController />
       <Ground />
+      <AxesHelper />
       <GizmoHelper alignment='bottom-right' margin={[80, 80]}>
         <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='black' />
       </GizmoHelper>

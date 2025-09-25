@@ -22,10 +22,22 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { Modal } from 'antd';
 import { useShallow } from 'zustand/react/shallow';
+import { transformTaskListToParams } from '../utils/index';
 import StartIcon from './SvgIcon/StartIcon';
 
 const TaskAction = forwardRef((props: any, ref) => {
-  const { preTaskList, setPreTaskList, points, initTaskActionRow, onFinish, charges, locations, isKVehicle } = props;
+  const {
+    preTaskList,
+    setPreTaskList,
+    points,
+    initTaskActionRow,
+    onFinish,
+    charges,
+    locations,
+    isKVehicle,
+    taskMode,
+    setTaskMode,
+  } = props;
   const [loading, setLoading] = useState(false);
   const [loopTime, setLoopTime] = useState(1);
   const [intervalTime, setIntervalTime] = useState(0);
@@ -50,6 +62,11 @@ const TaskAction = forwardRef((props: any, ref) => {
         setTimeout(() => {
           refs.scrollIntoView({ behavior: 'smooth' });
         }, 0);
+      },
+      setPublicParams: (params: any) => {
+        setLoopTime(params.loopTime);
+        setIntervalTime(params.intervalTime);
+        setTemplateName(params.templateName);
       },
     }),
     [],
@@ -84,49 +101,49 @@ const TaskAction = forwardRef((props: any, ref) => {
     setPreTaskList(list);
   };
 
-  const transformParams = (params: any) => {
-    const newParams = _.cloneDeep(params);
-    const transformDict: any = {
-      Pick: (obj: any) => {
-        obj['param'][0] = Number(obj?.task_low_height) || 0;
-        obj['param'][1] = Number(obj?.task_high_height) || 0;
-        obj['param'][2] = isKVehicle ? Number(obj?.fork_direction) : Number(obj.params1);
-        obj['param'][3] = Number(obj.params2);
-        return obj;
-      },
-      Place: (obj: any) => {
-        obj['param'][0] = Number(obj?.task_low_height) || 0;
-        obj['param'][1] = Number(obj?.task_high_height) || 0;
-        obj['param'][2] = isKVehicle ? Number(obj?.fork_direction) : Number(obj.params1);
-        obj['param'][3] = Number(obj.params2);
-        return obj;
-      },
-      Null: (obj: any) => {
-        return obj;
-      },
-      Charge: (obj: any) => {
-        obj['param'][0] = Number(obj?.task_charge_type) || 0;
-        obj['param'][1] = Number(obj?.threshold) || 0;
-        return obj;
-      },
-    };
-    for (let index = 0; index < newParams.tasks.length; index++) {
-      let obj = newParams.tasks[index];
-      obj = transformDict[obj['task_type']](obj);
-      delete obj.id;
-      delete obj.task_type_name;
-      delete obj.threshold;
-      delete obj.task_charge_type;
-      delete obj.task_low_height;
-      delete obj.task_high_height;
-      delete obj.fork_direction;
-      delete obj.expand;
-      delete obj.params1;
-      delete obj.params2;
-    }
+  // const transformTaskListToParams = (params: any) => {
+  //   const newParams = _.cloneDeep(params);
+  //   const transformDict: any = {
+  //     Pick: (obj: any) => {
+  //       obj['param'][0] = Number(obj?.task_low_height) || 0;
+  //       obj['param'][1] = Number(obj?.task_high_height) || 0;
+  //       obj['param'][2] = isKVehicle ? Number(obj?.fork_direction) : Number(obj.params1);
+  //       obj['param'][3] = Number(obj.params2);
+  //       return obj;
+  //     },
+  //     Place: (obj: any) => {
+  //       obj['param'][0] = Number(obj?.task_low_height) || 0;
+  //       obj['param'][1] = Number(obj?.task_high_height) || 0;
+  //       obj['param'][2] = isKVehicle ? Number(obj?.fork_direction) : Number(obj.params1);
+  //       obj['param'][3] = Number(obj.params2);
+  //       return obj;
+  //     },
+  //     Null: (obj: any) => {
+  //       return obj;
+  //     },
+  //     Charge: (obj: any) => {
+  //       obj['param'][0] = Number(obj?.task_charge_type) || 0;
+  //       obj['param'][1] = Number(obj?.threshold) || 0;
+  //       return obj;
+  //     },
+  //   };
+  //   for (let index = 0; index < newParams.tasks.length; index++) {
+  //     let obj = newParams.tasks[index];
+  //     obj = transformDict[obj['task_type']](obj);
+  //     delete obj.id;
+  //     delete obj.task_type_name;
+  //     delete obj.threshold;
+  //     delete obj.task_charge_type;
+  //     delete obj.task_low_height;
+  //     delete obj.task_high_height;
+  //     delete obj.fork_direction;
+  //     delete obj.expand;
+  //     delete obj.params1;
+  //     delete obj.params2;
+  //   }
 
-    return newParams;
-  };
+  //   return newParams;
+  // };
 
   const validateParams = (params: any) => {
     let isPass = true;
@@ -137,11 +154,14 @@ const TaskAction = forwardRef((props: any, ref) => {
   };
 
   const showConfirm = () => {
-    const params = transformParams({
-      loop_count: loopTime,
-      task_interval: intervalTime,
-      tasks: preTaskList.filter((item: any) => !!item?.task_type),
-    });
+    const params = transformTaskListToParams(
+      {
+        loop_count: loopTime,
+        task_interval: intervalTime,
+        tasks: preTaskList.filter((item: any) => !!item?.task_type),
+      },
+      isKVehicle,
+    );
     if (!params.tasks.length) return;
     const isValidate = validateParams(params);
     if (!isValidate) {
@@ -159,11 +179,14 @@ const TaskAction = forwardRef((props: any, ref) => {
   };
 
   const handleSubmit = async () => {
-    const params = transformParams({
-      loop_count: loopTime,
-      task_interval: intervalTime,
-      tasks: preTaskList.filter((item: any) => !!item?.task_type),
-    });
+    const params = transformTaskListToParams(
+      {
+        loop_count: loopTime,
+        task_interval: intervalTime,
+        tasks: preTaskList.filter((item: any) => !!item?.task_type),
+      },
+      isKVehicle,
+    );
     const templateParams = { name: templateName, ..._.cloneDeep(params) };
     if (!params.tasks.length) return;
     const isValidate = validateParams(params);
@@ -189,11 +212,14 @@ const TaskAction = forwardRef((props: any, ref) => {
   };
 
   const handleSaveTemplate = async () => {
-    const params = transformParams({
-      loop_count: loopTime,
-      task_interval: intervalTime,
-      tasks: preTaskList.filter((item: any) => !!item?.task_type),
-    });
+    const params = transformTaskListToParams(
+      {
+        loop_count: loopTime,
+        task_interval: intervalTime,
+        tasks: preTaskList.filter((item: any) => !!item?.task_type),
+      },
+      isKVehicle,
+    );
     if (!params.tasks.length) return;
     const isValidate = validateParams(params);
     if (!isValidate) {
@@ -225,6 +251,9 @@ const TaskAction = forwardRef((props: any, ref) => {
   return (
     <MapTaskPanelAction>
       <div className='listContainer'>
+        {taskMode === 'update' && (
+          <div className='sticky top-0 text-[#facc14] bg-[#44606b] text-center z-[10] py-[6px]'>编辑任务模版模式</div>
+        )}
         {preTaskList.map((task: any, index: number) => {
           return (
             <SubTaskContainer key={'task_action_' + task?.id}>
@@ -461,7 +490,7 @@ const TaskAction = forwardRef((props: any, ref) => {
       </div>
 
       <div>
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '10px', margigTop: '5px' }}>
           <InputGroupText
             title={t('deployer.singleTask.loopCount')}
             value={loopTime}
@@ -483,24 +512,72 @@ const TaskAction = forwardRef((props: any, ref) => {
             onChange={setTemplateName}
           ></InputGroupText>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <div style={{ flex: 2 }}>
-            <MainButton
-              loading={loading}
-              onClick={() => {
-                vehicleOnPoint ? handleSubmit() : showConfirm();
-              }}
-            ></MainButton>
+        {taskMode === 'create' && (
+          <div style={{ display: 'flex', gap: 10 }}>
+            <div style={{ flex: 2 }}>
+              <MainButton
+                loading={loading}
+                onClick={() => {
+                  vehicleOnPoint ? handleSubmit() : showConfirm();
+                }}
+              ></MainButton>
+            </div>
+            <Button
+              variant='contained'
+              disableElevation
+              sx={{ marginTop: '5px', color: 'white', minWidth: '120px', maxWidth: '220px' }}
+              onClick={handleSaveTemplate}
+            >
+              {t('deployer.singleTask.saveAsTemplate')}
+            </Button>
           </div>
-          <Button
-            variant='contained'
-            disableElevation
-            sx={{ marginTop: '5px', color: 'white', minWidth: '120px', maxWidth: '220px' }}
-            onClick={handleSaveTemplate}
-          >
-            {t('deployer.singleTask.saveAsTemplate')}
-          </Button>
-        </div>
+        )}
+        {taskMode === 'update' && (
+          <div style={{ display: 'flex', gap: 10 }}>
+            <div style={{ flex: 2 }}>
+              <Button
+                variant='contained'
+                disableElevation
+                sx={{
+                  marginTop: '5px',
+                  color: 'white',
+                  width: '100%',
+                  height: '52px',
+                  background: '#facc14',
+                  '&:hover': { background: '#facc14' },
+                }}
+                onClick={() => {
+                  const params = transformTaskListToParams(
+                    {
+                      loop_count: loopTime,
+                      task_interval: intervalTime,
+                      tasks: preTaskList.filter((item: any) => !!item?.task_type),
+                    },
+                    isKVehicle,
+                  );
+                  const templateParams = { name: templateName, ..._.cloneDeep(params) };
+                  console.log('templateParams', templateParams);
+                }}
+              >
+                {'保存模版'}
+              </Button>
+            </div>
+            <Button
+              variant='contained'
+              disableElevation
+              sx={{ marginTop: '5px', color: 'white', minWidth: '120px', maxWidth: '220px' }}
+              onClick={() => {
+                setTaskMode('create');
+                setLoopTime(1);
+                setIntervalTime(0);
+                setTemplateName('');
+                onFinish && onFinish(true);
+              }}
+            >
+              {'退出编辑'}
+            </Button>
+          </div>
+        )}
       </div>
       {contextHolder}
     </MapTaskPanelAction>

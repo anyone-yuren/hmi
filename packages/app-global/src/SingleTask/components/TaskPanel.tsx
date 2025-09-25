@@ -24,12 +24,13 @@ import TaskAction from './TaskAction';
 import { config_agv_info } from '../services/index';
 import { useSingleTaskStore } from '../store/singleTask.store';
 
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import _ from 'lodash';
 import { toast } from 'sonner';
 import MwConfirm from '../components/MwConfirm';
 import { ITaskItem } from '../index.d';
 import useConstants from '../useConstants';
-
+import { translateTempToTaskList } from '../utils/index';
 export type IActive = 'task' | 'template';
 const TaskPanel = forwardRef((props: any, ref) => {
   const {
@@ -45,6 +46,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
   } = props;
 
   const [active, setActive] = useState<IActive>('task');
+  const [taskMode, setTaskMode] = useState<'create' | 'update'>('create');
   const { data: taskList, runAsync: getTaskList } = useRequest(getTasks, {
     manual: true,
   });
@@ -153,6 +155,18 @@ const TaskPanel = forwardRef((props: any, ref) => {
       title: hashMap.title[active],
       content: hashMap.content[active],
       onOk: hashMap.onOk[active],
+    });
+  };
+
+  const handleTaskUpdate = (template) => {
+    const list = translateTempToTaskList(template, isKVehicle);
+    console.log('template', template);
+    setPreTaskList(list);
+    setTaskMode('update');
+    taskActionRef?.current?.setPublicParams({
+      loopTime: template.loop_count,
+      intervalTime: template.task_interval,
+      templateName: template.name,
     });
   };
 
@@ -280,6 +294,12 @@ const TaskPanel = forwardRef((props: any, ref) => {
                     handleTaskStart(template);
                   }}
                 ></StartIcon>
+                <BorderColorIcon
+                  sx={{ fontSize: 18, color: 'white' }}
+                  onClick={() => {
+                    handleTaskUpdate(template);
+                  }}
+                ></BorderColorIcon>
                 <DeleteIcon
                   fontSize={18}
                   isActive
@@ -331,6 +351,8 @@ const TaskPanel = forwardRef((props: any, ref) => {
           charges,
           locations,
           isKVehicle,
+          taskMode,
+          setTaskMode,
         }}
       ></TaskAction>
 

@@ -1,6 +1,5 @@
 import { Canvas } from '@react-three/fiber';
 import { useTranslation } from 'react-i18next';
-import * as THREE from 'three';
 const SafetyCanvas = (props: any) => {
   const { t } = useTranslation();
 
@@ -16,9 +15,6 @@ const SafetyCanvas = (props: any) => {
         onCreated={({ camera, scene }) => {
           camera.lookAt(0, 0, 0); // 将相机朝向原点
           scene.rotation.x = -Math.PI / 2;
-          // 添加坐标轴辅助对象，用于调试
-          const axesHelper = new THREE.AxesHelper(5);
-          scene.add(axesHelper);
         }}
       >
         {props.children}
