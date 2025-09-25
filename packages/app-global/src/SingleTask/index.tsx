@@ -101,6 +101,7 @@ const SingleTask = () => {
       3: () => {
         setTaskSettingVisible(false);
         setTaskVisible(true);
+        setPreTaskList([initTaskActionRow]);
       },
       100: () => {},
     },

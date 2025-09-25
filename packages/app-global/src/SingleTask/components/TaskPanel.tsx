@@ -67,6 +67,10 @@ const TaskPanel = forwardRef((props: any, ref) => {
     return { task: taskList?.data || [], template: templateList?.data || [] }[active] || [];
   }, [taskList, templateList, active]);
 
+  useEffect(() => {
+    setTaskMode('create');
+  }, []);
+
   const { refreshTaskList } = useSingleTaskStore((store) => ({
     refreshTaskList: store.refreshTaskList,
   }));
@@ -336,6 +340,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
           fontSize={'large'}
           onClick={() => {
             setTaskVisible(false);
+            setPreTaskList([]);
           }}
         ></CloseIcon>
       </MapTaskPanelHeader>

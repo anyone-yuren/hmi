@@ -16,7 +16,9 @@ const CloudPoints = (props: any) => {
       setCloudPoints: state.setCloudPoints,
     })),
   );
-
+  if (!cloudPoints?.data?.pic) {
+    return null;
+  }
   const [image] = useImage(`data:image/png;base64,${cloudPoints?.data?.pic}`);
   if (image) {
     imagesRef.current = image;
