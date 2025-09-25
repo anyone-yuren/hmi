@@ -101,7 +101,7 @@ function SafetyVehicle(props: any) {
           }
           position={forksUnderProjectArea.position}
         >
-          <meshStandardMaterial color='#00d1d1' transparent opacity={0.6} depthTest={false} />
+          <meshStandardMaterial color='yellow' transparent opacity={0.6} depthTest={false} />
         </mesh>
       )}
     </>
