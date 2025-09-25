@@ -199,7 +199,11 @@ const Safety = () => {
           distance={activeScheme.project_distance}
         ></SafetyVehicle>
         <SafetyObsLines lines={projectArea || []}></SafetyObsLines>
-        <SafetyPointCloud projectArea={projectArea} forksUnderRect={forksUnderOutline}></SafetyPointCloud>
+        <SafetyPointCloud
+          projectArea={projectArea}
+          forksUnderRect={forksUnderOutline}
+          vehicleRect={vehicleOutline}
+        ></SafetyPointCloud>
       </SafetyCanvas>
       {wsContainerVisible && (
         <WsContainer>

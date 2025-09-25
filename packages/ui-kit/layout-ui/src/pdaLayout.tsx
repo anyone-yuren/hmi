@@ -23,7 +23,6 @@ export const PdaLayout = (props: IProps) => {
   const { state } = useLocation();
   const query = useHashQuery();
   const client = query.get('client'); // "true"
-  debugger;
   const token = useTheme();
   const { setThemeMode } = useThemeMode();
   const { key = 'key' } = state || {};

@@ -4,11 +4,12 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { memo, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
-import { getProjectArea } from '../../utils/index';
+import { getProjectArea, isPointInRectangle, isPointInVehicle } from '../../utils/index';
 
 interface SafetyPointCloudProps {
   projectArea: { rectangle: number[] }[];
   forksUnderRect?: any;
+  vehicleRect?: any;
 }
 
 const MAX_RENDERED_POINTS = 60000;
@@ -16,9 +17,8 @@ const MIN_POINT_SIZE = 0.02;
 const MAX_POINT_SIZE = 0.14;
 const BASE_POINT_SIZE = 0.06;
 
-function SafetyPointCloud({ projectArea, forksUnderRect }: SafetyPointCloudProps) {
+function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPointCloudProps) {
   const { camera, size } = useThree();
-
   const { forksHeight, sensorPoints } = useSafetyStore(
     useShallow((store) => ({
       forksHeight: store.forksHeight,
@@ -27,6 +27,11 @@ function SafetyPointCloud({ projectArea, forksUnderRect }: SafetyPointCloudProps
   );
 
   const [excludeOutsidePoints] = useState(false);
+
+  const vehicleOutline = useMemo(() => {
+    const obj = vehicleRect.find((item) => item.name === 'head');
+    return obj?.rectangle;
+  }, [vehicleRect]);
 
   const forksUnderProjectArea = useMemo(() => {
     if (!forksUnderRect) return null;
@@ -128,15 +133,6 @@ function SafetyPointCloud({ projectArea, forksUnderRect }: SafetyPointCloudProps
       box = new THREE.Box3().setFromCenterAndSize(center, sizeVec);
     }
 
-    const isPointInRectangle = (px: number, py: number, rect: number[]) => {
-      const [x1, y1, x2, y2] = rect;
-      const minX = Math.min(x1, x2) / 1000;
-      const maxX = Math.max(x1, x2) / 1000;
-      const minY = Math.min(y1, y2) / 1000;
-      const maxY = Math.max(y1, y2) / 1000;
-      return px >= minX && px <= maxX && py >= minY && py <= maxY;
-    };
-
     for (let i = 0; i < rawPoints.length; i += stride * 3) {
       const x = rawPoints[i];
       const y = rawPoints[i + 1];
@@ -147,7 +143,8 @@ function SafetyPointCloud({ projectArea, forksUnderRect }: SafetyPointCloudProps
 
       const insideBox = box?.containsPoint(tempVec) ?? false;
       const insideRect = projectArea.some((a) => isPointInRectangle(tempVec.x, tempVec.y, a.rectangle));
-      const inside = insideBox || insideRect;
+      const insideVehicle = isPointInVehicle(tempVec.x, tempVec.y, tempVec.z, vehicleOutline);
+      const inside = insideBox || insideRect || insideVehicle;
 
       if (!excludeOutsidePoints || inside) {
         positions.push(x, y, z);

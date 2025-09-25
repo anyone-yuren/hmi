@@ -58,6 +58,24 @@ export const getProjectArea = (forksUnderRect, forksHeight) => {
   };
 };
 
+export const isPointInRectangle = (px: number, py: number, rect: number[]) => {
+  const [x1, y1, x2, y2] = rect;
+  const minX = Math.min(x1, x2) / 1000;
+  const maxX = Math.max(x1, x2) / 1000;
+  const minY = Math.min(y1, y2) / 1000;
+  const maxY = Math.max(y1, y2) / 1000;
+  return px >= minX && px <= maxX && py >= minY && py <= maxY;
+};
+
+export const isPointInVehicle = (px: number, py: number, pz: number, rect: number[]) => {
+  const [x1, y1, x2, y2] = rect;
+  const minX = Math.min(x1, x2) / 1000;
+  const maxX = Math.max(x1, x2) / 1000;
+  const minY = Math.min(y1, y2) / 1000;
+  const maxY = Math.max(y1, y2) / 1000;
+  return px >= minX && px <= maxX && py >= minY && py <= maxY && pz < 1.8;
+};
+
 // 根据左上角xy与宽高 生成一个【x1,y1,x2,y2】的数组
 export const getRectPoints = (x: number, y: number, width: number, height: number) => {
   return [0 - Math.round(y + height), 0 - Math.round(x + width), 0 - Math.round(y), 0 - Math.round(x)];
