@@ -1,3 +1,4 @@
+import { useUpdateEffect } from 'ahooks';
 import { forwardRef, memo, useEffect, useImperativeHandle } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSingleTaskStore } from '../../../../store/singleTask.store';
@@ -8,9 +9,10 @@ const translateAngel = (angel: number) => {
 };
 
 const Vehicles = forwardRef((props: any, ref) => {
-  const { agvPosition } = useSingleTaskStore(
+  const { agvPosition, agvViewLock } = useSingleTaskStore(
     useShallow((state) => ({
       agvPosition: state.agvPosition,
+      agvViewLock: state.agvViewLock,
     })),
   );
   useImperativeHandle(ref, () => ({
@@ -22,6 +24,10 @@ const Vehicles = forwardRef((props: any, ref) => {
   useEffect(() => {
     props.moveToVehicle(agvPosition);
   }, []);
+
+  useUpdateEffect(() => {
+    agvViewLock && props.moveToVehicle(agvPosition);
+  }, [agvPosition, agvViewLock]);
 
   return (
     <>

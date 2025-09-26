@@ -47,7 +47,11 @@ const TaskAction = forwardRef((props: any, ref) => {
 
   const [modal, contextHolder] = Modal.useModal();
   const { t } = useTranslation();
-  const rcsInfo = useSingleTaskStore(useShallow((store: any) => store.rcsInfo));
+  const { rcsInfo } = useSingleTaskStore(
+    useShallow((store: any) => ({
+      rcsInfo: store.rcsInfo,
+    })),
+  );
 
   const vehicleOnPoint = useMemo(() => {
     return rcsInfo?.is_on_node;

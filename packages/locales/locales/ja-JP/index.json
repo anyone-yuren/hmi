@@ -400,6 +400,8 @@
     },
     "singleTask": {
       "add": "增",
+      "agvViewLock": "車の視点をロックします",
+      "agvViewLockTips": "最初に車の視点のロックを解除してください",
       "autoChargeSetting": "自動充電設定",
       "axis": "座標ざひょう",
       "changeMode": "モードの切り替え",

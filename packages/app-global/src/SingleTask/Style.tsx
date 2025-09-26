@@ -146,14 +146,14 @@ export const TaskItem = styled('div')(() => ({
   },
 }));
 
-export const IconStyleButton: any = styled(IconButton)(({ theme, bottom }: any) => ({
+export const IconStyleButton: any = styled(IconButton)(({ theme, bottom, notActive }: any) => ({
   width: '50px',
   height: '50px',
   zIndex: theme.zIndex.drawer + 1,
-  color: '#fff',
-  backgroundColor: theme.palette.primary.main,
+  color: notActive ? theme.palette.primary.main : '#fff',
+  backgroundColor: notActive ? '#fff' : theme.palette.primary.main,
   '&:hover': {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: notActive ? '#fff' : theme.palette.primary.main,
   },
 }));
 

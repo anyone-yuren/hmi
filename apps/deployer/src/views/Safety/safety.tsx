@@ -95,6 +95,9 @@ const Safety = () => {
     setSensorPointsKey([]);
     const url = new URL(window.location.href);
     url.hash.indexOf('safetyPointsCloud') > 0 && setWsContainerVisible(true);
+    return () => {
+      setSensorPointsKey([]);
+    };
   }, []);
 
   useEffect(() => {

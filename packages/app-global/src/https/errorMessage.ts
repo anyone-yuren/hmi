@@ -1,12 +1,16 @@
 import { toast } from 'sonner';
+
+interface IOption {
+  delay?: number;
+}
 class ErrorMessageManager {
   private queue: string[];
   private timer: any;
   private delay: number;
-  constructor() {
+  constructor(option?: IOption) {
     this.queue = [];
     this.timer = null;
-    this.delay = 200;
+    this.delay = option?.delay || 200;
   }
   push(message: string) {
     this.queue.push(message);
@@ -21,6 +25,17 @@ class ErrorMessageManager {
     const uniqueQueue = [...new Set(this.queue)];
     uniqueQueue.forEach((msg) => {
       toast.error(msg, {
+        position: 'top-center',
+      });
+    });
+    this.queue = [];
+    this.timer = null;
+  }
+  showWarningMessage() {
+    if (this.queue.length === 0) return;
+    const uniqueQueue = [...new Set(this.queue)];
+    uniqueQueue.forEach((msg) => {
+      toast.warning(msg, {
         position: 'top-center',
       });
     });

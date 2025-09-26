@@ -15,9 +15,13 @@ import { forwardRef, memo, useCallback, useMemo, useState } from 'react';
 import { IconStyleButton } from '../Style';
 import { setTaskMode, uploadRcsMap } from '../services';
 
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Upload, UploadProps } from 'antd';
 import { UploadChangeParam, UploadFile } from 'antd/es/upload';
+import { useShallow } from 'zustand/react/shallow';
+import { useSingleTaskStore } from '../store/singleTask.store';
 
 const MapActionBar = forwardRef((props: any, ref) => {
   const {
@@ -29,12 +33,19 @@ const MapActionBar = forwardRef((props: any, ref) => {
     modeHashMap,
     getMapTaskMode,
     setOffsetVisible,
-    showRealTimePoints,
-    setShowRealTimePoints,
   } = props;
   const { t } = useTranslation();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const { showRealTimePoints, setShowRealTimePoints, agvViewLock, setAgvViewLock } = useSingleTaskStore(
+    useShallow((state) => ({
+      showRealTimePoints: state.showRealTimePoints,
+      setShowRealTimePoints: state.setShowRealTimePoints,
+      agvViewLock: state.agvViewLock,
+      setAgvViewLock: state.setAgvViewLock,
+    })),
+  );
 
   const open = Boolean(anchorEl);
 
@@ -205,12 +216,23 @@ const MapActionBar = forwardRef((props: any, ref) => {
           </Tooltip>
         </IconStyleButton>
         <IconStyleButton
+          notActive={!showRealTimePoints}
           onClick={() => {
             setShowRealTimePoints(!showRealTimePoints);
           }}
         >
           <Tooltip title={t('deployer.singleTask.visiblePoints')}>
-            <GrainIcon fontSize={'large'} style={{ color: showRealTimePoints ? 'red' : 'white' }} />
+            <GrainIcon fontSize={'large'} />
+          </Tooltip>
+        </IconStyleButton>
+        <IconStyleButton
+          onClick={() => {
+            setAgvViewLock(!agvViewLock);
+          }}
+          notActive={!agvViewLock}
+        >
+          <Tooltip title={t('deployer.singleTask.agvViewLock')}>
+            {agvViewLock ? <LockIcon fontSize={'large'} style={{}} /> : <LockOpenIcon fontSize={'large'} style={{}} />}
           </Tooltip>
         </IconStyleButton>
       </div>

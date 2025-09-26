@@ -400,6 +400,8 @@
     },
     "singleTask": {
       "add": "Add",
+      "agvViewLock": "Lock the vehicle's perspective",
+      "agvViewLockTips": "Please unlock the vehicle's perspective first",
       "autoChargeSetting": "Automatic charging settings",
       "axis": "Coordinates",
       "changeMode": "Change mode",

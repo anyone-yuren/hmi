@@ -399,6 +399,8 @@
     },
     "singleTask": {
       "add": "추가",
+      "agvViewLock": "자동차의 관점을 잠그십시오",
+      "agvViewLockTips": "먼저 자동차의 관점을 잠금 해제하십시오",
       "autoChargeSetting": "자동 충전 설정",
       "axis": "좌표",
       "changeMode": "모드 전환",

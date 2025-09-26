@@ -400,6 +400,8 @@
     },
     "singleTask": {
       "add": "添加",
+      "agvViewLock": "锁定小车视角",
+      "agvViewLockTips": "请先解除小车视角锁定",
       "autoChargeSetting": "自动充电设置",
       "axis": "坐标",
       "changeMode": "切换模式",

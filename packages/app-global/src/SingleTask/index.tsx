@@ -77,11 +77,9 @@ const SingleTask = () => {
   const { t } = useTranslation();
   const { TaskStatusHashMap, TaskTypeHashMap } = useConstants();
 
-  const { robotCurrentStatus, showRealTimePoints, setShowRealTimePoints } = useSingleTaskStore(
+  const { robotCurrentStatus } = useSingleTaskStore(
     useShallow((state) => ({
       robotCurrentStatus: state.robotCurrentStatus,
-      showRealTimePoints: state.showRealTimePoints,
-      setShowRealTimePoints: state.setShowRealTimePoints,
     })),
   );
 
@@ -271,8 +269,6 @@ const SingleTask = () => {
           modeHashMap={modeHashMap}
           getMapTaskMode={getMapTaskMode}
           setOffsetVisible={setOffsetVisible}
-          showRealTimePoints={showRealTimePoints}
-          setShowRealTimePoints={setShowRealTimePoints}
         ></MapActionBar>
 
         {mapTaskMode !== 0 && (

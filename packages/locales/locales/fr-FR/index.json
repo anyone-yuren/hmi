@@ -400,6 +400,8 @@
     },
     "singleTask": {
       "add": "Ajouter",
+      "agvViewLock": "Verrouiller la perspective de la voiture",
+      "agvViewLockTips": "Veuillez d'abord débloquer la perspective de la voiture",
       "autoChargeSetting": "Paramètres de charge automatique",
       "axis": "Coordonnées",
       "changeMode": "Mode de commutation",

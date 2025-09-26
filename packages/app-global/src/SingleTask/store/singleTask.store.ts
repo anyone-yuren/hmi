@@ -17,6 +17,8 @@ interface State {
   setRealTimePoints: (realTimePoints: any) => void;
   showRealTimePoints: boolean;
   setShowRealTimePoints: (showRealTimePoints: boolean) => void;
+  agvViewLock: boolean;
+  setAgvViewLock: (agvViewLock: boolean) => void;
 }
 
 const storageOptions = {
@@ -71,6 +73,11 @@ const localAndMapStore = (
   showRealTimePoints: true,
   setShowRealTimePoints: (showRealTimePoints: boolean) => {
     set({ showRealTimePoints });
+  },
+
+  agvViewLock: true,
+  setAgvViewLock: (agvViewLock: boolean) => {
+    set({ agvViewLock });
   },
 });
 

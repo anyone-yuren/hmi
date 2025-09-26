@@ -2,11 +2,16 @@
 import Hammer from 'hammerjs';
 import _ from 'lodash';
 import { type ElementRef, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Stage } from 'react-konva';
+import { useShallow } from 'zustand/react/shallow';
+import ErrorMessageManager from '../../../../https/errorMessage';
+import { useSingleTaskStore } from '../../../store/singleTask.store';
 
 const scaleBy = 1.7;
 let lastCenter: any = null;
 let lastDist = 0;
+const manager = new ErrorMessageManager({ delay: 300 });
 export function getCenter(p1: any, p2: any) {
   return {
     x: (p1.x + p2.x) / 2,
@@ -29,6 +34,12 @@ export function useZoom(
 ) {
   const { min, max, scale = 1 } = options || {};
   const [currentScale, setCurrentScale] = useState(scale);
+  const { agvViewLock } = useSingleTaskStore(
+    useShallow((state) => ({
+      agvViewLock: state.agvViewLock,
+    })),
+  );
+  const { t, i18n } = useTranslation();
 
   const minTips = _.throttle(() => {
     // message.error('不能再缩小了');
@@ -47,6 +58,10 @@ export function useZoom(
         center?: boolean;
       },
     ) => {
+      if (agvViewLock) {
+        manager.push(t('deployer.singleTask.agvViewLockTips'));
+        return;
+      }
       if (min && newScale < min) {
         newScale = min;
         minTips();
@@ -78,7 +93,7 @@ export function useZoom(
       stage.position(newPos);
       setCurrentScale(newScale);
     },
-    [stageRef, min, max],
+    [stageRef, min, max, agvViewLock, i18n.language],
   );
   useEffect(() => {
     const stage = stageRef.current;
@@ -98,12 +113,20 @@ export function useZoom(
         targetPosition: pointer,
       });
     };
-
+    const handleDragMove = (e: any) => {
+      if (agvViewLock) {
+        manager.push(t('deployer.singleTask.agvViewLockTips'));
+        return;
+      }
+      // 可以在这里添加逻辑，例如限制拖拽范围
+    };
+    stage.on('dragmove', handleDragMove);
     stage.on('wheel', handleWheel);
     return () => {
       stage.off('wheel', handleWheel);
+      stage.off('dragmove', handleDragMove);
     };
-  }, [stageRef, handleZoom]);
+  }, [stageRef, handleZoom, i18n.language]);
 
   useEffect(() => {
     if (!stageRef.current) return;
@@ -121,6 +144,10 @@ export function useZoom(
     });
 
     hammer.on('pinchmove', (e: any) => {
+      if (agvViewLock) {
+        manager.push(t('deployer.singleTask.agvViewLockTips'));
+        return;
+      }
       let newScale = oldScale * e.scale;
       if (min && newScale < min) {
         newScale = min;
@@ -167,7 +194,7 @@ export function useZoom(
       hammer.off('pinch');
       hammer.destroy();
     };
-  }, [stageRef.current, min, max]);
+  }, [stageRef.current, min, max, agvViewLock, i18n.language]);
 
   return {
     currentScale,
