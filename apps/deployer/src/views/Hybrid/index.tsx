@@ -39,7 +39,7 @@ import HybirdStatus from './components/hybirdStatus';
 import ReflectorHandle from './components/reflector/handles';
 import ReflectorActions from './components/reflector/handles/actions';
 import ReflectorLayer from './components/reflector/reflectorLayer';
-import SlamHandle from './components/slam/handles';
+import SlamHandles from './components/slam/handles';
 import SlamLayer from './components/slam/slamLayer';
 import { addFloor, delFloor, postFloorList, switchFloor } from './service';
 
@@ -95,6 +95,7 @@ const Mapping = () => {
     navigationType,
     setBeginPose,
     wsState,
+    setShowPointCloud,
   } = useHybirdStore(
     useShallow((state) => ({
       setMapLoading: state.setMapLoading,
@@ -108,6 +109,7 @@ const Mapping = () => {
       navigationType: state.navigationType,
       setBeginPose: state.setBeginPose,
       wsState: state.wsState,
+      setShowPointCloud: state.setShowPointCloud,
     })),
   );
 
@@ -146,7 +148,7 @@ const Mapping = () => {
     return robot_current_status.floor_number == floor;
   }, [robot_current_status.floor_number, floor]);
 
-  const changeHybird = (event: SelectChangeEvent) => {
+  const changeHybrid = (event: SelectChangeEvent) => {
     const newAlignment = event.target.value as string;
     if (!newAlignment) return;
     if (robot_current_status.system_status !== 0) {
@@ -190,6 +192,7 @@ const Mapping = () => {
         }
         toast.success(t('common.actionSuccess'));
         getFloors();
+        setFloor(robot_current_status?.floor_number);
       }
     },
   });
@@ -228,6 +231,8 @@ const Mapping = () => {
     if (robot_current_status.system_status !== 0) {
       setShowFloor(false);
       setFloorButtonDisabled(true);
+      setBeginPose(false); // 建图中关闭重定位的状态
+      setShowPointCloud(true); // 建图中显示点云
     } else {
       setFloorButtonDisabled(false);
     }
@@ -390,8 +395,8 @@ const Mapping = () => {
   };
 
   useEffect(() => {
-    console.log('effect isConnectSuccess', isConnectSuccess);
-  }, [isConnectSuccess]);
+    console.log('floor', floor);
+  }, [floor]);
 
   if (!isConnectSuccess) {
     return (
@@ -433,7 +438,7 @@ const Mapping = () => {
                         <Select
                           size='small'
                           value={alignment}
-                          onChange={changeHybird}
+                          onChange={changeHybrid}
                           label={t('deployer.hybrid.navigationType')}
                           sx={{
                             '& .MuiSelect-select': {
@@ -575,7 +580,7 @@ const Mapping = () => {
           isSameFloor &&
           (isShowNavigation(navigationType, 'LIDAR_SLAM_2D') || isShowNavigation(navigationType, 'LIDAR_SLAM_3D')) &&
           listData?.floor_list?.length ? (
-            <SlamHandle floor={floor} hide={!listData?.floor_list?.length}></SlamHandle>
+            <SlamHandles floor={floor} setFloor={setFloor} hide={!listData?.floor_list?.length}></SlamHandles>
           ) : null}
 
           {!isSameFloor && (

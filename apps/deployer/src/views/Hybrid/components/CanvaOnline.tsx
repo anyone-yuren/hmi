@@ -76,6 +76,7 @@ const DeviceList = () => {
                   id={item.point_id}
                   radius={8}
                   stroke={'black'}
+                  showRect={true}
                   x={meterToPixel(item.pose_x)}
                   y={0 - meterToPixel(item.pose_y)}
                   rotation={translateAngel(item.pose_theta) + 270}
