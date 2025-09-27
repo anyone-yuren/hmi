@@ -598,7 +598,7 @@ export default function RectDrawer() {
   useEffect(() => {
     if (obsInfo?.scheme_id && memoObstacleData?.obs_scheme?.scheme_list?.length) {
       const currentObs = memoObstacleData?.obs_scheme?.scheme_list?.find(
-        (item) => item.scheme_id === obsInfo?.scheme_id,
+        (item) => item?.scheme_id === obsInfo?.scheme_id,
         // (item) => item.scheme_id === 1,
       );
       if (currentObs) {
@@ -608,13 +608,18 @@ export default function RectDrawer() {
   }, [obsInfo?.scheme_id, memoObstacleData?.obs_scheme?.scheme_list]);
 
   const resetMap = () => {
+    centerOriginWithAnimation();
     setSelectedId('');
   };
 
   // 设置避障方案更新，与弹窗取消后，还原初始化避障方案。
-  const refreshCurrentObsInfo = (scheme_id) => {
+  const refreshCurrentObsInfo = (scheme_id, isReloadObs = false) => {
+    if (isReloadObs) {
+      refreshObstacleData();
+      return;
+    }
     if (scheme_id) {
-      const currentObs = memoObstacleData?.obs_scheme?.scheme_list?.find((item) => item.scheme_id === scheme_id);
+      const currentObs = memoObstacleData?.obs_scheme?.scheme_list?.find((item) => item?.scheme_id === scheme_id);
       if (currentObs) {
         setCurrentObsInfo({ ...currentObs });
         // 居中
