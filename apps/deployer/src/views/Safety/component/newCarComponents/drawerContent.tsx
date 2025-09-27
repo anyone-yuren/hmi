@@ -95,6 +95,7 @@ const DrawerContent = (props: IProps) => {
         toast.success('更新成功', {
           position: 'bottom-center',
         });
+        refreshCurrentObsInfo(currentObsInfo.scheme_id, true);
       }
     },
   });
