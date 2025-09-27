@@ -18,6 +18,7 @@ export default function useHybirdWsExtend() {
     setMotionStatus,
     setForksHeight,
     setSensorPoints,
+    setAllSensorPoints,
   } = useSafetyStore(
     useShallow((store) => ({
       setObsInfo: store.setObsInfo,
@@ -27,6 +28,7 @@ export default function useHybirdWsExtend() {
       setMotionStatus: store.setMotionStatus,
       setForksHeight: store.setForksHeight,
       setSensorPoints: store.setSensorPoints,
+      setAllSensorPoints: store.setAllSensorPoints,
     })),
   );
 
@@ -65,6 +67,16 @@ export default function useHybirdWsExtend() {
       const decompressedData = typeof data?.data === 'object' ? data?.data : JSON.parse(unzipText(data?.data || ''));
       // console.log('避障点云数据长度', key, decompressedData.length);
       setSensorPoints(key, decompressedData);
+    },
+    '/set_all_sensor_points': (data) => {
+      const obj: any = {};
+      Object.keys(data).forEach((key) => {
+        const decompressedData =
+          typeof data[key]?.data === 'object' ? data[key]?.data : JSON.parse(unzipText(data[key]?.data || ''));
+        obj[key] = decompressedData;
+      });
+      console.log('[多少秒更新一次]data', obj);
+      setAllSensorPoints(obj);
     },
   };
 }

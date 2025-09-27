@@ -5,7 +5,6 @@ import { memo, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { getProjectArea, isPointInRectangle, isPointInVehicle } from '../../utils/index';
-
 interface SafetyPointCloudProps {
   projectArea: { rectangle: number[] }[];
   forksUnderRect?: any;
@@ -39,13 +38,30 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
   }, [forksUnderRect, forksHeight]);
 
   // 原始点数据
+
   const rawPoints = useMemo(() => {
     const arr: number[] = [];
+    const targetPoints = 2000; // 目标点数
+
+    // 计算步长（stride）
+    const totalPoints = Object.values(sensorPoints || {}).reduce((count, list) => {
+      return count + (list as { x: number; y: number; z: number }[]).length;
+    }, 0);
+    const stride = Math.max(1, Math.floor(totalPoints / targetPoints));
+
+    let currentIndex = 0; // 当前索引，用于跳过点
     Object.values(sensorPoints || {}).forEach((list: any) => {
       (list as { x: number; y: number; z: number }[]).forEach((p) => {
-        arr.push(p.x, p.y, p.z);
+        if (currentIndex % stride === 0) {
+          if (p.x >= -5 && p.x <= 5 && p.y >= -5 && p.y <= 5 && p.z >= -5 && p.z <= 5) {
+            arr.push(p.x, p.y, p.z);
+          }
+        }
+        currentIndex++;
       });
     });
+
+    // console.log('稀疏点云数据', totalPoints, arr.length / 3);
     return new Float32Array(arr);
   }, [sensorPoints]);
 

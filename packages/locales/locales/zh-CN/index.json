@@ -697,7 +697,7 @@
       "truckRunningRightGap": "行驶状态下车右侧装车体外轮廓到车厢侧面间隙",
       "truckStorage": "平板&飞翼门装卸车库位",
       "truckStorageTips": "请选择操作上一个库位",
-      "truckload": "尾箱装卸",
+      "truckload": "尾厢装卸",
       "truckloadObserveLoadLegendTips1": "为了确保无人叉车在车厢内尽可能走直线，需要进行观测任务，计算出卡车位置偏差。",
       "truckloadObserveLoadLegendTips2": "以两列货物中的左侧为例，为例确保在装左侧货物过程中尽可能走直线驶入，需要对叉车进行偏移。",
       "truckloadObserveLoadLegendTips3": "该偏移量的方向参考地图坐标系，如图例所示需要左偏，则为-300。右侧同理。",
