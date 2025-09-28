@@ -3,6 +3,7 @@ import { Button, Select, Skeleton, Switch } from 'antd';
 import { useResponsive } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { useSafetyStore } from '../../store/safety.store';
 interface IProps {
@@ -49,7 +50,14 @@ const SafetyHeader = (props: IProps) => {
                     ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
                     : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_70%)]'
                 } font-bold`}
-                onClick={() => setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true)}
+                onClick={() => {
+                  const currentObs = obsData?.find((item) => item?.scheme_id === obsInfo?.scheme_id);
+                  if (!(currentObs && currentObs.scheme_id)) {
+                    toast.error('当前方案不存在');
+                    return;
+                  }
+                  setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true);
+                }}
               >
                 {obsInfo?.scheme_id ?? '-'}
                 <FormOutlined className='ml-2 cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 transition-all' />
@@ -91,8 +99,8 @@ const SafetyHeader = (props: IProps) => {
                     style={{ width: responsive?.xs ? 120 : 160 }}
                     defaultValue={obsInfo?.scheme_id ?? '-'}
                     options={obsData?.map((item) => ({
-                      label: item.scheme_id,
-                      value: item.scheme_id,
+                      label: item?.scheme_id,
+                      value: item?.scheme_id,
                     }))}
                     onChange={(value) => {
                       refreshCurrentObsInfo(value);
