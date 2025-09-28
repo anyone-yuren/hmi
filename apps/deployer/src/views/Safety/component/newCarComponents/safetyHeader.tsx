@@ -52,7 +52,7 @@ const SafetyHeader = (props: IProps) => {
                 } font-bold`}
                 onClick={() => {
                   const currentObs = obsData?.find((item) => item?.scheme_id === obsInfo?.scheme_id);
-                  if (!(currentObs && currentObs.length)) {
+                  if (!(currentObs && currentObs.scheme_id)) {
                     toast.error('当前方案不存在');
                     return;
                   }
