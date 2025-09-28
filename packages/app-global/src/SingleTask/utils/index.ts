@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
 export const translateTempToTaskList = (template, isKVehicle) => {
-  console.log(template, isKVehicle);
   const temp = _.cloneDeep(template);
   const transformDict = {
     Pick: (obj: any) => {
