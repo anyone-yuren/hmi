@@ -69,7 +69,7 @@ export default function RectDrawer() {
     const container = stage.container();
 
     const handleMouseDown = (e: MouseEvent) => {
-      if (e.button === 2) {
+      if (e.button === 2 || e.button === 1) {
         // 右键
         e.preventDefault(); // 阻止默认右键菜单
         isPanningRef.current = true;
