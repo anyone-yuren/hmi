@@ -563,6 +563,8 @@ export default function RectDrawer() {
         return { ...getRect(item.rectangle), id: item.id, associated_device: item.associated_device };
       });
       setRects(newRects);
+    } else {
+      setRects([]);
     }
   }, [currentObsInfo]);
 
