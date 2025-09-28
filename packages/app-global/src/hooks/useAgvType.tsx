@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 // 定义枚举值（数值可以和后端保持一致）
 export enum AGVTYPES {
   MIN = 0,
@@ -83,17 +82,4 @@ export const useAgvType = () => {
   );
   // 如果找不到对应值，就返回“未定义”
   return AGVTYPE_NAMES[avgType] ?? '未定义';
-};
-
-export const useAgvInfo = () => {
-  const { avgType } = useGlobalStore(
-    useShallow((state) => ({
-      avgType: state.avgType,
-    })),
-  );
-  const kVehicle = ['K16'];
-  const isKVehicle = useMemo(() => {
-    return kVehicle.includes(AGVTYPE_NAMES[avgType]);
-  }, [avgType]);
-  return { isKVehicle };
 };

@@ -1,4 +1,3 @@
-import { useAgvInfo } from '@/hooks/useAgvType';
 import SubAbout from './src/About';
 import SubCharging from './src/Charging';
 import LoginDialog from './src/components/LoginDialog';
@@ -25,6 +24,5 @@ export {
   SubAbout,
   SubCharging,
   triggerLoginModal,
-  useAgvInfo,
   useObsError,
 };
