@@ -337,6 +337,7 @@
       "isOnline": "是否上线?",
       "losePosition": "定位丢失",
       "magneticNail": "磁钉",
+      "manualTips": "请切换到手动模式再操作！",
       "navigationMode": "导航模式",
       "navigationType": "导航类型",
       "noFloorData": "暂无楼层数据，请添加",

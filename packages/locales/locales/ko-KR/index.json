@@ -336,6 +336,7 @@
       "isOnline": "온라인이든",
       "losePosition": "위치 손실",
       "magneticNail": "마그네틱 못",
+      "manualTips": "작동하기 전에 수동 모드로 전환하십시오!",
       "navigationMode": "내비게이션 모드",
       "navigationType": "탐색 유형",
       "noFloorData": "아직 바닥 데이터가 없으므로 추가하십시오.",

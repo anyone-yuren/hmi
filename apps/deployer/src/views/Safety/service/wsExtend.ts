@@ -8,7 +8,7 @@ function unzipText(str) {
     { to: 'string' },
   );
 }
-
+let lastUpdateTime = 0;
 export default function useHybirdWsExtend() {
   const {
     setObsInfo,
@@ -69,13 +69,17 @@ export default function useHybirdWsExtend() {
       setSensorPoints(key, decompressedData);
     },
     '/set_all_sensor_points': (data) => {
+      const now = new Date().getTime();
+      const timeInterval = lastUpdateTime ? (now - lastUpdateTime) / 1000 : 0;
+      lastUpdateTime = now;
+
       const obj: any = {};
       Object.keys(data).forEach((key) => {
         const decompressedData =
           typeof data[key]?.data === 'object' ? data[key]?.data : JSON.parse(unzipText(data[key]?.data || ''));
         obj[key] = decompressedData;
       });
-      console.log('[多少秒更新一次]data', obj);
+      console.log('[多少秒更新一次]data', obj, timeInterval.toFixed(2));
       setAllSensorPoints(obj);
     },
   };

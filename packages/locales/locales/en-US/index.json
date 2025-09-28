@@ -337,6 +337,7 @@
       "isOnline": "Whether it is online?",
       "losePosition": "Location lost",
       "magneticNail": "Magnetic Nail",
+      "manualTips": "Please switch to manual mode before operating!",
       "navigationMode": "Navigation mode",
       "navigationType": "Navigation type",
       "noFloorData": "There is no floor data yet, please add it",

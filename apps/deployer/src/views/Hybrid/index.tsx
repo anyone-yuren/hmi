@@ -122,7 +122,6 @@ const Mapping = () => {
   const [floor, setFloor] = React.useState(robot_current_status.floor_number || 1);
   const [floorButtonDisabled, setFloorButtonDisabled] = React.useState(true);
   const [alignment, setAlignment] = React.useState('slam');
-  const [isFirstConnect, setIsFirstConnect] = React.useState(true);
 
   const currentAddFloor = useRef(0);
   useEffect(() => {

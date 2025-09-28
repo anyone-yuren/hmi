@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { useRequest } from 'ahooks';
 import { Modal } from 'antd';
 import * as React from 'react';
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
@@ -48,6 +48,7 @@ const SlamHandles = (props: any) => {
     showFloor,
     setStagePos,
     agvPosition,
+    ioSensor,
   } = useHybirdStore(
     useShallow((state) => ({
       hybirdStage: state.hybirdStage,
@@ -63,8 +64,11 @@ const SlamHandles = (props: any) => {
       showFloor: state.showFloor,
       setStagePos: state.setStagePos,
       agvPosition: state.agvPosition,
+      ioSensor: state.ioSensor,
     })),
   );
+
+  const isManual = useMemo(() => ioSensor?.auto_manual_status === 1, [ioSensor?.auto_manual_status]);
 
   const { grid_map } = floorData;
   const { system_status = 0, floor_number }: any = robot_current_status;
@@ -132,6 +136,10 @@ const SlamHandles = (props: any) => {
     // setSelectedButton(buttonName);
     // 新增和扩展地图要关闭重定位的状态
     if (buttonName === 'add') {
+      if (!isManual) {
+        toast.error(t('deployer.hybrid.manualTips'));
+        return;
+      }
       setMapLoading(true);
       await runAdd({ floor_number: floor, cmd_type: 1 });
       setAddSlamMappingData({});
@@ -139,6 +147,10 @@ const SlamHandles = (props: any) => {
       setBeginPose(false);
     }
     if (buttonName === 'cancel') {
+      if (!isManual) {
+        toast.error(t('deployer.hybrid.manualTips'));
+        return;
+      }
       setMapLoading(true);
       setAddSlamMappingData({});
       if (system_status === 1) {
@@ -175,6 +187,10 @@ const SlamHandles = (props: any) => {
     }
     // 扩展地图
     if (buttonName === 'slamExtend') {
+      if (!isManual) {
+        toast.error(t('deployer.hybrid.manualTips'));
+        return;
+      }
       setMapLoading(true);
       await runExtendMapping({ floor_number: floor, cmd_type: 1 });
       setAddSlamMappingData({});
@@ -282,6 +298,10 @@ const SlamHandles = (props: any) => {
               variant='contained'
               ref={delRef}
               onClick={() => {
+                if (!isManual) {
+                  toast.error(t('deployer.hybrid.manualTips'));
+                  return;
+                }
                 delSlamMap();
               }}
               className='flex-1 flex  gap-1 items-center justify-center text-sm'

@@ -48,7 +48,7 @@ export const useSafety = () => {
         const now = new Date().getTime();
 
         // 每次数据推过来时，直接对比全局时间戳
-        if (now - lastGlobalUpdateTime >= 1000) {
+        if (now - lastGlobalUpdateTime >= 1900) {
           // 如果距离上次更新超过 1 秒，则触发更新所有 sensorPointsKey 的数据
           webSocketEventHashMap['/set_all_sensor_points'](sensorPointsCache);
           lastGlobalUpdateTime = now; // 更新全局时间戳

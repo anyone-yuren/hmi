@@ -31,6 +31,7 @@ export default function useHybirdWsExtend() {
     setScanHead,
     setWsState,
     isDrag,
+    setIoSensor,
   } = useHybirdStore(
     useShallow((store) => ({
       robotCurrentStatus: store.robot_current_status,
@@ -56,6 +57,7 @@ export default function useHybirdWsExtend() {
       setScanHead: store.setScanHead,
       setWsState: store.setWsState,
       isDrag: store.isDrag,
+      setIoSensor: store.setIoSensor,
     })),
   );
 
@@ -136,6 +138,9 @@ export default function useHybirdWsExtend() {
     '/navigation/scan_head': (data: any) => {
       // 获取定位点云
       !isDrag && setScanHead(data);
+    },
+    '/sirius/topics/robot_status_isensor': (data: any) => {
+      setIoSensor(data);
     },
     setWebsocketState: (state) => {
       setWsState(state);

@@ -104,6 +104,9 @@ interface State {
 
   isDrag: boolean;
   setIsDrag: (bol: boolean) => void;
+
+  ioSensor: any;
+  setIoSensor: (data: any) => void;
 }
 
 export const useHybirdStore = create<State>()(
@@ -230,6 +233,8 @@ export const useHybirdStore = create<State>()(
       setWsState: (data: any) => set({ wsState: data }),
       isDrag: false,
       setIsDrag: (bol: boolean) => set({ isDrag: bol }),
+      ioSensor: {},
+      setIoSensor: (data: any) => set({ IoSensor: data }),
     }),
     {
       name: 'hybird-store',

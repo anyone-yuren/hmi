@@ -1,29 +1,32 @@
 // 智能重定位
 import { useRequest } from 'ahooks';
 import { memo, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Group, Image as KonvaImage, Text } from 'react-konva';
+import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { useHttpCode } from '../../hooks/useHttpCode';
 import { useStageEvents } from '../../hooks/useStage';
 import { initalPose } from '../../service';
 import { useHybirdStore } from '../../store/hybird.store';
 import NewAgv from '../newAgv';
-
 function degreesToRadians(degrees: number) {
   return degrees * (Math.PI / 180);
 }
 const ChangePose = (props: { floor: number }) => {
   const { useErrorMessage } = useHttpCode();
-  const { startTouch, vehiclePosition, beginPose, showAgv, setMapLoading } = useHybirdStore(
+  const { startTouch, vehiclePosition, beginPose, showAgv, setMapLoading, ioSensor } = useHybirdStore(
     useShallow((store) => ({
       startTouch: store.startTouch,
       vehiclePosition: store.vehiclePosition,
       beginPose: store.beginPose,
       showAgv: store.showAgv,
       setMapLoading: store.setMapLoading,
+      ioSensor: store.ioSensor,
     })),
   );
-
+  const isManual = useMemo(() => ioSensor?.auto_manual_status === 1, [ioSensor?.auto_manual_status]);
+  const { t } = useTranslation();
   const renderAngleText = useMemo(() => {
     if (vehiclePosition?.angle > 0) {
       return Number((vehiclePosition?.angle || 0)?.toFixed(0));
@@ -43,6 +46,10 @@ const ChangePose = (props: { floor: number }) => {
   const { imageObj } = useStageEvents();
   useEffect(() => {
     if (!showAgv && beginPose && vehiclePosition.x) {
+      if (!isManual) {
+        toast.error(t('deployer.hybrid.manualTips'));
+        return;
+      }
       setMapLoading(true);
       runInitPose({
         floor_number: props.floor,
@@ -59,7 +66,7 @@ const ChangePose = (props: { floor: number }) => {
           setMapLoading(false);
         });
     }
-  }, [showAgv, beginPose, vehiclePosition, renderAngleText]);
+  }, [showAgv, beginPose, vehiclePosition, renderAngleText, isManual]);
   return (
     <Group name='pose-agv'>
       {true && beginPose && showAgv && (

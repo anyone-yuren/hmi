@@ -337,6 +337,7 @@
       "isOnline": "Si c'est en ligne?",
       "losePosition": "Positionnement perdu",
       "magneticNail": "Clous magnétiques",
+      "manualTips": "Veuillez passer en mode manuel avant de fonctionner!",
       "navigationMode": "Mode de navigation",
       "navigationType": "Type de navigation",
       "noFloorData": "Aucune donnée d'étage, veuillez en ajouter",

@@ -337,6 +337,7 @@
       "isOnline": "オンラインかどうか?",
       "losePosition": "ロストポジショニング",
       "magneticNail": "磁钉",
+      "manualTips": "操作する前に手動モードに切り替えてください！",
       "navigationMode": "ナビゲーションモード",
       "navigationType": "ナビゲーションタイプ",
       "noFloorData": "フロアデータはまだありませんので、追加してください",
