@@ -23,7 +23,7 @@ import { safetyConfig } from './service';
 import { useSafetyStore } from './store/safety.store';
 import { getRect } from './utils';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
-const snap = 20;
+const snap = 10;
 export default function RectDrawer() {
   const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const stageRef = useRef<Konva.Stage>(null);
