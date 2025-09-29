@@ -142,3 +142,6 @@ export const getTailTruckScenariosGoodsStatusManagementRead = () =>
 
 export const postTailTruckScenariosGoodsStatusManagementSave = (data: any) =>
   post('/cv_mwrobot/tail_truck_scenarios/goods_status_management/save', data, '10010');
+
+export const getCompareRobotToolkitModelWithWebModelRead = () =>
+  get('/cv_mwrobot/compare_robot_toolkit_model_with_web_model/read', {}, '10010');

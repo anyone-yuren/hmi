@@ -135,7 +135,7 @@ const Setting = (props: any) => {
   const modelHashMap = useMemo(() => {
     const hashMap: any = {};
     modelList?.data?.forEach((item: any) => {
-      hashMap[item.id] = item.name;
+      hashMap[item.id] = item.id;
     });
     return hashMap;
   }, [modelList]);
@@ -469,7 +469,7 @@ const Setting = (props: any) => {
                           },
                         }}
                       >
-                        <ListItemText primary={item.name} />
+                        <ListItemText primary={item.id} />
                       </MenuItem>
                     ))}
                   </CustomSelect>
@@ -680,7 +680,7 @@ const Setting = (props: any) => {
                               },
                             }}
                           >
-                            <ListItemText primary={modelHashMap?.[name] || '-'} />
+                            {<ListItemText primary={modelHashMap?.[name] || '-'} />}
                           </MenuItem>
                         ))}
                         {!updateHashMap?.['pallet_model_list']?.length && (

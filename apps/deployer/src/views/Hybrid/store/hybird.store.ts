@@ -234,7 +234,7 @@ export const useHybirdStore = create<State>()(
       isDrag: false,
       setIsDrag: (bol: boolean) => set({ isDrag: bol }),
       ioSensor: {},
-      setIoSensor: (data: any) => set({ IoSensor: data }),
+      setIoSensor: (data: any) => set({ ioSensor: data }),
     }),
     {
       name: 'hybird-store',

@@ -13,6 +13,7 @@
       "nolog": "No logs yet",
       "serial": "Serial number",
       "unknown": "Unknown",
+      "updateVersionInfo": "Version update information",
       "vehicleType": "Vehicle model",
       "viewlog": "View log"
     },
@@ -588,6 +589,7 @@
       "overPalletThreshold": "Pallet threshold",
       "palletHasGoodCheck": "Pallet detection",
       "palletHeight": "Pallet height",
+      "palletName": "Pallet name",
       "palletWidth": "Pallet width",
       "palletWidthTips": "Pallet width cannot be manually changed, it is the sum of leg width and fork entry width",
       "paramExplanation": "Parameter description",

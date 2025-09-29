@@ -13,6 +13,7 @@
       "nolog": "Pas encore de journaux",
       "serial": "Numéro de série",
       "unknown": "inconnu",
+      "updateVersionInfo": "Informations sur la mise à jour de la version",
       "vehicleType": "Modèle de voiture",
       "viewlog": "Afficher le journal"
     },
@@ -588,6 +589,7 @@
       "overPalletThreshold": "Seuil de dépassement",
       "palletHasGoodCheck": "Détection de la présence de marchandises sur la palette",
       "palletHeight": "Hauteur de la palette",
+      "palletName": "Nom de palette",
       "palletWidth": "Largeur de la palette",
       "palletWidthTips": "La largeur de la palette ne peut pas être modifiée manuellement, elle est la somme de la largeur des jambes et de la largeur d'entrée de la fourche.",
       "paramExplanation": "Description des paramètres",

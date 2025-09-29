@@ -47,7 +47,7 @@ const PointCloudFilter = (props: IProps) => {
   } = useRequest(getPointCloudMonitoringRead, {
     manual: true,
   });
-  const [state, setState, getState] = useGetState<any>({
+  const _initState = {
     front: {
       label: t('deployer.vision.frontDetectDist'),
       value: 0,
@@ -84,7 +84,8 @@ const PointCloudFilter = (props: IProps) => {
       keyIndex: 2,
       index: 0,
     },
-  });
+  };
+  const [state, setState, getState] = useGetState<any>(_initState);
   const intervalRef = useRef<any>(null);
   const { setPointCloudParams, setPointsCloudHeart, setPointsCloudKey } = useVisionStore(
     useShallow((store: any) => ({
@@ -116,7 +117,7 @@ const PointCloudFilter = (props: IProps) => {
 
   const hashMap = {
     0: type,
-    1: 'location_calibration_assistant',
+    1: 'location_calibrate_assistant',
   };
 
   const pointCloudFilterParams = useMemo(() => {
@@ -166,6 +167,8 @@ const PointCloudFilter = (props: IProps) => {
       getPointCloudMonitoringBack();
       clearInterval(timer);
       setPointsCloudHeart(0);
+      setValue(0);
+      setState(_initState);
     }
   }, [open]);
 
@@ -173,6 +176,7 @@ const PointCloudFilter = (props: IProps) => {
     const handleBeforeUnload = () => {
       setPointsCloudHeart(0);
     };
+
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
       setPointsCloudHeart(0);
@@ -353,7 +357,7 @@ const PointCloudFilter = (props: IProps) => {
                       <Tab label={t('deployer.vision.storageCalibration')} iconPosition='end' />
                     </Tabs>
                   )}
-                  {!error || true ? (
+                  {!error ? (
                     <>
                       {Object.keys(state)?.map((key: string) => {
                         return (

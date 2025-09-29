@@ -6,6 +6,7 @@ import SafetyBase from './component/3dComponents/safetyBase';
 import SafetyCanvas from './component/3dComponents/safetyCanvas';
 import SafetyObsLines from './component/3dComponents/safetyObsLines';
 import SafetyPointCloud from './component/3dComponents/safetyPointCloud';
+import SafetyPointCloudV2 from './component/3dComponents/safetyPointCloudV2';
 import SafetyVehicle from './component/3dComponents/safetyVehicle';
 import WsContainer from './component/WsContainer';
 import { getDeviceList, safetyConfig } from './service/index';
@@ -202,11 +203,14 @@ const Safety = () => {
           distance={activeScheme.project_distance}
         ></SafetyVehicle>
         <SafetyObsLines lines={projectArea || []}></SafetyObsLines>
-        <SafetyPointCloud
-          projectArea={projectArea}
-          forksUnderRect={forksUnderOutline}
-          vehicleRect={vehicleOutline}
-        ></SafetyPointCloud>
+        {true && (
+          <SafetyPointCloud
+            projectArea={projectArea}
+            forksUnderRect={forksUnderOutline}
+            vehicleRect={vehicleOutline}
+          ></SafetyPointCloud>
+        )}
+        {false && <SafetyPointCloudV2></SafetyPointCloudV2>}
       </SafetyCanvas>
       {wsContainerVisible && (
         <WsContainer>

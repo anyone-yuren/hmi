@@ -13,6 +13,7 @@
       "nolog": "아직 통나무가 없습니다",
       "serial": "일련 번호",
       "unknown": "알려지지 않은",
+      "updateVersionInfo": "버전 업데이트 정보",
       "vehicleType": "자동차 모델",
       "viewlog": "로그를 봅니다"
     },
@@ -587,6 +588,7 @@
       "overPalletThreshold": "초과 팔레트 임계값",
       "palletHasGoodCheck": "팔레트 유무 감지",
       "palletHeight": "팔레트 높이",
+      "palletName": "팔레트 이름",
       "palletWidth": "팔레트 너비",
       "palletWidthTips": "팔레트 너비는 수동으로 변경할 수 없으며, 다리 너비와 포크 진입 너비의 합입니다",
       "paramExplanation": "파라미터 설명",

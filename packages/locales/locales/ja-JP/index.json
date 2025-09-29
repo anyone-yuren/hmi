@@ -13,6 +13,7 @@
       "nolog": "まだログはありません",
       "serial": "シリアルナンバー",
       "unknown": "未知",
+      "updateVersionInfo": "バージョンの更新情報",
       "vehicleType": "車モデル",
       "viewlog": "ログを表示します"
     },
@@ -588,6 +589,7 @@
       "overPalletThreshold": "超パレットしきい値",
       "palletHasGoodCheck": "パレット有無検出",
       "palletHeight": "パレットの高さ",
+      "palletName": "パレット名",
       "palletWidth": "パレット幅",
       "palletWidthTips": "パレット幅は手動で変更できず、アウトリガー幅とフォーク幅の合計です",
       "paramExplanation": "パラメータ説明",

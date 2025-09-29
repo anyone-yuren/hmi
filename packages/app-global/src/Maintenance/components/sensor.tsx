@@ -30,7 +30,6 @@ const Sensor = (props: SensorProps) => {
       token: state.token,
     })),
   );
-  console.log('data', data);
   const STATUS = [t('common.normal'), t('common.triggered'), t('common.severelyExpired')];
   const theme = useTheme();
   const percentage = (data?.Current?.Time ?? 0) / (data?.Condition?.Time ?? 0);

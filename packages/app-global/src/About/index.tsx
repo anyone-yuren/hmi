@@ -1,16 +1,16 @@
 import { DownloadOutlined } from '@ant-design/icons';
-import { useRequest } from 'ahooks';
+import { useAsyncEffect, useRequest } from 'ahooks';
 import { Badge, Button, Drawer, List, Tree, TreeDataNode, Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import noVehicleSvg from '../assets/icons/noVehicle.svg';
 import { useAgvType } from '../hooks/useAgvType';
 import useDrawerClassName from '../hooks/useDrawerClassName';
 import NodeLogs from './components/nodeLogs';
-import { getNodeLogs } from './services';
+import { config_agv_info, getChangeLogs, getNodeLogs } from './services';
 
 const useStyles = createStyles(({ css, token }) => ({
   tree: css`
@@ -54,12 +54,13 @@ const getImage = (imageName: string) => {
 };
 
 const About = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { styles } = useStyles();
   const theme = useTheme();
   const [openLogs, setLogsOpen] = useState(false);
   const [openNodeLogs, setOpenNodeLogs] = useState(false);
   const classNames = useDrawerClassName();
+  const { data: agvInfo } = useRequest(config_agv_info);
 
   const agvType = useAgvType();
 
@@ -75,6 +76,16 @@ const About = () => {
       setOpenNodeLogs(true);
     },
   });
+
+  const { data: changeLogs, runAsync: getChangeLogAsync } = useRequest(getChangeLogs, {});
+
+  const renderChangeLogs = useMemo(() => {
+    return changeLogs?.data;
+  }, [changeLogs]);
+
+  useAsyncEffect(async () => {
+    await getChangeLogAsync({});
+  }, [i18n.language]);
 
   const productImage = useCallback(() => {
     if (!agvType) {
@@ -215,13 +226,13 @@ const About = () => {
               <Typography.Title level={5} className='!m-0'>
                 {t('common.about.serial')}
               </Typography.Title>
-              <Typography.Text className='!m-0 opacity-70'>MW2720230703001</Typography.Text>
+              <Typography.Text className='!m-0 opacity-70'>{agvInfo?.serial_number || '-'}</Typography.Text>
             </div>
             <div>
               <Typography.Title level={5} className='!m-0'>
                 {t('common.about.date')}
               </Typography.Title>
-              <Typography.Text className='!m-0 opacity-70'>2023-01-01</Typography.Text>
+              <Typography.Text className='!m-0 opacity-70'>{agvInfo?.manufacture_date || '-'}</Typography.Text>
             </div>
             <div>
               <Typography.Title level={5} className='!m-0'>
@@ -239,24 +250,30 @@ const About = () => {
                 {agvType ? agvType : t('common.about.unknown')}
               </Typography.Text>
             </div>
-            <div>
-              <Typography.Title level={5} className='!m-0'>
-                {t('common.about.memory')}
-              </Typography.Title>
-              <Typography.Text className='!m-0 opacity-70'>31.3 / 40 (G)</Typography.Text>
-            </div>
-            <div>
-              <Typography.Title level={5} className='!m-0'>
-                {t('common.about.cpu')}
-              </Typography.Title>
-              <Typography.Text className='!m-0 opacity-70'>87%</Typography.Text>
-            </div>
+            {false && (
+              <div>
+                <Typography.Title level={5} className='!m-0'>
+                  {t('common.about.memory')}
+                </Typography.Title>
+                <Typography.Text className='!m-0 opacity-70'>31.3 / 40 (G)</Typography.Text>
+              </div>
+            )}
+            {false && (
+              <div>
+                <Typography.Title level={5} className='!m-0'>
+                  {t('common.about.cpu')}
+                </Typography.Title>
+                <Typography.Text className='!m-0 opacity-70'>87%</Typography.Text>
+              </div>
+            )}
           </div>
-          <div className='flex justify-end gap-2'>
-            <Button color='yellow' variant='solid'>
-              {t('common.about.client')}
-            </Button>
-          </div>
+          {false && (
+            <div className='flex justify-end gap-2'>
+              <Button color='yellow' variant='solid'>
+                {t('common.about.client')}
+              </Button>
+            </div>
+          )}
         </div>
         <div
           className='relative h-full p-4 rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm shadow-teal-500/40 overflow-hidden flex flex-col w-2/3 gap-4'
@@ -268,6 +285,23 @@ const About = () => {
     `,
           }}
         >
+          <div className='w-full'>
+            <h2 className='text-lg font-bold mb-1'>{t('common.about.updateVersionInfo')} </h2>
+            <motion.div
+              className='!w-full h-px'
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+            >
+              <div
+                className='w-full h-full'
+                style={{
+                  background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)',
+                }}
+              />
+            </motion.div>
+          </div>
+          <div className='max-h-[200px] overflow-y-auto'>{renderChangeLogs}</div>
           <div className='w-full'>
             <h2 className='text-lg font-bold mb-1'>{t('common.about.nodes')} </h2>
             <motion.div
@@ -288,7 +322,7 @@ const About = () => {
             <List
               className='w-full'
               itemLayout='horizontal'
-              dataSource={nodesData}
+              dataSource={true ? [] : nodesData}
               renderItem={(item, index) => (
                 <List.Item
                   classNames={{

@@ -65,13 +65,12 @@ export default function useHybirdWsExtend() {
     },
     '/set_sensor_points': (key, data) => {
       const decompressedData = typeof data?.data === 'object' ? data?.data : JSON.parse(unzipText(data?.data || ''));
-      // console.log('避障点云数据长度', key, decompressedData.length);
       setSensorPoints(key, decompressedData);
     },
+    // 更新全部传感器点云的 先不开放
     '/set_all_sensor_points': (data) => {
       const now = new Date().getTime();
       const timeInterval = lastUpdateTime ? (now - lastUpdateTime) / 1000 : 0;
-      lastUpdateTime = now;
 
       const obj: any = {};
       Object.keys(data).forEach((key) => {
@@ -79,7 +78,6 @@ export default function useHybirdWsExtend() {
           typeof data[key]?.data === 'object' ? data[key]?.data : JSON.parse(unzipText(data[key]?.data || ''));
         obj[key] = decompressedData;
       });
-      console.log('[多少秒更新一次]data', obj, timeInterval.toFixed(2));
       setAllSensorPoints(obj);
     },
   };

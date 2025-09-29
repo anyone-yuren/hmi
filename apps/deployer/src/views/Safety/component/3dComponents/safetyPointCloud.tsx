@@ -54,29 +54,13 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
 
   const rawPoints = useMemo(() => {
     const arr: number[] = [];
-    const targetPoints = 200000; // 目标点数
 
-    // 计算步长（stride）
-    const totalPoints = Object.values(sensorPoints || {}).reduce((count, list) => {
-      return count + (list as { x: number; y: number; z: number }[]).length;
-    }, 0);
-    const stride = Math.max(1, Math.floor(totalPoints / targetPoints));
-
-    let currentIndex = 0; // 当前索引，用于跳过点
     Object.values(sensorPoints || {}).forEach((list: any) => {
       (list as { x: number; y: number; z: number }[]).forEach((p) => {
         arr.push(p.x, p.y, p.z);
-
-        // if (currentIndex % stride === 0) {
-        //   if (p.x >= -5 && p.x <= 5 && p.y >= -5 && p.y <= 5 && p.z >= -5 && p.z <= 5) {
-        //     arr.push(p.x, p.y, p.z);
-        //   }
-        // }
-        currentIndex++;
       });
     });
 
-    // console.log('稀疏点云数据', totalPoints, arr.length / 3);
     return new Float32Array(arr);
   }, [sensorPoints]);
 
@@ -147,52 +131,52 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
 
   // useFrame 动态更新点云
   useFrame(() => {
-    // if (!geometryRef.current || rawPoints.length === 0) return;
-    // // 更新 frustum
-    // projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
-    // frustum.setFromProjectionMatrix(projScreenMatrix);
-    // console.log('activePoints', activePoints);
-    // const positions: number[] = [];
-    // const colors: number[] = [];
-    // // 计算屏幕像素密度下的采样率
-    // // 屏幕总像素数
-    // const pixelCount = size.width * size.height;
-    // // 目标点数 = min(像素数 * k, MAX_RENDERED_POINTS)
-    // const targetPoints = Math.min(pixelCount * 1.2, MAX_RENDERED_POINTS);
-    // const stride = Math.max(1, Math.floor(rawPoints.length / 3 / targetPoints));
-    // const stride = 1 / 3;
-    // let box: THREE.Box3 | null = null;
-    // if (forksUnderProjectArea) {
-    //   const sizeVec = new THREE.Vector3(
-    //     forksUnderProjectArea.width,
-    //     forksUnderProjectArea.height,
-    //     forksUnderProjectArea.depth,
-    //   );
-    //   const center = new THREE.Vector3(
-    //     forksUnderProjectArea.position[0],
-    //     forksUnderProjectArea.position[1],
-    //     forksUnderProjectArea.position[2],
-    //   );
-    //   box = new THREE.Box3().setFromCenterAndSize(center, sizeVec);
-    // }
-    // for (let i = 0; i < rawPoints.length; i += stride * 3) {
-    //   const x = rawPoints[i];
-    //   const y = rawPoints[i + 1];
-    //   const z = rawPoints[i + 2];
-    //   tempVec.set(x, y, z);
-    //   // if (!frustum.containsPoint(tempVec)) continue;
-    //   const insideBox = box?.containsPoint(tempVec) ?? false;
-    //   const insideRect = projectArea.some((a) => isPointInRectangle(tempVec.x, tempVec.y, a.rectangle));
-    //   const insideVehicle = isPointInVehicle(tempVec.x, tempVec.y, tempVec.z, vehicleOutline);
-    //   const inside = insideBox || insideRect || insideVehicle;
-    //   if (!excludeOutsidePoints || inside) {
-    //     positions.push(x, y, z);
-    //     if (inside) colors.push(1, 0, 0);
-    //     else colors.push(1, 1, 1);
-    //   }
-    // }
-    // geometryRef.current.setAttribute('position', new THREE.Float32BufferAttribute(rawPoints, 3));
-    // geometryRef.current.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    if (!geometryRef.current || rawPoints.length === 0) return;
+    // 更新 frustum
+    projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    frustum.setFromProjectionMatrix(projScreenMatrix);
+
+    const positions: number[] = [];
+    const colors: number[] = [];
+    // 计算屏幕像素密度下的采样率
+    // 屏幕总像素数
+    const pixelCount = size.width * size.height;
+    // 目标点数 = min(像素数 * k, MAX_RENDERED_POINTS)
+    const stride = 1 / 3;
+    let box: THREE.Box3 | null = null;
+    if (forksUnderProjectArea) {
+      const sizeVec = new THREE.Vector3(
+        forksUnderProjectArea.width,
+        forksUnderProjectArea.height,
+        forksUnderProjectArea.depth,
+      );
+      const center = new THREE.Vector3(
+        forksUnderProjectArea.position[0],
+        forksUnderProjectArea.position[1],
+        forksUnderProjectArea.position[2],
+      );
+      box = new THREE.Box3().setFromCenterAndSize(center, sizeVec);
+    }
+    for (let i = 0; i < rawPoints.length; i += 3) {
+      const x = rawPoints[i];
+      const y = rawPoints[i + 1];
+      const z = rawPoints[i + 2];
+      tempVec.set(x, y, z);
+      // if (!frustum.containsPoint(tempVec)) continue;
+      // const insideBox = box?.containsPoint(tempVec) ?? false;
+      // const insideRect = projectArea.some((a) => isPointInRectangle(tempVec.x, tempVec.y, a.rectangle));
+      // const insideVehicle = isPointInVehicle(tempVec.x, tempVec.y, tempVec.z, vehicleOutline);
+      // const inside = insideBox || insideRect || insideVehicle;
+      // if (!excludeOutsidePoints || inside) {
+      positions.push(x, y, z);
+      colors.push(1, 1, 1);
+      //   if (inside) colors.push(1, 0, 0);
+      //   else colors.push(1, 1, 1);
+      // }
+    }
+    console.log('positions', positions);
+    geometryRef.current.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometryRef.current.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
   });
 
   return (

@@ -22,7 +22,7 @@ const ModelListSelect = (props: IProps) => {
   const modelHashMap = useMemo(() => {
     const hashMap: any = {};
     modelList?.data?.forEach((item: any) => {
-      hashMap[item.id] = item.name;
+      hashMap[item.id] = item.id;
     });
     return hashMap;
   }, [modelList]);
@@ -68,7 +68,7 @@ const ModelListSelect = (props: IProps) => {
                 },
               }}
             >
-              <ListItemText primary={item.name} />
+              <ListItemText primary={item.id} />
             </MenuItem>
           ))}
         </CustomSelect>

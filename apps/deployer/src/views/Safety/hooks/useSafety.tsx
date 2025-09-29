@@ -40,15 +40,20 @@ export const useSafety = () => {
         return;
       }
       const data = { uri: uri[1] };
+
       if (sensorPointsKey.includes(data?.uri)) {
         const extra_render_data = message ? JSON.parse(message.data) : {};
+        webSocketEventHashMap['/set_sensor_points'](data?.uri, extra_render_data);
+        return;
+
+        // const extra_render_data = message ? JSON.parse(message.data) : {};
 
         // 将 key 和 value 存入缓存对象
         sensorPointsCache[data.uri] = extra_render_data;
         const now = new Date().getTime();
 
         // 每次数据推过来时，直接对比全局时间戳
-        if (now - lastGlobalUpdateTime >= 1900) {
+        if (now - lastGlobalUpdateTime >= 1000) {
           // 如果距离上次更新超过 1 秒，则触发更新所有 sensorPointsKey 的数据
           webSocketEventHashMap['/set_all_sensor_points'](sensorPointsCache);
           lastGlobalUpdateTime = now; // 更新全局时间戳
@@ -91,8 +96,6 @@ export const useSafety = () => {
             '/sirius/topics/safety_protect_region',
             '/sirius/topics/task_status_motion',
             '/sirius/topics/robot_status_forkarm',
-            // 'pointcloud_head',
-            // sensorPointsKey[0],
             ...sensorPointsKey,
           ],
         }),

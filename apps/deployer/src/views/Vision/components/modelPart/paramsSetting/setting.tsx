@@ -2,8 +2,12 @@ import { memo, useMemo } from 'react';
 
 import StorageListSelect from '@/views/Vision/components/settingPart/comp/storageListSelect';
 import TextChangeRow from '@/views/Vision/components/settingPart/comp/textChangeRow';
-import { ThemeProvider, createTheme } from '@mui/material';
+import { ListItemText, MenuItem, ThemeProvider, createTheme } from '@mui/material';
+import { useRequest } from 'ahooks';
 import { useTranslation } from 'react-i18next';
+import { getCompareRobotToolkitModelWithWebModelRead } from '../../../services/index';
+import CustomSelect from '../../settingPart/comp/customSelect';
+import TextUpdateRow from '../../settingPart/comp/textUpdateRow';
 
 const LightTheme = (props: any) => {
   return (
@@ -28,6 +32,7 @@ const LightTheme = (props: any) => {
 const ParamsSetting = (props: any) => {
   const { propsState, setPropsState } = props;
   const { t } = useTranslation();
+  const { data: palletResponse } = useRequest(getCompareRobotToolkitModelWithWebModelRead);
 
   const changeUpdateHashMap = (key: string, value: any) => {
     setPropsState({
@@ -43,6 +48,10 @@ const ParamsSetting = (props: any) => {
     return [0, maxGoodsNums];
   }, [propsState]);
 
+  const palletList = useMemo(() => {
+    return palletResponse?.data?.pallet_info_list || [];
+  }, [palletResponse]);
+
   return (
     <LightTheme>
       <div className='text-black flex flex-wrap gap-[10px] justify-center'>
@@ -56,7 +65,7 @@ const ParamsSetting = (props: any) => {
         >
           <div>{propsState?.['extra_deep_compensation'] || 0}</div>
         </TextChangeRow>
-        {propsState.type != 'tail_truck' && (
+        {(propsState.type != 'tail_truck' || propsState.type != 'warehouse_shelves') && (
           <TextChangeRow
             className={'w-[280px]'}
             title={t('deployer.vision.forkExtendParams')}
@@ -83,6 +92,32 @@ const ParamsSetting = (props: any) => {
           </TextChangeRow>
         )}
 
+        <TextUpdateRow className={'w-[280px]'}>
+          <div>{t('deployer.vision.palletName')}</div>
+          <div>
+            <CustomSelect
+              variant='standard'
+              value={propsState?.['robot_toolkit_model_id']}
+              onChange={(event) => {
+                const selectedValue = event.target.value;
+                const selectedItem = palletList.find((item: any) => item.pallet_id === Number(selectedValue));
+                setPropsState({
+                  ...propsState,
+                  ['robot_toolkit_model_id']: Number(selectedValue),
+                  ['robot_toolkit_model_name']: selectedItem?.pallet_name,
+                });
+              }}
+            >
+              {palletList?.map((item: any) => {
+                return (
+                  <MenuItem value={item?.pallet_id} key={item?.pallet_id}>
+                    <ListItemText primary={item?.pallet_name || '-'} />
+                  </MenuItem>
+                );
+              })}
+            </CustomSelect>
+          </div>
+        </TextUpdateRow>
         <StorageListSelect
           className='w-[280px]'
           title={t('deployer.vision.targetStorage')}

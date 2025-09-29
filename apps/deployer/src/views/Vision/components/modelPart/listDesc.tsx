@@ -28,7 +28,7 @@ const ListDesc = forwardRef((props: any, ref: any) => {
   return (
     <div className='flex-1 min-h-[100px] overflow-overflow'>
       <Typography variant='h6' component='div'>
-        {container.name}
+        {container.id}
       </Typography>
       <div className='flex flex-col'>
         {container?.diameter && container?.height && (

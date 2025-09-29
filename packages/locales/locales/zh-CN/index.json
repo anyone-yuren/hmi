@@ -13,6 +13,7 @@
       "nolog": "暂无日志",
       "serial": "序列号",
       "unknown": "未知",
+      "updateVersionInfo": "版本更新信息",
       "vehicleType": "车型",
       "viewlog": "查看日志"
     },
@@ -588,6 +589,7 @@
       "overPalletThreshold": "超托阈值",
       "palletHasGoodCheck": "托盘货物有无检测",
       "palletHeight": "托盘高度",
+      "palletName": "托盘名称",
       "palletWidth": "托盘宽度",
       "palletWidthTips": "托盘宽度不可手动改变,是支腿宽度和进叉宽度的累加",
       "paramExplanation": "参数说明",

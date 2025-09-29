@@ -15,12 +15,10 @@ function SafetyVehicle(props: any) {
       forksHeight: store.forksHeight,
     })),
   );
-  console.log('[safety]forksUpRect叉臂下方保护区域立方体', forksUnderRect);
   const [depth, setDepth] = useState(1.8);
   const [forkDepth, setForkDepth] = useState(0.1);
 
   const outlook: any = useMemo(() => {
-    console.log('看看什么值在改变', vehicleRect, depth, forkDepth, forksHeight, distance);
     const vehicle = vehicleRect.find((item) => item.name === 'head');
     const forks = vehicleRect.find((item) => item.name === 'forkarm');
 
@@ -67,9 +65,7 @@ function SafetyVehicle(props: any) {
     return getProjectArea(forksUnderRect, forksHeight);
   }, [forksUnderRect, forksHeight]);
 
-  useEffect(() => {
-    console.log('[safety]:车图轮廓', outlook, forksUnderProjectArea);
-  }, [outlook, forksUnderProjectArea]);
+  useEffect(() => {}, [outlook, forksUnderProjectArea]);
 
   return (
     <>
