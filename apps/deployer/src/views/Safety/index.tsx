@@ -716,7 +716,7 @@ export default function RectDrawer() {
                   {rects.map((r) => (
                     <Group key={r.id} className='rect'>
                       {/* 坐标和尺寸提示 */}
-                      {selectedId === r.id && (
+                      {selectedId === String(r.id) && (
                         <>
                           <Text
                             text={`(${0 - Math.round(r.y)}, ${0 - Math.round(r.x)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
@@ -742,8 +742,8 @@ export default function RectDrawer() {
                         y={r.y}
                         width={r.width}
                         height={r.height}
-                        stroke={selectedId === r.id ? '#22d3ee' : '#ffd33d'}
-                        strokeWidth={selectedId === r.id ? 1.5 : 2}
+                        stroke={selectedId === String(r.id) ? '#22d3ee' : '#ffd33d'}
+                        strokeWidth={selectedId === String(r.id) ? 1.5 : 2}
                         dash={[4, 4]}
                         fill={'rgba(255,211,61,0.2)'}
                         draggable={noData}
@@ -752,8 +752,8 @@ export default function RectDrawer() {
                         onTransformEnd={handleTransformEnd}
                         onDragMove={handleDragMove}
                         onDragEnd={handleDragEnd}
-                        onClick={() => noData && setSelectedId(r.id)}
-                        onTap={() => noData && setSelectedId(r.id)}
+                        onClick={() => noData && setSelectedId(String(r.id))}
+                        onTap={() => noData && setSelectedId(String(r.id))}
                         onDragStart={(e) => {
                           const node = e.target as Konva.Rect;
                           node.setAttrs({
