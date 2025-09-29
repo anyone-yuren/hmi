@@ -151,7 +151,6 @@ const DrawerContent = (props: IProps) => {
   });
 
   const [initFormValue, setInitalValue] = useState(currentObsInfo ?? {});
-  console.log(currentObsInfo.scheme_id);
 
   const serviceLanguage = useMemo(() => {
     return i18n.language;
@@ -338,7 +337,7 @@ const DrawerContent = (props: IProps) => {
             </p>
             <div className='flex flex-col gap-2'>
               <div className='flex flex-col gap-2'>
-                <p className='text-xs text-nowrap shrink-0'>前进停车距离</p>
+                <p className='text-xs text-nowrap shrink-0'>前方安全停车距离</p>
                 <Form.Item
                   className='!mb-0 flex-1'
                   name='forward_stop_distance'
@@ -348,7 +347,7 @@ const DrawerContent = (props: IProps) => {
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
-                <p className='text-xs text-nowrap shrink-0'>后退停车距离</p>
+                <p className='text-xs text-nowrap shrink-0'>后方安全停车距离</p>
                 <Form.Item
                   className='!mb-0 flex-1'
                   name='backward_stop_distance'
@@ -358,7 +357,7 @@ const DrawerContent = (props: IProps) => {
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
-                <p className='text-xs text-nowrap shrink-0'>自旋</p>
+                <p className='text-xs text-nowrap shrink-0'>自旋安全停车距离</p>
                 <Form.Item
                   className='!mb-0 flex-1'
                   name='rotate_stop_distance'
@@ -368,7 +367,7 @@ const DrawerContent = (props: IProps) => {
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
-                <p className='text-xs text-nowrap shrink-0 min-w-[150px]'>离地高度</p>
+                <p className='text-xs text-nowrap shrink-0 min-w-[150px]'>地面滤波</p>
                 <Form.Item
                   className='!mb-0 flex-1'
                   name='ground_filter_height'
@@ -393,7 +392,7 @@ const DrawerContent = (props: IProps) => {
 
       <div className='flex flex-col gap-2'>
         <p className='flex justify-between items-center text-md font-bold relative pb-2'>
-          保护区域列表
+          安全保护区域
           {!isBatchDelete ? (
             <MinusCircleOutlined
               className={`${rects.length ? '' : 'hidden'} text-lg cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300`}
