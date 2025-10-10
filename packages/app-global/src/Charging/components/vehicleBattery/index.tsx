@@ -182,7 +182,7 @@ const VehicleBattery = () => {
             </div>
           </div>
           {/* 车辆图片与充电效果 */}
-          <div className='absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4'>
+          <div className='absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3'>
             {agvType ? (
               <motion.img
                 src={productImage()}
