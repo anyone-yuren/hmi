@@ -1,4 +1,4 @@
-import { CaretRightOutlined, DoubleRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, DoubleRightOutlined, QuestionCircleOutlined, ScheduleOutlined } from '@ant-design/icons';
 import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
 import { App, Button, Skeleton, Tooltip } from 'antd';
@@ -94,25 +94,28 @@ const Sensor = (props: SensorProps) => {
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.lastMaintainTime')}</h4>
-            {!loading ? (
+            {loading ? (
+              <Skeleton.Button active size='small' className='!w-36' />
+            ) : data?.History?.length ? (
               <div
-                className={`text-lg font-bold flex ${expendAll ? 'items-start' : 'items-center'} justify-items-center gap-2`}
+                className={`p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex ${expendAll ? 'items-start' : 'items-center'} gap-2`}
                 onClick={() => {
                   setExpendAll(!expendAll);
                 }}
               >
-                <div>
-                  {data?.History?.length
-                    ? data?.History?.filter((_, index) => expendAll || index === data.History.length - 1)?.map(
-                        (item: any, index: number) => {
-                          return (
-                            <div key={'sensor' + index} className='flex gap-2'>
-                              {item?.Date ?? '-'}
-                            </div>
-                          );
-                        },
-                      )
-                    : '-'}
+                <div className={`flex flex-col gap-2`}>
+                  {data?.History?.filter((_, index) => expendAll || index === data.History.length - 1)?.map(
+                    (item: any, index: number) => {
+                      return (
+                        <div key={'running' + index} className='flex gap-2'>
+                          <div className='text-xs flex items-center gap-1'>
+                            <ScheduleOutlined />
+                            {item?.Date ?? '-'}
+                          </div>
+                        </div>
+                      );
+                    },
+                  )}
                 </div>
                 {data?.History?.length > 1 && (
                   <div>
@@ -121,15 +124,22 @@ const Sensor = (props: SensorProps) => {
                 )}
               </div>
             ) : (
-              <Skeleton.Button active size='small' />
+              <p className='text-lg font-bold'>-</p>
             )}
           </div>
           <div className='flex flex-col items-end'>
             <h4 className='text-xs'>{t('common.maintenance.nextMaintainTime')}</h4>
-            {!loading ? (
-              <p className='text-lg font-bold'>{data?.Next?.Date ?? '-'}</p>
+            {loading ? (
+              <Skeleton.Button active size='small' className='!w-36' />
+            ) : data?.Next?.Date ? (
+              <div className='p-2 rounded-md bg-gradient-to-br from-white/20 to-white/5 flex items-center gap-2'>
+                <div className='text-xs flex items-center gap-1'>
+                  <ScheduleOutlined />
+                  {data?.Next?.Date ?? '-'}
+                </div>
+              </div>
             ) : (
-              <Skeleton.Button active size='small' />
+              <p className='text-lg font-bold'>-</p>
             )}
           </div>
           <div className='flex flex-col items-end w-full'>
@@ -140,7 +150,11 @@ const Sensor = (props: SensorProps) => {
                   <span>{data?.Current?.Time ?? '-'}</span>
                   <div className='flex-1 h-1 bg-white/20 rounded-[2px]'>
                     <div
-                      className='h-full bg-white rounded-full'
+                      className={
+                        percentage < 1.5
+                          ? 'h-full bg-white rounded-full bg-gradient-to-r from-white to-yellow-400'
+                          : 'h-full bg-white rounded-full bg-gradient-to-r from-white to-red-400'
+                      }
                       style={{ width: `${(percentage > 1 ? 1 : percentage) * 100}%` }}
                     ></div>
                   </div>
@@ -152,17 +166,15 @@ const Sensor = (props: SensorProps) => {
               )}
             </div>
           </div>
-          {false && (
-            <div className='flex flex-col items-end'>
-              <h4 className='text-xs font-bold cursor-pointer'>
-                {t('common.maintenance.maintain')} <DoubleRightOutlined />
-              </h4>
-            </div>
-          )}
+          <div className='flex flex-col items-end opacity-0 pointer-events-none'>
+            <h4 className='text-xs font-bold cursor-pointer'>
+              {t('common.maintenance.maintain')} <DoubleRightOutlined />
+            </h4>
+          </div>
         </div>
 
-        <div className='flex gap-3 justify-end'>
-          {token === 'admin' && (
+        {token === 'admin' && (
+          <div className='flex gap-3 justify-end'>
             <Button
               disabled={loading || !data?.Next}
               size='large'
@@ -180,8 +192,8 @@ const Sensor = (props: SensorProps) => {
             >
               {t('common.maintenance.ok')}
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

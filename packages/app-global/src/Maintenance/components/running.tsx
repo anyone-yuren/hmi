@@ -223,8 +223,8 @@ const Running = (props: Props) => {
             </h4>
           </div>
         </div>
-        <div className='flex gap-3 justify-end'>
-          {token === 'admin' && (
+        {token === 'admin' && (
+          <div className='flex gap-3 justify-end'>
             <Button
               // disabled={loading || !data?.next}
               disabled={loading}
@@ -244,8 +244,8 @@ const Running = (props: Props) => {
             >
               {t('common.maintenance.ok')}
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
