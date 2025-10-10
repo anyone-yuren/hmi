@@ -10,6 +10,7 @@ import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
 import { App, Button, Popconfirm, Skeleton, Tooltip } from 'antd';
 import { useTheme } from 'antd-style';
+import classnames from 'classnames';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
@@ -67,7 +68,14 @@ const Lifting = ({ loading, data, reload }: Props) => {
       {/* 顶部高光 */}
       <div className='pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-b from-[#d763b7]/100 to-[#462580]'></div>
       {/* 内容 */}
-      <div className='relative z-10 h-full p-8 flex flex-col justify-between'>
+      <div
+        className={classnames(
+          {
+            '!p-4': i18n.language !== 'zh_CN',
+          },
+          'relative z-10 h-full p-8 flex flex-col justify-between',
+        )}
+      >
         <div className='flex flex-col w-full items-center justify-center gap-2'>
           <SvgIcon name='left' size={120} />
           <h3 className='text-xl xl:text-3xl font-semibold tracking-tight'>{t('common.maintenance.lifting')}</h3>
@@ -224,8 +232,8 @@ const Lifting = ({ loading, data, reload }: Props) => {
             </h4>
           </div>
         </div>
-        <div className='flex gap-3 justify-end'>
-          {token === 'admin' && (
+        {token === 'admin' && (
+          <div className='flex gap-3 justify-end'>
             <Button
               // disabled={loading || !data?.next}
               disabled={loading}
@@ -245,8 +253,8 @@ const Lifting = ({ loading, data, reload }: Props) => {
             >
               {t('common.maintenance.ok')}
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
