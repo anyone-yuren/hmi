@@ -49,7 +49,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               叉臂裁剪高度: <span>{strategyData?.forkarm_height_cut} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              叉臂下方保护启用距离目标阈值: <span>{strategyData?.min_distance_to_task_point_close_this} mm</span>
+              屏蔽该策略的最大距离: <span>{strategyData?.min_distance_to_task_point_close_this} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
               关联传感器:
