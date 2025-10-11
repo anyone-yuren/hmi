@@ -41,9 +41,7 @@ export default function useHybirdWsExtend() {
     '/sirius/topics/safety_compose_sensor_points': (data: any) => {
       // 避障点云
       if (data.points) {
-        // const decompressedData = unzipText(data.points);
         const decompressedData = typeof data?.point_cloud === 'object' ? data?.points : unzipText(data?.points);
-        console.log('避障点云数据长度', decompressedData);
         setSeniorPoints(decompressedData ?? []);
       }
     },
