@@ -10,6 +10,16 @@ export const postPeripheralControlParam = (params: any): Promise<any> => {
   return post('/robot_config/peripheral_param/config_interactor_peripheral', params);
 };
 
+// 获取充电设置参数
+export const getChargingConfig = (): Promise<any> => {
+  return get('/mwrobot/config/get_charge_config');
+};
+
+// 设置充电参数
+export const postChargingConfig = (data: any): Promise<any> => {
+  return post('/mwrobot/config/set_charge_config', { ...data });
+};
+
 // 获取充电历史
 export const postChargingHistory = (data: any): Promise<any> => {
   return post('/mwrobot/get_charge_record', { ...data });

@@ -1,5 +1,6 @@
 {
   "common": {
+    "abnormal": "异常",
     "about": {
       "choose": "请选择其他日志",
       "client": "客户端",

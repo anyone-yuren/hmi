@@ -1,5 +1,6 @@
 {
   "common": {
+    "abnormal": "anormal",
     "about": {
       "choose": "Veuillez sélectionner un autre journal",
       "client": "Client",

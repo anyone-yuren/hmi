@@ -1,17 +1,17 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { useAsyncEffect, useRequest } from 'ahooks';
-import { Badge, Button, Drawer, List, Tree, TreeDataNode, Typography } from 'antd';
+import { Button, Drawer, List, Tree, TreeDataNode } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SvgIcon } from 'ui';
 import noVehicleSvg from '../assets/icons/noVehicle.svg';
 import { useAgvType } from '../hooks/useAgvType';
 import useDrawerClassName from '../hooks/useDrawerClassName';
 import NodeLogs from './components/nodeLogs';
-import { config_agv_info, getChangeLogs, getNodeLogs } from './services';
-
+import SystemPanel from './components/systemPanel';
+import WsContainer from './components/wsContainer';
+import { config_agv_info, getChangeLogs, getLogList } from './services';
 const useStyles = createStyles(({ css, token }) => ({
   tree: css`
     background-color: transparent;
@@ -57,8 +57,10 @@ const About = () => {
   const { t, i18n } = useTranslation();
   const { styles } = useStyles();
   const theme = useTheme();
-  const [openLogs, setLogsOpen] = useState(false);
-  const [openNodeLogs, setOpenNodeLogs] = useState(false);
+  const [openLogs, setLogsOpen] = useState(false); // 这个疑似废弃了
+  const [openNodeLogs, setOpenNodeLogs] = useState(false); // 废弃，用下面的
+  const [childNodeConfig, setChildNodeConfig] = useState({ open: false, node: [], key: '' });
+
   const classNames = useDrawerClassName();
   const { data: agvInfo } = useRequest(config_agv_info);
 
@@ -67,21 +69,35 @@ const About = () => {
   const [pdName, setPdName] = useState(`MW_${agvType}.png`);
   // 在组件中添加状态管理当前加载的节点
   const [loadingNode, setLoadingNode] = useState<string | null>(null);
-  const { run: getLogs, loading: logsLoading } = useRequest(getNodeLogs, {
-    manual: true,
-    onSuccess: () => {
-      setOpenNodeLogs(true);
-    },
-    onError: () => {
-      setOpenNodeLogs(true);
-    },
+  const {
+    data: logResponse,
+    loading: logLoading,
+    runAsync: getLogListAsync,
+  } = useRequest(getLogList, {
+    manual: false,
   });
+
+  // const { run: getLogs, loading: logsLoading } = useRequest(getNodeLogs, {
+  //   manual: true,
+  //   onSuccess: () => {
+  //     setOpenNodeLogs(true);
+  //   },
+  //   onError: () => {
+  //     setOpenNodeLogs(true);
+  //   },
+  // });
 
   const { data: changeLogs, runAsync: getChangeLogAsync } = useRequest(getChangeLogs, {});
 
   const renderChangeLogs = useMemo(() => {
     return changeLogs?.data;
   }, [changeLogs]);
+
+  const logList = useMemo(() => {
+    const keys = Object.keys(logResponse?.data || {});
+    if (!keys?.length) return [];
+    return keys;
+  }, [logResponse]);
 
   useAsyncEffect(async () => {
     await getChangeLogAsync({});
@@ -143,130 +159,23 @@ const About = () => {
     },
   ];
 
-  const nodesData = [
-    {
-      title: 'mwrobot_driver_h7',
-      time: '2025-07-24T10:36:16+08:00',
-      version: '20240730-R',
-      status: 1,
-      cpu: 6,
-      memory: 4.5,
-    },
-    {
-      title: 'mwrobot_driver_canbus',
-      time: '2025-07-24T10:36:16+08:00',
-      version: '20240730-R',
-      status: 1,
-      cpu: 104,
-      memory: 12,
-    },
-    {
-      title: 'mwrobot_interactor_rcs_final',
-      time: '2025-07-24T10:36:16+08:00',
-      version: '20240730-R',
-      status: 0,
-      cpu: 42,
-      memory: 32,
-    },
-    {
-      title: 'mwrobot_controller_action_executor',
-      time: '2025-07-24T10:36:16+08:00',
-      version: '20240730-R',
-      status: 0,
-      cpu: 2,
-      memory: 1,
-    },
-    {
-      title: 'mwrobot_controller_motion',
-      time: '2025-07-24T10:36:16+08:00',
-      version: '20240730-R',
-      status: 1,
-      cpu: 21,
-      memory: 3,
-    },
-    {
-      title: 'mwrobot_controller_safety',
-      time: '2025-07-24T10:36:16+08:00',
-      version: '20240730-R',
-      status: 0,
-      cpu: 2,
-      memory: 1,
-    },
-    {
-      title: 'mwrobot_controller_motion',
-      time: '2025-07-24T10:36:16+08:00',
-      version: '20240730-R',
-      status: 1,
-      cpu: 103,
-      memory: 10,
-    },
-    {
-      title: 'mwrobot_controller_safety',
-      time: '2025-07-24T10:36:16+08:00',
-      version: '20240730-R',
-      status: 0,
-      cpu: 2,
-      memory: 1,
-    },
-  ];
+  const handleRefresh = async () => {
+    const res = await getLogListAsync({});
+    const { key } = childNodeConfig;
+    const ary = res?.data?.[key];
+    setChildNodeConfig({
+      ...childNodeConfig,
+      node: ary,
+    });
+  };
+
   return (
     <div className='flex flex-col h-full p-4 gap-4 '>
       <div className=' flex gap-4 items-center flex-1 overflow-y-auto'>
         <div className='flex flex-1 flex-col gap-4 h-full relative p-4 rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm shadow-teal-500/40 overflow-hidden'>
-          <div
-            className='flex-1 flex flex-col gap-2  bg-no-repeat'
-            style={{
-              backgroundImage: `url(${productImage()})`,
-              backgroundSize: agvType ? '100% auto' : '70% auto',
-              backgroundPosition: 'center bottom',
-            }}
-          >
-            <div></div>
-            <div>
-              <Typography.Title level={5} className='!m-0'>
-                {t('common.about.serial')}
-              </Typography.Title>
-              <Typography.Text className='!m-0 opacity-70'>{agvInfo?.serial_number || '-'}</Typography.Text>
-            </div>
-            <div>
-              <Typography.Title level={5} className='!m-0'>
-                {t('common.about.date')}
-              </Typography.Title>
-              <Typography.Text className='!m-0 opacity-70'>{agvInfo?.manufacture_date || '-'}</Typography.Text>
-            </div>
-            <div>
-              <Typography.Title level={5} className='!m-0'>
-                {t('common.about.vehicleType')}
-              </Typography.Title>
-              <Typography.Text
-                onClick={() => {
-                  // 生成0到imageNames长度-1之间的随机整数
-                  const randomIndex = Math.floor(Math.random() * imageNames.length);
-                  // 设置随机选中的图片名称
-                  setPdName(imageNames[randomIndex]);
-                }}
-                className='!m-0 opacity-70'
-              >
-                {agvType ? agvType : t('common.about.unknown')}
-              </Typography.Text>
-            </div>
-            {false && (
-              <div>
-                <Typography.Title level={5} className='!m-0'>
-                  {t('common.about.memory')}
-                </Typography.Title>
-                <Typography.Text className='!m-0 opacity-70'>31.3 / 40 (G)</Typography.Text>
-              </div>
-            )}
-            {false && (
-              <div>
-                <Typography.Title level={5} className='!m-0'>
-                  {t('common.about.cpu')}
-                </Typography.Title>
-                <Typography.Text className='!m-0 opacity-70'>87%</Typography.Text>
-              </div>
-            )}
-          </div>
+          {true && <SystemPanel></SystemPanel>}
+          <WsContainer></WsContainer>
+
           {false && (
             <div className='flex justify-end gap-2'>
               <Button color='yellow' variant='solid'>
@@ -301,7 +210,9 @@ const About = () => {
               />
             </motion.div>
           </div>
-          <div className='max-h-[200px] overflow-y-auto'>{renderChangeLogs}</div>
+          <div className='max-h-[200px] overflow-y-auto'>
+            {renderChangeLogs ? renderChangeLogs : <List dataSource={[]}></List>}
+          </div>
           <div className='w-full'>
             <h2 className='text-lg font-bold mb-1'>{t('common.about.nodes')} </h2>
             <motion.div
@@ -322,7 +233,7 @@ const About = () => {
             <List
               className='w-full'
               itemLayout='horizontal'
-              dataSource={true ? [] : nodesData}
+              dataSource={logList}
               renderItem={(item, index) => (
                 <List.Item
                   classNames={{
@@ -331,12 +242,17 @@ const About = () => {
                   actions={[
                     <Button
                       type='primary'
-                      loading={loadingNode === item.title && logsLoading}
+                      loading={loadingNode === item && logLoading}
                       onClick={() => {
-                        console.log(item.title);
-
-                        setLoadingNode(item.title);
-                        getLogs({ node_name: item.title });
+                        setLoadingNode(item);
+                        setOpenNodeLogs(true);
+                        setChildNodeConfig({
+                          open: true,
+                          node: logResponse?.data?.[item],
+                          key: item,
+                        });
+                        // setLogsOpen(true);
+                        // getLogs({ node_name: item.title });
                       }}
                     >
                       {t('common.about.viewlog')}
@@ -344,37 +260,38 @@ const About = () => {
                   ]}
                 >
                   <List.Item.Meta
-                    title={
-                      <div className='flex items-center gap-2 justify-between'>
-                        <div className='px-1 flex items-center gap-1'>
-                          {item.status ? (
-                            <Badge status='processing' className={styles.dot} color={theme.colorPrimary} />
-                          ) : (
-                            <Badge className={styles.dot} status='default' />
-                          )}
-                          {item.title}
-                        </div>
-                        <div className='flex items-center justify-between min-w-32 gap-1'>
-                          <span
-                            style={{
-                              color:
-                                item.cpu > 80 ? theme.colorError : item.cpu > 40 ? theme.colorWarning : theme.colorText,
-                            }}
-                          >
-                            <SvgIcon name={'cpu'} size={16} /> {item.cpu}%
-                          </span>
-                          <span>
-                            <SvgIcon name={'memory'} size={16} /> {item.memory}%
-                          </span>
-                        </div>
-                      </div>
-                    }
-                    description={
-                      <div className='flex items-center gap-2'>
-                        <span>{item.time}</span>
-                        <span>{item.version}</span>
-                      </div>
-                    }
+                    title={<div className='px-1'>{item}</div>}
+                    // title={
+                    //   <div className='flex items-center gap-2 justify-between'>
+                    //     <div className='px-1 flex items-center gap-1'>
+                    //       {item.status ? (
+                    //         <Badge status='processing' className={styles.dot} color={theme.colorPrimary} />
+                    //       ) : (
+                    //         <Badge className={styles.dot} status='default' />
+                    //       )}
+                    //       {item.title}
+                    //     </div>
+                    //     <div className='flex items-center justify-between min-w-32 gap-1'>
+                    //       <span
+                    //         style={{
+                    //           color:
+                    //             item.cpu > 80 ? theme.colorError : item.cpu > 40 ? theme.colorWarning : theme.colorText,
+                    //         }}
+                    //       >
+                    //         <SvgIcon name={'cpu'} size={16} /> {item.cpu}%
+                    //       </span>
+                    //       <span>
+                    //         <SvgIcon name={'memory'} size={16} /> {item.memory}%
+                    //       </span>
+                    //     </div>
+                    //   </div>
+                    // }
+                    // description={
+                    //   <div className='flex items-center gap-2'>
+                    //     <span>{item.time}</span>
+                    //     <span>{item.version}</span>
+                    //   </div>
+                    // }
                   />
                 </List.Item>
               )}
@@ -411,16 +328,27 @@ const About = () => {
           </p>
         }
         placement='right'
-        open={openNodeLogs}
+        open={childNodeConfig.open}
         loading={false}
         classNames={{
           ...classNames,
           body: '!p-0',
         }}
         width={'100%'}
-        onClose={() => setOpenNodeLogs(false)}
+        onClose={() =>
+          setChildNodeConfig({
+            open: false,
+            node: [],
+            key: '',
+          })
+        }
       >
-        <NodeLogs />
+        <NodeLogs
+          node={childNodeConfig.node}
+          nodeKey={childNodeConfig.key}
+          listLoading={logLoading}
+          refresh={handleRefresh}
+        />
       </Drawer>
     </div>
   );

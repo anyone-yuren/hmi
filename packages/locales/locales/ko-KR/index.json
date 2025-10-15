@@ -1,5 +1,6 @@
 {
   "common": {
+    "abnormal": "이상",
     "about": {
       "choose": "다른 로그를 선택하십시오",
       "client": "고객",
