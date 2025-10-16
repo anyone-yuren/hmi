@@ -45,8 +45,8 @@ export const useVehicle = () => {
           setPowerStatus({
             power: Math.round(data?.power),
             charge_status: Math.round(data?.charge_status),
-            current: data?.current,
-            voltage: data?.voltage,
+            current: data?.current.toFixed(2),
+            voltage: data?.voltage.toFixed(2),
           });
           setSystemDateTime(data?.timestamp);
         }

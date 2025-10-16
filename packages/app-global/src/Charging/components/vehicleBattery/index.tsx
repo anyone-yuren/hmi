@@ -236,9 +236,11 @@ const VehicleBattery = (props: any) => {
           >
             {t('common.charging.chargingRecord')}
           </Button>
-          <Button color='yellow' variant='solid'>
-            {t('common.charging.abnormalRecord')}
-          </Button>
+          {false && (
+            <Button color='yellow' variant='solid'>
+              {t('common.charging.abnormalRecord')}
+            </Button>
+          )}
           <ChargingHistory
             open={showHistory}
             onClose={() => {

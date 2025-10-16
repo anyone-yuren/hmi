@@ -25,10 +25,10 @@ const Charging = () => {
 
   const temperatureTitle = useMemo(() => {
     if (!chargePileStatus?.temperature_value) {
-      return chargePileStatus?.temperature_status === 0 ? (
-        t('common.normal')
-      ) : (
+      return chargePileStatus?.temperature_status === 1 ? (
         <span className='text-[#d32029]'>{t('common.abnormal')}</span>
+      ) : (
+        t('common.normal')
       );
     }
     return `${chargePileStatus?.temperature_value}°C`;

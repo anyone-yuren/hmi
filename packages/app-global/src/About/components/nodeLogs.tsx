@@ -1,7 +1,8 @@
 import { RedoOutlined } from '@ant-design/icons';
-import { useRequest } from 'ahooks';
+import { useRequest, useSize } from 'ahooks';
 import { Button, List, Radio, Result, Splitter, Typography } from 'antd';
-import { useMemo, useState } from 'react';
+import VirtualList from 'rc-virtual-list';
+import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import LoadingPage from '../../components/PageLoading/Loading';
@@ -18,18 +19,12 @@ const NodeLogs = (props: IProps) => {
   const { node, nodeKey, listLoading, refresh } = props;
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
-  // const [loading, setLoading] = useState(false);
   const [loadingList, setLoadingList] = useState(false);
   const [radioValue, setRadioValue] = useState('all');
   const [nodePath, setNodePath] = useState('');
-  // const { token } = theme.useToken();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const size = useSize(containerRef);
 
-  // const panelStyle: React.CSSProperties = {
-  //   marginBottom: 8,
-  //   background: token.colorFillAlter,
-  //   borderRadius: token.borderRadiusLG,
-  //   border: 'none',
-  // };
   const {
     data: logInfo,
     loading: logLoading,
@@ -37,15 +32,7 @@ const NodeLogs = (props: IProps) => {
   } = useRequest((params) => viewLog(params), {
     manual: true,
   });
-  // const { data: logsList, loading: logListLoading } = useRequest(getLogList, {
-  //   onSuccess: (res) => {
-  //     // setLoadingList(false);
-  //   },
-  // });
 
-  // useEffect(() => {
-  //   console.log('logInfo', logInfo);
-  // }, [logInfo]);
   const renderList = useMemo(() => {
     const ary = logInfo?.data || [];
     const typeKeys: any = ['info', 'error', 'warning'];
@@ -78,10 +65,10 @@ const NodeLogs = (props: IProps) => {
       className='w-full h-full flex'
       style={{
         background: `
-      radial-gradient(circle at 60% 90%, #3f6fa199, #0000 60%), 
-      radial-gradient(circle at 20px 20px, #2e67a1cc, #0000 25%), 
-      #182336
-    `,
+          radial-gradient(circle at 60% 90%, #3f6fa199, #0000 60%), 
+          radial-gradient(circle at 20px 20px, #2e67a1cc, #0000 25%), 
+          #182336
+        `,
       }}
     >
       <Splitter className='w-full h-full'>
@@ -93,10 +80,6 @@ const NodeLogs = (props: IProps) => {
                 type='primary'
                 icon={<RedoOutlined />}
                 onClick={() => {
-                  // setLoadingList(true);
-                  // setTimeout(() => {
-                  //   setLoadingList(false);
-                  // }, 2000);
                   refresh();
                   setVisible(false);
                 }}
@@ -121,12 +104,6 @@ const NodeLogs = (props: IProps) => {
                           <div className='px-1 flex items-center gap-1'>{item}</div>
                         </div>
                       }
-                      // description={
-                      //   <div className='flex items-center gap-2'>
-                      //     <span>{item}</span>
-                      //     <span>{item}</span>
-                      //   </div>
-                      // }
                     />
                   </List.Item>
                 )}
@@ -162,133 +139,21 @@ const NodeLogs = (props: IProps) => {
                       </Radio.Button>
                     </Radio.Group>
                   </div>
-                  <div className='bg-black/80 rounded-lg w-full h-full p-2 overflow-y-auto flex-1'>
+                  <div ref={containerRef} className='bg-black/80 rounded-lg w-full h-full p-2 overflow-y-auto flex-1'>
                     {renderList?.length ? (
-                      renderList?.map((item) => {
-                        return (
+                      <VirtualList data={renderList} itemHeight={44} height={size?.height} itemKey={'title'}>
+                        {(item: any) => (
                           <Paragraph
                             className='!mb-2'
                             type={item.type}
                             style={{ whiteSpace: 'pre-wrap' }}
                           >{`${item.title}`}</Paragraph>
-                        );
-                      })
+                        )}
+                      </VirtualList>
                     ) : (
-                      <>
-                        <Result icon={<SvgIcon size={320} name={'noLog'} />} title={t('common.about.nolog')}></Result>
-                      </>
+                      <Result icon={<SvgIcon size={320} name={'noLog'} />} title={t('common.about.nolog')}></Result>
                     )}
                   </div>
-                  {false && (
-                    <div className='bg-black/80 rounded-lg w-full h-full p-2 overflow-y-auto flex-1'>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:35:22.140466] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph type='warning' className='!mb-2'>
-                        [2025-08-02 19:35:32.141429] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:35:42.142385] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:35:52.143405] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:36:02.144383] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:36:05.627674] [INFO] [运行信息]任务号:0, 任务状态:初始化, 半自动模式, 不在点上,
-                        货物状态:无货, 电量:46, 急停:0, 避障:1, 错误码:0x00000000, 车号:25, 剩余路线数量:0
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:36:12.145327] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='danger'>
-                        [2025-08-08 16:00:16.200668] [ERROR] Time synchronization successful motion data count is too
-                        few 4
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:36:22.146250] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:36:32.147161] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:36:42.148088] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:36:52.148989] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:37:02.149868] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:37:12.150771] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:37:22.151673] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:37:32.152575] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:37:42.153477] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:35:22.140466] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:35:32.141429] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:35:42.142385] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:35:52.143405] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:36:02.144383] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:36:05.627674] [INFO] [运行信息]任务号:0, 任务状态:初始化, 半自动模式, 不在点上,
-                        货物状态:无货, 电量:46, 急停:0, 避障:1, 错误码:0x00000000, 车号:25, 剩余路线数量:0
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:36:12.145327] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='danger'>
-                        [2025-08-08 16:00:16.200668] [ERROR] Time synchronization successful motion data count is too
-                        few 4
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:36:22.146250] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:36:32.147161] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:36:42.148088] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:36:52.148989] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2' type='warning'>
-                        [2025-08-02 19:37:02.149868] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:37:12.150771] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:37:22.151673] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:37:32.152575] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                      <Paragraph className='!mb-2'>
-                        [2025-08-02 19:37:42.153477] [WARN] 车体已连续15天未充满电
-                      </Paragraph>
-                    </div>
-                  )}
                 </div>
               ))}
             {!visible && (
