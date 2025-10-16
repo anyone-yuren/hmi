@@ -63,8 +63,8 @@ const NodeLogs = (props: IProps) => {
 
   const loadListNode = async (path: string) => {
     setNodePath(path);
-    await getLogInfo({ path });
     setVisible(true);
+    await getLogInfo({ path });
   };
 
   return (
