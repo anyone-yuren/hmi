@@ -156,6 +156,7 @@
       "workingTimes": "工作次数"
     },
     "modify": "修改",
+    "networkErrorTips": "网络异常，请重试",
     "noData": "暂无数据",
     "noPermission": "对不起，您没有权限访问此页面。",
     "normal": "正常",
@@ -190,7 +191,9 @@
     "pleaseUsername": "请输入用户名",
     "plsInput": "请输入",
     "plsInputParams": "请填写参数",
+    "reTry": "重试",
     "refresh": "刷新",
+    "retryNetworkTips": "系统会自动每隔10s连接三次，若依然无法加载数据，请手动尝试！",
     "safety": {
       "3dpoints": "3D点云",
       "back": "后退",

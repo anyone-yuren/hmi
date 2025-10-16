@@ -60,9 +60,9 @@ const VehicleBattery = (props: any) => {
   const {
     run,
     loading,
-    data: serviceControlParam,
+    // data: serviceControlParam,
   } = useRequest(getChargingConfig, {
-    manual: true,
+    manual: false,
     onSuccess: (response) => {
       setChargeSetting(response?.data);
     },
@@ -166,12 +166,13 @@ const VehicleBattery = (props: any) => {
                 <Typography.Text className='!m-0 font-bold '>{t('common.charging.lowPowerAlarm')}</Typography.Text>
                 <Typography.Text className='!m-0 opacity-70'>
                   <Switch
-                    defaultChecked={chargeSetting?.enable_low_battery_alarm}
+                    value={chargeSetting?.enable_low_battery_alarm}
                     onChange={(checked) => {
                       postRun.run({
                         enable_low_battery_alarm: checked,
                         low_battery_alarm_value: chargeSetting?.low_battery_alarm_value,
                       });
+                      run();
                     }}
                   />
                 </Typography.Text>
@@ -190,7 +191,7 @@ const VehicleBattery = (props: any) => {
                     }}
                   >
                     <Slider
-                      defaultValue={serviceControlParam?.low_power}
+                      defaultValue={chargeSetting?.low_battery_alarm_value}
                       className={`swiper-no-swiping w-full m-0`}
                       min={0}
                       max={100}

@@ -41,6 +41,9 @@ const NodeLogs = (props: IProps) => {
       error: 'danger',
       warning: 'warning',
     };
+    // 使用 Map 去重
+    const seenTitles = new Map();
+
     return ary
       ?.map((item) => {
         const matchedType = typeKeys.find((key) => new RegExp(`\\[${key.toUpperCase()}\\]`, 'i').test(item));
@@ -50,6 +53,10 @@ const NodeLogs = (props: IProps) => {
         };
       })
       ?.filter((item) => {
+        if (seenTitles.has(item.title)) {
+          return false; // 已存在，过滤掉
+        }
+        seenTitles.set(item.title, true); // 标记为已处理
         return radioValue === 'all' ? true : item.type === radioValue;
       });
   }, [logInfo, radioValue]);

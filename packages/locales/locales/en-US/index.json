@@ -156,6 +156,7 @@
       "workingTimes": "Number of operations"
     },
     "modify": "Modify",
+    "networkErrorTips": "Network abnormality, please try again",
     "noData": "No data",
     "noPermission": "Sorry, you do not have permission to access this page.",
     "normal": "Normal",
@@ -190,7 +191,9 @@
     "pleaseUsername": "Please enter your username",
     "plsInput": "Please input",
     "plsInputParams": "Please input parameters",
+    "reTry": "Retry",
     "refresh": "Refresh",
+    "retryNetworkTips": "The system will automatically connect three times every 10 seconds. If the data still cannot be loaded, please try manually!",
     "safety": {
       "3dpoints": "3D Point Cloud",
       "back": "Back off",
