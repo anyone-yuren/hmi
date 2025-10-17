@@ -53,7 +53,6 @@ const TaskPanel = forwardRef((props: any, ref) => {
   const { data: templateList, runAsync: getTemplateList } = useRequest(getTemplate, { manual: true });
   const { data: agvInfo, loading }: any = useRequest(() => config_agv_info(), {});
   const isKVehicle = useMemo(() => {
-    // return true;
     return agvInfo?.executor === 13;
   }, [agvInfo]);
   const move = useRef(false);

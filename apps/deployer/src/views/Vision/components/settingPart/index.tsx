@@ -18,12 +18,13 @@ const SettingPart = (props: any) => {
   const { disconnect, sendMessage, readyState, connect } = useVision();
   const { t } = useTranslation();
 
-  const { pointCloudParams, setChassis, pointsCloudHeart, pointsCloudKey } = useVisionStore(
+  const { pointCloudParams, setChassis, pointsCloudHeart, pointsCloudKey, setPointsCloudHeart } = useVisionStore(
     useShallow((store: any) => ({
       pointsCloudKey: store.pointsCloudKey,
       pointCloudParams: store.pointCloudParams,
       setChassis: store.setChassis,
       pointsCloudHeart: store.pointsCloudHeart,
+      setPointsCloudHeart: store.setPointsCloudHeart,
     })),
   );
 
@@ -49,6 +50,10 @@ const SettingPart = (props: any) => {
         }),
       );
   }, [pointsCloudHeart, readyState, pointsCloudKey]);
+
+  useEffect(() => {
+    readyState != 1 && setPointsCloudHeart(0);
+  }, [readyState]);
 
   useEffect(() => {
     return () => {

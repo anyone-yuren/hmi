@@ -43,7 +43,7 @@ const NodeLogs = (props: IProps) => {
     };
     // 使用 Map 去重
     const seenTitles = new Map();
-
+    if (typeof ary === 'string') return [];
     return ary
       ?.map((item) => {
         const matchedType = typeKeys.find((key) => new RegExp(`\\[${key.toUpperCase()}\\]`, 'i').test(item));
@@ -146,17 +146,19 @@ const NodeLogs = (props: IProps) => {
                       </Radio.Button>
                     </Radio.Group>
                   </div>
-                  <div ref={containerRef} className='bg-black/80 rounded-lg w-full h-full p-2 overflow-y-auto flex-1'>
+                  <div className='bg-black/80 rounded-lg w-full h-full p-2 overflow-y-auto flex-1'>
                     {renderList?.length ? (
-                      <VirtualList data={renderList} itemHeight={44} height={size?.height} itemKey={'title'}>
-                        {(item: any) => (
-                          <Paragraph
-                            className='!mb-2'
-                            type={item.type}
-                            style={{ whiteSpace: 'pre-wrap' }}
-                          >{`${item.title}`}</Paragraph>
-                        )}
-                      </VirtualList>
+                      <div ref={containerRef} className='h-full'>
+                        <VirtualList data={renderList} itemHeight={44} height={671} itemKey={'title'}>
+                          {(item: any) => (
+                            <Paragraph
+                              className='!mb-2'
+                              type={item.type}
+                              style={{ whiteSpace: 'pre-wrap' }}
+                            >{`${item.title}`}</Paragraph>
+                          )}
+                        </VirtualList>
+                      </div>
                     ) : (
                       <Result icon={<SvgIcon size={320} name={'noLog'} />} title={t('common.about.nolog')}></Result>
                     )}
