@@ -16,6 +16,7 @@ import CarModel from './component/newCarComponents/carModel';
 import DrawerContent from './component/newCarComponents/drawerContent';
 import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
+import PalletModel from './component/newCarComponents/palletModel';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
 import SensorsToMap from './component/newCarComponents/sensorsToMap';
 import { MAX_SCALE, MIN_SCALE } from './constants/config';
@@ -716,6 +717,7 @@ export default function RectDrawer() {
                   <Group name='sensor_list'>
                     <SensorsToMap />
                   </Group>
+                  <PalletModel />
                   {/* 绘制矩形 */}
                   {rects.map((r) => (
                     <Group key={r.id} className='rect'>
