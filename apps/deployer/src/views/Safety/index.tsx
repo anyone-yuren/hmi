@@ -17,6 +17,7 @@ import DrawerContent from './component/newCarComponents/drawerContent';
 import Maphandles from './component/newCarComponents/mapHandles';
 import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
+import SensorsToMap from './component/newCarComponents/sensorsToMap';
 import { MAX_SCALE, MIN_SCALE } from './constants/config';
 import { useSafety } from './hooks/useSafety';
 import { safetyConfig } from './service';
@@ -712,6 +713,9 @@ export default function RectDrawer() {
                 <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
                 <CarModel vehicleOutline={memoObstacleData?.vehicle_outline} />
                 <Layer ref={layerRef}>
+                  <Group name='sensor_list'>
+                    <SensorsToMap />
+                  </Group>
                   {/* 绘制矩形 */}
                   {rects.map((r) => (
                     <Group key={r.id} className='rect'>
