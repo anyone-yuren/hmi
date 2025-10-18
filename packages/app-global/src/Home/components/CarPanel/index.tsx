@@ -23,15 +23,28 @@ const CarStage = () => {
           gl={{
             alpha: true,
           }}
+          shadows
           // scene={{
           //   fog: new Fog("#fff", 3, 6),
           // }}
         >
           <color attach='background' args={['#000d0f']} />
           {/* <Environment files='/textures/abandoned_factory_canteen_01_1k.hdr' background /> */}
-          <ambientLight intensity={0.3} />
-          <pointLight position={[0, 5, 0]} intensity={1.5} color='#ffffff' />
-          <spotLight position={[2, 8, 2]} angle={0.3} penumbra={0.5} intensity={2} castShadow />
+          {/* <ambientLight intensity={0.3} /> */}
+          {/* <pointLight position={[0, 5, 0]} intensity={1.5} color='#ffffff' /> */}
+          <ambientLight intensity={0.35} />
+          <directionalLight
+            castShadow
+            position={[5, 8, 5]}
+            intensity={1}
+            shadow-mapSize-width={1024}
+            shadow-mapSize-height={1024}
+            shadow-camera-left={-10}
+            shadow-camera-right={10}
+            shadow-camera-top={10}
+            shadow-camera-bottom={-10}
+          />
+          {/* <spotLight position={[2, 8, 2]} angle={0.3} penumbra={0.5} intensity={2} castShadow /> */}
           {/* <Sky sunPosition={[100, 20, 10]} /> */}
           <CameraControls
             makeDefault

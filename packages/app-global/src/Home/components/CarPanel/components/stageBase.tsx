@@ -34,7 +34,7 @@ const StageBase = (props) => {
 
   useEffect(() => {
     if (controls) {
-      controls.setPosition(agvPosition.x / 1000 + 1, 4, agvPosition.y / 1000, true);
+      controls.setPosition(agvPosition.x / 1000 + 4, 6, agvPosition.y / 1000 + 4, true);
       controls.setTarget(agvPosition.x / 1000, 0, agvPosition.y / 1000, true);
     }
   }, [agvPosition]);
@@ -58,7 +58,7 @@ const StageBase = (props) => {
         // position={[agvPosition.x / 1000, -0.1, agvPosition.y / 1000]}
         {...gridConfig}
       />
-      <ambientLight color='yellow' intensity={2.5} />
+      {/* <ambientLight intensity={2.5} /> */}
       {/* 定向光 */}
       {/* <directionalLight
         castShadow

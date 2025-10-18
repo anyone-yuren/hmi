@@ -103,6 +103,10 @@ const router = createHashRouter([
     ],
   },
   {
+    path: 'models',
+    element: LazyLoad(lazy(() => import('@/views/Models'))),
+  },
+  {
     path: 'safetyPointsCloud',
     element: LazyLoad(lazy(() => import('@/views/Safety/safety'))),
   },
