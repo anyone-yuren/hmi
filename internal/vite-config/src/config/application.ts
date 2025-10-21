@@ -2,7 +2,6 @@ import { resolve } from "path";
 
 import dayjs from "dayjs";
 import { readPackageJSON } from "pkg-types";
-import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, loadEnv, mergeConfig, type UserConfig } from "vite";
 import { getDefaultPwaOptions } from "../options";
 import { createPlugins, loadApplicationPlugins } from "../plugins";
@@ -98,11 +97,11 @@ function defineApplicationConfig(options: DefineOptions = {}) {
             },
           },
           plugins: [
-            visualizer({
-              open: true, // 打包完成后自动打开浏览器
-              gzipSize: true, // 显示 gzip 压缩大小
-              brotliSize: true, // 显示 brotli 压缩大小
-            }),
+            // visualizer({
+            //   open: true, // 打包完成后自动打开浏览器
+            //   gzipSize: true, // 显示 gzip 压缩大小
+            //   brotliSize: true, // 显示 brotli 压缩大小
+            // }),
           ],
         },
       },

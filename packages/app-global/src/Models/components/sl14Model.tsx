@@ -107,7 +107,7 @@ function Sl14Model() {
   };
 
   return (
-    <group position={[0, 0, 3]}>
+    <group position={[0, 0, 0]}>
       <ForkliftBody />
       <MastAssembly />
       <Forks />

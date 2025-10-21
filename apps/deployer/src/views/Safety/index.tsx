@@ -477,8 +477,9 @@ export default function RectDrawer() {
     tween.play();
   }
   useEffect(() => {
+    if (!size?.width || !stageRef?.current) return;
     centerOriginWithAnimation();
-  }, [size]);
+  }, [size?.width, size?.height, stageRef.current]);
   useEffect(() => {
     setStageScale(scale);
   }, [scale]);
@@ -645,11 +646,13 @@ export default function RectDrawer() {
     return <ErrorPage loading={obstacleDataLoading} refresh={refreshObstacleData} />;
   }
   // 与车载约定，0就是未启动
-  if (!obsInfo.type) {
-    return <EmptyPage title={getObsMsg(obsInfo?.type ?? 0)} icon='rest' />;
-  }
+  // if (!obsInfo.type) {
+  //   return <EmptyPage title={getObsMsg(obsInfo?.type ?? 0)} icon='rest' />;
+  // }
 
-  return (
+  return !obsInfo.type ? (
+    <EmptyPage title={getObsMsg(obsInfo?.type ?? 0)} icon='rest' />
+  ) : (
     <div
       className={`w-full h-full flex flex-col !absolute left-0 top-0 bottom-0 bg-white text-black ${isDark ? '!bg-black text-white' : ''}`}
     >
@@ -682,7 +685,7 @@ export default function RectDrawer() {
               isDark={isDark}
               loading={obstacleDataLoading}
             />
-            <div className='relative h-full flex-1 min-w-0' ref={ref}>
+            <div className='relative h-full flex-1 min-w-30 min-h-30' ref={ref}>
               <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
               <div className='p-2 flex items-center gap-3 absolute bottom-0 left-0 right-0'>
                 {isMobile ? (
@@ -694,150 +697,156 @@ export default function RectDrawer() {
                   </>
                 )}
               </div>
-              <Stage
-                ref={stageRef}
-                width={size?.width}
-                height={size?.height}
-                onTouchStart={!isMobile ? handleMouseDown : undefined}
-                onTouchMove={!isMobile ? handleMouseMove : undefined}
-                onTouchEnd={!isMobile ? handleMouseUp : undefined}
-                onMouseDown={!isMobile ? handleMouseDown : undefined}
-                onMouseMove={!isMobile ? handleMouseMove : undefined}
-                onMouseUp={!isMobile ? handleMouseUp : undefined}
-                onWheel={!isMobile ? handleWheel : undefined}
-                draggable={isMobile}
-                onDragEnd={() => {
-                  setReRenderLineGrid(!reRenderLineGrid);
-                }}
-                style={stageStyle}
-              >
-                <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
-                <CarModel vehicleOutline={memoObstacleData?.vehicle_outline} />
-                <Layer ref={layerRef}>
-                  <Group name='sensor_list'>
-                    <SensorsToMap />
-                  </Group>
-                  <PalletModel />
-                  {/* 绘制矩形 */}
-                  {rects.map((r) => (
-                    <Group key={r.id} className='rect'>
-                      {/* 坐标和尺寸提示 */}
-                      {selectedId === String(r.id) && (
-                        <>
-                          <Text
-                            text={`(${0 - Math.round(r.y)}, ${0 - Math.round(r.x)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
-                            x={Math.round(r.x)}
-                            y={Math.round(r.y) - 12} // 显示在矩形上方
-                            fontSize={18}
-                            fill={isDark ? '#fff' : '#000'}
-                            listening={false} // 不可交互
-                          />
-                          {/* 显示右下角坐标 */}
-                          <Text
-                            text={`(${0 - Math.round(r.y + r.height)}, ${0 - Math.round(r.x + r.width)})`}
-                            x={Math.round(r.x + r.width)}
-                            y={Math.round(r.y + r.height)}
-                            fontSize={18}
-                            fill={isDark ? '#fff' : '#000'}
-                          />
-                        </>
-                      )}
-                      <Rect
-                        id={r.id + ''}
-                        x={r.x}
-                        y={r.y}
-                        width={r.width}
-                        height={r.height}
-                        stroke={selectedId === String(r.id) ? '#22d3ee' : '#ffd33d'}
-                        strokeWidth={selectedId === String(r.id) ? 1.5 : 2}
-                        dash={[4, 4]}
-                        fill={'rgba(255,211,61,0.2)'}
-                        draggable={noData}
-                        onTransform={handleTransform}
-                        onTransformStart={handleTransformStart}
-                        onTransformEnd={handleTransformEnd}
-                        onDragMove={handleDragMove}
-                        onDragEnd={handleDragEnd}
-                        onClick={() => noData && setSelectedId(String(r.id))}
-                        onTap={() => noData && setSelectedId(String(r.id))}
-                        onDragStart={(e) => {
-                          const node = e.target as Konva.Rect;
-                          node.setAttrs({
-                            startPos: {
-                              x: node.x(),
-                              y: node.y(),
-                            },
-                          });
-                        }}
-                      />
+              {size?.width ? (
+                <Stage
+                  ref={stageRef}
+                  width={size?.width}
+                  height={size?.height}
+                  onTouchStart={!isMobile ? handleMouseDown : undefined}
+                  onTouchMove={!isMobile ? handleMouseMove : undefined}
+                  onTouchEnd={!isMobile ? handleMouseUp : undefined}
+                  onMouseDown={!isMobile ? handleMouseDown : undefined}
+                  onMouseMove={!isMobile ? handleMouseMove : undefined}
+                  onMouseUp={!isMobile ? handleMouseUp : undefined}
+                  onWheel={!isMobile ? handleWheel : undefined}
+                  draggable={isMobile}
+                  onDragEnd={() => {
+                    setReRenderLineGrid(!reRenderLineGrid);
+                  }}
+                  style={stageStyle}
+                >
+                  <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
+                  <CarModel vehicleOutline={memoObstacleData?.vehicle_outline} />
+                  <Layer ref={layerRef}>
+                    <Group name='sensor_list'>
+                      <SensorsToMap />
                     </Group>
-                  ))}
-                  {/* 绘制 */}
-                  {preview && (
-                    <Group name='preview'>
-                      <Text
-                        text={`(${0 - Math.round(preview.y)}, ${0 - Math.round(preview.x)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
-                        x={Math.round(preview.x)}
-                        y={Math.round(preview.y) - 10}
-                        fontSize={18}
-                        fill={isDark ? '#fff' : '#000'}
-                      />
-                      {/* 显示右下角坐标 */}
-                      <Text
-                        text={`(${0 - Math.round(preview.y + preview.height)}, ${0 - Math.round(preview.x + preview.width)})`}
-                        x={Math.round(preview.x + preview.width)}
-                        y={Math.round(preview.y + preview.height)}
-                        fontSize={18}
-                        fill={isDark ? '#fff' : '#000'}
-                      />
-                      <Rect
-                        x={preview.x}
-                        y={preview.y}
-                        width={preview.width}
-                        height={preview.height}
-                        stroke={
-                          isUseFullRect && !isIntersecting ? 'rgba(0,150,136,0.6)' : isIntersecting ? 'red' : '#22d3ee'
-                        }
-                        strokeWidth={2}
-                        dash={[8, 6]}
-                        fill={
-                          isUseFullRect && !isIntersecting
-                            ? 'rgba(0,150,136,0.4)'
-                            : isIntersecting
-                              ? 'rgba(255,0,0,0.2)'
-                              : 'rgba(255,211,61,0.2)'
-                        }
+                    <PalletModel />
+                    {/* 绘制矩形 */}
+                    {rects?.map((r) => (
+                      <Group key={r.id} className='rect'>
+                        {/* 坐标和尺寸提示 */}
+                        {selectedId === String(r.id) && (
+                          <>
+                            <Text
+                              text={`(${0 - Math.round(r.y)}, ${0 - Math.round(r.x)}) ${Math.round(r.width)}x${Math.round(r.height)}`}
+                              x={Math.round(r.x)}
+                              y={Math.round(r.y) - 12} // 显示在矩形上方
+                              fontSize={18}
+                              fill={isDark ? '#fff' : '#000'}
+                              listening={false} // 不可交互
+                            />
+                            {/* 显示右下角坐标 */}
+                            <Text
+                              text={`(${0 - Math.round(r.y + r.height)}, ${0 - Math.round(r.x + r.width)})`}
+                              x={Math.round(r.x + r.width)}
+                              y={Math.round(r.y + r.height)}
+                              fontSize={18}
+                              fill={isDark ? '#fff' : '#000'}
+                            />
+                          </>
+                        )}
+                        <Rect
+                          id={r.id + ''}
+                          x={r.x}
+                          y={r.y}
+                          width={r.width}
+                          height={r.height}
+                          stroke={selectedId === String(r.id) ? '#22d3ee' : '#ffd33d'}
+                          strokeWidth={selectedId === String(r.id) ? 1.5 : 2}
+                          dash={[4, 4]}
+                          fill={'rgba(255,211,61,0.2)'}
+                          draggable={noData}
+                          onTransform={handleTransform}
+                          onTransformStart={handleTransformStart}
+                          onTransformEnd={handleTransformEnd}
+                          onDragMove={handleDragMove}
+                          onDragEnd={handleDragEnd}
+                          onClick={() => noData && setSelectedId(String(r.id))}
+                          onTap={() => noData && setSelectedId(String(r.id))}
+                          onDragStart={(e) => {
+                            const node = e.target as Konva.Rect;
+                            node.setAttrs({
+                              startPos: {
+                                x: node.x(),
+                                y: node.y(),
+                              },
+                            });
+                          }}
+                        />
+                      </Group>
+                    ))}
+                    {/* 绘制 */}
+                    {preview && (
+                      <Group name='preview'>
+                        <Text
+                          text={`(${0 - Math.round(preview.y)}, ${0 - Math.round(preview.x)})${Math.round(preview.width)}x${Math.round(preview.height)}`}
+                          x={Math.round(preview.x)}
+                          y={Math.round(preview.y) - 10}
+                          fontSize={18}
+                          fill={isDark ? '#fff' : '#000'}
+                        />
+                        {/* 显示右下角坐标 */}
+                        <Text
+                          text={`(${0 - Math.round(preview.y + preview.height)}, ${0 - Math.round(preview.x + preview.width)})`}
+                          x={Math.round(preview.x + preview.width)}
+                          y={Math.round(preview.y + preview.height)}
+                          fontSize={18}
+                          fill={isDark ? '#fff' : '#000'}
+                        />
+                        <Rect
+                          x={preview.x}
+                          y={preview.y}
+                          width={preview.width}
+                          height={preview.height}
+                          stroke={
+                            isUseFullRect && !isIntersecting
+                              ? 'rgba(0,150,136,0.6)'
+                              : isIntersecting
+                                ? 'red'
+                                : '#22d3ee'
+                          }
+                          strokeWidth={2}
+                          dash={[8, 6]}
+                          fill={
+                            isUseFullRect && !isIntersecting
+                              ? 'rgba(0,150,136,0.4)'
+                              : isIntersecting
+                                ? 'rgba(255,0,0,0.2)'
+                                : 'rgba(255,211,61,0.2)'
+                          }
+                          listening={false}
+                        />
+                      </Group>
+                    )}
+                    {snapLines.map((line, idx) => (
+                      <Line
+                        key={idx}
+                        points={line.points}
+                        stroke='rgba(0,150,136,0.8)'
+                        strokeWidth={2.5 / scale}
+                        dash={[6 / scale, 4 / scale]}
                         listening={false}
                       />
-                    </Group>
-                  )}
-                  {snapLines.map((line, idx) => (
-                    <Line
-                      key={idx}
-                      points={line.points}
-                      stroke='rgba(0,150,136,0.8)'
-                      strokeWidth={2.5 / scale}
-                      dash={[6 / scale, 4 / scale]}
-                      listening={false}
+                    ))}
+                    {/* 形变 */}
+                    <Transformer
+                      ref={transformerRef}
+                      rotateEnabled={false}
+                      anchorStroke='#22d3ee'
+                      anchorFill='#ffffff'
+                      anchorCornerRadius={4} // 圆角
+                      anchorStrokeWidth={2}
+                      borderStroke='#22d3ee' // 外框描边
+                      borderStrokeWidth={1.5}
+                      borderDash={[6, 4]}
+                      borderCornerRadius={4} // 外框圆角
+                      name='transformer'
+                      boundBoxFunc={(oldBox, newBox) => (newBox.width < 5 || newBox.height < 5 ? oldBox : newBox)}
                     />
-                  ))}
-                  {/* 形变 */}
-                  <Transformer
-                    ref={transformerRef}
-                    rotateEnabled={false}
-                    anchorStroke='#22d3ee'
-                    anchorFill='#ffffff'
-                    anchorCornerRadius={4} // 圆角
-                    anchorStrokeWidth={2}
-                    borderStroke='#22d3ee' // 外框描边
-                    borderStrokeWidth={1.5}
-                    borderDash={[6, 4]}
-                    borderCornerRadius={4} // 外框圆角
-                    name='transformer'
-                    boundBoxFunc={(oldBox, newBox) => (newBox.width < 5 || newBox.height < 5 ? oldBox : newBox)}
-                  />
-                </Layer>
-              </Stage>
+                  </Layer>
+                </Stage>
+              ) : null}
             </div>
           </div>
         </div>

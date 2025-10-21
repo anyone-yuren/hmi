@@ -44,7 +44,7 @@ const RcsLines = ({ mapEdges = [] }) => {
       // 获取中心点坐标
       const center = curve.getPointAt(index % 2 == 0 ? 0.5 : 0.25);
       const distance = center.distanceTo(cameraPosition);
-      if (distance > 8) {
+      if (distance > 15) {
         return null;
       }
 

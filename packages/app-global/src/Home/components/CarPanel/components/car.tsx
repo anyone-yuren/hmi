@@ -5,7 +5,7 @@ import { useMemo, useRef } from 'react';
 import { PointLightHelper, type DirectionalLight } from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgvType } from '../../../../hooks/useAgvType';
-import { Fork15lift } from '../../../../Models/components';
+import { Fork15lift, Sl14Model } from '../../../../Models/components';
 import { useHomeHybirdStore } from '../../../store/hybird';
 // import { PointLight } from "@react-three/drei";
 
@@ -82,6 +82,7 @@ const Car = (props) => {
         </group>
         <animated.group position={groupProps.position as unknown as THREE.Vector3} rotation={[0, deltaRotation, 0]}>
           {agvType === 'SE15' ? <Fork15lift /> : null}
+          {agvType === 'SL14' ? <Sl14Model /> : null}
         </animated.group>
         {/* <group position={[agvPosition.x / 1000, 0.01, agvPosition.y / 1000]} rotation={[0, deltaRotation, 0]}>
           {agvType === 'SE15' ? <Fork15lift /> : null}

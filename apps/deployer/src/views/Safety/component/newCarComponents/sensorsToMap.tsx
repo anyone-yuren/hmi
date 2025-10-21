@@ -21,7 +21,7 @@ const DeviceList = () => {
     })),
   );
 
-  const { sensor_sources = [4, 5], x, y } = obsInfo;
+  const { sensor_sources = [4, 5], sensor_description, x, y } = obsInfo;
   const { data: deviceList = [] } = useRequest(getDeviceList);
 
   useEffect(() => {
@@ -53,19 +53,23 @@ const DeviceList = () => {
     anim.start();
 
     return () => anim.stop();
-  }, [deviceList?.data, sensor_sources]);
+  }, [deviceList?.data, sensor_description]);
+  console.log('sensor_description', sensor_description);
+  console.log('deviceList', deviceList.data);
 
   return (
     <Group name='device' ref={groupRef}>
       {/* 当前观察者位置 */}
-      {sensor_sources.length ? <Circle radius={30} fill='red' x={meterToPixel(0 - y)} y={meterToPixel(0 - x)} /> : null}
+      {sensor_description.length ? (
+        <Circle radius={30} fill='red' x={meterToPixel(0 - y)} y={meterToPixel(0 - x)} />
+      ) : null}
 
       {/* 设备列表 */}
       {deviceList?.data?.map((item) => (
         <Circle
           key={item.id}
           radius={20}
-          fill={sensor_sources.includes(item.id) ? '#0000ff' : '#00ff00'}
+          fill={sensor_description.includes(item.name) ? '#0000ff' : '#00ff00'}
           x={0 - meterToPixel(item.y)}
           y={0 - meterToPixel(item.x)}
         />
