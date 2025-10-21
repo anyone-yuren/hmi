@@ -4,7 +4,7 @@
 import { useRequest } from 'ahooks';
 import Konva from 'konva';
 import { useEffect, useRef } from 'react';
-import { Circle, Group } from 'react-konva';
+import { Circle, Group, Text } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import { getDeviceList } from '../../service';
 import { useSafetyStore } from '../../store/safety.store';
@@ -66,13 +66,23 @@ const DeviceList = () => {
 
       {/* 设备列表 */}
       {deviceList?.data?.map((item) => (
-        <Circle
-          key={item.id}
-          radius={20}
-          fill={sensor_description.includes(item.name) ? '#0000ff' : '#00ff00'}
-          x={0 - meterToPixel(item.y)}
-          y={0 - meterToPixel(item.x)}
-        />
+        <>
+          <Circle
+            key={item.id}
+            radius={16}
+            fill={sensor_description.includes(item.name) ? '#0000ff' : '#00ff00'}
+            x={0 - meterToPixel(item.y)}
+            y={0 - meterToPixel(item.x)}
+          />
+
+          <Text
+            text={item.name}
+            x={0 - meterToPixel(item.y)}
+            y={0 - meterToPixel(item.x) - 60}
+            fontSize={54}
+            fill={sensor_description.includes(item.name) ? '#0000ff' : '#00ff00'}
+          />
+        </>
       ))}
     </Group>
   );
