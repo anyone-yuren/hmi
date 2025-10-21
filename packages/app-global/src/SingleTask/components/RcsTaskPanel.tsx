@@ -944,7 +944,7 @@ const RcsTaskPanel = (props: IProps) => {
                     }}
                     onClick={handleUpdateTemplate}
                   >
-                    {'保存模版'}
+                    {t('deployer.singleTask.saveTemplate')}
                   </Button>
                 </div>
                 <Button
@@ -953,7 +953,7 @@ const RcsTaskPanel = (props: IProps) => {
                   sx={{ marginTop: '5px', color: 'white', minWidth: '120px', maxWidth: '220px' }}
                   onClick={exitUpdateTemplate}
                 >
-                  {'退出编辑'}
+                  {t('deployer.singleTask.backUpdateMode')}
                 </Button>
               </div>
             )}
