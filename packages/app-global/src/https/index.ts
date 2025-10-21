@@ -17,12 +17,14 @@ const BASE_API = import.meta.env.VITE_BASE_API || `http://${currentHost}:10009`;
 const ADMIN_API = import.meta.env.VITE_ADMIN_API || `http://${currentHost}:10001`;
 const TOOL_API = import.meta.env.VITE_TOOL_API || `http://${currentHost}:10020`;
 const VISION_API = import.meta.env.VITE_VISION_API || `http://${currentHost}:10010`;
+const RCS_WEB_API = import.meta.env.VITE_RCS_WEB_API || `http://${currentHost}:10009`;
 
 const PORT_BASEURL = {
   10009: BASE_API,
   10001: ADMIN_API,
   10020: TOOL_API,
   10010: VISION_API,
+  25018: RCS_WEB_API,
 };
 
 // 创建 axios 实例
@@ -48,6 +50,14 @@ instance.interceptors.request.use(
     // if (!token) {
     //   triggerLoginModal();
     // }
+
+    // if (config.url?.includes('/rcs-web')) {
+    if (config.baseURL === RCS_WEB_API) {
+      // RCS 特殊处理
+      config.headers = config.headers || {};
+      config.headers['Content-Type'] = `application/json; charset=utf-8`;
+      return config;
+    }
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
@@ -67,9 +77,18 @@ instance.interceptors.response.use(
     if (!data || typeof data === 'string' || !('code' in data)) {
       return data;
     }
-
-    const { code, msg, data: resData } = data;
-
+    const { code, msg, message, data: resData } = data;
+    // if (config.url?.includes('/rcs-web')) {
+    if (config.baseURL === RCS_WEB_API) {
+      if (code === 0) {
+        return data;
+      } else {
+        toast.error(message, {
+          position: 'top-center',
+        });
+        return Promise.reject(message || t('common.http.error'));
+      }
+    }
     if (code === ResultEnum.SUCCESS) {
       return data;
     }
@@ -144,6 +163,18 @@ export const get = (url: string, params?: any, port: string = '10009') => {
 // POST 封装
 export const post = (url: string, data?: any, port: string = '10009') => {
   return instance.post(url, data, {
+    baseURL: PORT_BASEURL[port],
+  });
+};
+
+export const del = (url: string, data?: any, port: string = '10009') => {
+  return instance.delete(url, {
+    baseURL: PORT_BASEURL[port],
+  });
+};
+
+export const put = (url: string, data?: any, port: string = '10009') => {
+  return instance.put(url, data, {
     baseURL: PORT_BASEURL[port],
   });
 };

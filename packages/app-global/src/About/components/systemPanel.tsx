@@ -90,20 +90,27 @@ const SystemPanel = () => {
               {t('common.about.memory')}
             </Typography.Title>
             <Typography.Text className='!m-0 opacity-70'>
-              {`${systemUsage?.process_mem_usage || 0} / ${systemUsage?.system_mem_usage || 0}`}(%)
+              {/* {`${systemUsage?.process_mem_usage || 0} / ${systemUsage?.system_mem_usage || 0}`}(%) */}
+              {`${systemUsage?.system_mem_usage || 0}`}%
             </Typography.Text>
           </div>
         }
-        {
-          <div>
-            <Typography.Title level={5} className='!m-0'>
-              {t('common.about.cpu')}
-            </Typography.Title>
-            <Typography.Text className='!m-0 opacity-70'>
-              {`${systemUsage?.process_cpu_usage || 0} / ${systemUsage?.system_cpu_usage || 0}`}(%)
-            </Typography.Text>
-          </div>
-        }
+
+        <div>
+          <Typography.Title level={5} className='!m-0'>
+            {t('common.about.cpu')}
+          </Typography.Title>
+          <Typography.Text className='!m-0 opacity-70'>
+            {/* {`${systemUsage?.process_cpu_usage || 0} / ${systemUsage?.system_cpu_usage || 0}`}(%) */}
+            {`${systemUsage?.system_cpu_usage || 0}`}%
+          </Typography.Text>
+        </div>
+        <div>
+          <Typography.Title level={5} className='!m-0'>
+            {t('common.about.disk')}
+          </Typography.Title>
+          <Typography.Text className='!m-0 opacity-70'>{`${systemUsage?.system_disk_usage || 0}`}%</Typography.Text>
+        </div>
       </div>
       {false && (
         <div className='flex justify-end gap-2'>

@@ -62,6 +62,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
   const isTask = useMemo(() => {
     return active === 'task';
   }, [active]);
+
   const list = useMemo(() => {
     return { task: taskList?.data || [], template: templateList?.data || [] }[active] || [];
   }, [taskList, templateList, active]);
@@ -163,7 +164,6 @@ const TaskPanel = forwardRef((props: any, ref) => {
 
   const handleTaskUpdate = (template) => {
     const list = translateTempToTaskList(template, isKVehicle);
-    console.log('template', template);
     setPreTaskList(list);
     setTaskMode('update');
     taskActionRef?.current?.setPublicParams({

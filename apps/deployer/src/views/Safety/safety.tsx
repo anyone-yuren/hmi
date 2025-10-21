@@ -113,21 +113,26 @@ const Safety = () => {
       return;
     // 激活的传感器和策略所需要的雷达列表
     let sensorList: any = [];
+    console.log('config', config);
     const scheme_list = config?.data?.obs_scheme?.scheme_list;
     const strategy = config?.data?.strategy_list;
     const scheme = scheme_list.find((item) => item.scheme_id === obsInfo.scheme_id);
+    console.log('scheme_list', scheme);
     if (scheme?.pc_sensor_list?.length) {
       sensorList = [...sensorList, ...scheme?.pc_sensor_list];
     }
     Object.keys(strategy)?.map((item) => {
-      const pc_sensor_list = strategy?.[item]?.associated_pc_sensor_list;
-      const sensor_list = strategy?.[item]?.associated_sensor_list;
-      pc_sensor_list?.length && (sensorList = [...sensorList, ...pc_sensor_list]);
-      sensor_list?.length && (sensorList = [...sensorList, ...sensor_list]);
+      if (scheme.strategy_list.includes(strategy[item].id)) {
+        const pc_sensor_list = strategy?.[item]?.associated_pc_sensor_list;
+        const sensor_list = strategy?.[item]?.associated_sensor_list;
+        pc_sensor_list?.length && (sensorList = [...sensorList, ...pc_sensor_list]);
+        sensor_list?.length && (sensorList = [...sensorList, ...sensor_list]);
+      }
     });
     const list = deviceList?.data
       ?.filter((item) => sensorList.includes(item.name))
       ?.map((item, index) => item.topic || index);
+    console.log('[Safety]当前订阅传感器的key', list);
     setSensorPointsKey(list);
   }, [obsInfo, config, deviceList]);
 

@@ -1,4 +1,4 @@
-import { get, post } from '../../https/index';
+import { del, get, post, put } from '../../https/index';
 
 export const getTasks = () => get('/sirius/topics/test_task_info', {}, '10009');
 export const createTask = (data) => post('/sirius/topics/test_task_execution', data, '10009');
@@ -20,6 +20,30 @@ export const chargePolicy = (data) => post('/mwrobot/single_task/set_charge_poli
 export const getChargePolicy = () => get('/mwrobot/single_task/get_charge_policy', {}, '10009');
 
 export const config_agv_info = () => get('/robot_config/base_param/config_agv_info', {}, '10009');
+export const getRcsTemplateTaskList = (vehicleNum: number) =>
+  get(
+    `/api/v1/MissionTemplate/GetPagedListAsync?SkipCount=0&MaxResultCount=100&PlatformSource=6&VehicleNum=${vehicleNum}`,
+    {},
+    '25018',
+  );
+export const updateRcsTemplateTaskList = (data: any) => put(`/api/v1/MissionTemplate/ModifyAsync`, data, '25018');
+export const getRcsTaskList = (vehicleNum: number) =>
+  get(
+    `/api/v1/Mission/GetPagedListAsync?SkipCount=0&MaxResultCount=100&PlatformSource=6&MissionStates=0&MissionStates=1&VehicleNum=${vehicleNum}`,
+    {},
+    '25018',
+  );
+
+export const createRcsTask = (data) => post('/api/v1/Mission/CreateAsync', data, '25018');
+
+export const createRcsTemplateTask = (data) => post('/api/v1/MissionTemplate/CreateAsync', data, '25018');
+export const deleteRcsTemplateTask = (data) => del(`/api/v1/MissionTemplate/DeleteAsync?id=${data?.id}`, data, '25018');
+export const createRcsMissionFormTemplate = (data) =>
+  put(`/api/v1/MissionTemplate/CreateMissionByTemplateAsync?id=${data?.id}`, data, '25018');
+
+export const updateRcsMissionState = (data) => post('/api/v1/Mission/ModifyMissionStateAsync', data, '25018');
+
+export const getPalletList = () => get('/mwrobot/config/get_pallet_list', {}, '10009');
 
 export const getFloorData = (floor) =>
   post(
@@ -41,3 +65,5 @@ export const updateOffsetTable = (data) => post('/mwrobot/offset_table/update', 
 export const deleteOffsetTable = (data) => post('/mwrobot/offset_table/delete', data, '10009');
 
 export const createOffsetTable = (data) => post('/mwrobot/offset_table/insert', data, '10009');
+
+export const getAgvInfo = () => get('/robot_config/base_param/config_agv_info', {}, '10009');

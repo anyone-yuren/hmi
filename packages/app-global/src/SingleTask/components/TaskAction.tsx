@@ -236,7 +236,9 @@ const TaskAction = forwardRef((props: any, ref) => {
     <MapTaskPanelAction>
       <div className='listContainer'>
         {taskMode === 'update' && (
-          <div className='sticky top-0 text-[#facc14] bg-[#44606b] text-center z-[10] py-[6px]'>编辑任务模版模式</div>
+          <div className='sticky top-0 text-[#facc14] bg-[#44606b] text-center z-[10] py-[6px]'>
+            {t('deployer.singleTask.updateTemplateTips')}
+          </div>
         )}
         {preTaskList.map((task: any, index: number) => {
           return (
@@ -474,7 +476,7 @@ const TaskAction = forwardRef((props: any, ref) => {
       </div>
 
       <div>
-        <div style={{ display: 'flex', gap: '10px', margigTop: '5px' }}>
+        <div style={{ display: 'flex', gap: '10px', marginTop: '5px' }}>
           <InputGroupText
             title={t('deployer.singleTask.loopCount')}
             value={loopTime}

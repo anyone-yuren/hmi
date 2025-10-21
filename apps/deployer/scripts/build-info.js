@@ -58,6 +58,7 @@ VITE_APP_BUILD_DATE=${getCommitDate()}
 VITE_APP_BUILD_TIME=${new Date().toLocaleString()}
 VITE_APP_BUILD_INFO=${getCommitInfo().subject}
 VITE_USE_GLOBAL_LOADING=true
+VITE_RCS_WEB_API=/rcs-web 
 `.trim();
 
 // // 写入 .env.local 文件

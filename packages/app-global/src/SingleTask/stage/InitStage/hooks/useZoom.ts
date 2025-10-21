@@ -34,9 +34,10 @@ export function useZoom(
 ) {
   const { min, max, scale = 1 } = options || {};
   const [currentScale, setCurrentScale] = useState(scale);
-  const { agvViewLock } = useSingleTaskStore(
+  const { agvViewLock, setAgvViewLock } = useSingleTaskStore(
     useShallow((state) => ({
       agvViewLock: state.agvViewLock,
+      setAgvViewLock: state.setAgvViewLock,
     })),
   );
   const { t, i18n } = useTranslation();
@@ -59,8 +60,9 @@ export function useZoom(
       },
     ) => {
       if (agvViewLock) {
-        manager.push(t('deployer.singleTask.agvViewLockTips'));
-        return;
+        setAgvViewLock(false);
+        // manager.push(t('deployer.singleTask.agvViewLockTips'));
+        // return;
       }
       if (min && newScale < min) {
         newScale = min;
@@ -115,8 +117,9 @@ export function useZoom(
     };
     const handleDragMove = (e: any) => {
       if (agvViewLock) {
-        manager.push(t('deployer.singleTask.agvViewLockTips'));
-        return;
+        setAgvViewLock(false);
+        // manager.push(t('deployer.singleTask.agvViewLockTips'));
+        // return;
       }
       // 可以在这里添加逻辑，例如限制拖拽范围
     };
@@ -145,8 +148,9 @@ export function useZoom(
 
     hammer.on('pinchmove', (e: any) => {
       if (agvViewLock) {
-        manager.push(t('deployer.singleTask.agvViewLockTips'));
-        return;
+        setAgvViewLock(false);
+        // manager.push(t('deployer.singleTask.agvViewLockTips'));
+        // return;
       }
       let newScale = oldScale * e.scale;
       if (min && newScale < min) {
