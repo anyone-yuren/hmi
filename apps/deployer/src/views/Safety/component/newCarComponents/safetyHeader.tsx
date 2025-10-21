@@ -2,7 +2,7 @@ import { FormOutlined, MenuOutlined, MoonOutlined, SunOutlined, SwapOutlined } f
 import { Button, Select, Skeleton, Switch } from 'antd';
 import { useResponsive } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { useSafetyStore } from '../../store/safety.store';
@@ -30,6 +30,10 @@ const SafetyHeader = (props: IProps) => {
       };
     }),
   );
+
+  useEffect(() => {
+    setShowSelect(false);
+  }, [obsData]);
 
   return (
     <div className={`header h-14 py-2 shadow-md gap-2 flex items-center justify-between px-4`}>
