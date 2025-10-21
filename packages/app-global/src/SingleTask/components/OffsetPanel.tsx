@@ -112,7 +112,7 @@ const OffsetPanel = forwardRef((props: any, ref) => {
           }}
         />
       </ThemeProvider>
-      <div ref={virtualListRef} className='flex flex-col overflow-hidden'>
+      <div ref={virtualListRef} className='flex flex-col h-full overflow-hidden'>
         <List data={renderOffsetList} height={size?.height} itemHeight={10} itemKey={'point_id'}>
           {(point, index) => {
             return (
@@ -141,18 +141,16 @@ const OffsetPanel = forwardRef((props: any, ref) => {
                     </div>
                   </div>
                   <div className='flex pb-[5px] pt-[3px] justify-between items-center text-[12px]'>
-                    <div>
-                      <span className='w-[80px] inline-block'>
+                    <div className='flex-1 flex gap-[6px]'>
+                      <span className='inline-block'>
                         {t('deployer.singleTask.offset')}X: {point.x}
                       </span>
-                      <span className='w-[80px] inline-block'>
+                      <span className='inline-block'>
                         {t('deployer.singleTask.offset')}Y: {point.y}
                       </span>
                     </div>
                     <div className='text-[#ccc]'>
-                      <span>
-                        {point.update_time ? dayjs.unix(point.update_time).format('YYYY-MM-DD HH:mm:ss') : '-'}
-                      </span>
+                      <span>{point.time ? dayjs.unix(point.time).format('YYYY-MM-DD HH:mm:ss') : '-'}</span>
                     </div>
                   </div>
                 </div>

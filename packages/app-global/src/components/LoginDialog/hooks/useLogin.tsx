@@ -41,7 +41,7 @@ export default function LoginModalTrigger() {
   const { run, loading } = useRequest(postLogin, {
     manual: true,
     onSuccess: (data) => {
-      setToken(data?.permission ?? 'admin');
+      setToken(data?.data?.permission ?? 'admin');
       toast.warning(t('common.loginSuccessTip'), {
         // duration: Infinity,
         classNames: {

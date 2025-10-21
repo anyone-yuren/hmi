@@ -1,7 +1,7 @@
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, ThemeProvider } from '@mui/material';
 import { useSize } from 'ahooks';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
-import { cancelTask, getFloorData, getLineList, getPointList, getTaskMode, offsetTable } from './services';
+import { cancelTask, getAgvInfo, getFloorData, getLineList, getPointList, getTaskMode, offsetTable } from './services';
 import { InitStage } from './stage/index';
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -9,7 +9,6 @@ import { createTheme } from '@mui/material/styles';
 import { useRequest } from 'ahooks';
 import _ from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { generateUniqueId, MapContainer, MapTaskPanelEmptyContainer, MapTaskPopup, RenderItemRow } from './Style';
 import EmptyBox from './components/Empty';
@@ -17,11 +16,14 @@ import MapActionBar from './components/MapActionBar';
 import MouseEvent from './components/MouseEvent';
 import OffsetModal from './components/OffsetModal';
 import OffsetPanel from './components/OffsetPanel';
+import RcsTaskPanel from './components/RcsTaskPanel';
 import SecondaryPage from './components/SecondaryPage';
 import TaskPanel from './components/TaskPanel';
 import TaskSetting from './components/TaskSetting';
 import WsContainer from './components/wsContainer';
 
+import { toast } from 'sonner';
+import RcsTaskModal from './components/RcsTaskModal';
 import { IMode, IPoint, ISubTaskItem, ITaskItem } from './index.d';
 import { useSingleTaskStore } from './store/singleTask.store';
 import useConstants from './useConstants';
@@ -46,6 +48,7 @@ const SingleTask = () => {
   const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const [activePoints, setActivePoints] = useState<IPoint['id'][]>([]);
   const [taskVisible, setTaskVisible] = useState(false);
+  const [rcsTaskVisible, setRcsTaskVisible] = useState(false);
   const [taskSettingVisible, setTaskSettingVisible] = useState(false);
   const [offsetVisible, setOffsetVisible] = useState(false);
   const [offsetModalVisible, setOffsetModalVisible] = useState(false);
@@ -54,8 +57,15 @@ const SingleTask = () => {
   const [subTask, setSubTask] = useState<ITaskItem>();
   const [activeKey, setActiveKey] = useState('task');
   const [PopUp, setPopUp] = useState(false);
+  const [rcsModalConfig, setRcsModalConfig] = useState({
+    visible: false,
+    mode: 'task',
+    rows: [],
+  });
+
   const [moveToTarget, setMoveToTarget] = useState({ x: null, y: null });
 
+  const { data: agvInfo }: any = useRequest(getAgvInfo);
   const { data: pointsData, loading }: Record<string, any> = useRequest(getPointList, {});
   const { data: linesList } = useRequest(() => getLineList(), {});
 
@@ -83,6 +93,11 @@ const SingleTask = () => {
     })),
   );
 
+  const vehicleNum = useMemo(() => {
+    return 32;
+    return agvInfo?.agv_id || 0;
+  }, [agvInfo]);
+
   const modeHashMap: {
     title: Record<IMode, string>;
     showTaskPanel: Record<IMode, () => void> | any;
@@ -94,11 +109,20 @@ const SingleTask = () => {
     },
     showTaskPanel: {
       0: () => {
-        toast.error(t('deployer.singleTask.changeModeTips'));
+        // toast.error(t('deployer.singleTask.changeModeTips'));
+        if (!vehicleNum) {
+          toast.error(t('deployer.singleTask.requireVehicleNum'));
+          return;
+        }
+        setTaskSettingVisible(false);
+        setTaskVisible(false);
+        setRcsTaskVisible(true);
+        setPreTaskList([initTaskActionRow]);
       },
       3: () => {
         setTaskSettingVisible(false);
         setTaskVisible(true);
+        setRcsTaskVisible(false);
         setPreTaskList([initTaskActionRow]);
       },
       100: () => {},
@@ -245,9 +269,27 @@ const SingleTask = () => {
           ></TaskPanel>
         </MapTaskPopup>
       )}
-
-      {offsetVisible && (
+      {/* RCS 任务下载面板 */}
+      {rcsTaskVisible && (
         <MapTaskPopup>
+          <RcsTaskPanel
+            close={() => {
+              setRcsTaskVisible(false);
+              setPreTaskList([]);
+            }}
+            {..._.pick(pointsDict, ['points', 'charges', 'locations'])}
+            preTaskList={preTaskList}
+            setPreTaskList={setPreTaskList}
+            initTaskActionRow={initTaskActionRow}
+            setRcsModalConfig={setRcsModalConfig}
+            vehicleNum={vehicleNum}
+          ></RcsTaskPanel>
+        </MapTaskPopup>
+      )}
+
+      {/* 偏移表面板 */}
+      {offsetVisible && (
+        <MapTaskPopup width={410}>
           <OffsetPanel
             setOffsetVisible={setOffsetVisible}
             offsetList={offsetList}
@@ -271,7 +313,7 @@ const SingleTask = () => {
           setOffsetVisible={setOffsetVisible}
         ></MapActionBar>
 
-        {mapTaskMode !== 0 && (
+        {
           <div
             style={{
               borderRadius: '80px',
@@ -282,7 +324,7 @@ const SingleTask = () => {
           >
             <ArrowBackIosNewIcon></ArrowBackIosNewIcon>
           </div>
-        )}
+        }
 
         <div ref={ref} className='flex-1 w-full h-full min-h-[300px]'>
           {/* 放开点位的判断显示,没有点位就展示图片 */}
@@ -446,6 +488,20 @@ const SingleTask = () => {
             setOffsetModalVisible={setOffsetModalVisible}
             getOffsetList={getOffsetList}
           ></OffsetModal>
+        </SecondaryPage>
+
+        <SecondaryPage
+          open={rcsModalConfig.visible}
+          setOpen={(flags: boolean) => {
+            setRcsModalConfig({
+              ...rcsModalConfig,
+              visible: flags,
+            });
+          }}
+          fullScreen={false}
+          sx={{ zIndex: 1213, width: '600px!important' }}
+        >
+          <RcsTaskModal rows={rcsModalConfig.rows} mode={rcsModalConfig.mode}></RcsTaskModal>
         </SecondaryPage>
       </MapContainer>
       <WsContainer></WsContainer>

@@ -1,11 +1,10 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { useAsyncEffect, useRequest } from 'ahooks';
-import { Button, Drawer, List, Tree, TreeDataNode } from 'antd';
+import { Button, Drawer, List, Tree, TreeDataNode, Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import noVehicleSvg from '../assets/icons/noVehicle.svg';
 import { useAgvType } from '../hooks/useAgvType';
 import useDrawerClassName from '../hooks/useDrawerClassName';
 import NodeLogs from './components/nodeLogs';
@@ -87,7 +86,7 @@ const About = () => {
   //   },
   // });
 
-  const { data: changeLogs, runAsync: getChangeLogAsync } = useRequest(getChangeLogs, {});
+  const { data: changeLogs, runAsync: getChangeLogAsync } = useRequest(getChangeLogs, { manual: true });
 
   const renderChangeLogs = useMemo(() => {
     return changeLogs?.data;
@@ -103,12 +102,12 @@ const About = () => {
     await getChangeLogAsync({});
   }, [i18n.language]);
 
-  const productImage = useCallback(() => {
-    if (!agvType) {
-      return noVehicleSvg;
-    }
-    return getImage(`${pdName}`);
-  }, [pdName, agvType]);
+  // const productImage = useCallback(() => {
+  //   if (!agvType) {
+  //     return noVehicleSvg;
+  //   }
+  //   return getImage(`${pdName}`);
+  // }, [pdName, agvType]);
 
   const treeData: TreeDataNode[] = [
     {
@@ -169,6 +168,25 @@ const About = () => {
     });
   };
 
+  const changeTypeConfig = {
+    perf: {
+      color: 'green',
+      icon: '🌈',
+    },
+    5: '🔥',
+    fix: {
+      color: '',
+      icon: '🐛',
+    },
+    feat: {
+      color: '#FF9800',
+      icon: '🚀',
+    },
+    3: '🎉',
+    4: '🎁',
+    8: '🎨',
+  };
+
   return (
     <div className='flex flex-col h-full p-4 gap-4 '>
       <div className=' flex gap-4 items-center flex-1 overflow-y-auto'>
@@ -210,8 +228,28 @@ const About = () => {
               />
             </motion.div>
           </div>
-          <div className='max-h-[200px] overflow-y-auto'>
-            {renderChangeLogs ? renderChangeLogs : <List dataSource={[]}></List>}
+          <div className='max-h-[320px] overflow-y-auto bg-[#1d314c] py-[1rem] rounded-2xl'>
+            {renderChangeLogs?.version ? (
+              <Typography.Title level={4} className='px-5'>
+                {renderChangeLogs?.version}
+              </Typography.Title>
+            ) : null}
+            <div className='flex flex-col gap-[5px]'>
+              {renderChangeLogs?.changeLogOutputs.length ? (
+                renderChangeLogs?.changeLogOutputs?.map((item) => {
+                  const obj = changeTypeConfig[item.changeType] || { icon: '🌈' };
+                  return (
+                    <Typography.Text className='px-5'>
+                      {obj.icon}&nbsp;&nbsp;
+                      <span>{item.description}</span>
+                    </Typography.Text>
+                  );
+                })
+              ) : (
+                <List dataSource={[]}></List>
+              )}
+            </div>
+            {/* {renderChangeLogs ? renderChangeLogs : <List dataSource={[]}></List>} */}
           </div>
           <div className='w-full'>
             <h2 className='text-lg font-bold mb-1'>{t('common.about.nodes')} </h2>

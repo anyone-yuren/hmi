@@ -121,7 +121,7 @@ export const useHybrid = () => {
   }, [readyState]);
 
   useEffect(() => {
-    if (readyState === 1) {
+    if (readyState10009 === 1) {
       sendMessage10009(
         JSON.stringify({
           uri: 'subscribe',

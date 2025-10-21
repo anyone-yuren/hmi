@@ -17,6 +17,7 @@ export const useAboutStore = create<State>()(
       // process_cpu_usage: 0,
       // system_mem_usage: 0,
       // process_mem_usage: 0,
+      // system_disk_usage: 0,
       systemUsage: {},
       setSystemUsage: (systemUsage: any) => {
         set({ systemUsage });

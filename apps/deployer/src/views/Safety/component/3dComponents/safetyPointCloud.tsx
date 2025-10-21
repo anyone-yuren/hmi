@@ -174,7 +174,6 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
       //   else colors.push(1, 1, 1);
       // }
     }
-    console.log('positions', positions);
     geometryRef.current.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
     geometryRef.current.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
   });

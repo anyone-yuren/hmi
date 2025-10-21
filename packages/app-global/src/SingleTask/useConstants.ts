@@ -2,7 +2,15 @@ import { useTranslation } from 'react-i18next';
 import { ISubTaskItem } from './index.d';
 const useConstants = () => {
   const { t } = useTranslation();
-  const TaskStatusHashMap: Record<ISubTaskItem['task_state'], { text: string; color: string }> = {
+  const TaskStatusHashMap: Record<ISubTaskItem['task_state'] | 0 | 1, { text: string; color: string }> = {
+    0: {
+      text: t('common.taskStatus.unexecuted'),
+      color: '#aeaeae',
+    },
+    1: {
+      text: t('common.taskStatus.running'),
+      color: '#00D1D1',
+    },
     Init: {
       text: t('common.taskStatus.unexecuted'),
       color: '#aeaeae',

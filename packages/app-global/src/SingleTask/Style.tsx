@@ -97,7 +97,7 @@ export const TaskIconContainer = styled('div')(() => ({
 export const InputGroup = styled('div')(() => ({
   height: 50,
   background: '#d8d8d833',
-  borderRadius: 5,
+  borderRadius: '6px',
   padding: '0px 10px 0px 10px',
   margin: '0px 0px 0px 0px',
   flex: 1,
@@ -132,6 +132,7 @@ export const TaskItem = styled('div')(() => ({
   display: 'flex',
   // flexDirection: 'column',
   justifyContent: 'center',
+  gap: '6px',
   '.title': {
     color: 'white',
     fontSize: 14,
@@ -191,12 +192,12 @@ export const MapTaskPanel: any = styled('div')(() => ({
   gap: 5,
 }));
 
-export const MapTaskPopup: any = styled(GlobalPanel)(() => ({
+export const MapTaskPopup: any = styled(GlobalPanel)(({ width = 360 }: { width?: number }) => ({
   position: 'absolute',
   top: 0,
   right: 0,
   zIndex: 1212,
-  width: 360,
+  width: width,
 }));
 
 export const MapTaskPanelHeader: any = styled('div')(() => ({

@@ -139,7 +139,7 @@ const GlobalHeader = () => {
               triggerLoginModal();
             } else {
               modal.confirm({
-                title: '确认退出登录吗？',
+                title: t('common.logoutTip'),
                 onOk: () => {
                   setToken('');
                 },

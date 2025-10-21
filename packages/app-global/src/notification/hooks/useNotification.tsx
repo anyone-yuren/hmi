@@ -65,7 +65,7 @@ export const useNotification = () => {
               return (
                 <div key={item.error_code} className='mb-2'>
                   <p>
-                    {index + 1} {item?.description}
+                    {index + 1} . {item?.description || '-'}
                   </p>
                   <div className=''>
                     <p className='opacity-50'>{item?.solution}</p>

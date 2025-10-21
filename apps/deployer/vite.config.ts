@@ -62,6 +62,12 @@ export default defineApplicationConfig({
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/ws10009/, ''),
         },
+        '/rcs-web': {
+          target: `http://192.168.20.200:25018`,
+          // target: `http://192.168.20.89:5203`,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/rcs-web/, ''),
+        },
       },
     },
   },
