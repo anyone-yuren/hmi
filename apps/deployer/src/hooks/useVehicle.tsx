@@ -19,6 +19,7 @@ export const useVehicle = () => {
     setSignal,
     setSystemDateTime,
     setRcsIsOnline,
+    setTaskInfo,
   } = useVehicleStore(
     useShallow((state) => ({
       setPowerStatus: state.setPowerStatus,
@@ -29,6 +30,7 @@ export const useVehicle = () => {
       setSignal: state.setSignal,
       setSystemDateTime: state.setSystemDateTime,
       setRcsIsOnline: state.setRcsIsOnline,
+      setTaskInfo: state.setTaskInfo,
     })),
   );
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
@@ -43,6 +45,8 @@ export const useVehicle = () => {
           setPowerStatus({
             power: Math.round(data?.power),
             charge_status: Math.round(data?.charge_status),
+            current: data?.current.toFixed(2),
+            voltage: data?.voltage.toFixed(2),
           });
           setSystemDateTime(data?.timestamp);
         }
@@ -72,6 +76,22 @@ export const useVehicle = () => {
           setRcsIsOnline(data?.is_online);
         }
       }
+      if (e?.data?.includes('/sirius/topics/task_info')) {
+        const data = JSON.parse(e?.data);
+        if (data) {
+          setTaskInfo({
+            operate_identification: data?.operate_identification,
+            task_id: data?.task_id,
+            task_point_id: data?.task_point_id,
+            task_state: data?.task_state,
+            task_value1: data?.task_value1,
+            task_value2: data?.task_value2,
+            error_x: data?.error_x,
+            error_y: data?.error_y,
+            error_angle: data?.error_angle,
+          });
+        }
+      }
     },
   });
 
@@ -86,6 +106,7 @@ export const useVehicle = () => {
             '/sirius/topics/charge_pile_status',
             '/sirius/topics/robot_status_signal',
             '/sirius/topics/rcs_info',
+            '/sirius/topics/task_info',
           ],
         }),
       );

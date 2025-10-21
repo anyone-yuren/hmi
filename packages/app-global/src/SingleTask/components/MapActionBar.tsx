@@ -11,7 +11,7 @@ import { IMode } from '../index.d';
 
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import { createTheme } from '@mui/material/styles';
-import { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { IconStyleButton } from '../Style';
 import { setTaskMode, uploadRcsMap } from '../services';
 
@@ -104,6 +104,10 @@ const MapActionBar = forwardRef((props: any, ref) => {
     },
     fileList,
   };
+
+  useEffect(() => {
+    setAgvViewLock(true);
+  }, []);
 
   return (
     <div

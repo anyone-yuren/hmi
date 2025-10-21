@@ -11,6 +11,8 @@ export const getLineList = () => get('/mwrobot/get_segments_info', {}, '10009');
 export const addTemplate = (data) => post('/mwrobot/single_task/add_template_task', data, '10009');
 export const deleteTemplate = (data) => post('/mwrobot/single_task/delete_template_task', data, '10009');
 export const getTemplate = () => get('/mwrobot/single_task/get_template_task', {}, '10009');
+export const updateTemplate = (data) => post('/mwrobot/single_task/update_template_task', data, '10009');
+
 export const getTaskMode = () => get('/mwrobot/config/get_task_mode', {}, '10009');
 export const setTaskMode = (data) => post('/mwrobot/config/set_task_mode', data, '10009');
 export const uploadRcsMap = (data) => post('/mwrobot/config/upload_rcs_map', data, '10009');

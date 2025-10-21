@@ -11,12 +11,15 @@ type CHARGE_PILE_STATUS = {
   pe_charge_input: boolean; //充电输入光电
   pe_charge_output: boolean; //充电输出光电
 };
+interface IPowerStatus {
+  power: number;
+  charge_status: number;
+  current: number;
+  voltage: number;
+}
 interface State {
-  powerStatus: {
-    power: number;
-    charge_status: number;
-  };
-  setPowerStatus: (powerStatus: { power: number; charge_status: number }) => any;
+  powerStatus: IPowerStatus;
+  setPowerStatus: (powerStatus: IPowerStatus) => any;
   seniorPoints: any[];
   setSeniorPoints: (seniorPoints: any[]) => void;
   auto_manual_status: number;
@@ -46,8 +49,10 @@ export const useVehicleStore = create<State>()(
       powerStatus: {
         power: 0,
         charge_status: 0,
+        current: 0,
+        voltage: 0,
       },
-      setPowerStatus: (powerStatus: { power: number; charge_status: number }) => {
+      setPowerStatus: (powerStatus: IPowerStatus) => {
         const { cacheSave } = useGlobalStore.getState();
         if (cacheSave) {
           set({ powerStatus });

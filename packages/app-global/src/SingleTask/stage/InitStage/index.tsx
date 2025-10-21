@@ -401,7 +401,7 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
           }}
         >
           <span className='absolute' style={{ left: '50%', top: '-20px', transform: 'translateX(-50%)' }}>
-            {((mapRationView * 100) / 1000).toFixed(2) + 'm'}
+            {(((mapRationView * 100) / 1000) * 20).toFixed(2) + 'm'}
           </span>
         </div>
       </div>

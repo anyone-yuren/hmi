@@ -179,6 +179,7 @@ const PointCloudFilter = (props: IProps) => {
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
+      clearInterval(timer);
       setPointsCloudHeart(0);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };

@@ -2,30 +2,50 @@ import { AppstoreOutlined, ColumnWidthOutlined, DotChartOutlined, SnippetsOutlin
 import { useVehicleStore } from '@gbeata/store';
 import { Divider, Stack } from '@mui/material';
 import { Button, Modal, Result, Typography } from 'antd';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import AnimateBrush from './components/animateBrush';
 import VehicleBattery from './components/vehicleBattery';
-
+import WsContainer from './components/wsContainer';
 const Charging = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [modal, contextHolder] = Modal.useModal();
-
-  const { powerStatus } = useVehicleStore(
+  const [hasTask, setHasTask] = useState(false);
+  const { powerStatus, chargePileStatus, taskInfo } = useVehicleStore(
     useShallow((state) => {
       return {
         powerStatus: state.powerStatus,
+        chargePileStatus: state.chargePileStatus,
+        taskInfo: state.taskInfo,
       };
     }),
   );
+
+  const temperatureTitle = useMemo(() => {
+    if (!chargePileStatus?.temperature_value) {
+      return chargePileStatus?.temperature_status === 1 ? (
+        <span className='text-[#d32029]'>{t('common.abnormal')}</span>
+      ) : (
+        t('common.normal')
+      );
+    }
+    return `${chargePileStatus?.temperature_value}°C`;
+  }, [chargePileStatus?.temperature_value, chargePileStatus?.temperature_status, i18n.language]);
+
+  useEffect(() => {
+    if (taskInfo?.operate_identification === 3) {
+      setHasTask(true);
+    }
+  }, [taskInfo?.operate_identification]);
   // 有无任务
-  const [hasTask, setHasTask] = useState(false);
+
   return (
     <div className='flex flex-row gap-4 p-4 h-full'>
+      <WsContainer></WsContainer>
       {/* 小车模块 */}
-      <VehicleBattery />
+      <VehicleBattery voltage={powerStatus?.voltage || 0} current={powerStatus?.current || 0} />
       {/* 电池模块 */}
       <div className='flex gap-4 items-center flex-1 '>
         {!hasTask ? (
@@ -73,21 +93,22 @@ const Charging = () => {
               <div className='flex flex-row gap-4'>
                 <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
                   <SvgIcon name='volt' size={32} />
-                  <div className=''>22.8V</div>
+                  <div className=''>{chargePileStatus?.output_voltage || 0} V</div>
                 </div>
                 <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
                   <SvgIcon name='ampere' size={32} />
-                  <div className=''>22.8A</div>
+                  <div className=''>{chargePileStatus?.output_current || 0} A</div>
                 </div>
+
                 <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
                   <SvgIcon name='brush' size={32} />
-                  <div className=''>22.8℃</div>
+                  <div className=''>{temperatureTitle}</div>
                 </div>
               </div>
               <div>
                 <div className='bg-white/10 p-2 flex justify-between rounded-md'>
                   <Typography.Text className='!m-0 font-bold '>{t('common.charging.ip')}</Typography.Text>
-                  <Typography.Text className='!m-0 opacity-70'>192.168.1.1</Typography.Text>
+                  <Typography.Text className='!m-0 opacity-70'>{chargePileStatus?.ip || '-'}</Typography.Text>
                 </div>
               </div>
               <div>
@@ -104,38 +125,44 @@ const Charging = () => {
             <div className='flex flex-1  rounded-2xl bg-white/10 flex-col overflow-y-auto'>
               <div className='w-full'>
                 <Stack
-                  className='flex p-4 flex-1 items-center justify-between'
+                  className='flex p-4 flex-1 items-center'
                   direction='row'
                   gap={4}
                   divider={<Divider orientation='vertical' flexItem />}
                 >
-                  <div className='flex flex-col items-center justify-center relative'>
+                  <div className='flex-1 flex flex-col items-center justify-center relative'>
                     <div className='text-sm font-bold flex gap-1 items-center '>
                       <SnippetsOutlined />
                       {t('common.charging.taskNo')}
                     </div>
-                    <div className='text-sm opacity-70'>10002912</div>
+                    <div className='text-sm opacity-70'>{taskInfo?.task_id || '-'}</div>
                   </div>
-                  <div className='flex flex-col items-center justify-center relative'>
+                  <div className='flex-1 flex flex-col items-center justify-center relative'>
                     <div className='text-sm font-bold flex gap-1 items-center'>
                       <ColumnWidthOutlined />
                       {t('common.charging.positionDeviation')}(mm)
                     </div>
-                    <div className='text-sm opacity-70'>x:2300 y:2300 4°</div>
-                  </div>
-                  <div className='flex flex-col items-center justify-center relative'>
-                    <div className='text-sm font-bold flex gap-1 items-center'>
-                      <AppstoreOutlined />
-                      {t('common.charging.chargeType')}
+                    <div className='text-sm opacity-70'>
+                      x:{taskInfo?.error_x || '-'} y:{taskInfo?.error_y || '-'} {taskInfo?.error_angle || '-'}°
                     </div>
-                    <div className='text-sm opacity-70'>{t('common.charging.autoCharge')}</div>
                   </div>
-                  <div className='flex flex-col items-center justify-center relative'>
+                  {false && (
+                    <div className='flex flex-col items-center justify-center relative'>
+                      <div className='text-sm font-bold flex gap-1 items-center'>
+                        <AppstoreOutlined />
+                        {t('common.charging.chargeType')}
+                      </div>
+                      <div className='text-sm opacity-70'>{t('common.charging.autoCharge')}</div>
+                    </div>
+                  )}
+                  <div className='flex-1 flex flex-col items-center justify-center relative'>
                     <div className='text-sm font-bold flex gap-1 items-center'>
                       <DotChartOutlined />
                       {t('common.charging.targetEnergy')}
                     </div>
-                    <div className='text-sm opacity-70'>99%</div>
+                    <div className='text-sm opacity-70'>
+                      {`${taskInfo.task_value2}${taskInfo.task_value1 === 1 ? '%' : 'h'}`}
+                    </div>
                   </div>
                 </Stack>
               </div>

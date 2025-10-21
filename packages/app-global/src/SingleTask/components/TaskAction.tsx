@@ -7,7 +7,7 @@ import { useRequest } from 'ahooks';
 import { toast } from 'sonner';
 import 'swiper/css';
 import { InputGroup, MapTaskPanelAction, MapTaskSelect, SubTaskContainer } from '../Style';
-import { addTemplate, createTask, getHeightInfo } from '../services';
+import { addTemplate, createTask, getHeightInfo, updateTemplate } from '../services';
 import MainButton from './MainButton';
 import MwConfirm from './MwConfirm';
 import PointOrLineBox, { PointCardContainer } from './PointOrLineBox';
@@ -42,8 +42,23 @@ const TaskAction = forwardRef((props: any, ref) => {
   const [loopTime, setLoopTime] = useState(1);
   const [intervalTime, setIntervalTime] = useState(0);
   const [templateName, setTemplateName] = useState('');
+  const [initTemplateName, setInitTemplateName] = useState('');
   const { data: heightResponse } = useRequest(() => getHeightInfo(), {});
   const taskActionRef = useRef(null);
+
+  const { loading: updateTemplateLoading, runAsync: updateTemplateAsync } = useRequest(
+    (params) => updateTemplate(params),
+    {
+      manual: true,
+      onSuccess: (res: any) => {
+        toast.success(t('common.actionSuccess'));
+        exitUpdateTemplate();
+      },
+      onError: (err: any) => {
+        toast.error(err.message);
+      },
+    },
+  );
 
   const [modal, contextHolder] = Modal.useModal();
   const { t } = useTranslation();
@@ -71,6 +86,7 @@ const TaskAction = forwardRef((props: any, ref) => {
         setLoopTime(params.loopTime);
         setIntervalTime(params.intervalTime);
         setTemplateName(params.templateName);
+        setInitTemplateName(params.templateName);
       },
     }),
     [],
@@ -104,50 +120,6 @@ const TaskAction = forwardRef((props: any, ref) => {
     list.splice(index, 1);
     setPreTaskList(list);
   };
-
-  // const transformTaskListToParams = (params: any) => {
-  //   const newParams = _.cloneDeep(params);
-  //   const transformDict: any = {
-  //     Pick: (obj: any) => {
-  //       obj['param'][0] = Number(obj?.task_low_height) || 0;
-  //       obj['param'][1] = Number(obj?.task_high_height) || 0;
-  //       obj['param'][2] = isKVehicle ? Number(obj?.fork_direction) : Number(obj.params1);
-  //       obj['param'][3] = Number(obj.params2);
-  //       return obj;
-  //     },
-  //     Place: (obj: any) => {
-  //       obj['param'][0] = Number(obj?.task_low_height) || 0;
-  //       obj['param'][1] = Number(obj?.task_high_height) || 0;
-  //       obj['param'][2] = isKVehicle ? Number(obj?.fork_direction) : Number(obj.params1);
-  //       obj['param'][3] = Number(obj.params2);
-  //       return obj;
-  //     },
-  //     Null: (obj: any) => {
-  //       return obj;
-  //     },
-  //     Charge: (obj: any) => {
-  //       obj['param'][0] = Number(obj?.task_charge_type) || 0;
-  //       obj['param'][1] = Number(obj?.threshold) || 0;
-  //       return obj;
-  //     },
-  //   };
-  //   for (let index = 0; index < newParams.tasks.length; index++) {
-  //     let obj = newParams.tasks[index];
-  //     obj = transformDict[obj['task_type']](obj);
-  //     delete obj.id;
-  //     delete obj.task_type_name;
-  //     delete obj.threshold;
-  //     delete obj.task_charge_type;
-  //     delete obj.task_low_height;
-  //     delete obj.task_high_height;
-  //     delete obj.fork_direction;
-  //     delete obj.expand;
-  //     delete obj.params1;
-  //     delete obj.params2;
-  //   }
-
-  //   return newParams;
-  // };
 
   const validateParams = (params: any) => {
     let isPass = true;
@@ -250,6 +222,14 @@ const TaskAction = forwardRef((props: any, ref) => {
   const saveTemplate = async (params: any) => {
     await addTemplate(params);
     onFinish && onFinish();
+  };
+
+  const exitUpdateTemplate = () => {
+    setTaskMode('create');
+    setLoopTime(1);
+    setIntervalTime(0);
+    setTemplateName('');
+    onFinish && onFinish(true);
   };
 
   return (
@@ -542,6 +522,7 @@ const TaskAction = forwardRef((props: any, ref) => {
               <Button
                 variant='contained'
                 disableElevation
+                disabled={updateTemplateLoading}
                 sx={{
                   marginTop: '5px',
                   color: 'white',
@@ -550,7 +531,7 @@ const TaskAction = forwardRef((props: any, ref) => {
                   background: '#facc14',
                   '&:hover': { background: '#facc14' },
                 }}
-                onClick={() => {
+                onClick={async () => {
                   const params = transformTaskListToParams(
                     {
                       loop_count: loopTime,
@@ -560,7 +541,8 @@ const TaskAction = forwardRef((props: any, ref) => {
                     isKVehicle,
                   );
                   const templateParams = { name: templateName, ..._.cloneDeep(params) };
-                  console.log('templateParams', templateParams);
+                  const sendParams = { old_info_name: initTemplateName, new_template_task: templateParams };
+                  await updateTemplateAsync(sendParams);
                 }}
               >
                 {'保存模版'}
@@ -570,13 +552,7 @@ const TaskAction = forwardRef((props: any, ref) => {
               variant='contained'
               disableElevation
               sx={{ marginTop: '5px', color: 'white', minWidth: '120px', maxWidth: '220px' }}
-              onClick={() => {
-                setTaskMode('create');
-                setLoopTime(1);
-                setIntervalTime(0);
-                setTemplateName('');
-                onFinish && onFinish(true);
-              }}
+              onClick={exitUpdateTemplate}
             >
               {'退出编辑'}
             </Button>

@@ -1,60 +1,81 @@
 import { RedoOutlined } from '@ant-design/icons';
+import { useRequest, useSize } from 'ahooks';
 import { Button, List, Radio, Result, Splitter, Typography } from 'antd';
-import { useState } from 'react';
+import VirtualList from 'rc-virtual-list';
+import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import LoadingPage from '../../components/PageLoading/Loading';
+import { viewLog } from '../services';
 
 const { Paragraph } = Typography;
-
-const NodeLogs = () => {
+interface IProps {
+  nodeKey: string;
+  node: any[];
+  listLoading: boolean;
+  refresh: any;
+}
+const NodeLogs = (props: IProps) => {
+  const { node, nodeKey, listLoading, refresh } = props;
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [loadingList, setLoadingList] = useState(false);
+  const [radioValue, setRadioValue] = useState('all');
+  const [nodePath, setNodePath] = useState('');
+  const containerRef = useRef<HTMLDivElement>(null);
+  const size = useSize(containerRef);
 
-  const loadListNode = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setVisible(true);
-    }, 2000);
+  const {
+    data: logInfo,
+    loading: logLoading,
+    runAsync: getLogInfo,
+  } = useRequest((params) => viewLog(params), {
+    manual: true,
+  });
+
+  const renderList = useMemo(() => {
+    const ary = logInfo?.data || [];
+    const typeKeys: any = ['info', 'error', 'warning'];
+    const typeKeyHashmap: any = {
+      info: 'info',
+      error: 'danger',
+      warning: 'warning',
+    };
+    // 使用 Map 去重
+    const seenTitles = new Map();
+    if (typeof ary === 'string') return [];
+    return ary
+      ?.map((item) => {
+        const matchedType = typeKeys.find((key) => new RegExp(`\\[${key.toUpperCase()}\\]`, 'i').test(item));
+        return {
+          title: item,
+          type: typeKeyHashmap[matchedType] || 'info',
+        };
+      })
+      ?.filter((item) => {
+        if (seenTitles.has(item.title)) {
+          return false; // 已存在，过滤掉
+        }
+        seenTitles.set(item.title, true); // 标记为已处理
+        return radioValue === 'all' ? true : item.type === radioValue;
+      });
+  }, [logInfo, radioValue]);
+
+  const loadListNode = async (path: string) => {
+    setNodePath(path);
+    setVisible(true);
+    await getLogInfo({ path });
   };
-  const nodesData = [
-    {
-      title: '20250802-151349.[ERROR]',
-    },
-    {
-      title: '20250804-161507.[WARN]',
-    },
-    {
-      title: '20250804-161507.[INFO]',
-    },
-    {
-      title: '20250804-161507.[DEBUG]',
-    },
-    {
-      title: '20250804-161507.[INFO]',
-    },
-    {
-      title: '20250804-161507.[DEBUG]',
-    },
-    {
-      title: '20250806-165140.[ERROR]',
-    },
-    {
-      title: '20250806-165140.[DEBUG]',
-    },
-  ];
+
   return (
     <div
       className='w-full h-full flex'
       style={{
         background: `
-      radial-gradient(circle at 60% 90%, #3f6fa199, #0000 60%), 
-      radial-gradient(circle at 20px 20px, #2e67a1cc, #0000 25%), 
-      #182336
-    `,
+          radial-gradient(circle at 60% 90%, #3f6fa199, #0000 60%), 
+          radial-gradient(circle at 20px 20px, #2e67a1cc, #0000 25%), 
+          #182336
+        `,
       }}
     >
       <Splitter className='w-full h-full'>
@@ -66,138 +87,81 @@ const NodeLogs = () => {
                 type='primary'
                 icon={<RedoOutlined />}
                 onClick={() => {
-                  setLoadingList(true);
+                  refresh();
                   setVisible(false);
-                  setTimeout(() => {
-                    setLoadingList(false);
-                  }, 2000);
                 }}
               >
                 {t('common.refresh')}
               </Button>
             </h2>
-            <List
-              className='w-full'
-              itemLayout='horizontal'
-              dataSource={nodesData}
-              loading={loadingList}
-              renderItem={(item, index) => (
-                <List.Item className='cursor-pointer hover:bg-[#234e70]' onClick={() => loadListNode()}>
-                  <List.Item.Meta
-                    title={
-                      <div className='flex items-center gap-2 justify-between'>
-                        <div className='px-1 flex items-center gap-1'>{item.title}</div>
-                      </div>
-                    }
-                    description={
-                      <div className='flex items-center gap-2'>
-                        <span>{item.time}</span>
-                        <span>{item.version}</span>
-                      </div>
-                    }
-                  />
-                </List.Item>
-              )}
-            />
+            {true && (
+              <List
+                className='w-full'
+                itemLayout='horizontal'
+                dataSource={node}
+                loading={listLoading}
+                renderItem={(item, index) => (
+                  <List.Item
+                    className='cursor-pointer hover:bg-[#234e70]'
+                    onClick={() => loadListNode(`${nodeKey}/${item}`)}
+                  >
+                    <List.Item.Meta
+                      title={
+                        <div className='flex items-center gap-2 justify-between'>
+                          <div className='px-1 flex items-center gap-1'>{item}</div>
+                        </div>
+                      }
+                    />
+                  </List.Item>
+                )}
+              />
+            )}
           </div>
         </Splitter.Panel>
         <Splitter.Panel>
           <div className='w-full h-full p-2'>
             {visible &&
-              (loading ? (
+              (logLoading ? (
                 <LoadingPage />
               ) : (
                 <div className='p-[2px] w-full h-full rounded-lg bg-gradient-to-r from-[#234e70] to-teal-400 relative flex flex-col gap-2'>
                   <div className='flex items-center justify-between p-2 bg-black/40 shadow-sm rounded-lg'>
-                    <p className='m-0'>20250804-161507.[DEBUG]</p>
-                    <Radio.Group defaultValue='a' buttonStyle='solid' className=''>
-                      <Radio.Button value='a'>{t('common.all')}</Radio.Button>
-                      <Radio.Button value='b' className='text-[#ff4d4f]'>
+                    <p className='m-0'>{nodePath}</p>
+                    <Radio.Group
+                      value={radioValue}
+                      buttonStyle='solid'
+                      onChange={(event) => {
+                        setRadioValue(event.target.value);
+                      }}
+                    >
+                      <Radio.Button value='all'>{t('common.all')}</Radio.Button>
+                      <Radio.Button value='danger' className='text-[#ff4d4f]'>
                         {t('common.error')}
                       </Radio.Button>
-                      <Radio.Button value='c' className='text-[#faad14]'>
+                      <Radio.Button value='warning' className='text-[#faad14]'>
                         {t('common.warn')}
                       </Radio.Button>
-                      <Radio.Button value='d' className='text-[#409eff]'>
+                      <Radio.Button value='info' className='text-[#409eff]'>
                         {t('common.info')}
                       </Radio.Button>
                     </Radio.Group>
                   </div>
                   <div className='bg-black/80 rounded-lg w-full h-full p-2 overflow-y-auto flex-1'>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:35:22.140466] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph type='warning' className='!mb-2'>
-                      [2025-08-02 19:35:32.141429] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:35:42.142385] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:35:52.143405] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:36:02.144383] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2'>
-                      [2025-08-02 19:36:05.627674] [INFO] [运行信息]任务号:0, 任务状态:初始化, 半自动模式, 不在点上,
-                      货物状态:无货, 电量:46, 急停:0, 避障:1, 错误码:0x00000000, 车号:25, 剩余路线数量:0
-                    </Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:36:12.145327] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2' type='danger'>
-                      [2025-08-08 16:00:16.200668] [ERROR] Time synchronization successful motion data count is too few
-                      4
-                    </Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:36:22.146250] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:36:32.147161] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:36:42.148088] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:36:52.148989] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:37:02.149868] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:37:12.150771] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:37:22.151673] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:37:32.152575] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:37:42.153477] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:35:22.140466] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:35:32.141429] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:35:42.142385] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:35:52.143405] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:36:02.144383] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2'>
-                      [2025-08-02 19:36:05.627674] [INFO] [运行信息]任务号:0, 任务状态:初始化, 半自动模式, 不在点上,
-                      货物状态:无货, 电量:46, 急停:0, 避障:1, 错误码:0x00000000, 车号:25, 剩余路线数量:0
-                    </Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:36:12.145327] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2' type='danger'>
-                      [2025-08-08 16:00:16.200668] [ERROR] Time synchronization successful motion data count is too few
-                      4
-                    </Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:36:22.146250] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:36:32.147161] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:36:42.148088] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:36:52.148989] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2' type='warning'>
-                      [2025-08-02 19:37:02.149868] [WARN] 车体已连续15天未充满电
-                    </Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:37:12.150771] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:37:22.151673] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:37:32.152575] [WARN] 车体已连续15天未充满电</Paragraph>
-                    <Paragraph className='!mb-2'>[2025-08-02 19:37:42.153477] [WARN] 车体已连续15天未充满电</Paragraph>
+                    {renderList?.length ? (
+                      <div ref={containerRef} className='h-full'>
+                        <VirtualList data={renderList} itemHeight={44} height={671} itemKey={'title'}>
+                          {(item: any) => (
+                            <Paragraph
+                              className='!mb-2'
+                              type={item.type}
+                              style={{ whiteSpace: 'pre-wrap' }}
+                            >{`${item.title}`}</Paragraph>
+                          )}
+                        </VirtualList>
+                      </div>
+                    ) : (
+                      <Result icon={<SvgIcon size={320} name={'noLog'} />} title={t('common.about.nolog')}></Result>
+                    )}
                   </div>
                 </div>
               ))}

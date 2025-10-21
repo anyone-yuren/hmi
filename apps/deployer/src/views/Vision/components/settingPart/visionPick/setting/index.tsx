@@ -411,9 +411,9 @@ const Setting = (props: any) => {
               );
             })} */}
 
-            <Title>{t('模型列表')}</Title>
+            <Title>{t('deployer.vision.modelList')}</Title>
             <TextUpdateRow>
-              <div>{t('是否启用')}</div>
+              <div>{t('deployer.vision.isTurnOn')}</div>
               <div>
                 <CustomSwitch
                   checked={updateHashMap['base_pallet_model_detect']}
@@ -427,7 +427,7 @@ const Setting = (props: any) => {
             </TextUpdateRow>
             {updateHashMap['base_pallet_model_detect'] && (
               <TextUpdateRow>
-                <div>{t('模型')}</div>
+                <div>{t('deployer.vision.model')}</div>
                 <div className='relative'>
                   <CustomSelect
                     multiple

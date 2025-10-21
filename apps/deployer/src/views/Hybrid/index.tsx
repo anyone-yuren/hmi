@@ -81,7 +81,7 @@ const CustomList = styled(List)<{ component?: React.ElementType }>({
 });
 
 const Mapping = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const {
     setMapLoading,
@@ -383,7 +383,7 @@ const Mapping = () => {
         </SwipeAction>
       );
     });
-  }, [floor, listData]);
+  }, [floor, listData, i18n.language]);
   const layerRef = useRef<Konva.Layer>(null);
 
   const wsStateHashmap = {

@@ -30,7 +30,7 @@ const PalletAnnotation = (props: any) => {
               paddingInline: 20,
             }}
             onClick={() => {
-              toast.error('deployer.vision.palletWidthTips');
+              toast.error(t('deployer.vision.palletWidthTips'));
             }}
           >
             {t('deployer.vision.palletWidth')}: {props?.width}

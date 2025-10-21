@@ -56,6 +56,9 @@ export const useHybrid = () => {
         webSocketEventHashMap[data?.uri] && webSocketEventHashMap[data?.uri](render_data);
       }
     },
+    onError: (error, instance) => {
+      console.log('WebSocket error:', error, instance);
+    },
   });
 
   const {

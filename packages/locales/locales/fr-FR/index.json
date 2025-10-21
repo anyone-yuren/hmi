@@ -1,5 +1,6 @@
 {
   "common": {
+    "abnormal": "anormal",
     "about": {
       "choose": "Veuillez sélectionner un autre journal",
       "client": "Client",
@@ -155,6 +156,7 @@
       "workingTimes": "Nombre d'opérations"
     },
     "modify": "Modifier",
+    "networkErrorTips": "Anomalie du réseau, veuillez réessayer",
     "noData": "Aucune donnée disponible",
     "noPermission": "Vous n'avez pas les droits d'accéder à cette page.",
     "normal": "normale",
@@ -189,7 +191,9 @@
     "pleaseUsername": "Veuillez saisir votre nom d'utilisateur",
     "plsInput": "Veuillez entrer",
     "plsInputParams": "パラメータを入力してください",
+    "reTry": "Essayer à nouveau",
     "refresh": "rafraîchir",
+    "retryNetworkTips": "Le système se connectera automatiquement trois fois toutes les 10 secondes. Si les données ne peuvent toujours pas être chargées, veuillez essayer manuellement !",
     "safety": {
       "3dpoints": "Nuage de points 3D",
       "back": "Reculer",

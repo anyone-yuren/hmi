@@ -53,13 +53,14 @@ const GlobalHeader = () => {
   const [modal, contextHolder] = Modal.useModal();
   const { styles } = useStyles();
   const theme = useTheme();
-  const { powerStatus, setPowerStatus, systemDateTime, rcsIsOnline } = useVehicleStore(
+  const { powerStatus, setPowerStatus, systemDateTime, rcsIsOnline, taskInfo } = useVehicleStore(
     useShallow((state) => {
       return {
         powerStatus: state.powerStatus,
         setPowerStatus: state.setPowerStatus,
         systemDateTime: state.systemDateTime,
         rcsIsOnline: state.rcsIsOnline,
+        taskInfo: state.taskInfo,
       };
     }),
   );
@@ -90,6 +91,12 @@ const GlobalHeader = () => {
       data?.agv_type && setAvgType(data?.agv_type);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (taskInfo?.operate_identification === 3) {
+      navigate('/charging');
+    }
+  }, [taskInfo?.operate_identification]);
 
   // 设置十分钟定时器
   useEffect(() => {

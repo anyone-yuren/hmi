@@ -1,4 +1,5 @@
 import { Button } from 'antd';
+import { t } from 'i18next';
 import { SvgIcon } from 'ui';
 interface IProps {
   loading: boolean;
@@ -9,12 +10,10 @@ const ErrorPage = ({ loading, refresh }: IProps) => {
     <div className='flex w-full h-full flex-col items-center justify-center'>
       <SvgIcon name='networkError' size={420} />
       <div className='text-center flex flex-col gap-2 items-center relative'>
-        <p className='absolute text-sm opacity-80 text-nowrap -top-10'>
-          系统会自动每隔10s连接三次，若依然无法加载数据，请手动尝试！
-        </p>
-        <p className='text-lg font-bold'>网络异常，请重试</p>
+        <p className='absolute text-sm opacity-80 text-nowrap -top-10'>{t('common.retryNetworkTips')}</p>
+        <p className='text-lg font-bold'>{t('common.networkErrorTips')}</p>
         <Button type='primary' loading={loading} onClick={refresh}>
-          {loading ? '连接中' : '重试'}
+          {loading ? t('deployer.hybrid.connecting') : t('common.reTry')}
         </Button>
       </div>
     </div>

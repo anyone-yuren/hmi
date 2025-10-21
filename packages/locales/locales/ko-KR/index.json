@@ -1,5 +1,6 @@
 {
   "common": {
+    "abnormal": "이상",
     "about": {
       "choose": "다른 로그를 선택하십시오",
       "client": "고객",
@@ -155,6 +156,7 @@
       "workingTimes": "작동 횟수"
     },
     "modify": "수정",
+    "networkErrorTips": "네트워크에 이상이 있습니다. 다시 시도해 주세요.",
     "noData": "아직 데이터가 없습니다",
     "noPermission": "죄송합니다.이 페이지에 액세스 할 수있는 권한이 없습니다.",
     "normal": "정상",
@@ -189,7 +191,9 @@
     "pleaseUsername": "사용자 이름을 입력하십시오",
     "plsInput": "입력하십시오.",
     "plsInputParams": "파라미터를 입력해주세요",
+    "reTry": "다시 시도하세요",
     "refresh": "새로 고치다",
+    "retryNetworkTips": "10s마다 자동으로 세 번 연결됩니다. 데이터를 로드할 수 없으면 수동으로 시도하십시오!",
     "safety": {
       "3dpoints": "3D 포인트 클라우드",
       "back": "후진",

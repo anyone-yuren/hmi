@@ -29,6 +29,7 @@ const Cargo = () => {
   const { data: goodsResponse, runAsync: getLocation } = useRequest(read, {});
 
   function findClosestToOrigin(points) {
+    return points[points.length - 1];
     return points.reduce((closest, current) => {
       const dist1 = closest[0] ** 2 + closest[1] ** 2;
       const dist2 = current[0] ** 2 + current[1] ** 2;

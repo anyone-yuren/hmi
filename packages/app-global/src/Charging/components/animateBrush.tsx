@@ -1,15 +1,16 @@
 import { useVehicleStore } from '@gbeata/store';
 import { Button } from 'antd';
+import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import Flash from './flash';
 import LoadingCharging from './loadingCharging';
-
 const AnimateBrush = (props) => {
-  const { setPowerStatus, powerStatus } = useVehicleStore(
+  const { setPowerStatus, powerStatus, chargePileStatus } = useVehicleStore(
     useShallow((state) => {
       return {
+        chargePileStatus: state.chargePileStatus,
         setPowerStatus: state.setPowerStatus,
         powerStatus: state.powerStatus,
       };
@@ -34,6 +35,82 @@ const AnimateBrush = (props) => {
       time: string;
     }[]
   >([]);
+
+  const initViewState = () => {
+    setThreeColor('green');
+    setPowerStatus({
+      ...powerStatus,
+      power: 0,
+      charge_status: 0,
+    });
+
+    setStationChargingData([]);
+    setVehicleChargingData([]);
+    setIsBrush(false);
+    setStretch(false);
+    setIsStation(false);
+  };
+
+  useEffect(() => {
+    const ary = [2, 3];
+    if (!ary.includes(chargePileStatus.charge_status)) {
+      initViewState();
+    }
+  }, [chargePileStatus.charge_status]);
+  useEffect(() => {
+    // 车子关电触发
+    if (chargePileStatus.pe_charge_output) {
+      setIsBrush(true);
+      setIsLoading(false);
+      const timeString = dayjs().format('HH:mm:ss');
+      setVehicleChargingData([
+        {
+          key: '1',
+          message: '车辆发送光电',
+          time: timeString,
+        },
+        {
+          key: '2',
+          message: '等待充电桩伸出',
+          time: timeString,
+        },
+      ]);
+    }
+  }, [chargePileStatus.pe_charge_output]);
+  useEffect(() => {
+    if (chargePileStatus.brush_board_status === 0) {
+      setStretch(true);
+      const timeString = dayjs().format('HH:mm:ss');
+      setStationChargingData([
+        {
+          key: '1',
+          message: '充电桩伸出',
+          time: timeString,
+        },
+        {
+          key: '2',
+          message: '等待充电桩发光',
+          time: timeString,
+        },
+      ]);
+    }
+  }, [chargePileStatus.brush_board_status]);
+
+  useEffect(() => {
+    // 充电桩光电触发
+    if (chargePileStatus.pe_charge_input) {
+      setIsStation(true);
+      const timeString = dayjs().format('HH:mm:ss');
+      setStationChargingData([
+        ...stationChargingData,
+        {
+          key: '3',
+          message: '充电桩发送光电',
+          time: timeString,
+        },
+      ]);
+    }
+  }, [chargePileStatus.pe_charge_input]);
   return (
     <div className='w-full flex flex-1  relative'>
       <div className='absolute flex gap-2 p-4 z-50'>
@@ -68,7 +145,7 @@ const AnimateBrush = (props) => {
           size='small'
           onClick={() => {
             setIsStation(!isStation);
-            setStretch(true);
+            setStretch(false);
             setStationChargingData(
               isStation
                 ? []
@@ -115,6 +192,7 @@ const AnimateBrush = (props) => {
           onClick={() => {
             setThreeColor('green');
             setPowerStatus({
+              ...powerStatus,
               power: 0,
               charge_status: 0,
             });
