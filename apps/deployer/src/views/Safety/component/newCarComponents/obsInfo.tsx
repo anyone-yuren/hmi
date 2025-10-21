@@ -113,6 +113,14 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
             <p className='text-md'>避障类型</p>
             {getObsMsg(obsInfo.type)}
           </div>
+          {obsInfo?.sensor_description?.length ? (
+            <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
+              <p className='min-w-[40%]'>避障传感器</p>
+              <p className='break-words flex items-center gap-2 flex-col'>
+                {obsInfo?.sensor_description?.map((item) => <span className='bg-black/5 px-1'>{item}</span>) || '-'}
+              </p>
+            </div>
+          ) : null}
           <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
             <p className='text-md'>货物状态</p>
             {goodsInfo?.good_status ? (
