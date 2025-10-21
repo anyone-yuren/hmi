@@ -69,20 +69,19 @@ const DeviceList = () => {
         <>
           <Circle
             key={item.id}
-            radius={20}
+            radius={16}
             fill={sensor_description.includes(item.name) ? '#0000ff' : '#00ff00'}
             x={0 - meterToPixel(item.y)}
             y={0 - meterToPixel(item.x)}
           />
-          {sensor_description.includes(item.name) ? (
-            <Text
-              text={item.name}
-              x={0 - meterToPixel(item.y)}
-              y={0 - meterToPixel(item.x) - 30}
-              fontSize={24}
-              fill='#ff0000'
-            />
-          ) : null}
+
+          <Text
+            text={item.name}
+            x={0 - meterToPixel(item.y)}
+            y={0 - meterToPixel(item.x) - 60}
+            fontSize={54}
+            fill={sensor_description.includes(item.name) ? '#0000ff' : '#00ff00'}
+          />
         </>
       ))}
     </Group>
