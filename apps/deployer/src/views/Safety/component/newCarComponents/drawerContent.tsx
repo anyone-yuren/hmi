@@ -436,7 +436,7 @@ const DrawerContent = (props: IProps) => {
         <Checkbox.Group className='flex flex-col gap-2' value={checkedList} onChange={setCheckedList}>
           {rects?.length ? (
             rects.map((item) => {
-              const isSelected = Number(selectedId) === item.id;
+              const isSelected = Number(selectedId) === Number(item.id);
               return (
                 <div
                   key={String(item.id)}
@@ -448,6 +448,7 @@ const DrawerContent = (props: IProps) => {
                   }}
                   className={`group w-full bg-[#F7F8FA] rounded-md flex flex-col gap-2 justify-between p-4 hover:bg-[#E8EAF0] hover:shadow-lg  hover:font-bold  animation-all duration-300 cursor-pointer ${isSelected ? 'shadow-lg bg-[#E8EAF0]  font-bold' : ''}`}
                   onClick={() => {
+                    debugger;
                     setSelectedId(item.id);
                     setSelectRect(item);
                   }}
