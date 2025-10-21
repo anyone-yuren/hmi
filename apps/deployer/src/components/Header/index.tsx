@@ -13,6 +13,7 @@ import { useRequest } from 'ahooks';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
 import Signal from './components/signal';
@@ -53,6 +54,7 @@ const GlobalHeader = () => {
   const [modal, contextHolder] = Modal.useModal();
   const { styles } = useStyles();
   const theme = useTheme();
+  const { t } = useTranslation();
   const { powerStatus, setPowerStatus, systemDateTime, rcsIsOnline, taskInfo } = useVehicleStore(
     useShallow((state) => {
       return {
