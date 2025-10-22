@@ -23,7 +23,7 @@ const RcsLines = ({ mapEdges = [] }) => {
     return mapEdges?.map((edge) => {
       const controlPoints = edge?.control_points?.map((point) => {
         // const position = [convertToMeters(item.x), 0, convertToMeters(item.y)];
-        const position = new Vector3(convertToMeters(point.x), 0, convertToMeters(point.y));
+        const position = new Vector3(0 - convertToMeters(point.x), 0, convertToMeters(point.y));
         return position;
       });
       const curve = new CatmullRomCurve3(controlPoints);

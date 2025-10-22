@@ -5,7 +5,7 @@ import { useMemo, useRef } from 'react';
 import { PointLightHelper, type DirectionalLight } from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgvType } from '../../../../hooks/useAgvType';
-import { Fork15lift, Sl14Model } from '../../../../Models/components';
+import { Fork15lift, Sl14Model, X20Model } from '../../../../Models/components';
 import { useHomeHybirdStore } from '../../../store/hybird';
 // import { PointLight } from "@react-three/drei";
 
@@ -27,15 +27,21 @@ const Car = (props) => {
     })),
   );
 
-  const position = [agvPosition?.x / 1000 || 0, 0, agvPosition?.y / 1000 || 0];
+  const position = [0 - agvPosition?.x / 1000 || 0, 0, agvPosition?.y / 1000 || 0];
 
   const directionalLightRef = useRef<DirectionalLight>(null!);
   useHelper(directionalLightRef, PointLightHelper, 2);
 
   const calculateShortestAngle = (target: number): number => {
-    const delta = ((target + 180) % 360) - 180;
+    const delta = (target * 180) / Math.PI + 180;
     return delta;
   };
+  // const calculateShortestAngle = (target: number): number => {
+  //   console.log('target', target);
+  //   const delta = ((target + 180) % 360) - 180;
+  //   return delta;
+  // };
+
   // 计算目标角度与当前角度之间的最短路径
   const deltaRotation = useMemo(
     () => calculateShortestAngle(agvPosition.angel), // 没有任何依据的0.6，只是图标精度的调整
@@ -80,9 +86,10 @@ const Car = (props) => {
             }
           />
         </group>
-        <animated.group position={groupProps.position as unknown as THREE.Vector3} rotation={[0, deltaRotation, 0]}>
+        <animated.group position={groupProps.position as unknown as THREE.Vector3} rotation={[0, agvPosition.angel, 0]}>
           {agvType === 'SE15' ? <Fork15lift /> : null}
           {agvType === 'SL14' ? <Sl14Model /> : null}
+          {agvType === 'X20' ? <X20Model /> : null}
         </animated.group>
         {/* <group position={[agvPosition.x / 1000, 0.01, agvPosition.y / 1000]} rotation={[0, deltaRotation, 0]}>
           {agvType === 'SE15' ? <Fork15lift /> : null}

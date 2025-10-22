@@ -74,7 +74,7 @@ function TrapezoidBox({ width = 650, height = 550, depth = 300, isLeft = true, c
 function O30Model() {
   const SCALE = 0.001; // 毫米转米
   return (
-    <group position={[0, 0, -5]}>
+    <group position={[0, 0, 0]} rotation={[0, Math.PI, 0]}>
       {/* Forklift body */}
       <group position={[(850 * SCALE) / 2, (900 * SCALE) / 2, 0]}>
         <group>
