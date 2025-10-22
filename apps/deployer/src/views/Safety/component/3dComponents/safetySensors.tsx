@@ -18,7 +18,7 @@ interface IProps {
 
 function SafetySensors({ sensors }: IProps) {
   const pointsRef = useRef<THREE.Points>(null);
-
+  console.log('SafetySensors', sensors);
   // 将传感器数据转换为 Float32Array 格式
   const positions = useMemo(() => {
     const arr = new Float32Array(sensors.length * 3);
@@ -66,10 +66,31 @@ function SafetySensors({ sensors }: IProps) {
       return new THREE.Euler(roll, pitch, yaw, 'XYZ'); // 参数已经是弧度
     }, [pitch, roll, yaw]);
 
+    const rotationQuaternion = useMemo(() => {
+      const q = new THREE.Quaternion();
+
+      // 绕世界 X 轴旋转
+      const qx = new THREE.Quaternion();
+      qx.setFromAxisAngle(new THREE.Vector3(1, 0, 0), roll);
+
+      // 绕世界 Y 轴旋转
+      const qy = new THREE.Quaternion();
+      qy.setFromAxisAngle(new THREE.Vector3(0, 1, 0), pitch);
+
+      // 绕世界 Z 轴旋转
+      const qz = new THREE.Quaternion();
+      qz.setFromAxisAngle(new THREE.Vector3(0, 0, 1), yaw);
+
+      // 顺序：Z → Y → X（即世界坐标顺序）
+      q.multiply(qz).multiply(qy).multiply(qx);
+
+      return q;
+    }, [roll, pitch, yaw]);
+
     return (
       <group>
         {/* 旋转的坐标轴部分 */}
-        <group position={position} rotation={rotation}>
+        <group position={position} quaternion={rotationQuaternion}>
           {/* X轴 - 红色 */}
           <Line points={xAxisPoints} color='red' lineWidth={3} />
 
@@ -84,7 +105,7 @@ function SafetySensors({ sensors }: IProps) {
         <Text
           position={[position[0], position[1] - 0.1, position[2]]} // 在坐标轴下方显示名称
           color='white'
-          fontSize={0.1}
+          fontSize={0.15}
           anchorX='center'
           anchorY='middle'
           rotation={[Math.PI / 2, 0, 0]}
@@ -98,10 +119,12 @@ function SafetySensors({ sensors }: IProps) {
   return (
     <>
       {/* 传感器点 */}
-      <points ref={pointsRef}>
-        <primitive object={geometry} attach='geometry' />
-        <pointsMaterial color='green' size={0.4} sizeAttenuation depthTest={false} />
-      </points>
+      {false && (
+        <points ref={pointsRef}>
+          <primitive object={geometry} attach='geometry' />
+          <pointsMaterial color='green' size={0.4} sizeAttenuation depthTest={false} />
+        </points>
+      )}
 
       {/* 为每个传感器点添加坐标轴 */}
       {sensors.map((sensor, index) => (
