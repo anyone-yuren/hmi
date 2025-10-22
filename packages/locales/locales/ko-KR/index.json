@@ -401,6 +401,7 @@
     },
     "setting": {
       "lowPower": "배터리 부족 경보 임계값",
+      "networkSetting": "네트워크 구성",
       "peripheral": "주변 장치 파라미터",
       "runMusic": "주행하는 동안 재생되는 음악",
       "volumn": "스피커 볼륨"

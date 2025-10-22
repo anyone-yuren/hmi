@@ -402,6 +402,7 @@
     },
     "setting": {
       "lowPower": "电量报警阈值",
+      "networkSetting": "网络配置",
       "peripheral": "外设参数",
       "runMusic": "行走音乐",
       "volumn": "喇叭音量"

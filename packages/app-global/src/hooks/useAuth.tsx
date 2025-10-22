@@ -28,7 +28,6 @@ const AuthComponent = (props: IProps) => {
       };
     }),
   );
-  debugger;
   if (authKey && !authKey.includes(token)) {
     return null;
   }
