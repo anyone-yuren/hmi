@@ -19,7 +19,7 @@ const SafetyBase = (props: any) => {
       <Ground />
       <AxesHelper />
       <GizmoHelper alignment='bottom-right' margin={[80, 80]}>
-        <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='black' />
+        <GizmoViewport axisColors={['red', 'blue', 'green']} labels={['X', 'Z', 'Y']} labelColor='black' />
       </GizmoHelper>
     </>
   );

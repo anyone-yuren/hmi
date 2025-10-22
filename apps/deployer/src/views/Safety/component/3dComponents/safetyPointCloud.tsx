@@ -21,11 +21,12 @@ const ACTIVE_POINT_RADIUS = 1;
 
 function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPointCloudProps) {
   const { camera, size } = useThree();
-  const { forksHeight, sensorPoints, obsInfo } = useSafetyStore(
+  const { forksHeight, sensorPoints, obsInfo, sensorPointsKey } = useSafetyStore(
     useShallow((store) => ({
       forksHeight: store.forksHeight,
       sensorPoints: store.sensorPoints,
       obsInfo: store.obsInfo,
+      sensorPointsKey: store.sensorPointsKey,
     })),
   );
 
@@ -46,7 +47,6 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
   }, [obsInfo?.x, obsInfo?.y, obsInfo?.z]);
 
   useEffect(() => {
-    console.log('activePoints', activePoints);
     const positions = new Float32Array(activePoints);
     activePointGeometry.current.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   }, [activePoints]);
@@ -54,15 +54,18 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
 
   const rawPoints = useMemo(() => {
     const arr: number[] = [];
-
-    Object.values(sensorPoints || {}).forEach((list: any) => {
-      (list as { x: number; y: number; z: number }[]).forEach((p) => {
-        arr.push(p.x, p.y, p.z);
+    Object.keys(sensorPoints || {})
+      ?.filter((key) => {
+        return sensorPointsKey.includes(key);
+      })
+      .forEach((key: any) => {
+        (sensorPoints[key] as { x: number; y: number; z: number }[]).forEach((p) => {
+          arr.push(p.x, p.y, p.z);
+        });
       });
-    });
 
     return new Float32Array(arr);
-  }, [sensorPoints]);
+  }, [sensorPoints, sensorPointsKey]);
 
   const geometryRef = useRef<THREE.BufferGeometry>(new THREE.BufferGeometry());
   const activePointGeometry = useRef<THREE.BufferGeometry>(new THREE.BufferGeometry());
@@ -125,13 +128,13 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
   }, []);
 
   useEffect(() => {
-    if (!geometryRef.current || rawPoints.length === 0) return;
+    if (!geometryRef.current) return;
     geometryRef.current.setAttribute('position', new THREE.Float32BufferAttribute(rawPoints, 3));
   }, [geometryRef.current, rawPoints]);
 
   // useFrame 动态更新点云
   useFrame(() => {
-    if (!geometryRef.current || rawPoints.length === 0) return;
+    if (!geometryRef.current) return;
     // 更新 frustum
     projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
     frustum.setFromProjectionMatrix(projScreenMatrix);
