@@ -193,7 +193,7 @@ const DrawerContent = (props: IProps) => {
   // 滚动到选中的 item
   useEffect(() => {
     if (selectedId) {
-      const item = itemRefs.current[selectedId];
+      const item = itemRefs.current[Number(selectedId)];
       if (item) {
         item.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
@@ -436,10 +436,10 @@ const DrawerContent = (props: IProps) => {
         <Checkbox.Group className='flex flex-col gap-2' value={checkedList} onChange={setCheckedList}>
           {rects?.length ? (
             rects.map((item) => {
-              const isSelected = selectedId === item.id;
+              const isSelected = Number(selectedId) === Number(item.id);
               return (
                 <div
-                  key={item.id}
+                  key={String(item.id)}
                   ref={(el) => (itemRefs.current[item.id] = el)}
                   style={{
                     borderColor: isSelected ? token.colorPrimary : token.colorBorder,
@@ -448,6 +448,7 @@ const DrawerContent = (props: IProps) => {
                   }}
                   className={`group w-full bg-[#F7F8FA] rounded-md flex flex-col gap-2 justify-between p-4 hover:bg-[#E8EAF0] hover:shadow-lg  hover:font-bold  animation-all duration-300 cursor-pointer ${isSelected ? 'shadow-lg bg-[#E8EAF0]  font-bold' : ''}`}
                   onClick={() => {
+                    debugger;
                     setSelectedId(item.id);
                     setSelectRect(item);
                   }}

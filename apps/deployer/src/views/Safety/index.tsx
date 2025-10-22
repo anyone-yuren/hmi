@@ -467,10 +467,10 @@ export default function RectDrawer() {
       easing: Konva.Easings.EaseInOut,
       x: width / 2,
       y: height / 2,
-      scaleX: 0.5,
-      scaleY: 0.5,
+      scaleX: 0.25,
+      scaleY: 0.25,
       onFinish: () => {
-        setScale(0.5);
+        setScale(0.3);
         setReRenderLineGrid(!reRenderLineGrid);
       },
     });
