@@ -7,7 +7,7 @@ import ChargingAnimation from '../charging';
 import WsVehicleContainer from '../wsVehicleContainer';
 import { config_agv_info } from './service';
 
-import { GlobalNotification, LoginDialog, triggerLoginModal } from '@gbeata/app-global';
+import { AuthComponent, GlobalNotification, LoginDialog, triggerLoginModal } from '@gbeata/app-global';
 import { useGlobalStore, useVehicleStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
 import { createStyles } from 'antd-style';
@@ -190,36 +190,40 @@ const GlobalHeader = () => {
               icon={<SvgIcon name='chache' size={responsive.xs ? 42 : 54} />}
             ></Button>
           </div>
-          <div
-            onClick={() => {
-              navigate('/singleTask');
-            }}
-            className={'justify-center flex  flex-col items-center '}
-          >
-            <Button
-              classNames={{
-                icon: 'flex items-center justify-center',
+          <AuthComponent authKey={['admin']}>
+            <div
+              onClick={() => {
+                navigate('/singleTask');
               }}
-              className={`${styles.taskHoverButton} border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#223d62] to-[#3b587e]`}
-              shape='circle'
-              icon={<SvgIcon name='task' size={responsive.xs ? 42 : 54} />}
-            ></Button>
-          </div>
-          <div
-            onClick={() => {
-              navigate('/hybrid');
-            }}
-            className={' justify-center flex flex-col items-center  '}
-          >
-            <Button
-              classNames={{
-                icon: 'flex items-center justify-center',
+              className={'justify-center flex  flex-col items-center '}
+            >
+              <Button
+                classNames={{
+                  icon: 'flex items-center justify-center',
+                }}
+                className={`${styles.taskHoverButton} border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white bg-gradient-to-b from-[#223d62] to-[#3b587e]`}
+                shape='circle'
+                icon={<SvgIcon name='task' size={responsive.xs ? 42 : 54} />}
+              ></Button>
+            </div>
+          </AuthComponent>
+          <AuthComponent authKey={['admin', 'customer']}>
+            <div
+              onClick={() => {
+                navigate('/hybrid');
               }}
-              className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white'
-              shape='circle'
-              icon={<SvgIcon name='hybrid' size={responsive.xs ? 80 : 80} />}
-            ></Button>
-          </div>
+              className={' justify-center flex flex-col items-center  '}
+            >
+              <Button
+                classNames={{
+                  icon: 'flex items-center justify-center',
+                }}
+                className='border-none !w-[82px] h-[82px] flex items-center justify-center !rounded-2xl text-white'
+                shape='circle'
+                icon={<SvgIcon name='hybrid' size={responsive.xs ? 80 : 80} />}
+              ></Button>
+            </div>
+          </AuthComponent>
         </div>
         <div>
           <Button
