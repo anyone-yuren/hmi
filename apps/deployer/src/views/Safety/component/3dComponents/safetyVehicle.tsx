@@ -7,16 +7,37 @@ import { generateRectanglePoints, getProjectArea } from '../../utils/index';
 const mockHeight = 685;
 function SafetyVehicle(props: any) {
   const { vehicleRect, forksUnderRect, distance } = props;
-  console.log('distance:[前，后]', distance);
   if (!distance?.length) return null;
 
-  const { forksHeight } = useSafetyStore(
+  const { forksHeight, obsInfo } = useSafetyStore(
     useShallow((store) => ({
       forksHeight: store.forksHeight,
+      obsInfo: store.obsInfo,
     })),
   );
   const [depth, setDepth] = useState(1.8);
   const [forkDepth, setForkDepth] = useState(0.1);
+  const [palletDepth, setPalletDepth] = useState(0.1);
+
+  const pallet: any = useMemo(() => {
+    const x1 = obsInfo.pallet_left_top_point_x || 0;
+    const y1 = obsInfo.pallet_left_top_point_y || 0;
+    const x2 = obsInfo.pallet_right_bottom_point_x || 0;
+    const y2 = obsInfo.pallet_right_bottom_point_y || 0;
+    const palletPoints = generateRectanglePoints([x1, y1, x2, y2]);
+    const palletWidth = Math.abs(palletPoints[1][0] - palletPoints[0][0]);
+    const palletHeight = Math.abs(palletPoints[2][1] - palletPoints[0][1]);
+    const palletPosition = [
+      (palletPoints[0][0] + palletPoints[1][0]) / 2, // X 中心点
+      (palletPoints[0][1] + palletPoints[2][1]) / 2, // Y 中心点
+      forksHeight / 1000 + palletDepth / 2 + forkDepth, // Z 中心点
+    ];
+    return {
+      width: palletWidth,
+      height: palletHeight,
+      position: palletPosition,
+    };
+  }, [obsInfo, palletDepth, forksHeight, forkDepth]);
 
   const outlook: any = useMemo(() => {
     const vehicle = vehicleRect.find((item) => item.name === 'head');
@@ -74,7 +95,7 @@ function SafetyVehicle(props: any) {
         geometry={new THREE.BoxGeometry(outlook.vehicle.width, outlook.vehicle.height, depth)}
         position={outlook.vehicle.position}
       >
-        <meshStandardMaterial color='#00d1d1' transparent opacity={0.8} depthTest={false} />
+        <meshStandardMaterial color='#00d1d1' transparent opacity={0.6} depthTest={false} depthWrite={false} />
       </mesh>
 
       {/* 渲染叉臂立方体 */}
@@ -82,7 +103,11 @@ function SafetyVehicle(props: any) {
         geometry={new THREE.BoxGeometry(outlook.forks.width, outlook.forks.height, forkDepth)}
         position={outlook.forks.position}
       >
-        <meshStandardMaterial color='#00d1d1' depthTest={false} />
+        <meshStandardMaterial color='#00d1d1' transparent opacity={0.8} depthTest={false} depthWrite={false} />
+      </mesh>
+
+      <mesh geometry={new THREE.BoxGeometry(pallet.width, pallet.height, palletDepth)} position={pallet.position}>
+        <meshStandardMaterial color='yellow' transparent opacity={0.8} depthTest={false} depthWrite={false} />
       </mesh>
 
       {/* 渲染保护区域立方体 */}
@@ -97,7 +122,7 @@ function SafetyVehicle(props: any) {
           }
           position={forksUnderProjectArea.position}
         >
-          <meshStandardMaterial color='yellow' transparent opacity={0.6} depthTest={false} />
+          <meshStandardMaterial color='yellow' transparent opacity={0.6} depthTest={false} depthWrite={false} />
         </mesh>
       )}
     </>

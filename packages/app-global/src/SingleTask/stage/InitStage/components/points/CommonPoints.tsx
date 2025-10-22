@@ -67,7 +67,7 @@ const CommonPoints = (props: IMapPointsProps) => {
               perfectDrawEnabled={false}
               {...commonProps}
             />
-            {point.offsetX != null && point.offsetY && (
+            {point.offsetX != null && point.offsetY != null && (
               <Circle
                 radius={0.8} // 小圆点半径
                 fill={'red'} // 红色填充

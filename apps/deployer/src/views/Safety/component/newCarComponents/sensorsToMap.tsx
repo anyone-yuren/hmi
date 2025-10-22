@@ -54,8 +54,8 @@ const DeviceList = () => {
 
     return () => anim.stop();
   }, [deviceList?.data, sensor_description]);
-  console.log('sensor_description', sensor_description);
-  console.log('deviceList', deviceList.data);
+  // console.log('sensor_description', sensor_description);
+  // console.log('deviceList', deviceList.data);
 
   return (
     <Group name='device' ref={groupRef}>
