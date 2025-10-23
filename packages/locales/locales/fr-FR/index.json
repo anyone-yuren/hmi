@@ -541,7 +541,7 @@
       "firstVision": "Première détection visuelle",
       "firstVisualPoint": "Premier point de détection visuelle",
       "forkExtendDistCompensation": "Compensation de distance de déploiement du bras de fourche",
-      "forkExtendParams": "Paramètres de distance d'extension du bras de fourche",
+      "forkExtendParams": "Compensation de hauteur de fourche supplémentaire",
       "forkUpPointCloud": "Nuage de points au-dessus du bras de fourche",
       "forkWidth": "Largeur de la fourche",
       "forkWidthPallet": "Utiliser différentes profondeurs de fourche pour différents types de palettes",

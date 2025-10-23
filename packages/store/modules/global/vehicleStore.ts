@@ -14,6 +14,7 @@ type CHARGE_PILE_STATUS = {
   error_code: number; //错误码
   pe_charge_input: boolean; //充电输入光电
   pe_charge_output: boolean; //充电输出光电
+  connect_status: number; // 充电桩连接状态 0:未连接 1:已连接 自动下发的充电桩才会连接,手动下发的充电桩不会连接
 };
 interface IPowerStatus {
   power: number;
@@ -71,6 +72,7 @@ export const useVehicleStore = create<State>()(
         error_code: 0,
         pe_charge_input: false,
         pe_charge_output: false,
+        connect_status: 0,
       },
       setChargePileStatus: (chargePileStatus: CHARGE_PILE_STATUS) => {
         const { cacheSave } = useGlobalStore.getState();

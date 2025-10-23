@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import ParamsSetting from '../paramsSetting/setting';
 
 const Pallet = forwardRef((props: any, ref: any) => {
+  const { annotationVisible = true } = props;
   const [propsState, setPropsState] = useState<any>({});
   const [, setInput, getInput] = useGetState();
   const divRef = useRef(null);
@@ -249,8 +250,13 @@ const Pallet = forwardRef((props: any, ref: any) => {
 
   // 宽度改变等比加
   return (
-    <div className='flex flex-col w-full h-full'>
-      <div ref={divRef} className='flex w-full h-full justify-center'>
+    <div className='flex w-full h-full items-center'>
+      {propsState?.showMarks && <ParamsSetting propsState={propsState} setPropsState={setPropsState}></ParamsSetting>}
+      <div
+        ref={divRef}
+        className='flex w-full h-full justify-center'
+        style={{ marginInline: propsState?.showMarks ? '50px' : '0px' }}
+      >
         <div
           className='absolute '
           style={{
@@ -297,7 +303,7 @@ const Pallet = forwardRef((props: any, ref: any) => {
             );
           })}
           {/* 这里是标注组件 */}
-          {propsState?.showMarks && !!scale && (
+          {propsState?.showMarks && annotationVisible && !!scale && (
             <PalletAnnotation
               {...propsState}
               divSize={divSize}
@@ -307,7 +313,6 @@ const Pallet = forwardRef((props: any, ref: any) => {
           )}
         </div>
       </div>
-      {propsState?.showMarks && <ParamsSetting propsState={propsState} setPropsState={setPropsState}></ParamsSetting>}
     </div>
   );
 });

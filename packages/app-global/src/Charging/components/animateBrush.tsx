@@ -40,8 +40,8 @@ const AnimateBrush = (props) => {
     setThreeColor('green');
     setPowerStatus({
       ...powerStatus,
-      power: 0,
-      charge_status: 0,
+      // power: 0,
+      // charge_status: 0,
     });
 
     setStationChargingData([]);
@@ -54,7 +54,13 @@ const AnimateBrush = (props) => {
   useEffect(() => {
     const ary = [2, 3];
     if (!ary.includes(chargePileStatus.charge_status)) {
-      initViewState();
+      // initViewState();
+    }
+    if (chargePileStatus.charge_status === 3) {
+      // 充电状态，动画一直一步到位
+      setIsLoading(false);
+      setIsBrush(true);
+      setStretch(true);
     }
   }, [chargePileStatus.charge_status]);
   useEffect(() => {
@@ -78,7 +84,7 @@ const AnimateBrush = (props) => {
     }
   }, [chargePileStatus.pe_charge_output]);
   useEffect(() => {
-    if (chargePileStatus.brush_board_status === 0) {
+    if (chargePileStatus.brush_board_status === 1) {
       setStretch(true);
       const timeString = dayjs().format('HH:mm:ss');
       setStationChargingData([
@@ -113,117 +119,119 @@ const AnimateBrush = (props) => {
   }, [chargePileStatus.pe_charge_input]);
   return (
     <div className='w-full flex flex-1  relative'>
-      <div className='absolute flex gap-2 p-4 z-50'>
-        <Button
-          type='primary'
-          size='small'
-          onClick={() => {
-            setIsBrush(!isBrush);
-            setIsLoading(false);
-            setVehicleChargingData(
-              isBrush
-                ? []
-                : [
-                    {
-                      key: '1',
-                      message: '车辆发送光电',
-                      time: '2023-01-01 12:00:00',
-                    },
-                    {
-                      key: '2',
-                      message: '等待充电桩伸出',
-                      time: '2023-01-01 12:00:00',
-                    },
-                  ],
-            );
-          }}
-        >
-          光电触发
-        </Button>
-        <Button
-          type='primary'
-          size='small'
-          onClick={() => {
-            setIsStation(!isStation);
-            setStretch(false);
-            setStationChargingData(
-              isStation
-                ? []
-                : [
-                    {
-                      key: '1',
-                      message: '充电桩伸出',
-                      time: '2023-01-01 12:00:00',
-                    },
-                    {
-                      key: '2',
-                      message: '等待充电桩发光',
-                      time: '2023-01-01 12:00:00',
-                    },
-                  ],
-            );
-          }}
-        >
-          充电桩光电
-        </Button>
-        <Button variant='solid' color='red' size='small' onClick={() => setStretch(!stretch)}>
-          伸缩机械臂
-        </Button>
-        <Button variant='solid' color='yellow' size='small' onClick={() => setIsLoading(!isLoading)}>
-          准备充电
-        </Button>
-        <Button
-          type='primary'
-          size='small'
-          onClick={() => {
-            setThreeColor('yellow');
-            setPowerStatus({
-              power: 50,
-              charge_status: 3,
-            });
-          }}
-        >
-          开始充电
-        </Button>
-        <Button
-          variant='solid'
-          color='red'
-          size='small'
-          onClick={() => {
-            setThreeColor('green');
-            setPowerStatus({
-              ...powerStatus,
-              power: 0,
-              charge_status: 0,
-            });
+      {false && (
+        <div className='absolute flex gap-2 p-4 z-50'>
+          <Button
+            type='primary'
+            size='small'
+            onClick={() => {
+              setIsBrush(!isBrush);
+              setIsLoading(false);
+              setVehicleChargingData(
+                isBrush
+                  ? []
+                  : [
+                      {
+                        key: '1',
+                        message: '车辆发送光电',
+                        time: '2023-01-01 12:00:00',
+                      },
+                      {
+                        key: '2',
+                        message: '等待充电桩伸出',
+                        time: '2023-01-01 12:00:00',
+                      },
+                    ],
+              );
+            }}
+          >
+            光电触发
+          </Button>
+          <Button
+            type='primary'
+            size='small'
+            onClick={() => {
+              setIsStation(!isStation);
+              setStretch(false);
+              setStationChargingData(
+                isStation
+                  ? []
+                  : [
+                      {
+                        key: '1',
+                        message: '充电桩伸出',
+                        time: '2023-01-01 12:00:00',
+                      },
+                      {
+                        key: '2',
+                        message: '等待充电桩发光',
+                        time: '2023-01-01 12:00:00',
+                      },
+                    ],
+              );
+            }}
+          >
+            充电桩光电
+          </Button>
+          <Button variant='solid' color='red' size='small' onClick={() => setStretch(!stretch)}>
+            伸缩机械臂
+          </Button>
+          <Button variant='solid' color='yellow' size='small' onClick={() => setIsLoading(!isLoading)}>
+            准备充电
+          </Button>
+          <Button
+            type='primary'
+            size='small'
+            onClick={() => {
+              setThreeColor('yellow');
+              setPowerStatus({
+                power: 50,
+                charge_status: 3,
+              });
+            }}
+          >
+            开始充电
+          </Button>
+          <Button
+            variant='solid'
+            color='red'
+            size='small'
+            onClick={() => {
+              setThreeColor('green');
+              setPowerStatus({
+                ...powerStatus,
+                power: 0,
+                charge_status: 0,
+              });
 
-            setStationChargingData([]);
-            setVehicleChargingData([]);
-            setIsBrush(false);
-            setStretch(false);
-            setIsStation(false);
-          }}
-        >
-          测试停止
-        </Button>
-        <Button
-          variant='solid'
-          color='yellow'
-          size='small'
-          onClick={() => {
-            setVehicleChargingData([
-              ...vehicleChargingData,
-              {
-                key: '3',
-                message: '车辆发送光电',
-                time: '2023-01-01 12:00:00',
-              },
-            ]);
-          }}
-        >
-          加数据
-        </Button>
-      </div>
+              setStationChargingData([]);
+              setVehicleChargingData([]);
+              setIsBrush(false);
+              setStretch(false);
+              setIsStation(false);
+            }}
+          >
+            测试停止
+          </Button>
+          <Button
+            variant='solid'
+            color='yellow'
+            size='small'
+            onClick={() => {
+              setVehicleChargingData([
+                ...vehicleChargingData,
+                {
+                  key: '3',
+                  message: '车辆发送光电',
+                  time: '2023-01-01 12:00:00',
+                },
+              ]);
+            }}
+          >
+            加数据
+          </Button>
+        </div>
+      )}
       {/* 小车 */}
       <div className='flex-1 relative'>
         <div
@@ -346,7 +354,7 @@ const AnimateBrush = (props) => {
         </div>
       </div>
 
-      {isLoading && <LoadingCharging />}
+      {isLoading && <LoadingCharging state={chargePileStatus.charge_status} />}
     </div>
   );
 };

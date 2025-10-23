@@ -141,6 +141,17 @@ const AddModel = (props: any) => {
         />
       );
     },
+    multi_cage: (container: any) => {
+      return (
+        <Pallet
+          ref={(refs: any) => {
+            containerRefHashMap.current.multi_cage = refs;
+          }}
+          {...container}
+          annotationVisible={false}
+        />
+      );
+    },
   };
 
   const handleSave = async () => {
