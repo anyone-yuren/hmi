@@ -38,6 +38,8 @@ interface State {
   sensorPointsKey: any[];
   setSensorPointsKey: (data: any) => void;
 
+  isDensePointCloud: boolean;
+  setIsDensePointCloud: (isDensePointCloud: boolean) => void;
   sensorPoints: {};
   setSensorPoints: (key: string, data: any) => void;
   setAllSensorPoints: (sensorPoints: any) => void;
@@ -81,7 +83,13 @@ export const useSafetyStore = create<State>()(
       forksHeight: 0,
       setForksHeight: (data) => set({ forksHeight: data }),
       sensorPointsKey: [],
-      setSensorPointsKey: (data) => set({ sensorPointsKey: data }),
+      setSensorPointsKey: (data) => {
+        const isDense = get().isDensePointCloud;
+        const keys = !isDense ? data?.map((item) => `/sirius/topics/${item}`) : data;
+        set({ sensorPointsKey: keys });
+      },
+      isDensePointCloud: false,
+      setIsDensePointCloud: (isDensePointCloud: boolean) => set({ isDensePointCloud }),
       sensorPoints: {},
       setSensorPoints: (key, data) => set({ sensorPoints: { ...get().sensorPoints, [key]: data } }),
       setAllSensorPoints: (sensorPoints) => set({ sensorPoints }),
