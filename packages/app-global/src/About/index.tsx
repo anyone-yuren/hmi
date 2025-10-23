@@ -228,7 +228,7 @@ const About = () => {
               />
             </motion.div>
           </div>
-          <div className='max-h-[320px] overflow-y-auto bg-[#1d314c] py-[1rem] rounded-2xl'>
+          <div className='max-h-[220px] overflow-y-auto bg-[#1d314c] py-[1rem] rounded-2xl'>
             {renderChangeLogs?.version ? (
               <Typography.Title level={4} className='px-5'>
                 {renderChangeLogs?.version}

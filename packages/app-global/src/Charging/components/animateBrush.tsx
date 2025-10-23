@@ -56,6 +56,9 @@ const AnimateBrush = (props) => {
     if (!ary.includes(chargePileStatus.charge_status)) {
       // initViewState();
     }
+    if (chargePileStatus.charge_status === 2) {
+      setIsLoading(true);
+    }
     if (chargePileStatus.charge_status === 3) {
       // 充电状态，动画一直一步到位
       setIsLoading(false);
