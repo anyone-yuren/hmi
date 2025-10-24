@@ -39,13 +39,13 @@ export const postLanNet = (data: any) => {
 };
 // 设置端口转发
 export const postPortFwdList = (data: any) => {
-  return post('/mwrobot/wireless_client/set_port_fwd_list', data);
+  return post('/mwrobot/wireless_client/set_port_fwd', data);
 };
 // 删除LAN网络信息
 export const postDeletePort = (data: any) => {
-  return post('/mwrobot/wireless_client/delete_port_fwd_list', data);
+  return post('/mwrobot/wireless_client/delete_port_fwd', data);
 };
 // 修改LAN网络信息
 export const postUpdatePort = (data: any) => {
-  return post('/mwrobot/wireless_client/update_port_fwd_list', data);
+  return post('/mwrobot/wireless_client/update_port_fwd', data);
 };

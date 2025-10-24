@@ -377,6 +377,9 @@
       "port": "ポート番号",
       "tips": "ヒント：グレーはトリガーされておらず、緑はトリガーされています"
     },
+    "network": {
+      "loginTip": "ログインに失敗しました"
+    },
     "safety": {
       "backDistance": "後退距離",
       "currentScheme": "現在の障害物回避スキーム",

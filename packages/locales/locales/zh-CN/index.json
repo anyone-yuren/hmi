@@ -377,6 +377,9 @@
       "port": "端口号",
       "tips": "提示：灰色为未触发，绿色为触发"
     },
+    "network": {
+      "loginTip": "登录失败"
+    },
     "safety": {
       "backDistance": "后退距离",
       "currentScheme": "当前避障方案",

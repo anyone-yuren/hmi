@@ -11,13 +11,16 @@ import VirtualList from 'rc-virtual-list';
 import { useMemo, useState } from 'react';
 import { SvgIcon } from 'ui';
 import NetworkInfo from './components/netWorkInfo';
-import { getApList } from './services';
+import { getApInfo, getApList } from './services';
 
 const CONTAINER_HEIGHT = 300; // 虚拟列表容器高度，可按需要调整
 
 const NetworkPage = () => {
   const [isLinked, setIsLinked] = useState('MultiwayRobot-4G');
-  const { data, loading } = useRequest(getApList);
+
+  const [selectNetwork, setSelectNetwork] = useState(null);
+  const { data, loading, run: reloadApList } = useRequest(getApList);
+  const { data: currentAp, loading: loadingAp, run: getCurrentAp } = useRequest(getApInfo);
 
   const networkList = useMemo(() => data?.data || {}, [data?.data]);
 
@@ -36,6 +39,9 @@ const NetworkPage = () => {
       className={`group !mb-2 w-full bg-white/10 rounded-xl flex flex-row gap-2 justify-between items-center p-2 hover:bg-white/5 hover:shadow-lg hover:font-bold animation-all duration-300 cursor-pointer ${
         isLinked === network.name ? 'bg-teal-400/60 shadow-lg' : ''
       }`}
+      onClick={() => {
+        setSelectNetwork(network);
+      }}
     >
       <div>
         <h4 className='text-lg font-bold'>{network.ssid}</h4>
@@ -47,25 +53,27 @@ const NetworkPage = () => {
 
   return (
     <div className='p-4 h-full flex gap-4'>
-      <div className='w-1/4 p-4 bg-white/10 rounded-2xl flex flex-col'>
-        <h3 className='text-lg font-bold mb-1 flex justify-between items-center'>
-          网络设置 <Button type='text' icon={<RedoOutlined />} />
-        </h3>
+      <div className='w-1/4 p-4 bg-white/10 rounded-2xl flex flex-col gap-2'>
+        <div>
+          <h3 className='text-lg font-bold flex justify-between items-center'>
+            网络设置 <Button type='text' icon={<RedoOutlined />} disabled={loading} onClick={reloadApList} />
+          </h3>
 
-        {/* 渐变分隔线 */}
-        <motion.div
-          className='!w-full h-px'
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <div
-            className='w-full h-full'
-            style={{
-              background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)',
-            }}
-          />
-        </motion.div>
+          {/* 渐变分隔线 */}
+          <motion.div
+            className='!w-full h-px'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <div
+              className='w-full h-full'
+              style={{
+                background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)',
+              }}
+            />
+          </motion.div>
+        </div>
 
         {/* 无信号提示 */}
         <div className='bg-white/5 flex flex-col items-center justify-center rounded-2xl p-4 mt-4 group hidden'>
@@ -74,7 +82,8 @@ const NetworkPage = () => {
         </div>
 
         {/* ✅ 5G 网络虚拟列表 */}
-        <div className='mt-4 relative flex-1'>
+        <div className='relative flex-1'>
+          <h3 className='mb-2 font-bold text-lg'>5G</h3>
           {networkList?.ap_list_5G?.length ? (
             <VirtualList
               data={networkList.ap_list_5G.filter((item) => item.ssid?.trim())}
@@ -89,7 +98,8 @@ const NetworkPage = () => {
         </div>
 
         {/* ✅ 2.4G 网络虚拟列表 */}
-        <div className='mt-4 relative flex-1'>
+        <div className='relative flex-1'>
+          <h3 className='mb-2 font-bold text-lg'>2.4G</h3>
           {networkList?.['ap_list_2.4G']?.length ? (
             <VirtualList
               data={networkList['ap_list_2.4G'].filter((item) => item.ssid?.trim())}
@@ -115,7 +125,7 @@ const NetworkPage = () => {
           `,
         }}
       >
-        <NetworkInfo />
+        <NetworkInfo currentAp={currentAp?.data} selectNetwork={selectNetwork} />
       </div>
     </div>
   );

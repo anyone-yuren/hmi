@@ -377,6 +377,9 @@
       "port": "Numéro de port",
       "tips": "Indication : gris pour non déclenché, vert pour déclenché"
     },
+    "network": {
+      "loginTip": "La connexion a échoué"
+    },
     "safety": {
       "backDistance": "Distance de recul",
       "currentScheme": "Solution d'évitement actuelle",

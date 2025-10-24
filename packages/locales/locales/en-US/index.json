@@ -377,6 +377,9 @@
       "port": "Port no",
       "tips": "Tip: Gray means not triggered, green means triggered"
     },
+    "network": {
+      "loginTip": "Login failed"
+    },
     "safety": {
       "backDistance": "Retreat distance",
       "currentScheme": "Current obstacle avoidance scheme",

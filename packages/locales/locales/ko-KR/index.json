@@ -376,6 +376,9 @@
       "port": "포트 번호",
       "tips": "팁: 회색은 트리거되지 않았고, 녹색은 트리거되었습니다."
     },
+    "network": {
+      "loginTip": "로그인 실패"
+    },
     "safety": {
       "backDistance": "후진 거리",
       "currentScheme": "현재 장애물 회피 방안",
