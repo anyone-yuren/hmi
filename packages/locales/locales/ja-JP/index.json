@@ -125,7 +125,7 @@
     },
     "info": "情報",
     "login": "ログイン",
-    "loginSuccessTip": "10分以内に操作がない場合、システムは自動的に終了します！",
+    "loginSuccessTip": "ログイン成功,10分以内に操作がない場合、システムは自動的に終了します！",
     "logoutTip": "ログアウトを確認しますか？",
     "maintenance": {
       "brakingTimes": "ブレーキ回数",

@@ -125,7 +125,7 @@
     },
     "info": "Info",
     "login": "Log in",
-    "loginSuccessTip": "If there is no operation within ten minutes, the system will automatically exit!",
+    "loginSuccessTip": "Login successful, if there is no operation within ten minutes, the system will automatically exit!",
     "logoutTip": "Confirm logging out?",
     "maintenance": {
       "brakingTimes": "Number of braking times",

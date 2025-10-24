@@ -125,7 +125,7 @@
     },
     "info": "信息",
     "login": "登录",
-    "loginSuccessTip": "若十分钟内无操作，系统将自动退出！",
+    "loginSuccessTip": "登录成功,若十分钟内无操作,系统将自动退出！",
     "logoutTip": "确认退出登录吗？",
     "maintenance": {
       "brakingTimes": "刹车次数",

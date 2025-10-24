@@ -125,7 +125,7 @@
     },
     "info": "정보",
     "login": "로그인",
-    "loginSuccessTip": "10 분 이내에 작동이 없으면 시스템이 자동으로 종료됩니다!",
+    "loginSuccessTip": "로그인 성공,10 분 이내에 작동이 없으면 시스템이 자동으로 종료됩니다!",
     "logoutTip": "로그 아웃을 확인 하시겠습니까?",
     "maintenance": {
       "brakingTimes": "브레이크 횟수",
