@@ -67,6 +67,37 @@ const NodeLogs = (props: IProps) => {
     await getLogInfo({ path });
   };
 
+  const handleDownload = async () => {
+    try {
+      const logData = logInfo?.data;
+      if (!logData || logData.length === 0) {
+        console.warn('No log data to download');
+        return;
+      }
+      let logContent = '';
+      if (typeof logData === 'string') {
+        logContent = logData;
+      } else if (Array.isArray(logData)) {
+        logContent = logData.join('\n');
+      } else {
+        logContent = JSON.stringify(logData, null, 2);
+      }
+      const blob = new Blob([logContent], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      const fileName = `${nodePath.replace(/\//g, '_').replace('.log', '')}.txt`;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to download log file:', error);
+    }
+  };
+
   return (
     <div
       className='w-full h-full flex'
@@ -127,24 +158,29 @@ const NodeLogs = (props: IProps) => {
                 <div className='p-[2px] w-full h-full rounded-lg bg-gradient-to-r from-[#234e70] to-teal-400 relative flex flex-col gap-2'>
                   <div className='flex items-center justify-between p-2 bg-black/40 shadow-sm rounded-lg'>
                     <p className='m-0'>{nodePath}</p>
-                    <Radio.Group
-                      value={radioValue}
-                      buttonStyle='solid'
-                      onChange={(event) => {
-                        setRadioValue(event.target.value);
-                      }}
-                    >
-                      <Radio.Button value='all'>{t('common.all')}</Radio.Button>
-                      <Radio.Button value='danger' className='text-[#ff4d4f]'>
-                        {t('common.error')}
-                      </Radio.Button>
-                      <Radio.Button value='warning' className='text-[#faad14]'>
-                        {t('common.warn')}
-                      </Radio.Button>
-                      <Radio.Button value='info' className='text-[#409eff]'>
-                        {t('common.info')}
-                      </Radio.Button>
-                    </Radio.Group>
+                    <div className='flex gap-2'>
+                      <Button type={'primary'} onClick={handleDownload}>
+                        {t('common.download')}
+                      </Button>
+                      <Radio.Group
+                        value={radioValue}
+                        buttonStyle='solid'
+                        onChange={(event) => {
+                          setRadioValue(event.target.value);
+                        }}
+                      >
+                        <Radio.Button value='all'>{t('common.all')}</Radio.Button>
+                        <Radio.Button value='danger' className='text-[#ff4d4f]'>
+                          {t('common.error')}
+                        </Radio.Button>
+                        <Radio.Button value='warning' className='text-[#faad14]'>
+                          {t('common.warn')}
+                        </Radio.Button>
+                        <Radio.Button value='info' className='text-[#409eff]'>
+                          {t('common.info')}
+                        </Radio.Button>
+                      </Radio.Group>
+                    </div>
                   </div>
                   <div className='bg-black/80 rounded-lg w-full h-full p-2 overflow-y-auto flex-1'>
                     {renderList?.length ? (
@@ -170,11 +206,11 @@ const NodeLogs = (props: IProps) => {
                 icon={<SvgIcon size={320} name={'noLog'} />}
                 title={t('common.about.nolog')}
                 subTitle={t('common.about.choose')}
-                extra={
-                  <Button type='primary' onClick={() => setVisible(true)}>
-                    {t('common.choose')}
-                  </Button>
-                }
+                // extra={
+                //   <Button type='primary' onClick={() => setVisible(true)}>
+                //     {t('common.choose')}
+                //   </Button>
+                // }
               ></Result>
             )}
           </div>

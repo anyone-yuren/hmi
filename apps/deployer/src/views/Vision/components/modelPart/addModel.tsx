@@ -6,6 +6,7 @@ import { getModalTypes, saveModel, updateModel } from '../../services/index';
 import { translateFnHashMap, translateSendParams } from '../../utils/index';
 import Concentric from './models/concentric';
 import Cylinder from './models/cylinder';
+import MultiCage from './models/multiCage';
 import NinePallet from './models/ninePallet';
 import Pallet from './models/pallet';
 import Rect from './models/rect';
@@ -136,6 +137,16 @@ const AddModel = (props: any) => {
         <Truck
           ref={(refs: any) => {
             containerRefHashMap.current['tail_truck'] = refs;
+          }}
+          {...container}
+        />
+      );
+    },
+    multi_cage: (container: any) => {
+      return (
+        <MultiCage
+          ref={(refs: any) => {
+            containerRefHashMap.current.multi_cage = refs;
           }}
           {...container}
         />

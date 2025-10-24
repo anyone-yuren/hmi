@@ -145,3 +145,6 @@ export const postTailTruckScenariosGoodsStatusManagementSave = (data: any) =>
 
 export const getCompareRobotToolkitModelWithWebModelRead = () =>
   get('/cv_mwrobot/compare_robot_toolkit_model_with_web_model/read', {}, '10010');
+
+export const getMultiCageModelRead = () => get('/cv_mwrobot/multi_cage_model/read', {}, '10010');
+// /cv_mwrobot/multi_cage_model/read

@@ -9,10 +9,12 @@ import { useShallow } from 'zustand/react/shallow';
 import AnimateBrush from './components/animateBrush';
 import VehicleBattery from './components/vehicleBattery';
 import WsContainer from './components/wsContainer';
+import { postChargingFunction } from './services/index';
+
 const Charging = () => {
   const { t, i18n } = useTranslation();
   const [modal, contextHolder] = Modal.useModal();
-  const [hasTask, setHasTask] = useState(false);
+  const [hasTask, setHasTask] = useState(true);
   const { powerStatus, chargePileStatus, taskInfo } = useVehicleStore(
     useShallow((state) => {
       return {
@@ -40,6 +42,26 @@ const Charging = () => {
     }
   }, [taskInfo?.operate_identification]);
   // 有无任务
+
+  const powerStatusHashmap = useMemo(() => {
+    return {
+      1: t('common.charging.stop'),
+      2: t('common.charging.readyCharging'),
+      3: t('common.charging.charging'),
+      4: t('common.charging.success'),
+    };
+  }, [i18n.language]);
+
+  useEffect(() => {
+    if (chargePileStatus?.charge_status === 1) {
+      setHasTask(false);
+    } else {
+      setHasTask(true);
+    }
+  }, [chargePileStatus?.charge_status]);
+  const isConnect = useMemo(() => {
+    return chargePileStatus?.connect_status === 1;
+  }, [chargePileStatus?.connect_status]);
 
   return (
     <div className='flex flex-row gap-4 p-4 h-full'>
@@ -71,7 +93,8 @@ const Charging = () => {
                         ),
                         okText: t('common.confirm'),
                         cancelText: t('common.cancel'),
-                        onOk() {
+                        async onOk() {
+                          await postChargingFunction({ cmd: 'StartCharge' });
                           setHasTask(true);
                         },
                         onCancel() {
@@ -90,14 +113,18 @@ const Charging = () => {
           <div className='h-full w-full flex flex-col gap-4'>
             <div className='p-4 flex flex-col gap-4 bg-white/10 rounded-2xl'>
               <h2 className='text-lg font-bold mb-0'>{t('common.charging.stationInfo')}</h2>
-              <div className='flex flex-row gap-4'>
+              {/* {isConnect ? ( */}
+              <div className='flex flex-row gap-4 relative'>
+                <div className='rounded-md absolute w-full h-full top-0 left-0 bg-[#0000009e] shadow-md shadow-[#000000]/80 text-white flex items-center justify-center'>
+                  {t('common.charging.notConnecting')}
+                </div>
                 <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
                   <SvgIcon name='volt' size={32} />
-                  <div className=''>{chargePileStatus?.output_voltage || 0} V</div>
+                  <div className=''>{chargePileStatus?.output_voltage?.toFixed(2) || 0} V</div>
                 </div>
                 <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
                   <SvgIcon name='ampere' size={32} />
-                  <div className=''>{chargePileStatus?.output_current || 0} A</div>
+                  <div className=''>{chargePileStatus?.output_current?.toFixed(2) || 0} A</div>
                 </div>
 
                 <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
@@ -105,6 +132,7 @@ const Charging = () => {
                   <div className=''>{temperatureTitle}</div>
                 </div>
               </div>
+              {/* ) : null} */}
               <div>
                 <div className='bg-white/10 p-2 flex justify-between rounded-md'>
                   <Typography.Text className='!m-0 font-bold '>{t('common.charging.ip')}</Typography.Text>
@@ -115,7 +143,8 @@ const Charging = () => {
                 <div className='bg-white/10 p-2 flex justify-between rounded-md'>
                   <Typography.Text className='!m-0 font-bold '>{t('common.charging.status')}</Typography.Text>
                   <Typography.Text className='!m-0 opacity-70'>
-                    {powerStatus.charge_status === 4 ? t('common.charging.charging') : t('common.charging.stop')}
+                    {/* {powerStatus.charge_status === 3 ? t('common.charging.charging') : t('common.charging.stop')} */}
+                    {powerStatusHashmap[powerStatus.charge_status]}
                   </Typography.Text>
                 </div>
                 <span className='text-xs text-white/50'>{t('common.charging.totalTimes')}</span>
@@ -123,6 +152,7 @@ const Charging = () => {
             </div>
             {/* 充电任务 */}
             <div className='flex flex-1  rounded-2xl bg-white/10 flex-col overflow-y-auto'>
+              {/* {isConnect ? ( */}
               <div className='w-full'>
                 <Stack
                   className='flex p-4 flex-1 items-center'
@@ -143,7 +173,8 @@ const Charging = () => {
                       {t('common.charging.positionDeviation')}(mm)
                     </div>
                     <div className='text-sm opacity-70'>
-                      x:{taskInfo?.error_x || '-'} y:{taskInfo?.error_y || '-'} {taskInfo?.error_angle || '-'}°
+                      x:{taskInfo?.error_x?.toFixed(2) || '-'} y:{taskInfo?.error_y?.toFixed(2) || '-'}{' '}
+                      {taskInfo?.error_angle?.toFixed(2) || '-'}°
                     </div>
                   </div>
                   {false && (
@@ -161,11 +192,12 @@ const Charging = () => {
                       {t('common.charging.targetEnergy')}
                     </div>
                     <div className='text-sm opacity-70'>
-                      {`${taskInfo.task_value2}${taskInfo.task_value1 === 1 ? '%' : 'h'}`}
+                      {`${taskInfo.task_value2 || 100}${taskInfo.task_value1 === 3 ? 'h' : '%'}`}
                     </div>
                   </div>
                 </Stack>
               </div>
+              {/* ) : null} */}
               {/* 刷版动画 */}
               <AnimateBrush />
             </div>

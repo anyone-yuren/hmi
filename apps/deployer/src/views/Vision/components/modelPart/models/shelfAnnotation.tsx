@@ -85,9 +85,9 @@ const shelfAnnotation = (props: any) => {
         style={{
           border: '1px solid black',
           borderTop: 'none',
-          height: '30px',
+          height: '40px',
           width: gap * scale,
-          bottom: '-30px',
+          bottom: '-40px',
           left: legs_width * scale + 'px',
         }}
       >
@@ -101,9 +101,9 @@ const shelfAnnotation = (props: any) => {
         style={{
           border: '1px solid black',
           borderTop: 'none',
-          height: '30px',
+          height: '20px',
           width: goods_width * scale,
-          bottom: '-30px',
+          bottom: '-20px',
           left: (legs_width + gap) * scale + 'px',
         }}
       >

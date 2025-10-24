@@ -1,4 +1,5 @@
 import { createStyles } from 'antd-style';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -80,13 +81,22 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const LoadingCharging = () => {
+const LoadingCharging = (props) => {
+  const { state } = props;
   const { styles } = useStyles();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  console.log('state', state);
+  const textHashmap = useMemo(() => {
+    return {
+      1: t('common.charging.runCharging'),
+      2: '准备充电',
+      3: '正在充电',
+    };
+  }, [i18n.language]);
   return (
     <div className={styles.loadingContainer}>
       <div className='loader'></div>
-      <p>{t('common.charging.runCharging')}...</p>
+      <p>{textHashmap?.[state || 1]}...</p>
     </div>
   );
 };

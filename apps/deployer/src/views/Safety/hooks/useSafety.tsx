@@ -79,8 +79,8 @@ export const useSafety = () => {
   });
   useEffect(() => {
     if (readyState === 1) {
-      const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      const keys = isMobile ? sensorPointsKey?.map((item) => `/sirius/topics/${item}`) : sensorPointsKey;
+      // const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      // const keys = isMobile ? sensorPointsKey?.map((item) => `/sirius/topics/${item}`) : sensorPointsKey;
       sendMessage(
         JSON.stringify({
           uri: 'subscribe',
@@ -92,7 +92,7 @@ export const useSafety = () => {
             '/sirius/topics/safety_protect_region',
             '/sirius/topics/task_status_motion',
             '/sirius/topics/robot_status_forkarm',
-            ...keys,
+            ...sensorPointsKey,
           ],
         }),
       );

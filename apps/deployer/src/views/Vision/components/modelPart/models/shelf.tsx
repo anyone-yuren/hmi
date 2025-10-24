@@ -163,8 +163,14 @@ const Shelf = forwardRef((props: any, ref) => {
   }, [drawSize, divSize]);
 
   return (
-    <div className='flex flex-col w-full h-full'>
-      <div ref={divRef} className='flex flex-1 w-full h-full justify-center'>
+    <div className='flex items-center w-full h-full'>
+      {propsState?.showMarks && <ParamsSetting propsState={propsState} setPropsState={setPropsState}></ParamsSetting>}
+
+      <div
+        ref={divRef}
+        className='flex flex-1 w-full h-full justify-center'
+        style={{ marginInline: propsState?.showMarks ? '50px' : '0px' }}
+      >
         <div
           className='absolute'
           style={{
@@ -224,7 +230,6 @@ const Shelf = forwardRef((props: any, ref) => {
           )}
         </div>
       </div>
-      {propsState?.showMarks && <ParamsSetting propsState={propsState} setPropsState={setPropsState}></ParamsSetting>}
     </div>
   );
 });

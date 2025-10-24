@@ -1,7 +1,7 @@
 import { memo } from 'react';
-import { useHybrid } from '../hooks/useHome';
+import { useHome } from '../hooks/useHome';
 const WsContainer = () => {
-  const {} = useHybrid();
+  const {} = useHome();
   // useEffect(() => {
   //   if (readyState === 1) {
   //     sendMessage({

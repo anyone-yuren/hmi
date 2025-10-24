@@ -39,3 +39,8 @@ export const getAccumulatedChargingTimes = (): Promise<any> => {
 export const getLastFullChargeTime = (): Promise<any> => {
   return get('/mwrobot/get_last_full_battery_time');
 };
+
+// 充电指令
+export const postChargingFunction = (data: any): Promise<any> => {
+  return post('/sirius/topics/charge_function', { ...data });
+};

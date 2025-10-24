@@ -95,7 +95,7 @@ function SafetyVehicle(props: any) {
         geometry={new THREE.BoxGeometry(outlook.vehicle.width, outlook.vehicle.height, depth)}
         position={outlook.vehicle.position}
       >
-        <meshStandardMaterial color='#00d1d1' transparent opacity={0.6} depthTest={false} depthWrite={false} />
+        <meshStandardMaterial color='#00d1d1' transparent opacity={0.8} depthTest={false} depthWrite={false} />
       </mesh>
 
       {/* 渲染叉臂立方体 */}
@@ -103,7 +103,7 @@ function SafetyVehicle(props: any) {
         geometry={new THREE.BoxGeometry(outlook.forks.width, outlook.forks.height, forkDepth)}
         position={outlook.forks.position}
       >
-        <meshStandardMaterial color='#00d1d1' transparent opacity={0.8} depthTest={false} depthWrite={false} />
+        <meshStandardMaterial color='#00d1d1' transparent opacity={0.9} depthTest={false} depthWrite={false} />
       </mesh>
 
       <mesh geometry={new THREE.BoxGeometry(pallet.width, pallet.height, palletDepth)} position={pallet.position}>

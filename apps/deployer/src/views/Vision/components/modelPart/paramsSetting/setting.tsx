@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 
 import StorageListSelect from '@/views/Vision/components/settingPart/comp/storageListSelect';
 import TextChangeRow from '@/views/Vision/components/settingPart/comp/textChangeRow';
@@ -52,22 +52,30 @@ const ParamsSetting = (props: any) => {
     return palletResponse?.data?.pallet_info_list || [];
   }, [palletResponse]);
 
+  useEffect(() => {
+    if (propsState.type === 'multi_cage') {
+      getMultiCageModels();
+    }
+  }, [propsState]);
+
   return (
     <LightTheme>
-      <div className='text-black flex flex-wrap gap-[10px] justify-center'>
-        <TextChangeRow
-          className={'w-[280px]'}
-          title={t('deployer.vision.extraDepthCompensation')}
-          value={propsState?.['extra_deep_compensation']}
-          onChange={(value: string) => {
-            changeUpdateHashMap('extra_deep_compensation', value);
-          }}
-        >
-          <div>{propsState?.['extra_deep_compensation'] || 0}</div>
-        </TextChangeRow>
-        {(propsState.type != 'tail_truck' || propsState.type != 'warehouse_shelves') && (
+      <div className='text-black gap-[10px] justify-center'>
+        {
           <TextChangeRow
-            className={'w-[280px]'}
+            className={'w-[260px]'}
+            title={t('deployer.vision.extraDepthCompensation')}
+            value={propsState?.['extra_deep_compensation']}
+            onChange={(value: string) => {
+              changeUpdateHashMap('extra_deep_compensation', value);
+            }}
+          >
+            <div>{propsState?.['extra_deep_compensation'] || 0}</div>
+          </TextChangeRow>
+        }
+        {propsState.type != 'tail_truck' && propsState.type != 'warehouse_shelves' && (
+          <TextChangeRow
+            className={'w-[260px]'}
             title={t('deployer.vision.forkExtendParams')}
             value={propsState?.['forkarm_final_width']}
             onChange={(value: string) => {
@@ -80,7 +88,7 @@ const ParamsSetting = (props: any) => {
 
         {propsState.type === 'warehouse_shelves' && (
           <TextChangeRow
-            className={'w-[280px]'}
+            className={'w-[260px]'}
             title={t('deployer.vision.goodsCount')}
             value={propsState?.['goods_nums']}
             validateRange={goodsValidateRange}
@@ -92,34 +100,36 @@ const ParamsSetting = (props: any) => {
           </TextChangeRow>
         )}
 
-        <TextUpdateRow className={'w-[280px]'}>
-          <div>{t('deployer.vision.palletName')}</div>
-          <div>
-            <CustomSelect
-              variant='standard'
-              value={propsState?.['robot_toolkit_model_id']}
-              onChange={(event) => {
-                const selectedValue = event.target.value;
-                const selectedItem = palletList.find((item: any) => item.pallet_id === Number(selectedValue));
-                setPropsState({
-                  ...propsState,
-                  ['robot_toolkit_model_id']: Number(selectedValue),
-                  ['robot_toolkit_model_name']: selectedItem?.pallet_name,
-                });
-              }}
-            >
-              {palletList?.map((item: any) => {
-                return (
-                  <MenuItem value={item?.pallet_id} key={item?.pallet_id}>
-                    <ListItemText primary={item?.pallet_name || '-'} />
-                  </MenuItem>
-                );
-              })}
-            </CustomSelect>
-          </div>
-        </TextUpdateRow>
+        {
+          <TextUpdateRow className={'w-[260px]'}>
+            <div>{t('deployer.vision.palletName')}</div>
+            <div>
+              <CustomSelect
+                variant='standard'
+                value={propsState?.['robot_toolkit_model_id']}
+                onChange={(event) => {
+                  const selectedValue = event.target.value;
+                  const selectedItem = palletList.find((item: any) => item.pallet_id === Number(selectedValue));
+                  setPropsState({
+                    ...propsState,
+                    ['robot_toolkit_model_id']: Number(selectedValue),
+                    ['robot_toolkit_model_name']: selectedItem?.pallet_name,
+                  });
+                }}
+              >
+                {palletList?.map((item: any) => {
+                  return (
+                    <MenuItem value={item?.pallet_id} key={item?.pallet_id}>
+                      <ListItemText primary={item?.pallet_name || '-'} />
+                    </MenuItem>
+                  );
+                })}
+              </CustomSelect>
+            </div>
+          </TextUpdateRow>
+        }
         <StorageListSelect
-          className='w-[280px]'
+          className='w-[260px]'
           title={t('deployer.vision.targetStorage')}
           value={propsState?.['storage_list']}
           onChange={(value: any) => {

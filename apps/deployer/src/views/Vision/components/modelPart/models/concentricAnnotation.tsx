@@ -46,7 +46,7 @@ export const InSideAnnotation = memo((props: any) => {
         props.handleSizeArea && props.handleSizeArea('minDiameter');
       }}
     >
-      <span className='text-[12px] flex items-center w-[120px] mx-auto justify-center text-[red] relative top-[-100%] bg-[white] px-[12px]'>
+      <span className='text-[12px] flex items-center w-[120px] mx-auto justify-center text-[red] relative top-[-100%]  px-[12px]'>
         <BorderColorIcon style={{ fontSize: '12px' }} />
         {t('deployer.vision.inDiameter')}:{props?.minDiameter}
       </span>
