@@ -224,7 +224,7 @@ const Charging = () => {
               <AnimateBrush />
               <Popconfirm
                 title={t('common.tips')}
-                description={t('确定取消充电任务吗') + '?'}
+                description={t('common.charging.cancelTips') + '?'}
                 onConfirm={async () => {
                   await postChargingFunction({ cmd: 'StopCharge' });
                   toast.success(t('common.actionSuccess'));
@@ -232,7 +232,7 @@ const Charging = () => {
                 }}
               >
                 <Button variant='solid' className='absolute bottom-4 right-4 z-[100]' color='danger'>
-                  {t('取消充电任务')}
+                  {t('common.charge.cancelChargeTask')}
                 </Button>
               </Popconfirm>
             </div>
