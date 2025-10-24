@@ -8,10 +8,10 @@ const NetworkInfo = (props: { currentAp: Record<string, any>; selectNetwork: any
   return (
     <div className='flex flex-col gap-2 overflow-y-auto'>
       <div>
-        <PasswordConnect selectNetwork={selectNetwork} />
+        <PasswordConnect selectNetwork={selectNetwork} currentAp={currentAp} />
       </div>
       <div>
-        <WanSetting />
+        <WanSetting selectNetwork={selectNetwork} currentAp={currentAp} />
       </div>
       <div>
         <LanSetting />

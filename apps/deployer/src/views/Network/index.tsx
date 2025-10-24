@@ -5,7 +5,7 @@ import SignalCellularAlt1BarIcon from '@mui/icons-material/SignalCellularAlt1Bar
 import SignalCellularAlt2BarIcon from '@mui/icons-material/SignalCellularAlt2Bar';
 import WifiOffIcon from '@mui/icons-material/WifiOff';
 import { useRequest } from 'ahooks';
-import { Button } from 'antd';
+import { Button, Skeleton } from 'antd';
 import { motion } from 'framer-motion';
 import VirtualList from 'rc-virtual-list';
 import { useMemo, useState } from 'react';
@@ -13,13 +13,22 @@ import { SvgIcon } from 'ui';
 import NetworkInfo from './components/netWorkInfo';
 import { getApInfo, getApList } from './services';
 
-const CONTAINER_HEIGHT = 300; // 虚拟列表容器高度，可按需要调整
+const CONTAINER_HEIGHT = 250; // 虚拟列表容器高度，可按需要调整
 
 const NetworkPage = () => {
   const [isLinked, setIsLinked] = useState('MultiwayRobot-4G');
 
   const [selectNetwork, setSelectNetwork] = useState(null);
-  const { data, loading, run: reloadApList } = useRequest(getApList);
+  const {
+    data,
+    loading,
+    run: reloadApList,
+  } = useRequest(getApList, {
+    onBefore: () => {
+      setSelectNetwork(null);
+      setIsLinked('');
+    },
+  });
   const { data: currentAp, loading: loadingAp, run: getCurrentAp } = useRequest(getApInfo);
 
   const networkList = useMemo(() => data?.data || {}, [data?.data]);
@@ -33,23 +42,28 @@ const NetworkPage = () => {
   };
 
   /** 渲染单个网络项 */
-  const renderNetworkItem = (network: any) => (
-    <div
-      key={network.ssid + network.channel}
-      className={`group !mb-2 w-full bg-white/10 rounded-xl flex flex-row gap-2 justify-between items-center p-2 hover:bg-white/5 hover:shadow-lg hover:font-bold animation-all duration-300 cursor-pointer ${
-        isLinked === network.name ? 'bg-teal-400/60 shadow-lg' : ''
-      }`}
-      onClick={() => {
-        setSelectNetwork(network);
-      }}
-    >
-      <div>
-        <h4 className='text-lg font-bold'>{network.ssid}</h4>
-        <p className='text-xs opacity-80'>{network.encryption}</p>
+  const renderNetworkItem = (network: any, index) => {
+    const { ssid, channel, encryption, quality, hwmode } = network;
+    const puuid = `${ssid}-${channel}-${hwmode}-${index}`;
+    return (
+      <div
+        // key={puuid}
+        className={`group !mb-2 w-full bg-white/10 rounded-xl flex flex-row gap-2 justify-between items-center p-2 hover:bg-white/5 hover:shadow-lg hover:font-bold animation-all duration-300 cursor-pointer ${
+          isLinked === puuid ? 'bg-teal-400/60 shadow-lg' : ''
+        }`}
+        onClick={() => {
+          setSelectNetwork(network);
+          setIsLinked(puuid);
+        }}
+      >
+        <div>
+          <h4 className='text-xs font-bold'>{ssid}</h4>
+          <p className='text-xs opacity-80'>{encryption}</p>
+        </div>
+        <div>{signalIcon(quality ?? 0)}</div>
       </div>
-      <div>{signalIcon(network.quality ?? 0)}</div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className='p-4 h-full flex gap-4'>
@@ -74,11 +88,15 @@ const NetworkPage = () => {
             />
           </motion.div>
         </div>
-
-        {/* 无信号提示 */}
-        <div className='bg-white/5 flex flex-col items-center justify-center rounded-2xl p-4 mt-4 group hidden'>
-          <SvgIcon name='noNetwork' size={200} className='mx-auto transition opacity-70 group-hover:scale-110' />
-          <p>暂无信号</p>
+        <div
+          className='bg-teal-500/10 p-2 rounded-lg flex items-center justify-between shadow-sm shadow-teal-300 font-bold cursor-pointer'
+          onClick={() => {
+            const { ssid, channel, hwmode } = currentAp?.data || {};
+            setSelectNetwork(ssid + channel + hwmode);
+          }}
+        >
+          <p>当前连接</p>
+          <p>{loadingAp ? <Skeleton.Button size='small' active /> : (currentAp?.data?.ssid ?? '-')}</p>
         </div>
 
         {/* ✅ 5G 网络虚拟列表 */}
@@ -88,12 +106,17 @@ const NetworkPage = () => {
             <VirtualList
               data={networkList.ap_list_5G.filter((item) => item.ssid?.trim())}
               height={CONTAINER_HEIGHT}
-              itemHeight={60}
-              itemKey={(item) => item.ssid + item.channel}
+              // itemHeight={60}
+              itemKey={(item) => `${item.ssid}-${item.channel}-${item.hwmode}`}
             >
-              {(item) => renderNetworkItem(item)}
+              {(item, index) => renderNetworkItem(item, index)}
             </VirtualList>
-          ) : null}
+          ) : (
+            <div className='bg-white/5 flex flex-col items-center justify-center rounded-2xl p-4 mt-4 group'>
+              <SvgIcon name='noNetwork' size={140} className='mx-auto transition opacity-70 group-hover:scale-110' />
+              <p>暂无信号</p>
+            </div>
+          )}
           {loading && <PanelLoading isDark={true} />}
         </div>
 
@@ -104,12 +127,17 @@ const NetworkPage = () => {
             <VirtualList
               data={networkList['ap_list_2.4G'].filter((item) => item.ssid?.trim())}
               height={CONTAINER_HEIGHT}
-              itemHeight={60}
-              itemKey={(item) => item.ssid + item.channel}
+              // itemHeight={60}
+              itemKey={(item) => `${item.ssid}-${item.channel}-${item.hwmode}`}
             >
-              {(item) => renderNetworkItem(item)}
+              {(item, index) => renderNetworkItem(item, index)}
             </VirtualList>
-          ) : null}
+          ) : (
+            <div className='bg-white/5 flex flex-col items-center justify-center rounded-2xl p-4 mt-4 group'>
+              <SvgIcon name='noNetwork' size={140} className='mx-auto transition opacity-70 group-hover:scale-110' />
+              <p>暂无信号</p>
+            </div>
+          )}
           {loading && <PanelLoading isDark={true} />}
         </div>
       </div>

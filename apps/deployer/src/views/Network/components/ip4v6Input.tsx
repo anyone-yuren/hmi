@@ -1,6 +1,16 @@
 import { Form, Input } from 'antd';
 
-const Ipv4v6Input = ({ label, name, disabled }) => {
+const Ipv4v6Input = ({
+  label,
+  name,
+  disabled,
+  required,
+}: {
+  label: string;
+  name: string;
+  disabled: boolean;
+  required?: boolean;
+}) => {
   const ipv4Pattern =
     /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/;
 
@@ -12,7 +22,7 @@ const Ipv4v6Input = ({ label, name, disabled }) => {
       label={label}
       name={name}
       rules={[
-        { required: true, message: '请输入IP地址' },
+        { required: required, message: '请输入IP地址' },
         {
           validator(_, value) {
             if (!value) return Promise.resolve();

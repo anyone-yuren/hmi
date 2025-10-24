@@ -1,66 +1,97 @@
-import { Button, Checkbox, Form } from 'antd';
+import PanelLock from '@/components/lockPanel';
+import PanelLoading from '@/components/PanelLoading';
+import { useRequest } from 'ahooks';
+import { Button, Form } from 'antd';
+import { useEffect, useMemo } from 'react';
+import { toast } from 'sonner';
+import { getWanInfo, postWanNet } from '../../services';
 import Ipv4v6Input from '../ip4v6Input';
 
-const WanSetting = () => {
+const WanSetting = (props) => {
+  const { selectNetwork, currentAp } = props;
   const [form] = Form.useForm();
-  // 监听 DHCP 状态
-  const ipMethod = Form.useWatch('ipMethod', form);
-  const isDhcp = ipMethod === 'dhcp';
+  const { data: wanInfo, loading } = useRequest(getWanInfo);
+  const { run: updateWan, loading: uploadLoading } = useRequest(postWanNet, {
+    manual: true,
+    onSuccess: (res) => {
+      if (res?.code === 200) {
+        toast.success('LAN设置成功', {
+          position: 'bottom-center',
+        });
+      }
+    },
+  });
+
+  const initValues = useMemo(() => wanInfo?.data, [wanInfo]);
+
+  useEffect(() => {
+    if (initValues) {
+      form.setFieldsValue(initValues);
+    }
+  }, [initValues, form]);
+
+  const onSubmit = async () => {
+    const values = await form.validateFields();
+    await updateWan({ ...values, proto: 'static' });
+  };
+
   return (
     <>
       <h3 className='text-lg font-bold mb-2'>WAN设置</h3>
       <div className='relative bg-white/10 rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:shadow-teal-400/20 hover:bg-white/5 shadow-lg '>
-        {/* <PanelLock /> */}
+        {loading ? <PanelLoading isDark={true} /> : null}
+        {selectNetwork?.ssid || (currentAp && currentAp.ssid) ? null : <PanelLock />}
         <Form
           form={form}
           labelCol={{ className: 'min-w-[120px] text-right' }}
           wrapperCol={{ className: 'flex-1' }}
           labelAlign='right'
           className='grid w-full grid-cols-2 lg:grid-cols-3 gap-2 overflow-y-auto'
-          initialValues={{ ipMethod: 'dhcp' }}
+          initialValues={{ proto: 'dhcp' }}
         >
-          <div className='col-span-full flex items-center gap-2'>
-            <Form.Item noStyle shouldUpdate={(prev, cur) => prev.ipMethod !== cur.ipMethod}>
-              {({ getFieldValue, setFieldValue }) => {
-                const checked = getFieldValue('ipMethod') === 'dhcp';
-                return (
-                  <Form.Item className='!mb-0' label='静态IP地址'>
-                    <Checkbox
-                      checked={checked}
-                      onChange={(e) => setFieldValue('ipMethod', e.target.checked ? 'dhcp' : 'static')}
-                    >
-                      自动获取IP地址
-                    </Checkbox>
-                  </Form.Item>
-                );
-              }}
-            </Form.Item>
-          </div>
-          {/* <div className='flex gap-2 items-center'>
-                       <span className='min-w-20 text-right'>WAN IP</span>
-                       <IpInput value='192.168.20.110' onChange={() => {}} />
-                     </div> */}
-          <div className='flex gap-2 items-center'>
-            <Ipv4v6Input label='IP地址' name='ip' disabled={isDhcp} />
-          </div>
-          <div className='flex gap-2 items-center'>
-            <Ipv4v6Input label='子网掩码' name='ip' disabled={isDhcp} />
-          </div>
-          <div className='flex gap-2 items-center'>
-            <Ipv4v6Input label='默认网关' name='ip' disabled={isDhcp} />
-          </div>
-          <div className='flex gap-2 items-center'>
-            <Ipv4v6Input label='首选DNS' name='ip' disabled={isDhcp} />
-          </div>
-          <div className='flex gap-2 items-center'>
-            <Ipv4v6Input label='备用DNS' name='ip' disabled={isDhcp} />
-          </div>
+          <Form.Item noStyle shouldUpdate={(prev, cur) => prev.proto !== cur.proto}>
+            {({ getFieldValue, setFieldValue }) => {
+              const isDhcp = getFieldValue('proto') === 'dhcp';
+              return (
+                <>
+                  {/* <div className='col-span-full flex items-center gap-2'>
+                    <Form.Item className='!mb-0' label='静态IP地址' name={'proto'}>
+                      <Checkbox
+                        checked={isDhcp}
+                        onChange={(e) => {
+                          setFieldValue('proto', e.target.checked ? 'dhcp' : 'static');
+                        }}
+                      >
+                        自动获取IP地址
+                      </Checkbox>
+                    </Form.Item>
+                  </div> */}
+
+                  <Ipv4v6Input label='IP地址' name='ipaddr' disabled={false} />
+                  <Ipv4v6Input label='子网掩码' name='netmask' disabled={false} />
+                  <Ipv4v6Input label='默认网关' name='gateway' disabled={false} />
+                  <Ipv4v6Input label='首选DNS' name='first_dns' disabled={false} />
+                  <Ipv4v6Input label='备用DNS' name='second_dns' disabled={false} required={false} />
+                </>
+              );
+            }}
+          </Form.Item>
+
           <div className='flex items-end gap-2'>
-            <Button type='primary'>保存</Button>
+            <Button
+              type='primary'
+              htmlType='submit'
+              loading={uploadLoading}
+              disabled={uploadLoading}
+              onClick={onSubmit}
+            >
+              保存
+            </Button>
           </div>
         </Form>
       </div>
     </>
   );
 };
+
 export default WanSetting;

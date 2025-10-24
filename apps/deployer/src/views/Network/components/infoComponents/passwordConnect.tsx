@@ -1,11 +1,20 @@
 import PanelLock from '@/components/lockPanel';
 import { useRequest } from 'ahooks';
-import { Button, Checkbox, Form, Input, Select, Switch, message } from 'antd';
+import { Button, Checkbox, Form, Input, InputNumber, Select, Switch, message } from 'antd';
+import { useMemo } from 'react';
 import { postConnectAp } from '../../services';
 
 const PasswordConnect = (props) => {
-  const { selectNetwork } = props;
+  const { selectNetwork, currentAp } = props;
   const [form] = Form.useForm();
+
+  const initValues = useMemo(() => {
+    return {
+      encryption: '-',
+      turbo_roam: true,
+      rssi_threshold: -70,
+    };
+  }, [currentAp]);
 
   const { runAsync: connectAp, loading } = useRequest(postConnectAp, {
     manual: true,
@@ -59,17 +68,14 @@ const PasswordConnect = (props) => {
     <>
       <h3 className='text-lg font-bold mb-2'>连接设置</h3>
       <div className='relative bg-white/10 rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:shadow-teal-400/20 hover:bg-white/5 shadow-lg'>
-        {!selectNetwork?.ssid ? <PanelLock /> : null}
+        {selectNetwork?.ssid || (currentAp && currentAp.ssid) ? null : <PanelLock />}
         <Form
           form={form}
           labelCol={{ className: 'min-w-[120px] text-right' }}
           wrapperCol={{ className: 'flex-1' }}
           labelAlign='right'
           className='grid w-full grid-cols-2 lg:grid-cols-3 gap-2 overflow-y-auto'
-          initialValues={{
-            ipMethod: 'dhcp',
-            turbo_roam: false,
-          }}
+          initialValues={initValues}
         >
           {/* 密码 */}
           <Form.Item
@@ -91,7 +97,7 @@ const PasswordConnect = (props) => {
             <Select
               placeholder='请选择加密方式'
               options={[
-                { label: '不加密', value: '' },
+                { label: '不加密', value: '-' },
                 { label: 'WPA2', value: 'WPA2' },
                 { label: 'WPA/WPA2', value: 'WPA/WPA2' },
                 { label: 'WPA3', value: 'WPA3' },
@@ -144,7 +150,7 @@ const PasswordConnect = (props) => {
             name='rssi_threshold'
             rules={[{ required: true, message: '请输入漫游阈值' }]}
           >
-            <Input type='number' placeholder='请输入漫游阈值' />
+            <InputNumber min={-97} max={-45} placeholder='请输入漫游阈值' />
           </Form.Item>
 
           {/* 按钮 */}
