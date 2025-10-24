@@ -57,6 +57,7 @@
       "lastFullChargeTime": "The last time was full of time",
       "lowPowerAlarm": "Low power alarm",
       "nodata": "No charging task",
+      "notConnecting": "The charging pile is not connected",
       "positionDeviation": "Position deviation",
       "readyCharging": "Ready to charge",
       "recent14Days": "Last 14 days",

@@ -15,9 +15,9 @@ interface IChargingProps {
 const Charging: FC<PropsWithChildren<IChargingProps>> = (props) => {
   const { status } = props;
   const [modal, contextHolder] = Modal.useModal();
-  const { charge_pile_status, powerStatus } = useVehicleStore(
+  const { chargePileStatus, powerStatus } = useVehicleStore(
     useShallow((store) => ({
-      charge_pile_status: store.charge_pile_status,
+      chargePileStatus: store.chargePileStatus,
       powerStatus: store.powerStatus,
     })),
   );
@@ -41,7 +41,7 @@ const Charging: FC<PropsWithChildren<IChargingProps>> = (props) => {
           });
         }}
       />
-      {charge_pile_status?.charge_status === 2 ? (
+      {chargePileStatus?.charge_status === 2 ? (
         <div className='text text-gray-50 mt-10 opacity-50 animate-fadeIn'>{t('common.charging.waitting')}</div>
       ) : null}
       <div className='contrast'>

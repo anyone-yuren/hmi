@@ -46,9 +46,9 @@ const Charging = () => {
   const powerStatusHashmap = useMemo(() => {
     return {
       1: t('common.charging.stop'),
-      2: '准备充电',
+      2: t('common.charging.readyCharging'),
       3: t('common.charging.charging'),
-      4: '充电完成',
+      4: t('common.charging.success'),
     };
   }, [i18n.language]);
 
@@ -116,7 +116,7 @@ const Charging = () => {
               {/* {isConnect ? ( */}
               <div className='flex flex-row gap-4 relative'>
                 <div className='rounded-md absolute w-full h-full top-0 left-0 bg-[#0000009e] shadow-md shadow-[#000000]/80 text-white flex items-center justify-center'>
-                  {t('充电桩未连接')}
+                  {t('common.charging.notConnecting')}
                 </div>
                 <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
                   <SvgIcon name='volt' size={32} />

@@ -57,6 +57,7 @@
       "lastFullChargeTime": "마지막 시간은 시간이 가득했습니다",
       "lowPowerAlarm": "저전력 경보",
       "nodata": "충전 작업이 없습니다",
+      "notConnecting": "충전 파일이 연결되지 않았습니다",
       "positionDeviation": "위치 편차",
       "readyCharging": "충전 준비",
       "recent14Days": "지난 14 일",

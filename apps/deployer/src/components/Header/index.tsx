@@ -102,7 +102,7 @@ const GlobalHeader = () => {
 
   // 设置十分钟定时器
   useEffect(() => {
-    if (powerStatus.charge_status === 3 && !closeChargingTime) {
+    if ([2, 3].includes(powerStatus.charge_status) && !closeChargingTime) {
       setShowChargingDialog(true);
       // const timer = setTimeout(
       //   () => {

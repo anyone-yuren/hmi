@@ -57,6 +57,7 @@
       "lastFullChargeTime": "最後は時間がいっぱいでした",
       "lowPowerAlarm": "低電力アラーム",
       "nodata": "充電タスクはありません",
+      "notConnecting": "充電パイルが接続されていません",
       "positionDeviation": "位置偏差",
       "readyCharging": "充電準備",
       "recent14Days": "過去14日間",

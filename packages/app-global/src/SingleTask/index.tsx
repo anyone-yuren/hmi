@@ -169,8 +169,9 @@ const SingleTask = () => {
         offsetY: offsetHashMap?.[point.id]?.y,
         offsetUpdateTime: offsetHashMap?.[point.id]?.update_time || null,
       };
-      points.push(newPoint);
+
       hashMap[point.id] = newPoint;
+      !hashMap[point.id] && points.push(newPoint);
       point.type === 6 && charges.push(newPoint);
       (point.type === 1 || point.type === 4) && locations.push(newPoint);
     }

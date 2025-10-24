@@ -57,6 +57,7 @@
       "lastFullChargeTime": "La dernière fois était plein de temps",
       "lowPowerAlarm": "Alarme de faible puissance",
       "nodata": "Pas de tâche de charge",
+      "notConnecting": "La pile de chargement n'est pas connectée",
       "positionDeviation": "Déviation de position",
       "readyCharging": "Préparation à la charge",
       "recent14Days": "14 derniers jours",

@@ -57,6 +57,7 @@
       "lastFullChargeTime": "上次充满时间",
       "lowPowerAlarm": "低电量报警",
       "nodata": "没有充电任务",
+      "notConnecting": "充电桩未连接",
       "positionDeviation": "位置偏差",
       "readyCharging": "准备充电",
       "recent14Days": "最近14天",
