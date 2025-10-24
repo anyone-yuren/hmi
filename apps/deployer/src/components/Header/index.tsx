@@ -95,14 +95,16 @@ const GlobalHeader = () => {
   }, [data]);
 
   useEffect(() => {
-    if (taskInfo?.operate_identification === 3) {
+    console.log(taskInfo?.operate_identification, powerStatus.charge_status);
+    // 准备充电的时候就跳到充电页面
+    if (taskInfo?.operate_identification === 3 || powerStatus.charge_status === 2) {
       navigate('/charging');
     }
-  }, [taskInfo?.operate_identification]);
+  }, [taskInfo?.operate_identification, powerStatus.charge_status]);
 
   // 设置十分钟定时器
   useEffect(() => {
-    if ([2, 3].includes(powerStatus.charge_status) && !closeChargingTime) {
+    if ([3].includes(powerStatus.charge_status) && !closeChargingTime) {
       setShowChargingDialog(true);
       // const timer = setTimeout(
       //   () => {
@@ -236,7 +238,7 @@ const GlobalHeader = () => {
           ></Button>
         </div>
       </ConfigProvider>
-      {[2, 3].includes(powerStatus.charge_status) && showChargingDialog && (
+      {[3].includes(powerStatus.charge_status) && showChargingDialog && (
         <ChargingAnimation
           onClick={() => {
             setShowChargingDialog(false);

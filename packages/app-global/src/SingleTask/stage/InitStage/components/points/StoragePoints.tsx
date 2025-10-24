@@ -29,12 +29,10 @@ const StoragePoints = (props: IMapPointsProps) => {
       console.log('[StoragePoints]:托盘加载失败了');
     };
   }, []);
-
   return (
     <>
       {points?.map((storage: IPoint) => {
         const isFull = storage?.state === 1;
-
         return (
           <Group
             key={`storage_point_group_${storage.id}`}
@@ -68,7 +66,7 @@ const StoragePoints = (props: IMapPointsProps) => {
                 {...storageProps}
               ></KonvaImage>
             )}
-            {storage.offsetX != null && storage.offsetY && (
+            {storage.offsetX != null && storage.offsetY != null && (
               <Circle
                 radius={0.8} // 小圆点半径
                 fill={'red'} // 红色填充

@@ -18,16 +18,20 @@ interface IProps {
 
 function SafetySensorTabs({ sensors }: IProps) {
   const { t, i18n } = useTranslation();
-  const { setSensorPointsKey, isDensePointCloud, setIsDensePointCloud, setSensorPoints } = useSafetyStore(
+  const { setSensorPointsKey, obsInfo, isDensePointCloud, setIsDensePointCloud, setSensorPoints } = useSafetyStore(
     useShallow((store) => ({
       setSensorPointsKey: store.setSensorPointsKey,
       isDensePointCloud: store.isDensePointCloud,
       setIsDensePointCloud: store.setIsDensePointCloud,
       setSensorPoints: store.setSensorPoints,
+      obsInfo: store.obsInfo,
     })),
   );
 
   const [sensorList, setSensorList] = useState<ISensor[]>([]);
+  const activeSensor = useMemo(() => {
+    return obsInfo?.sensor_description || [];
+  }, [obsInfo?.sensor_description]);
 
   const lidarTypeHashMap = useMemo(() => {
     return {
@@ -97,7 +101,11 @@ function SafetySensorTabs({ sensors }: IProps) {
         </div>
         {sensorList?.map((sensor) => {
           return (
-            <div key={sensor.topic} className='bg-[#319796] text-[white] rounded-lg flex p-2 items-center gap-2'>
+            <div
+              key={sensor.topic}
+              className='text-[white] rounded-lg flex p-2 items-center gap-2'
+              style={{ background: activeSensor.includes(sensor.name) ? '#ff000087' : '#319796' }}
+            >
               <div>
                 <div className='text-[14px]'>{sensor.ch_name}</div>
                 <div className='text-[12px]'>{lidarTypeHashMap?.[sensor.type] || '-'}</div>

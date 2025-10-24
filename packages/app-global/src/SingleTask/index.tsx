@@ -153,8 +153,16 @@ const SingleTask = () => {
       points: any = [],
       charges: any = [],
       locations: any = [];
+    let seenIds = new Set();
     for (let index = 0; index < pointsData?.data?.length; index++) {
       const point = pointsData?.['data']?.[index] || {};
+      // 检查是否已经处理过这个ID
+      if (seenIds.has(point.id)) {
+        continue; // 如果已经处理过，跳过这个点
+      }
+
+      // 添加到已见ID集合
+      seenIds.add(point.id);
       // 暂时先这么临时处理,后面看看有没有什么办法
       point.types.length &&
         (point.type = point.types[0] === 0 && point.types.length > 1 ? point.types[1] : point.types[0]);
@@ -169,12 +177,13 @@ const SingleTask = () => {
         offsetY: offsetHashMap?.[point.id]?.y,
         offsetUpdateTime: offsetHashMap?.[point.id]?.update_time || null,
       };
-
+      points.push(newPoint);
       hashMap[point.id] = newPoint;
-      !hashMap[point.id] && points.push(newPoint);
+      // !hashMap[point.id] && ;
       point.type === 6 && charges.push(newPoint);
       (point.type === 1 || point.type === 4) && locations.push(newPoint);
     }
+    console.log(points);
     return { hashMap, points, charges, locations, render: !loading };
   }, [pointsData, offsetHashMap, loading]);
 

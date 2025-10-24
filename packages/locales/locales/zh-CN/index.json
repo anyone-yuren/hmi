@@ -27,6 +27,9 @@
     "back": "返回",
     "backToHome": "返回主页",
     "cancel": "取消",
+    "charge": {
+      "cancelChargeTask": "取消充电任务"
+    },
     "charging": {
       "abnormalRecord": "异常记录",
       "accumulatedChargingDegrees": "累计充电度数",
@@ -35,6 +38,7 @@
       "autoCharge": "自动充电",
       "battery": "车辆电池",
       "brushBoardStatus": "刷块状态",
+      "cancelTips": "确定取消充电任务吗",
       "chargeNow": "立即充电",
       "chargePile": "充电桩",
       "chargeStatus": "充电状态",
@@ -591,7 +595,7 @@
       "load": "装车",
       "loadInstructions": "装车说明",
       "loadStorage": "装卸车库位",
-      "maxGoodHeight": "最大允许货物宽度",
+      "maxGoodHeight": "最大允许货物高度",
       "maxGoodWidth": "最大允许货物宽度",
       "maxMoveVehicleTime": "最大挪车次数",
       "minMoveVehicleThreshold": "最小挪车阈值",

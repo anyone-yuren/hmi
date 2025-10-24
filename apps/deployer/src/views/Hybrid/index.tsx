@@ -35,7 +35,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Group, Layer } from 'react-konva';
 import Agv from './components/agv';
-import HybirdStatus from './components/hybirdStatus';
+import HybridStatus from './components/hybridStatus';
 import ReflectorHandle from './components/reflector/handles';
 import ReflectorActions from './components/reflector/handles/actions';
 import ReflectorLayer from './components/reflector/reflectorLayer';
@@ -51,7 +51,7 @@ import { useLatest } from 'ahooks';
 import Konva from 'konva';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
-import CanvaOnline from './components/CanvaOnline';
+import CanvasOnline from './components/CanvasOnline';
 import ChangePose from './components/changePose';
 import InputWidthKeyboard from './components/inputWithKeyboard';
 import MwConfirm from './components/MwConfirm';
@@ -157,7 +157,7 @@ const Mapping = () => {
     setAlignment(newAlignment);
   };
 
-  const { runAsync: getFloors, data: listData } = useRequest(postFloorList, {
+  const { runAsync: getFloors, data: listData }: any = useRequest(postFloorList, {
     manual: true,
     onSuccess: (data) => {
       setMapLoading(false);
@@ -191,7 +191,7 @@ const Mapping = () => {
         }
         toast.success(t('common.actionSuccess'));
         getFloors();
-        setFloor(robot_current_status?.floor_number);
+        setFloor(robot_current_status?.floor_number as number);
       }
     },
   });
@@ -317,7 +317,7 @@ const Mapping = () => {
                   classNames={{
                     indicator: '!w-2 !h-2 !bg-teal-400 mr-1',
                   }}
-                  status={floor === value ? 'processing' : null}
+                  status={floor === value ? 'processing' : 'default'}
                 />
                 <ListItemText disableTypography sx={{ color: 'text.primary', fontSize: '14px' }}>
                   {t('deployer.hybrid.floor') + ' ' + value}
@@ -429,7 +429,7 @@ const Mapping = () => {
               {wsState === 1 ? (
                 isSameFloor ? (
                   <>
-                    <HybirdStatus />
+                    <HybridStatus />
                     <PositionView />
                     <>
                       <Divider sx={{ width: '100%', margin: '10px 0' }} />
@@ -547,7 +547,7 @@ const Mapping = () => {
                     <ChangePose floor={floor} />
                     {!isShowNavigation(navigationType, 'LIDAR_SLAM_3D') && <NavigationRegion />}
                   </Group>
-                  <CanvaOnline />
+                  <CanvasOnline />
                 </Layer>
                 {<PointsCloudDiagV1 />}
               </InitStage>
@@ -597,7 +597,7 @@ const Mapping = () => {
                 variant='contained'
                 style={{ color: 'white' }}
                 onClick={() => {
-                  setFloor(robot_current_status?.floor_number);
+                  setFloor(robot_current_status?.floor_number as number);
                 }}
               >
                 {t('deployer.hybrid.cancelView')}

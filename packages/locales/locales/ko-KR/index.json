@@ -27,6 +27,9 @@
     "back": "돌아오다",
     "backToHome": "홈페이지로 돌아갑니다",
     "cancel": "취소",
+    "charge": {
+      "cancelChargeTask": "충전 작업 취소"
+    },
     "charging": {
       "abnormalRecord": "예외 로깅",
       "accumulatedChargingDegrees": "누적 충전 학위",
@@ -35,6 +38,7 @@
       "autoCharge": "자동 충전",
       "battery": "차량 배터리",
       "brushBoardStatus": "블록 상태",
+      "cancelTips": "충전 작업을 취소하시겠습니까?",
       "chargeNow": "지금 요금",
       "chargePile": "충전소",
       "chargeStatus": "충전 상태",

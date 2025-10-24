@@ -30,6 +30,7 @@ const StationPoints = (props: IMapPointsProps) => {
   };
 
   useAsyncEffect(async () => {
+    console.log('station points', points);
     // 这里得优化
     points?.map(async (point: IPoint) => {
       if (!imagesHashMap[point.type]) {

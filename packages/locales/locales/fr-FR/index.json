@@ -27,6 +27,9 @@
     "back": "Retour",
     "backToHome": "Retour à la page d'accueil",
     "cancel": "Annuler",
+    "charge": {
+      "cancelChargeTask": "Annuler la tâche de chargement"
+    },
     "charging": {
       "abnormalRecord": "Excortion d'exception",
       "accumulatedChargingDegrees": "Diplôme de charge cumulatif",
@@ -35,6 +38,7 @@
       "autoCharge": "Charge automatique",
       "battery": "Batterie du véhicule",
       "brushBoardStatus": "État du balai électrique",
+      "cancelTips": "Êtes-vous sûr d'annuler la tâche de chargement ?",
       "chargeNow": "Facturer maintenant",
       "chargePile": "Station de charge",
       "chargeStatus": "État de la charge",

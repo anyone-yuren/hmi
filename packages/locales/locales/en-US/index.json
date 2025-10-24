@@ -27,6 +27,9 @@
     "back": "Back",
     "backToHome": "Back home",
     "cancel": "Cancel",
+    "charge": {
+      "cancelChargeTask": "Cancel charging task"
+    },
     "charging": {
       "abnormalRecord": "Exception logging",
       "accumulatedChargingDegrees": "Cumulative charging degree",
@@ -35,6 +38,7 @@
       "autoCharge": "Automatic charging",
       "battery": "Vehicle battery",
       "brushBoardStatus": "Flashing status",
+      "cancelTips": "Are you sure to cancel the charging task?",
       "chargeNow": "Charge now",
       "chargePile": "Charging station",
       "chargeStatus": "Charging status",
@@ -591,7 +595,7 @@
       "load": "Loading",
       "loadInstructions": "Loading instructions",
       "loadStorage": "Loading and unloading vehicle location",
-      "maxGoodHeight": "Maximum allowed width",
+      "maxGoodHeight": "Maximum allowed height",
       "maxGoodWidth": "Maximum allowed width",
       "maxMoveVehicleTime": "Maximum number of moves",
       "minMoveVehicleThreshold": "Minimum number of moves threshold",

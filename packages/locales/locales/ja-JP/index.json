@@ -27,6 +27,9 @@
     "back": "帰る",
     "backToHome": "ホームページに戻ります",
     "cancel": "キャンセル",
+    "charge": {
+      "cancelChargeTask": "充電タスクをキャンセルする"
+    },
     "charging": {
       "abnormalRecord": "例外ロギング",
       "accumulatedChargingDegrees": "累積充電の学位",
@@ -35,6 +38,7 @@
       "autoCharge": "自動充電",
       "battery": "車両バッテリー",
       "brushBoardStatus": "ブラシブロック状態",
+      "cancelTips": "充電タスクをキャンセルしてもよろしいですか?",
       "chargeNow": "今すぐ請求します",
       "chargePile": "充電スタンド",
       "chargeStatus": "充電状態",

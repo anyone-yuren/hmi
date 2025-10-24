@@ -1,9 +1,10 @@
 import { AppstoreOutlined, ColumnWidthOutlined, DotChartOutlined, SnippetsOutlined } from '@ant-design/icons';
 import { useVehicleStore } from '@gbeata/store';
 import { Divider, Stack } from '@mui/material';
-import { Button, Modal, Result, Typography } from 'antd';
+import { Button, Modal, Popconfirm, Result, Typography } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import AnimateBrush from './components/animateBrush';
@@ -45,10 +46,22 @@ const Charging = () => {
 
   const powerStatusHashmap = useMemo(() => {
     return {
-      1: t('common.charging.stop'),
-      2: t('common.charging.readyCharging'),
-      3: t('common.charging.charging'),
-      4: t('common.charging.success'),
+      1: {
+        color: 'white',
+        label: t('common.charging.stop'),
+      },
+      2: {
+        color: 'yellow',
+        label: t('common.charging.readyCharging'),
+      },
+      3: {
+        color: '#0bff0b',
+        label: t('common.charging.charging'),
+      },
+      4: {
+        color: 'white',
+        label: t('common.charging.success'),
+      },
     };
   }, [i18n.language]);
 
@@ -142,16 +155,19 @@ const Charging = () => {
               <div>
                 <div className='bg-white/10 p-2 flex justify-between rounded-md'>
                   <Typography.Text className='!m-0 font-bold '>{t('common.charging.status')}</Typography.Text>
-                  <Typography.Text className='!m-0 opacity-70'>
+                  <Typography.Text
+                    className='!m-0 opacity-70'
+                    style={{ color: powerStatusHashmap[powerStatus.charge_status]?.color }}
+                  >
                     {/* {powerStatus.charge_status === 3 ? t('common.charging.charging') : t('common.charging.stop')} */}
-                    {powerStatusHashmap[powerStatus.charge_status]}
+                    {powerStatusHashmap[powerStatus.charge_status]?.label}
                   </Typography.Text>
                 </div>
                 <span className='text-xs text-white/50'>{t('common.charging.totalTimes')}</span>
               </div>
             </div>
             {/* 充电任务 */}
-            <div className='flex flex-1  rounded-2xl bg-white/10 flex-col overflow-y-auto'>
+            <div className='flex flex-1 relative rounded-2xl bg-white/10 flex-col overflow-y-auto'>
               {/* {isConnect ? ( */}
               <div className='w-full'>
                 <Stack
@@ -165,17 +181,23 @@ const Charging = () => {
                       <SnippetsOutlined />
                       {t('common.charging.taskNo')}
                     </div>
-                    <div className='text-sm opacity-70'>{taskInfo?.task_id || '-'}</div>
+                    <div className='text-sm opacity-70'>
+                      {taskInfo?.task_state === 1 ? taskInfo?.task_id || '-' : '-'}
+                    </div>
                   </div>
                   <div className='flex-1 flex flex-col items-center justify-center relative'>
                     <div className='text-sm font-bold flex gap-1 items-center'>
                       <ColumnWidthOutlined />
                       {t('common.charging.positionDeviation')}(mm)
                     </div>
-                    <div className='text-sm opacity-70'>
-                      x:{taskInfo?.error_x?.toFixed(2) || '-'} y:{taskInfo?.error_y?.toFixed(2) || '-'}{' '}
-                      {taskInfo?.error_angle?.toFixed(2) || '-'}°
-                    </div>
+                    {taskInfo?.task_state === 1 ? (
+                      <div className='text-sm opacity-70'>
+                        x:{taskInfo?.error_x?.toFixed(2) || '-'} y:{taskInfo?.error_y?.toFixed(2) || '-'}{' '}
+                        {taskInfo?.error_angle?.toFixed(2) || '-'}°
+                      </div>
+                    ) : (
+                      <div className='text-sm opacity-70'>-</div>
+                    )}
                   </div>
                   {false && (
                     <div className='flex flex-col items-center justify-center relative'>
@@ -200,6 +222,19 @@ const Charging = () => {
               {/* ) : null} */}
               {/* 刷版动画 */}
               <AnimateBrush />
+              <Popconfirm
+                title={t('common.tips')}
+                description={t('确定取消充电任务吗') + '?'}
+                onConfirm={async () => {
+                  await postChargingFunction({ cmd: 'StopCharge' });
+                  toast.success(t('common.actionSuccess'));
+                  setHasTask(false);
+                }}
+              >
+                <Button variant='solid' className='absolute bottom-4 right-4 z-[100]' color='danger'>
+                  {t('取消充电任务')}
+                </Button>
+              </Popconfirm>
             </div>
           </div>
         )}

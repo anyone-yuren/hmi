@@ -32,6 +32,11 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
 
   const [excludeOutsidePoints] = useState(false);
 
+  const activeSensor = useMemo(() => {
+    // return ['Lidar2d_left', '/sirius/topics/scan_Lidar2d_left'];
+    return obsInfo?.sensor_description || [];
+  }, [obsInfo?.sensor_description]);
+
   const vehicleOutline = useMemo(() => {
     const obj = vehicleRect.find((item) => item.name === 'head');
     return obj?.rectangle;
@@ -52,20 +57,34 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
   }, [activePoints]);
   // 原始点数据
 
-  const rawPoints = useMemo(() => {
-    const arr: number[] = [];
+  const rawPointsAndColors = useMemo(() => {
+    const positions: number[] = [];
+    const colors: number[] = [];
+
     Object.keys(sensorPoints || {})
       ?.filter((key) => {
         return sensorPointsKey.includes(key);
       })
       .forEach((key: any) => {
+        const ary = key.split(/_(.*)/, 2);
+        console.log('key', key, ary);
+        const isSensorActive = ary[1] ? activeSensor.includes(ary[1]) : false;
         (sensorPoints[key] as { x: number; y: number; z: number }[]).forEach((p) => {
-          arr.push(p.x, p.y, p.z);
+          positions.push(p.x, p.y, p.z);
+          // 如果传感器在 activeSensor 中，则渲染为红色，否则为白色
+          if (isSensorActive) {
+            colors.push(1, 0, 0); // 红色
+          } else {
+            colors.push(1, 1, 1); // 白色
+          }
         });
       });
 
-    return new Float32Array(arr);
-  }, [sensorPoints, sensorPointsKey]);
+    return {
+      positions: new Float32Array(positions),
+      colors: new Float32Array(colors),
+    };
+  }, [sensorPoints, sensorPointsKey, activeSensor]);
 
   const geometryRef = useRef<THREE.BufferGeometry>(new THREE.BufferGeometry());
   const activePointGeometry = useRef<THREE.BufferGeometry>(new THREE.BufferGeometry());
@@ -129,8 +148,9 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
 
   useEffect(() => {
     if (!geometryRef.current) return;
-    geometryRef.current.setAttribute('position', new THREE.Float32BufferAttribute(rawPoints, 3));
-  }, [geometryRef.current, rawPoints]);
+    geometryRef.current.setAttribute('position', new THREE.Float32BufferAttribute(rawPointsAndColors.positions, 3));
+    geometryRef.current.setAttribute('color', new THREE.Float32BufferAttribute(rawPointsAndColors.colors, 3));
+  }, [geometryRef.current, rawPointsAndColors]);
 
   // useFrame 动态更新点云
   useFrame(() => {
@@ -160,10 +180,13 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
       );
       box = new THREE.Box3().setFromCenterAndSize(center, sizeVec);
     }
-    for (let i = 0; i < rawPoints.length; i += 3) {
-      const x = rawPoints[i];
-      const y = rawPoints[i + 1];
-      const z = rawPoints[i + 2];
+    for (let i = 0; i < rawPointsAndColors.positions.length; i += 3) {
+      const x = rawPointsAndColors.positions[i];
+      const y = rawPointsAndColors.positions[i + 1];
+      const z = rawPointsAndColors.positions[i + 2];
+      const r = rawPointsAndColors.colors[i];
+      const g = rawPointsAndColors.colors[i + 1];
+      const b = rawPointsAndColors.colors[i + 2];
       tempVec.set(x, y, z);
       // if (!frustum.containsPoint(tempVec)) continue;
       // const insideBox = box?.containsPoint(tempVec) ?? false;
@@ -172,7 +195,7 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
       // const inside = insideBox || insideRect || insideVehicle;
       // if (!excludeOutsidePoints || inside) {
       positions.push(x, y, z);
-      colors.push(1, 1, 1);
+      colors.push(r, g, b);
       //   if (inside) colors.push(1, 0, 0);
       //   else colors.push(1, 1, 1);
       // }
