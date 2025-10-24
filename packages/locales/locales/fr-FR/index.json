@@ -405,6 +405,7 @@
     },
     "setting": {
       "lowPower": "Seuil d'alerte de faible batterie",
+      "networkSetting": "Configuration réseau",
       "peripheral": "Paramètres des périphériques",
       "runMusic": "Musique de marche",
       "volumn": "Volume du haut-parleur"

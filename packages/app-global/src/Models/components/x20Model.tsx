@@ -112,7 +112,7 @@ function X20Model() {
   };
 
   return (
-    <group position={[0, 0, 0]}>
+    <group position={[0, 0, 0]} rotation={[0, Math.PI, 0]}>
       <ForkliftBody />
       <Forks />
     </group>

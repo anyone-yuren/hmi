@@ -36,7 +36,6 @@ const PalletModel = () => {
     ) {
       return null;
     }
-
     const x1 = 0 - meterToPixel(pallet_left_top_point_y);
     const y1 = 0 - meterToPixel(pallet_left_top_point_x);
     const x2 = 0 - meterToPixel(pallet_right_bottom_point_y);
@@ -62,7 +61,7 @@ const PalletModel = () => {
           height={palletRect.height}
           stroke={has_goods ? '#ccc' : '#fff'} // 有货绿色，无货红色
           strokeWidth={4}
-          fill={'rgba(33, 33, 33, 0.4)'}
+          fill={'rgba(0, 0, 255, 0.6)'}
           dash={[10, 5]} // 虚线样式
           cornerRadius={10}
           opacity={0.8}

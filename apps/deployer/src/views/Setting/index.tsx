@@ -1,4 +1,7 @@
+import LoginModalTrigger, { triggerLoginModal } from '@/views/Network/components/loginClient';
 import { styled } from '@mui/material';
+import { Button } from 'antd';
+import { useTranslation } from 'react-i18next';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
@@ -14,6 +17,7 @@ export const SwiperWrapper = styled('div')(({ theme }) => ({
 }));
 
 const Setting = () => {
+  const { t } = useTranslation();
   return (
     <SwiperWrapper>
       <Swiper
@@ -30,6 +34,16 @@ const Setting = () => {
           </div>
         </SwiperSlide>
       </Swiper>
+      <LoginModalTrigger />
+      <Button
+        type='primary'
+        className='absolute bottom-4 right-4 z-10'
+        onClick={() => {
+          triggerLoginModal();
+        }}
+      >
+        {t('deployer.setting.networkSetting')}
+      </Button>
     </SwiperWrapper>
   );
 };

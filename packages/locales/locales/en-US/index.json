@@ -407,6 +407,7 @@
     },
     "setting": {
       "lowPower": "Low battery level alarm threshold",
+      "networkSetting": "Network setting",
       "peripheral": "Peripheral parameters",
       "runMusic": "Music for motion",
       "volumn": "Speaker volume"

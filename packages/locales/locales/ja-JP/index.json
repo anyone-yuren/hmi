@@ -407,6 +407,7 @@
     },
     "setting": {
       "lowPower": "バッテリー低下アラームしきい値",
+      "networkSetting": "ネットワーク構成",
       "peripheral": "ペリフェラルパラメータ",
       "runMusic": "運動しながら流れる音楽",
       "volumn": "スピーカーの音量"

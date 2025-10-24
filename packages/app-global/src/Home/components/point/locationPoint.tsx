@@ -42,7 +42,7 @@ const LocationPoint = () => {
         ?.filter((data) => data.types[0] == 1)
         ?.map((item) => {
           // const position = [convertToMeters(item.x), 0, convertToMeters(item.y)];
-          const position = new Vector3(convertToMeters(item.x), 0.4, convertToMeters(item.y));
+          const position = new Vector3(0 - convertToMeters(item.x), 0.4, convertToMeters(item.y));
 
           const distance = position.distanceTo(cameraPosition);
           if (distance > 15) {
