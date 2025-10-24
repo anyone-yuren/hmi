@@ -17,7 +17,7 @@ const VEHICLE_URL_10001 =
     ? '/ws10001' // 开发环境使用代理
     : `ws://${currentHost}:10001`; // 生产环境使用真实地址
 
-export const useHybrid = () => {
+export const useHome = () => {
   const {
     setTaskInfo,
     setControlStatus,

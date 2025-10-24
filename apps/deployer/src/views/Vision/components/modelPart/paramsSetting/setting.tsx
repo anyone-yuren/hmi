@@ -5,7 +5,7 @@ import TextChangeRow from '@/views/Vision/components/settingPart/comp/textChange
 import { ListItemText, MenuItem, ThemeProvider, createTheme } from '@mui/material';
 import { useRequest } from 'ahooks';
 import { useTranslation } from 'react-i18next';
-import { getCompareRobotToolkitModelWithWebModelRead, getMultiCageModelRead } from '../../../services/index';
+import { getCompareRobotToolkitModelWithWebModelRead } from '../../../services/index';
 import CustomSelect from '../../settingPart/comp/customSelect';
 import TextUpdateRow from '../../settingPart/comp/textUpdateRow';
 
@@ -33,7 +33,6 @@ const ParamsSetting = (props: any) => {
   const { propsState, setPropsState } = props;
   const { t } = useTranslation();
   const { data: palletResponse } = useRequest(getCompareRobotToolkitModelWithWebModelRead);
-  const { data: multiCageModels, run: getMultiCageModels } = useRequest(getMultiCageModelRead, { manual: true });
 
   const changeUpdateHashMap = (key: string, value: any) => {
     setPropsState({
@@ -59,14 +58,10 @@ const ParamsSetting = (props: any) => {
     }
   }, [propsState]);
 
-  useEffect(() => {
-    console.log('multiCageModels', multiCageModels);
-  }, [multiCageModels]);
-
   return (
     <LightTheme>
       <div className='text-black gap-[10px] justify-center'>
-        {propsState.type != 'multi_cage' && (
+        {
           <TextChangeRow
             className={'w-[260px]'}
             title={t('deployer.vision.extraDepthCompensation')}
@@ -77,23 +72,21 @@ const ParamsSetting = (props: any) => {
           >
             <div>{propsState?.['extra_deep_compensation'] || 0}</div>
           </TextChangeRow>
+        }
+        {propsState.type != 'tail_truck' && propsState.type != 'warehouse_shelves' && (
+          <TextChangeRow
+            className={'w-[260px]'}
+            title={t('deployer.vision.forkExtendParams')}
+            value={propsState?.['forkarm_final_width']}
+            onChange={(value: string) => {
+              changeUpdateHashMap('forkarm_final_width', value);
+            }}
+          >
+            <div>{propsState?.['forkarm_final_width'] || 0}</div>
+          </TextChangeRow>
         )}
-        {propsState.type != 'tail_truck' &&
-          propsState.type != 'warehouse_shelves' &&
-          propsState.type != 'multi_cage' && (
-            <TextChangeRow
-              className={'w-[260px]'}
-              title={t('deployer.vision.forkExtendParams')}
-              value={propsState?.['forkarm_final_width']}
-              onChange={(value: string) => {
-                changeUpdateHashMap('forkarm_final_width', value);
-              }}
-            >
-              <div>{propsState?.['forkarm_final_width'] || 0}</div>
-            </TextChangeRow>
-          )}
 
-        {propsState.type === 'warehouse_shelves' && propsState.type != 'multi_cage' && (
+        {propsState.type === 'warehouse_shelves' && (
           <TextChangeRow
             className={'w-[260px]'}
             title={t('deployer.vision.goodsCount')}
@@ -107,7 +100,7 @@ const ParamsSetting = (props: any) => {
           </TextChangeRow>
         )}
 
-        {propsState.type != 'multi_cage' && (
+        {
           <TextUpdateRow className={'w-[260px]'}>
             <div>{t('deployer.vision.palletName')}</div>
             <div>
@@ -134,7 +127,7 @@ const ParamsSetting = (props: any) => {
               </CustomSelect>
             </div>
           </TextUpdateRow>
-        )}
+        }
         <StorageListSelect
           className='w-[260px]'
           title={t('deployer.vision.targetStorage')}

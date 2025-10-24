@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 import ParamsSetting from '../paramsSetting/setting';
 
 const Pallet = forwardRef((props: any, ref: any) => {
-  const { annotationVisible = true } = props;
   const [propsState, setPropsState] = useState<any>({});
   const [, setInput, getInput] = useGetState();
   const divRef = useRef(null);
@@ -303,7 +302,7 @@ const Pallet = forwardRef((props: any, ref: any) => {
             );
           })}
           {/* 这里是标注组件 */}
-          {propsState?.showMarks && annotationVisible && !!scale && (
+          {propsState?.showMarks && !!scale && (
             <PalletAnnotation
               {...propsState}
               divSize={divSize}

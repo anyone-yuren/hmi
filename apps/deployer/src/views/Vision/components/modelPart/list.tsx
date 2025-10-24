@@ -10,6 +10,7 @@ import MwConfirm from '../MwConfirm';
 import ListDesc from './listDesc';
 import Concentric from './models/concentric';
 import Cylinder from './models/cylinder';
+import MultiCage from './models/multiCage';
 import NinePallet from './models/ninePallet';
 import Pallet from './models/pallet';
 import Rect from './models/rect';
@@ -57,6 +58,9 @@ const ModelList = forwardRef((props: any, ref: any) => {
     },
     tail_truck: (container: any) => {
       return <Truck {...container} />;
+    },
+    multi_cage: (container: any) => {
+      return <MultiCage {...container} />;
     },
   };
   useEffect(() => {
@@ -109,7 +113,7 @@ const ModelList = forwardRef((props: any, ref: any) => {
                 props?.handleItems && props?.handleItems(container);
               }}
             >
-              <div className='w-[200px] h-[100px] relative'>
+              <div className='w-[200px] h-[100px] relative '>
                 {containerHashMap[container.type] && containerHashMap[container.type](container)}
               </div>
               <ListDesc {...container}></ListDesc>

@@ -100,7 +100,7 @@ function SafetySensorTabs({ sensors }: IProps) {
             <div key={sensor.topic} className='bg-[#319796] text-[white] rounded-lg flex p-2 items-center gap-2'>
               <div>
                 <div className='text-[14px]'>{sensor.ch_name}</div>
-                <div className='text-[12px]'>{lidarTypeHashMap?.[sensor.type]}</div>
+                <div className='text-[12px]'>{lidarTypeHashMap?.[sensor.type] || '-'}</div>
               </div>
               <Switch value={sensor.select} onChange={() => handleSensor(sensor)} />
             </div>

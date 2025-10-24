@@ -94,6 +94,12 @@ const ListDesc = forwardRef((props: any, ref: any) => {
             {container?.truck_size?.height}
           </Typography>
         )}
+        {container?.multi_cage_size && (
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+            {t('deployer.vision.truckListDesc')}: {container?.multi_cage_size?.length}/
+            {container?.multi_cage_size?.width}/{container?.multi_cage_size?.height}
+          </Typography>
+        )}
       </div>
     </div>
   );
