@@ -52,7 +52,7 @@
       "confirm": "すぐに充電タスクはありますか？",
       "confirm1": "AGVが充電パイルに移動したことを確認してください",
       "confirm2": "充電パイルが電源を入れていることを確認してください",
-      "confirm3": "現在の車両が手動状態にあることを確認してください",
+      "confirm3": "現在の車両が自動状態であることを確認してください",
       "endPower": "エンドパワー",
       "errorCode": "エラーコード",
       "extend": "延ばす",
@@ -90,6 +90,11 @@
     "constructionEndTip": "最初にログインしてください",
     "createTime": "作成時間",
     "delete": "削除",
+    "deployer": {
+      "singleTask": {
+        "offsetEmptyTips": "オフセット テーブルの値を同時に空または 0 にすることはできません"
+      }
+    },
     "download": "ダウンロード",
     "edit": "編集",
     "endTime": "終了時間",

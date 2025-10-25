@@ -90,7 +90,7 @@ const Sideway = () => {
     <>
       <div className='flex w-full text-black gap-[20px]'>
         <div className='w-[350px]'>
-          <PointCloudFilter type={'shelf_place_move_vehicle'}></PointCloudFilter>
+          <PointCloudFilter type={'tail_place_move_vehicle'}></PointCloudFilter>
           {renderList?.map((item: any) => {
             return (
               <div key={item.key}>

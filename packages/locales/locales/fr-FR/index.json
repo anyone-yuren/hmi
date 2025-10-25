@@ -52,7 +52,7 @@
       "confirm": "Y a-t-il une tâche de charge immédiatement?",
       "confirm1": "Veuillez vous assurer que l'AGV a déménagé à la pile de charge",
       "confirm2": "Veuillez vous assurer que la pile de charge est alimentée",
-      "confirm3": "Veuillez vous assurer que le véhicule actuel est en état manuel",
+      "confirm3": "Veuillez vous assurer que le véhicule actuel est en état automatique",
       "endPower": "Puissance finale",
       "errorCode": "Code d'erreur",
       "extend": "Sortir",
@@ -90,6 +90,11 @@
     "constructionEndTip": "Veuillez vous connecter en premier",
     "createTime": "temps de création",
     "delete": "Supprimer",
+    "deployer": {
+      "singleTask": {
+        "offsetEmptyTips": "La valeur de la table de décalage ne peut pas être vide ou 0 en même temps"
+      }
+    },
     "edit": "Modifier",
     "endTime": "Heure de fin",
     "error": "erreur",

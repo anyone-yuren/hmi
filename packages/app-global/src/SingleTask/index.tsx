@@ -101,6 +101,7 @@ const SingleTask = () => {
   const modeHashMap: {
     title: Record<IMode, string>;
     showTaskPanel: Record<IMode, () => void> | any;
+    showTaskPanelOnly: Record<IMode, () => void> | any;
   } = {
     title: {
       0: t('deployer.singleTask.rcsMode'),
@@ -127,6 +128,19 @@ const SingleTask = () => {
       },
       100: () => {},
     },
+    showTaskPanelOnly: {
+      0: (visible: boolean) => {
+        !rcsTaskVisible && setRcsTaskVisible(visible);
+        setTaskVisible(false);
+        setOffsetVisible(false);
+      },
+      3: (visible) => {
+        !taskVisible && setTaskVisible(visible);
+        setRcsTaskVisible(false);
+        setOffsetVisible(false);
+      },
+      100: (visible) => {},
+    },
   };
 
   const isTask = useMemo(() => {
@@ -137,6 +151,11 @@ const SingleTask = () => {
   const mapTaskMode: IMode = useMemo(() => {
     return taskMode?.data?.task_mode ?? 100;
   }, [taskMode]);
+
+  useEffect(() => {
+    modeHashMap.showTaskPanelOnly?.[mapTaskMode](false);
+    setPreTaskList([]);
+  }, [mapTaskMode]);
 
   const offsetHashMap = useMemo(() => {
     if (!offsetList || !offsetList?.data?.length) return {};
@@ -230,7 +249,8 @@ const SingleTask = () => {
   };
 
   const taskAction = (type: ISubTaskItem['task_type'], id: IPoint['id']) => {
-    !taskVisible && setTaskVisible(true);
+    // !taskVisible && setTaskVisible(true);
+    modeHashMap.showTaskPanelOnly?.[mapTaskMode](true);
     const list: any = [...preTaskList];
     const newList = list.filter((item: any) => item.task_point_id && item.task_type);
     newList.push(

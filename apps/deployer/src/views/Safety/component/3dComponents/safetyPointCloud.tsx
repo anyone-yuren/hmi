@@ -10,6 +10,7 @@ interface SafetyPointCloudProps {
   projectArea: { rectangle: number[] }[];
   forksUnderRect?: any;
   vehicleRect?: any;
+  sensors: any[];
 }
 
 const MAX_RENDERED_POINTS = 60000;
@@ -19,7 +20,7 @@ const BASE_POINT_SIZE = 0.06;
 const ACTIVE_POINT_SIZE = 0.5;
 const ACTIVE_POINT_RADIUS = 1;
 
-function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPointCloudProps) {
+function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect, sensors }: SafetyPointCloudProps) {
   const { camera, size } = useThree();
   const { forksHeight, sensorPoints, obsInfo, sensorPointsKey } = useSafetyStore(
     useShallow((store) => ({
@@ -60,7 +61,7 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
   const rawPointsAndColors = useMemo(() => {
     const positions: number[] = [];
     const colors: number[] = [];
-
+    console.log('sensors', sensors);
     Object.keys(sensorPoints || {})
       ?.filter((key) => {
         return sensorPointsKey.includes(key);
@@ -69,22 +70,28 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect }: SafetyPo
         const ary = key.split(/_(.*)/, 2);
         console.log('key', key, ary);
         const isSensorActive = ary[1] ? activeSensor.includes(ary[1]) : false;
-        (sensorPoints[key] as { x: number; y: number; z: number }[]).forEach((p) => {
-          positions.push(p.x, p.y, p.z);
-          // 如果传感器在 activeSensor 中，则渲染为红色，否则为白色
-          if (isSensorActive) {
-            colors.push(1, 0, 0); // 红色
-          } else {
-            colors.push(1, 1, 1); // 白色
-          }
-        });
+        (sensorPoints[key] as { x: number; y: number; z: number }[])
+          .map((item) => {
+            const obj = sensors.find((origin) => origin.name === ary[1]);
+            console.log(obj);
+            return item;
+          })
+          .forEach((p) => {
+            positions.push(p.x, p.y, p.z);
+            // 如果传感器在 activeSensor 中，则渲染为红色，否则为白色
+            if (isSensorActive) {
+              colors.push(1, 0, 0); // 红色
+            } else {
+              colors.push(1, 1, 1); // 白色
+            }
+          });
       });
 
     return {
       positions: new Float32Array(positions),
       colors: new Float32Array(colors),
     };
-  }, [sensorPoints, sensorPointsKey, activeSensor]);
+  }, [sensorPoints, sensorPointsKey, activeSensor, sensors]);
 
   const geometryRef = useRef<THREE.BufferGeometry>(new THREE.BufferGeometry());
   const activePointGeometry = useRef<THREE.BufferGeometry>(new THREE.BufferGeometry());

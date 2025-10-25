@@ -52,7 +52,7 @@
       "confirm": "Is there a charging task immediately?",
       "confirm1": "Please make sure the AGV has moved to the charging pile",
       "confirm2": "Please make sure the charging pile is powered on",
-      "confirm3": "Please make sure the current vehicle is in manual state",
+      "confirm3": "Please make sure the current vehicle is in automatic state",
       "endPower": "End power",
       "errorCode": "Error codes",
       "extend": "Extend",
@@ -90,6 +90,11 @@
     "constructionEndTip": "Please log in first",
     "createTime": "Create time",
     "delete": "Delete",
+    "deployer": {
+      "singleTask": {
+        "offsetEmptyTips": "The value of the offset table cannot be empty or 0 at the same time"
+      }
+    },
     "download": "Download",
     "edit": "Edit",
     "endTime": "End time",

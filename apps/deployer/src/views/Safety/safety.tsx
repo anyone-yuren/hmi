@@ -218,6 +218,7 @@ const Safety = () => {
             projectArea={projectArea}
             forksUnderRect={forksUnderOutline}
             vehicleRect={vehicleOutline}
+            sensors={deviceList?.data}
           ></SafetyPointCloud>
         )}
         {false && <SafetyPointCloudV2></SafetyPointCloudV2>}

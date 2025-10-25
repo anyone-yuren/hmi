@@ -52,7 +52,7 @@
       "confirm": "是否立即下发充电任务",
       "confirm1": "请确认AGV已经移动到充电桩",
       "confirm2": "请确认充电桩已经上电",
-      "confirm3": "请确保当前车辆处于手动状态",
+      "confirm3": "请确保当前车辆处于自动状态",
       "endPower": "结束电量",
       "errorCode": "错误码",
       "extend": "伸出",
@@ -90,6 +90,11 @@
     "constructionEndTip": "请先登录",
     "createTime": "创建时间",
     "delete": "删除",
+    "deployer": {
+      "singleTask": {
+        "offsetEmptyTips": "偏移表的值不能同时为空或者0"
+      }
+    },
     "download": "下载",
     "edit": "编辑",
     "endTime": "结束时间",

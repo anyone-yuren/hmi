@@ -52,7 +52,7 @@
       "confirm": "즉시 충전 작업이 있습니까?",
       "confirm1": "AGV가 충전 더미로 이동했는지 확인하십시오.",
       "confirm2": "충전 파일에 전원이 켜져 있는지 확인하십시오",
-      "confirm3": "현재 차량이 수동 상태에 있는지 확인하십시오",
+      "confirm3": "현재 차량이 자동 상태인지 확인해주세요.",
       "endPower": "최종 힘",
       "errorCode": "오류 코드",
       "extend": "펼치기",
@@ -90,6 +90,11 @@
     "constructionEndTip": "먼저 로그인하십시오",
     "createTime": "생성 시간",
     "delete": "삭제",
+    "deployer": {
+      "singleTask": {
+        "offsetEmptyTips": "오프셋 테이블의 값은 비어 있거나 동시에 0일 수 없습니다."
+      }
+    },
     "download": "다운로드",
     "edit": "편집",
     "endTime": "종료 시간",

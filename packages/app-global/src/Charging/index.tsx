@@ -126,11 +126,13 @@ const Charging = () => {
           <div className='h-full w-full flex flex-col gap-4'>
             <div className='p-4 flex flex-col gap-4 bg-white/10 rounded-2xl'>
               <h2 className='text-lg font-bold mb-0'>{t('common.charging.stationInfo')}</h2>
-              {/* {isConnect ? ( */}
+
               <div className='flex flex-row gap-4 relative'>
-                <div className='rounded-md absolute w-full h-full top-0 left-0 bg-[#0000009e] shadow-md shadow-[#000000]/80 text-white flex items-center justify-center'>
-                  {t('common.charging.notConnecting')}
-                </div>
+                {!isConnect ? (
+                  <div className='rounded-md absolute w-full h-full top-0 left-0 bg-[#0000009e] shadow-md shadow-[#000000]/80 text-white flex items-center justify-center'>
+                    {t('common.charging.notConnecting')}
+                  </div>
+                ) : null}
                 <div className='rounded-md flex flex-1 items-center flex-col p-2 shadow-md shadow-[#22d3ee]/20 bg-white/10'>
                   <SvgIcon name='volt' size={32} />
                   <div className=''>{chargePileStatus?.output_voltage?.toFixed(2) || 0} V</div>
@@ -145,7 +147,7 @@ const Charging = () => {
                   <div className=''>{temperatureTitle}</div>
                 </div>
               </div>
-              {/* ) : null} */}
+
               <div>
                 <div className='bg-white/10 p-2 flex justify-between rounded-md'>
                   <Typography.Text className='!m-0 font-bold '>{t('common.charging.ip')}</Typography.Text>
@@ -168,7 +170,6 @@ const Charging = () => {
             </div>
             {/* 充电任务 */}
             <div className='flex flex-1 relative rounded-2xl bg-white/10 flex-col overflow-y-auto'>
-              {/* {isConnect ? ( */}
               <div className='w-full'>
                 <Stack
                   className='flex p-4 flex-1 items-center'
@@ -219,7 +220,6 @@ const Charging = () => {
                   </div>
                 </Stack>
               </div>
-              {/* ) : null} */}
               {/* 刷版动画 */}
               <AnimateBrush />
               <Popconfirm

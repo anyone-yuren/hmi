@@ -84,6 +84,10 @@ const OffsetModal = forwardRef((props: any, ref) => {
       toast.error(t('common.pleaseInputNumber'));
       return;
     }
+    if (!params.x && !params.y) {
+      toast.error(t('common.deployer.singleTask.offsetEmptyTips'));
+      return;
+    }
     const { code }: any = await createOffsetTable(params);
     if (code === 200) {
       toast.success(t('common.actionSuccess'));
