@@ -50,19 +50,19 @@ const VehicleFork = () => {
               content={
                 <div className='flex flex-col gap-2 min-w-40'>
                   <div className='bg-white/5 rounded-md p-2 flex items-center justify-between transition-all hover:bg-white/10  hover:scale-105'>
-                    <p>横滚角</p>
+                    <p>{t('common.home.eulerX')}</p>
                     <p>{robotForkarmStatus?.euler_x}</p>
                   </div>
                   <div className='bg-white/5 rounded-md p-2 flex items-center justify-between transition-all hover:bg-white/10  hover:scale-105'>
-                    <p>俯仰角</p>
+                    <p>{t('common.home.eulerY')}</p>
                     <p>{robotForkarmStatus?.euler_y}</p>
                   </div>
                   <div className='bg-white/5 rounded-md p-2 flex items-center justify-between transition-all hover:bg-white/10  hover:scale-105'>
-                    <p>偏航角</p>
+                    <p>{t('common.home.eulerZ')}</p>
                     <p>{robotForkarmStatus?.euler_z}</p>
                   </div>
                   <div className='bg-white/5 rounded-md p-2 flex items-center justify-between transition-all hover:bg-white/10  hover:scale-105'>
-                    <p>叉间距</p>
+                    <p>{t('common.home.forkWidth')}</p>
                     <p>{robotForkarmStatus?.width}</p>
                   </div>
                 </div>
