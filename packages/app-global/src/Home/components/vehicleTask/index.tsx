@@ -112,14 +112,15 @@ const VehicleTask = () => {
             </div>
             <div className='p-2'>
               <Typography.Title level={4}>
-                {t('common.home.taskId')}:{taskInfo?.task_id}
+                {t('common.home.taskId')}:{taskInfo?.task_state === 2 ? '-' : taskInfo?.task_id}
               </Typography.Title>
               <div className='flex items-center gap-6 opacity-100 text-md'>
                 <div>
-                  {t('common.home.taskType')}:{taskState[taskInfo?.task_state] ?? '-'}
+                  {t('common.home.taskType')}:
+                  {taskInfo?.task_state === 2 ? '-' : (taskState[taskInfo?.task_state] ?? '-')}
                 </div>
                 <div>
-                  {t('common.home.taskPoint')}:{taskInfo?.task_point_id}
+                  {t('common.home.taskPoint')}:{taskInfo?.task_state === 2 ? '-' : taskInfo?.task_point_id}
                 </div>
                 <Typography.Text
                   style={{
