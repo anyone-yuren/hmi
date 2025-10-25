@@ -38,7 +38,7 @@ const PortRuleDrawer: React.FC<PortRuleDrawerProps> = ({ open, onClose, onSubmit
   }, [open, initialValues, form]);
 
   const handleFinish = (values: PortRule) => {
-    onSubmit(values);
+    onSubmit({ ...initialValues, ...values });
     onClose();
   };
 

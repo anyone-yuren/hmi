@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
-import { Button, message, Switch, Table, TableColumnsType } from 'antd';
+import { Button, message, Modal, Switch, Table, TableColumnsType } from 'antd';
 import { useState } from 'react';
 import { getPortList, postDeletePort, postPortFwdList, postUpdatePort } from '../services';
 import PortRuleDrawer, { PortRule } from './editorDrawer';
@@ -14,8 +14,9 @@ interface DataType {
 }
 
 const PortModules = () => {
+  const [modal, contextHolder] = Modal.useModal();
   const { data: portData, loading, run } = useRequest(getPortList);
-
+  // const [modal, contextHolder] = Modal.useModal();
   const { loading: updateLoading, run: updatePort } = useRequest(postUpdatePort, {
     manual: true,
     onSuccess: () => {
@@ -60,7 +61,6 @@ const PortModules = () => {
             size='small'
             checked={value}
             onChange={(checked) => {
-              debugger;
               updatePort({
                 ...row,
                 enabled: checked,
@@ -77,15 +77,28 @@ const PortModules = () => {
       width: 100,
       render: (_, row) => (
         <div className='flex items-center gap-2'>
-          <Button variant='text' color='orange'>
+          <Button
+            variant='text'
+            color='orange'
+            onClick={() => {
+              handleEdit(row);
+            }}
+          >
             编辑
           </Button>
           <Button
             variant='text'
             color='red'
             onClick={() => {
-              delPort({
-                real_num: row?.real_num,
+              modal.confirm({
+                title: '确认删除吗？',
+                okText: '确认',
+                okType: 'danger',
+                onOk: () => {
+                  delPort({
+                    real_num: row?.real_num,
+                  });
+                },
               });
             }}
           >
@@ -104,21 +117,19 @@ const PortModules = () => {
     setOpen(true);
   };
 
-  const handleEdit = () => {
+  const handleEdit = (row) => {
     setEditData({
-      enabled: true,
-      proto: 'tcp',
-      src_port: 80,
-      dest_ip: '192.168.1.150',
-      dest_port: 80,
-      name: '示例规则',
+      ...row,
     });
     setOpen(true);
   };
 
   const handleSubmit = (values: PortRule) => {
-    console.log('提交数据:', values);
-    addRun(values);
+    if (values.real_num) {
+      updatePort(values);
+    } else {
+      addRun(values);
+    }
     message.success('保存成功！');
   };
   return (
@@ -149,6 +160,7 @@ const PortModules = () => {
         size='small'
         pagination={false}
       ></Table>
+      {contextHolder}
     </>
   );
 };
