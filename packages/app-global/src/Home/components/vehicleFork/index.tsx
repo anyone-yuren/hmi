@@ -1,5 +1,6 @@
+import { EllipsisOutlined } from '@ant-design/icons';
 import { useGlobalStore } from '@gbeata/store';
-import { Typography } from 'antd';
+import { Button, Popover, Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,7 @@ const VehicleFork = () => {
       robotForkarmStatus: state.robotForkarmStatus,
     })),
   );
+
   return (
     <motion.div
       className='relative h-full p-4 rounded-2xl bg-white/10  backdrop-blur-3xl shadow-sm shadow-teal-500/40 overflow-hidden'
@@ -42,7 +44,35 @@ const VehicleFork = () => {
       {/* 内容 */}
       <div className='relative z-10 h-full text-white flex flex-col'>
         <div className='w-full'>
-          <h2 className='text-lg font-bold mb-1'>{t('common.home.vehicleFork')}</h2>
+          <h2 className='text-lg font-bold mb-1 flex justify-between items-center'>
+            {t('common.home.vehicleFork')}{' '}
+            <Popover
+              content={
+                <div className='flex flex-col gap-2 min-w-40'>
+                  <div className='bg-white/5 rounded-md p-2 flex items-center justify-between transition-all hover:bg-white/10  hover:scale-105'>
+                    <p>横滚角</p>
+                    <p>{robotForkarmStatus?.euler_x}</p>
+                  </div>
+                  <div className='bg-white/5 rounded-md p-2 flex items-center justify-between transition-all hover:bg-white/10  hover:scale-105'>
+                    <p>俯仰角</p>
+                    <p>{robotForkarmStatus?.euler_y}</p>
+                  </div>
+                  <div className='bg-white/5 rounded-md p-2 flex items-center justify-between transition-all hover:bg-white/10  hover:scale-105'>
+                    <p>偏航角</p>
+                    <p>{robotForkarmStatus?.euler_z}</p>
+                  </div>
+                  <div className='bg-white/5 rounded-md p-2 flex items-center justify-between transition-all hover:bg-white/10  hover:scale-105'>
+                    <p>叉间距</p>
+                    <p>{robotForkarmStatus?.width}</p>
+                  </div>
+                </div>
+              }
+              trigger='click'
+              placement='topRight'
+            >
+              <Button icon={<EllipsisOutlined />} type='text'></Button>
+            </Popover>
+          </h2>
           <motion.div
             className='!w-full h-px'
             initial={{ opacity: 0 }}
