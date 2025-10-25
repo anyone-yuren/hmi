@@ -6,6 +6,7 @@ import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { getProjectArea } from '../../utils/index';
+
 interface SafetyPointCloudProps {
   projectArea: { rectangle: number[] }[];
   forksUnderRect?: any;
@@ -34,12 +35,11 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect, sensors }:
   const [excludeOutsidePoints] = useState(false);
 
   const activeSensor = useMemo(() => {
-    // return ['Lidar2d_left', '/sirius/topics/scan_Lidar2d_left'];
     return obsInfo?.sensor_description || [];
   }, [obsInfo?.sensor_description]);
 
   const vehicleOutline = useMemo(() => {
-    const obj = vehicleRect.find((item) => item.name === 'head');
+    const obj = vehicleRect?.find((item: any) => item.name === 'head');
     return obj?.rectangle;
   }, [vehicleRect]);
 
@@ -52,39 +52,97 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect, sensors }:
     return [obsInfo?.x || 0, obsInfo?.y || 0, obsInfo?.z || 0];
   }, [obsInfo?.x, obsInfo?.y, obsInfo?.z]);
 
+  const geometryRef = useRef<THREE.BufferGeometry>(new THREE.BufferGeometry());
+  const activePointGeometry = useRef<THREE.BufferGeometry>(new THREE.BufferGeometry());
+  const activePointMaterial = useMemo(() => {
+    return new THREE.PointsMaterial({
+      color: 0xff0000,
+      size: ACTIVE_POINT_SIZE,
+      sizeAttenuation: true,
+    });
+  }, []);
+
   useEffect(() => {
     const positions = new Float32Array(activePoints);
     activePointGeometry.current.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   }, [activePoints]);
-  // 原始点数据
 
+  // helper: convert degrees to radians if input looks like degrees
+  const toRadIfNeeded = (v: number) => {
+    if (!isFinite(v)) return 0;
+    // if absolute value greater than 2π, treat as degrees and convert
+    if (Math.abs(v) > 2 * Math.PI) return THREE.MathUtils.degToRad(v);
+    return v;
+  };
+
+  // =============================
+  // 核心：点云偏移 + 使用 Matrix4 (避免 Euler 问题)
+  // =============================
   const rawPointsAndColors = useMemo(() => {
     const positions: number[] = [];
     const colors: number[] = [];
-    console.log('sensors', sensors);
+
+    // 临时对象复用（注意每次设置后立即 apply，不会被其他传感器复用造成污染）
+    const tempVec = new THREE.Vector3();
+    const rotX = new THREE.Matrix4();
+    const rotY = new THREE.Matrix4();
+    const rotZ = new THREE.Matrix4();
+    const tmpMat = new THREE.Matrix4();
+
     Object.keys(sensorPoints || {})
-      ?.filter((key) => {
-        return sensorPointsKey.includes(key);
-      })
+      ?.filter((key) => sensorPointsKey.includes(key))
       .forEach((key: any) => {
+        // key 可能形如 <prefix>_<sensorName>
         const ary = key.split(/_(.*)/, 2);
-        console.log('key', key, ary);
-        const isSensorActive = ary[1] ? activeSensor.includes(ary[1]) : false;
-        (sensorPoints[key] as { x: number; y: number; z: number }[])
-          .map((item) => {
-            const obj = sensors.find((origin) => origin.name === ary[1]);
-            console.log(obj);
-            return item;
-          })
-          .forEach((p) => {
+        const sensorName = ary[1];
+        const isSensorActive = sensorName ? activeSensor.includes(sensorName) : false;
+
+        // 找到对应传感器的原始姿态信息
+        const obj = sensors.find((origin) => origin.name === sensorName);
+        if (!obj) {
+          // 如果没有找到对应传感器信息，直接把点按原样加入
+          (sensorPoints[key] as { x: number; y: number; z: number }[]).forEach((p) => {
             positions.push(p.x, p.y, p.z);
-            // 如果传感器在 activeSensor 中，则渲染为红色，否则为白色
-            if (isSensorActive) {
-              colors.push(1, 0, 0); // 红色
-            } else {
-              colors.push(1, 1, 1); // 白色
-            }
+            if (isSensorActive) colors.push(1, 0, 0);
+            else colors.push(1, 1, 1);
           });
+          return;
+        }
+
+        const { x = 0, y = 0, z = 0, pitch = 0, roll = 0, yaw = 0 } = obj;
+
+        // 将角度值智能转换为弧度（如果输入是度数）
+        const pitchRad = toRadIfNeeded(pitch);
+        const rollRad = toRadIfNeeded(roll);
+        const yawRad = toRadIfNeeded(yaw);
+
+        // 构造旋转矩阵（不使用 Euler），顺序：Z (yaw) -> Y (pitch) -> X (roll)
+        // 注意顺序可以根据你的传感器定义调整
+        rotZ.makeRotationZ(yawRad);
+        rotY.makeRotationY(pitchRad);
+        rotX.makeRotationX(rollRad);
+
+        // tmpMat = rotZ * rotY * rotX
+        tmpMat.identity();
+        tmpMat.multiply(rotZ);
+        tmpMat.multiply(rotY);
+        tmpMat.multiply(rotX);
+
+        // 把平移放到矩阵中（注意 setPosition 会替换矩阵的第四列）
+        tmpMat.setPosition(new THREE.Vector3(x, y, z));
+
+        // 对该传感器下的每个点，应用矩阵
+        (sensorPoints[key] as { x: number; y: number; z: number }[]).forEach((p) => {
+          tempVec.set(p.x, p.y, p.z);
+          tempVec.applyMatrix4(tmpMat); // 局部 -> 世界
+          positions.push(tempVec.x, tempVec.y, tempVec.z);
+
+          if (isSensorActive) {
+            colors.push(1, 0, 0);
+          } else {
+            colors.push(1, 1, 1);
+          }
+        });
       });
 
     return {
@@ -93,19 +151,9 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect, sensors }:
     };
   }, [sensorPoints, sensorPointsKey, activeSensor, sensors]);
 
-  const geometryRef = useRef<THREE.BufferGeometry>(new THREE.BufferGeometry());
-  const activePointGeometry = useRef<THREE.BufferGeometry>(new THREE.BufferGeometry());
-  const activePointMaterial = useMemo(() => {
-    return new THREE.PointsMaterial({
-      color: 0xff0000, // 红色
-      size: ACTIVE_POINT_SIZE, // 点的大小
-      sizeAttenuation: true, // 启用深度衰减
-    });
-  }, []);
-
   const shaderMaterialRef = useRef<THREE.ShaderMaterial>();
 
-  const tempVec = useMemo(() => new THREE.Vector3(), []);
+  const tempVecForFrustum = useMemo(() => new THREE.Vector3(), []);
   const frustum = useMemo(() => new THREE.Frustum(), []);
   const projScreenMatrix = useMemo(() => new THREE.Matrix4(), []);
 
@@ -157,58 +205,22 @@ function SafetyPointCloud({ projectArea, forksUnderRect, vehicleRect, sensors }:
     if (!geometryRef.current) return;
     geometryRef.current.setAttribute('position', new THREE.Float32BufferAttribute(rawPointsAndColors.positions, 3));
     geometryRef.current.setAttribute('color', new THREE.Float32BufferAttribute(rawPointsAndColors.colors, 3));
-  }, [geometryRef.current, rawPointsAndColors]);
+    // 标记几何体需要更新（WebGL buffers）
+    geometryRef.current.attributes.position.needsUpdate = true;
+    geometryRef.current.attributes.color.needsUpdate = true;
+  }, [rawPointsAndColors]);
 
-  // useFrame 动态更新点云
   useFrame(() => {
     if (!geometryRef.current) return;
-    // 更新 frustum
+    // 更新视锥（如果以后要做剪裁）
     projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
     frustum.setFromProjectionMatrix(projScreenMatrix);
 
-    const positions: number[] = [];
-    const colors: number[] = [];
-    // 计算屏幕像素密度下的采样率
-    // 屏幕总像素数
-    const pixelCount = size.width * size.height;
-    // 目标点数 = min(像素数 * k, MAX_RENDERED_POINTS)
-    const stride = 1 / 3;
-    let box: THREE.Box3 | null = null;
-    if (forksUnderProjectArea) {
-      const sizeVec = new THREE.Vector3(
-        forksUnderProjectArea.width,
-        forksUnderProjectArea.height,
-        forksUnderProjectArea.depth,
-      );
-      const center = new THREE.Vector3(
-        forksUnderProjectArea.position[0],
-        forksUnderProjectArea.position[1],
-        forksUnderProjectArea.position[2],
-      );
-      box = new THREE.Box3().setFromCenterAndSize(center, sizeVec);
-    }
-    for (let i = 0; i < rawPointsAndColors.positions.length; i += 3) {
-      const x = rawPointsAndColors.positions[i];
-      const y = rawPointsAndColors.positions[i + 1];
-      const z = rawPointsAndColors.positions[i + 2];
-      const r = rawPointsAndColors.colors[i];
-      const g = rawPointsAndColors.colors[i + 1];
-      const b = rawPointsAndColors.colors[i + 2];
-      tempVec.set(x, y, z);
-      // if (!frustum.containsPoint(tempVec)) continue;
-      // const insideBox = box?.containsPoint(tempVec) ?? false;
-      // const insideRect = projectArea.some((a) => isPointInRectangle(tempVec.x, tempVec.y, a.rectangle));
-      // const insideVehicle = isPointInVehicle(tempVec.x, tempVec.y, tempVec.z, vehicleOutline);
-      // const inside = insideBox || insideRect || insideVehicle;
-      // if (!excludeOutsidePoints || inside) {
-      positions.push(x, y, z);
-      colors.push(r, g, b);
-      //   if (inside) colors.push(1, 0, 0);
-      //   else colors.push(1, 1, 1);
-      // }
-    }
-    geometryRef.current.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-    geometryRef.current.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    // 目前直接使用 precomputed rawPointsAndColors（如果需要做帧内动态过滤可以扩展）
+    geometryRef.current.setAttribute('position', new THREE.Float32BufferAttribute(rawPointsAndColors.positions, 3));
+    geometryRef.current.setAttribute('color', new THREE.Float32BufferAttribute(rawPointsAndColors.colors, 3));
+    geometryRef.current.attributes.position.needsUpdate = true;
+    geometryRef.current.attributes.color.needsUpdate = true;
   });
 
   return (

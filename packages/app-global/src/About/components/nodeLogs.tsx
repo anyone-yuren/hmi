@@ -2,7 +2,7 @@ import { RedoOutlined } from '@ant-design/icons';
 import { useRequest, useSize } from 'ahooks';
 import { Button, List, Radio, Result, Splitter, Typography } from 'antd';
 import VirtualList from 'rc-virtual-list';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import LoadingPage from '../../components/PageLoading/Loading';
@@ -22,6 +22,8 @@ const NodeLogs = (props: IProps) => {
   const [loadingList, setLoadingList] = useState(false);
   const [radioValue, setRadioValue] = useState('all');
   const [nodePath, setNodePath] = useState('');
+  const [treeLoadHashMap, setTreeLoadHashMap] = useState({});
+  const [downloadKey, setDownloadKey] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
   const size = useSize(containerRef);
 
@@ -67,9 +69,18 @@ const NodeLogs = (props: IProps) => {
     await getLogInfo({ path });
   };
 
-  const handleDownload = async () => {
+  useEffect(() => {
+    setTreeLoadHashMap((origin) => {
+      return {
+        ...origin,
+        [downloadKey]: logLoading,
+      };
+    });
+  }, [logLoading, downloadKey]);
+
+  const handleDownload = async (logData, path) => {
     try {
-      const logData = logInfo?.data;
+      // const logData = logInfo?.data;
       if (!logData || logData.length === 0) {
         console.warn('No log data to download');
         return;
@@ -87,7 +98,7 @@ const NodeLogs = (props: IProps) => {
       const a = document.createElement('a');
       a.style.display = 'none';
       a.href = url;
-      const fileName = `${nodePath.replace(/\//g, '_').replace('.log', '')}.txt`;
+      const fileName = `${(path || nodePath).replace(/\//g, '_').replace('.log', '')}.txt`;
       a.download = fileName;
       document.body.appendChild(a);
       a.click();
@@ -110,7 +121,7 @@ const NodeLogs = (props: IProps) => {
       }}
     >
       <Splitter className='w-full h-full'>
-        <Splitter.Panel defaultSize='25%' min='20%' max='30%'>
+        <Splitter.Panel defaultSize='30%' min='20%' max='40%'>
           <div className='p-2'>
             <h2 className='text-lg font-bold mb-1 flex items-center justify-between'>
               {t('common.about.loglist')}
@@ -135,6 +146,20 @@ const NodeLogs = (props: IProps) => {
                   <List.Item
                     className='cursor-pointer hover:bg-[#234e70]'
                     onClick={() => loadListNode(`${nodeKey}/${item}`)}
+                    actions={[
+                      <Button
+                        type={'primary'}
+                        loading={treeLoadHashMap[item]}
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          setDownloadKey(item);
+                          const { data } = await getLogInfo({ path: `${nodeKey}/${item}` });
+                          handleDownload(data, `${nodeKey}/${item}`);
+                        }}
+                      >
+                        {t('common.download')}
+                      </Button>,
+                    ]}
                   >
                     <List.Item.Meta
                       title={
@@ -159,9 +184,11 @@ const NodeLogs = (props: IProps) => {
                   <div className='flex items-center justify-between p-2 bg-black/40 shadow-sm rounded-lg'>
                     <p className='m-0'>{nodePath}</p>
                     <div className='flex gap-2'>
-                      <Button type={'primary'} onClick={handleDownload}>
+                      {/* <Button type={'primary'} onClick={()=>{
+                        handleDownload(logInfo?.data)
+                      }}>
                         {t('common.download')}
-                      </Button>
+                      </Button> */}
                       <Radio.Group
                         value={radioValue}
                         buttonStyle='solid'

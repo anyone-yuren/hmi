@@ -391,7 +391,7 @@
     "safety": {
       "backDistance": "Retreat distance",
       "currentScheme": "Current obstacle avoidance scheme",
-      "densePointCloud": "Dense point cloud",
+      "densePointCloud": "Original point cloud",
       "densePointCloudTips": "Dense point cloud display",
       "forwardDistance": "Distance traveled",
       "goodsStatus": "Status of the goods",

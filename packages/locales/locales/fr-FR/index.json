@@ -390,6 +390,7 @@
     "safety": {
       "backDistance": "Distance de recul",
       "currentScheme": "Solution d'évitement actuelle",
+      "densePointCloud": "Nuage de points d'origine",
       "densePointCloudTips": "Affichage de nuage de points denses",
       "forwardDistance": "Distance de progression",
       "goodsStatus": "État des marchandises",

@@ -390,7 +390,7 @@
     "safety": {
       "backDistance": "후진 거리",
       "currentScheme": "현재 장애물 회피 방안",
-      "densePointCloud": "밀집 점군",
+      "densePointCloud": "원래 포인트 클라우드",
       "densePointCloudTips": "밀집 포인트 클라우드 표시",
       "forwardDistance": "이동 거리",
       "goodsStatus": "화물의 상태",

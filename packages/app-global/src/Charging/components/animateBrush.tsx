@@ -87,7 +87,7 @@ const AnimateBrush = (props) => {
     }
   }, [chargePileStatus.pe_charge_output]);
   useEffect(() => {
-    if (chargePileStatus.brush_board_status === 1) {
+    if (chargePileStatus.brush_board_status === 0) {
       setStretch(true);
       const timeString = dayjs().format('HH:mm:ss');
       setStationChargingData([
@@ -110,14 +110,24 @@ const AnimateBrush = (props) => {
     if (chargePileStatus.pe_charge_input) {
       setIsStation(true);
       const timeString = dayjs().format('HH:mm:ss');
-      setStationChargingData([
-        ...stationChargingData,
-        {
-          key: '3',
-          message: '充电桩发送光电',
-          time: timeString,
-        },
-      ]);
+      setStationChargingData((origin) => {
+        return [
+          ...origin,
+          {
+            key: '3',
+            message: '充电桩发送光电',
+            time: timeString,
+          },
+        ];
+      });
+      // setStationChargingData([
+      //   ...stationChargingData,
+      //   {
+      //     key: '3',
+      //     message: '充电桩发送光电',
+      //     time: timeString,
+      //   },
+      // ]);
     }
   }, [chargePileStatus.pe_charge_input]);
   return (

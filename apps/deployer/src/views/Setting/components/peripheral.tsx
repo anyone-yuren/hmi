@@ -67,22 +67,24 @@ const Peripheral = () => {
               />
             </div>
           </div>
-          <div className='flex flex-col p-2 bg-[#d8d8d833] rounded-md'>
-            <div className='text-lg opacity-50'>{t('deployer.setting.lowPower')}</div>
-            <div className='flex flex-row'>
-              <Slider
-                defaultValue={serviceControlParam?.low_power}
-                className={`${styles.customSlider} swiper-no-swiping w-full`}
-                min={0}
-                max={100}
-                onChangeComplete={(value) => {
-                  postRun.run({
-                    low_power: value,
-                  });
-                }}
-              />
+          {false && (
+            <div className='flex flex-col p-2 bg-[#d8d8d833] rounded-md'>
+              <div className='text-lg opacity-50'>{t('deployer.setting.lowPower')}</div>
+              <div className='flex flex-row'>
+                <Slider
+                  defaultValue={serviceControlParam?.low_power}
+                  className={`${styles.customSlider} swiper-no-swiping w-full`}
+                  min={0}
+                  max={100}
+                  onChangeComplete={(value) => {
+                    postRun.run({
+                      low_power: value,
+                    });
+                  }}
+                />
+              </div>
             </div>
-          </div>
+          )}
           <div className='flex flex-row items-center justify-between p-2 bg-[#d8d8d833] rounded-md'>
             <div className='text-lg opacity-50'>{t('deployer.setting.runMusic')}</div>
             <div className='flex flex-row'>

@@ -391,7 +391,7 @@
     "safety": {
       "backDistance": "後退距離",
       "currentScheme": "現在の障害物回避スキーム",
-      "densePointCloud": "密な点群",
+      "densePointCloud": "元の点群",
       "densePointCloudTips": "ちゅうみつてんぐんひょうじ",
       "forwardDistance": "移動距離",
       "goodsStatus": "商品のステータス",
