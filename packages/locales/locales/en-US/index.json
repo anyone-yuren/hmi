@@ -105,7 +105,14 @@
     "exit": "Quit",
     "home": {
       "actualSpeed": "V_actual",
+      "eulerX": "Roll angle",
+      "eulerY": "Pitch angle",
+      "eulerZ": "Yaw angle",
+      "forkWidth": "Fork spacing",
+      "multi": "Multi",
       "plannedSpeed": "V_plan",
+      "rcsMode": "Rcs mode",
+      "single": "Single",
       "task": "Task",
       "taskId": "Task no.",
       "taskPoint": "Task point",
@@ -387,6 +394,9 @@
       "output": "Output",
       "port": "Port no",
       "tips": "Tip: Gray means not triggered, green means triggered"
+    },
+    "network": {
+      "loginTip": "Login failed"
     },
     "safety": {
       "backDistance": "Retreat distance",

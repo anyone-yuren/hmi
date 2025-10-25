@@ -105,7 +105,14 @@
     "exit": "退出",
     "home": {
       "actualSpeed": "实际速度",
+      "eulerX": "横滚角",
+      "eulerY": "俯仰角",
+      "eulerZ": "偏航角",
+      "forkWidth": "叉间距",
+      "multi": "多机",
       "plannedSpeed": "规划速度",
+      "rcsMode": "调度模式",
+      "single": "单机",
       "task": "任务",
       "taskId": "任务号",
       "taskPoint": "任务点",
@@ -387,6 +394,9 @@
       "output": "输出",
       "port": "端口号",
       "tips": "提示：灰色为未触发，绿色为触发"
+    },
+    "network": {
+      "loginTip": "登录失败"
     },
     "safety": {
       "backDistance": "后退距离",

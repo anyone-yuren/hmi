@@ -41,7 +41,7 @@ const Home = () => {
             </div>
           </div>
           <div className='col-span-1 flex flex-col h-full gap-4'>
-            <div className='flex-1'>
+            <div className=''>
               {/* <Skeleton.Node active className='!h-full !w-full' /> */}
               <VehicleStatus />
             </div>

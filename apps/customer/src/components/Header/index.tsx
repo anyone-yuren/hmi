@@ -79,6 +79,7 @@ const GlobalHeader = () => {
               onOk: () => {
                 setToken('');
                 toast.success(t('common.actionSuccess'));
+                navigate('/');
               },
             });
           }

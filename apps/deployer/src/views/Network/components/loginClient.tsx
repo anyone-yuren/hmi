@@ -6,6 +6,7 @@ import { createStyles, ThemeProvider } from 'antd-style';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { clientLogin } from '../services';
 
@@ -42,7 +43,11 @@ export default function LoginModalTrigger() {
   const { run, loading } = useRequest(clientLogin, {
     manual: true,
     onSuccess: (data) => {
-      navigate('/network');
+      if (data?.code === 200) {
+        navigate('/network');
+      } else {
+        toast.error(data?.msg || t('deployer.network.loginTip'));
+      }
 
       // toast.warning(t('common.loginSuccessTip'), {
       //   // duration: Infinity,

@@ -104,7 +104,14 @@
     "exit": "Quitter",
     "home": {
       "actualSpeed": "Vitesse réelle",
+      "eulerX": "angle de roulis",
+      "eulerY": "angle d'inclinaison",
+      "eulerZ": "Angle de lacet",
+      "forkWidth": "espacement des fourches",
+      "multi": "Plusieurs machines",
       "plannedSpeed": "Vitesse planifiée",
+      "rcsMode": "Mode de planification",
+      "single": "Autonome",
       "task": "Tâche",
       "taskId": "Numéro de tâche",
       "taskPoint": "Point de tâche",
@@ -386,6 +393,9 @@
       "output": "Sortie",
       "port": "Numéro de port",
       "tips": "Indication : gris pour non déclenché, vert pour déclenché"
+    },
+    "network": {
+      "loginTip": "La connexion a échoué"
     },
     "safety": {
       "backDistance": "Distance de recul",

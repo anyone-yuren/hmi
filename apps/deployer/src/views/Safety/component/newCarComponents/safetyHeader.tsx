@@ -108,6 +108,7 @@ const SafetyHeader = (props: IProps) => {
                     }))}
                     onChange={(value) => {
                       refreshCurrentObsInfo(value);
+                      setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true);
                       // setShowSelect(false);
                     }}
                   />
@@ -120,6 +121,7 @@ const SafetyHeader = (props: IProps) => {
                     onClick={() => {
                       setShowSelect(false);
                       refreshCurrentObsInfo();
+                      setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(false);
                     }}
                   >
                     取消

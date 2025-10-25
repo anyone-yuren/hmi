@@ -18,12 +18,13 @@ interface ObsInfoPanelProps {
   currentObsData: any;
   strategyList: any;
   loading: boolean;
+  client?: boolean;
 }
 const ObsInfoPanel = (props: ObsInfoPanelProps) => {
   const { t } = useTranslation();
   const classNames = useDrawerClassName();
   const [open, setOpen] = useState(false);
-  const { show = true, isDark = false, currentObsData, strategyList, loading } = props;
+  const { show = true, isDark = false, currentObsData, strategyList, loading, client } = props;
   const { token } = theme.useToken();
   const { motionStatus, obsInfo, goodsInfo } = useSafetyStore(
     useShallow((store) => ({
@@ -132,24 +133,28 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
             )}
           </div>
         </div>
-        <p className='text-md font-bold relative pb-2'>
-          点云查看
-          <Line1px />
-        </p>
-        <div
-          className={`group h-40 flex flex-col rounded-b-lg items-center justify-center 
+        {!client ? (
+          <>
+            <p className='text-md font-bold relative pb-2'>
+              点云查看
+              <Line1px />
+            </p>
+            <div
+              className={`group h-40 flex flex-col rounded-b-lg items-center justify-center 
   backdrop-blur-[6px] hover:shadow-lg animation-all duration-300 ${
     isDark
       ? 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_10%)]'
       : 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]'
   }`}
-          onClick={() => setOpen(true)}
-        >
-          <SvgIcon name='points' size={128} className='group-hover:scale-110 animation-all duration-300' />
-          <p className='text-xs opacity-60'>
-            {currentObsData?.pc_sensor_list?.length ? '查看点云' : t('common.safety.noDevice')}
-          </p>
-        </div>
+              onClick={() => setOpen(true)}
+            >
+              <SvgIcon name='points' size={128} className='group-hover:scale-110 animation-all duration-300' />
+              <p className='text-xs opacity-60'>
+                {currentObsData?.pc_sensor_list?.length ? '查看点云' : t('common.safety.noDevice')}
+              </p>
+            </div>
+          </>
+        ) : null}
       </motion.div>
       <Drawer
         closable

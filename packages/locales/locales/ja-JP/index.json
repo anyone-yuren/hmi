@@ -105,7 +105,14 @@
     "exit": "終了する",
     "home": {
       "actualSpeed": "実際の速度",
+      "eulerX": "ロール角",
+      "eulerY": "ピッチ角",
+      "eulerZ": "ヨー角",
+      "forkWidth": "フォークの間隔",
+      "multi": "複数のマシン",
       "plannedSpeed": "計画速度",
+      "rcsMode": "スケジュールモード",
+      "single": "スタンドアロン",
       "task": "タスク",
       "taskId": "タスク番号",
       "taskPoint": "クエストポイント",
@@ -387,6 +394,9 @@
       "output": "アウトプット",
       "port": "ポート番号",
       "tips": "ヒント：グレーはトリガーされておらず、緑はトリガーされています"
+    },
+    "network": {
+      "loginTip": "ログインに失敗しました"
     },
     "safety": {
       "backDistance": "後退距離",

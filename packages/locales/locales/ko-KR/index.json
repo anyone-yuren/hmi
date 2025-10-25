@@ -105,7 +105,14 @@
     "exit": "나가기",
     "home": {
       "actualSpeed": "실제 속도",
+      "eulerX": "롤 각도",
+      "eulerY": "피치 각도",
+      "eulerZ": "요 각도",
+      "forkWidth": "포크 간격",
+      "multi": "여러 기계",
       "plannedSpeed": "계획된 속도",
+      "rcsMode": "스케줄링 모드",
+      "single": "독립형",
       "task": "작업",
       "taskId": "작업 번호",
       "taskPoint": "작업 포인트",
@@ -386,6 +393,9 @@
       "output": "출력",
       "port": "포트 번호",
       "tips": "팁: 회색은 트리거되지 않았고, 녹색은 트리거되었습니다."
+    },
+    "network": {
+      "loginTip": "로그인 실패"
     },
     "safety": {
       "backDistance": "후진 거리",

@@ -26,6 +26,7 @@ import { useSafetyStore } from './store/safety.store';
 import { getRect } from './utils';
 import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRect, validateRect } from './utils/draw';
 const snap = 10;
+
 export default function RectDrawer() {
   const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const stageRef = useRef<Konva.Stage>(null);
@@ -35,6 +36,7 @@ export default function RectDrawer() {
   const size = useSize(ref);
   const [errorRequest, setErrorRequest] = useState(false);
   const query = useHashQuery();
+  const client = query.get('client'); // "true"
   const [isDark, setIsDark] = useState(query.get('dark') ? true : false);
   const { setStageScale } = useHybirdStore(useShallow((store) => ({ setStageScale: store.setStageScale })));
   const [show, setShow] = useState(true);
@@ -684,6 +686,7 @@ export default function RectDrawer() {
               show={show}
               isDark={isDark}
               loading={obstacleDataLoading}
+              client={client}
             />
             <div className='relative h-full flex-1 min-w-30 min-h-30' ref={ref}>
               <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
