@@ -14,6 +14,7 @@ import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import Selectlangulage from './components/Selectlangulage';
 import Signal from './components/signal';
@@ -144,6 +145,8 @@ const GlobalHeader = () => {
                 title: t('common.logoutTip'),
                 onOk: () => {
                   setToken('');
+                  toast.success(t('common.actionSuccess'));
+                  navigate('/');
                 },
               });
             }
