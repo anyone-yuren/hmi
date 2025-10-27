@@ -679,6 +679,7 @@
       "plsSelectModel": "まずモデルを選択してください",
       "pointSetting": "ポイント設定",
       "pointsCloud": "点群フィルタリング",
+      "pointsCloudSavePath": "パスを保存",
       "right": "右",
       "rightCompensation": "右側の補正パラメータ",
       "rightDetectDist": "右方探査距離",

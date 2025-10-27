@@ -678,6 +678,7 @@
       "plsSelectModel": "Veuillez d'abord sélectionner un modèle",
       "pointSetting": "Configuration des points",
       "pointsCloud": "Filtrage du nuage de points",
+      "pointsCloudSavePath": "Le chemin de sauvegarde est",
       "right": "droite",
       "rightCompensation": "Paramètres de compensation à droite",
       "rightDetectDist": "Distance de détection à droite",

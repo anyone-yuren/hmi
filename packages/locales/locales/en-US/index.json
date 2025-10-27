@@ -679,6 +679,7 @@
       "plsSelectModel": "Please select a model first",
       "pointSetting": "Point configuration",
       "pointsCloud": "Point cloud filtering",
+      "pointsCloudSavePath": "Save path as",
       "right": "right",
       "rightCompensation": "Right compensation parameters",
       "rightDetectDist": "Right detection distance",

@@ -678,6 +678,7 @@
       "plsSelectModel": "먼저 모델을 선택하십시오.",
       "pointSetting": "포인트 설정",
       "pointsCloud": "포인트 클라우드 필터링",
+      "pointsCloudSavePath": "저장 경로",
       "right": "오른쪽",
       "rightCompensation": "오른쪽의 보상 파라미터",
       "rightDetectDist": "오른쪽 탐지 거리",

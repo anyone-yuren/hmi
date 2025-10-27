@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
 import StorageListSelect from '@/views/Vision/components/settingPart/comp/storageListSelect';
 import TextChangeRow from '@/views/Vision/components/settingPart/comp/textChangeRow';
@@ -52,11 +52,11 @@ const ParamsSetting = (props: any) => {
     return palletResponse?.data?.pallet_info_list || [];
   }, [palletResponse]);
 
-  useEffect(() => {
-    if (propsState.type === 'multi_cage') {
-      getMultiCageModels();
-    }
-  }, [propsState]);
+  // useEffect(() => {
+  //   if (propsState.type === 'multi_cage') {
+  //     getMultiCageModels();
+  //   }
+  // }, [propsState]);
 
   return (
     <LightTheme>

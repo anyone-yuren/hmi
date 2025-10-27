@@ -227,7 +227,11 @@ const PointCloudFilter = (props: IProps) => {
   const handleParamsSave = async () => {
     const params = await validateParams(initParams);
     await postPointCloudMonitoringSave(params);
-    toast.success(t('common.actionSuccess'));
+    toast.success(
+      `${t('common.actionSuccess')}!${t('deployer.vision.pointsCloudSavePath')}:
+      [/home/mw/.mwrobot/robot_config/vision_param]
+      `,
+    );
   };
 
   const handleDelPress = useCallback(

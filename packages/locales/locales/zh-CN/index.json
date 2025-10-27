@@ -679,6 +679,7 @@
       "plsSelectModel": "请先选择模型",
       "pointSetting": "点位配置",
       "pointsCloud": "点云筛选",
+      "pointsCloudSavePath": "保存路径为",
       "right": "右",
       "rightCompensation": "右侧补偿参数",
       "rightDetectDist": "右探测距离",

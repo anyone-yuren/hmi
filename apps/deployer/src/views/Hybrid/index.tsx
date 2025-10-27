@@ -24,6 +24,7 @@ import {
   Select,
   SelectChangeEvent,
   styled,
+  TextField,
   ThemeProvider,
   Typography,
   useTheme,
@@ -656,21 +657,38 @@ const Mapping = () => {
                     toast.error(t('deployer.hybrid.plsCancelAction'));
                     return;
                   }
+
                   MwConfirm.confirm({
                     title: t('deployer.hybrid.floorNo'),
                     content: (
                       <>
-                        <InputWidthKeyboard
-                          mode='numbers'
-                          input={''}
+                        {false && (
+                          <InputWidthKeyboard
+                            mode='numbers'
+                            input={''}
+                            placeholder={t('common.plsInput')}
+                            setInput={setNewFloor}
+                          ></InputWidthKeyboard>
+                        )}
+                        <TextField
+                          fullWidth
+                          autoFocus
                           placeholder={t('common.plsInput')}
-                          setInput={setNewFloor}
-                        ></InputWidthKeyboard>
+                          defaultValue={!latestInputText ? '' : latestInputText}
+                          onChange={(event) => {
+                            setNewFloor(event.target.value as any);
+                          }}
+                          type={'number'}
+                        ></TextField>
                       </>
                     ),
 
                     onOk: async () => {
                       const addFloorNumber = Number(latestInputText.current);
+                      if (addFloorNumber <= 0 || addFloorNumber > 999999) {
+                        toast.error(t('deployer.vision.paramsValidateRange') + `:[1-999999]`);
+                        return Promise.reject();
+                      }
                       await postAddFloor(addFloorNumber);
                       currentAddFloor.current = addFloorNumber;
                     },

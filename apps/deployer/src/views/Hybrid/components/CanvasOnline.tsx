@@ -87,10 +87,10 @@ const DeviceList = () => {
                 y={0 - meterToPixel(item.pose_y)}
                 id={item.point_id}
                 text={item.point_id}
-                offsetY={15}
+                offsetY={30}
                 offsetX={3}
-                fontSize={12}
-                fill='#FF0000'
+                fontSize={25}
+                fill='#00D1D1'
               ></Text>
             </>
           );

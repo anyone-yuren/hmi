@@ -209,7 +209,14 @@ const Cargo = () => {
           >
             {mappedPoints?.map((point, index) => {
               return (
-                <Dropdown key={index} arrow menu={{ items: getItems(index) }} trigger={['click', 'contextMenu']}>
+                <Dropdown
+                  key={index}
+                  arrow
+                  getPopupContainer={(node) => node}
+                  menu={{ items: getItems(index) }}
+                  trigger={['click', 'contextMenu']}
+                  overlayStyle={{ width: '100px' }}
+                >
                   <div
                     style={{
                       position: 'absolute',

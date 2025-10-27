@@ -96,6 +96,7 @@ const MapActionBar = forwardRef((props: any, ref) => {
   }, []);
 
   const uploadProps: UploadProps = {
+    accept: `.zar`,
     onRemove: (file) => {
       const index = fileList.indexOf(file);
       const newFileList = fileList.slice();
@@ -201,7 +202,7 @@ const MapActionBar = forwardRef((props: any, ref) => {
             <GpsFixedIcon fontSize={'large'} />
           </Tooltip>
         </IconStyleButton>
-        {!isMultiwayAgv && (
+        {!isMultiwayAgv && mapTaskMode === 3 && (
           <Upload {...uploadProps} onChange={uploadFile}>
             <IconStyleButton>
               <Tooltip title={t('deployer.singleTask.uploadMap')}>

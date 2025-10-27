@@ -33,7 +33,8 @@ const VehicleBattery = (props: any) => {
 
   const [pdName, setPdName] = useState(`MW_${agvType}.png`);
   const productImage = useCallback(() => {
-    return getImage(`${pdName}`);
+    const url = getImage(`${pdName}`);
+    return url.indexOf('undefined') > -1 ? undefined : getImage(`${pdName}`);
   }, [pdName]);
 
   const [showHistory, setShowHistory] = useState(false);
@@ -209,7 +210,7 @@ const VehicleBattery = (props: any) => {
           </div>
           {/* 车辆图片与充电效果 */}
           <div className='absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3'>
-            {agvType ? (
+            {agvType && productImage() ? (
               <motion.img
                 src={productImage()}
                 initial={{ filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }}
