@@ -3,7 +3,7 @@ import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
 import { Form, Input, Modal } from 'antd';
 import { createStyles, ThemeProvider } from 'antd-style';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
@@ -38,7 +38,7 @@ export default function LoginModalTrigger() {
       setToken: state.setToken,
     })),
   );
-  const { run, loading } = useRequest(postLogin, {
+  const { runAsync, loading } = useRequest(postLogin, {
     manual: true,
     onSuccess: (data) => {
       setToken(data?.data?.permission ?? 'admin');
@@ -52,9 +52,13 @@ export default function LoginModalTrigger() {
   });
   const { styles } = useStyles();
   const [form] = Form.useForm();
+  const modalRef = useRef<any>(null);
 
   const showLoginModal = useCallback(() => {
-    Modal.confirm({
+    if (modalRef.current) {
+      modalRef.current.destroy();
+    }
+    modalRef.current = Modal.confirm({
       title: t('common.login'),
       content: (
         <ThemeProvider themeMode='dark'>
@@ -86,7 +90,7 @@ export default function LoginModalTrigger() {
       onOk: async () => {
         // 提交逻辑
         const values = await form.validateFields();
-        await run(values);
+        return runAsync(values);
       },
       okButtonProps: {
         loading,
@@ -94,6 +98,17 @@ export default function LoginModalTrigger() {
       rootClassName: styles.loginModal,
     });
   }, [i18n.language]);
+
+  useEffect(() => {
+    if (modalRef.current) {
+      console.log('loading', loading);
+      modalRef.current.update({
+        okButtonProps: {
+          loading,
+        },
+      });
+    }
+  }, [loading]);
 
   showLoginModalExternal = showLoginModal;
 

@@ -11,6 +11,7 @@ import SafetyPointCloudV2 from './component/3dComponents/safetyPointCloudV2';
 import SafetySensors from './component/3dComponents/safetySensors';
 import SafetySensorTabs from './component/3dComponents/safetySensorTabs';
 import SafetyVehicle from './component/3dComponents/safetyVehicle';
+import SafetyVehicleModels from './component/3dComponents/safetyVehicleModels';
 import WsContainer from './component/WsContainer';
 import { getDeviceList, safetyConfig } from './service/index';
 import { useSafetyStore } from './store/safety.store';
@@ -156,7 +157,6 @@ const Safety = () => {
     if (!config?.data || !config?.data?.strategy_list || !config?.data?.strategy_list?.strategy_under_fork_protection) {
       return {};
     }
-    console.log('forksUnderOutline是否在变');
     return config?.data?.strategy_list?.strategy_under_fork_protection;
   }, [config]);
 
@@ -206,11 +206,20 @@ const Safety = () => {
     <div className='relative w-full h-full'>
       <SafetyCanvas>
         <SafetyBase></SafetyBase>
-        <SafetyVehicle
-          vehicleRect={vehicleOutline}
-          forksUnderRect={forksUnderOutline}
-          distance={activeScheme.project_distance}
-        ></SafetyVehicle>
+        {true && (
+          <SafetyVehicleModels
+            vehicleRect={vehicleOutline}
+            forksUnderRect={forksUnderOutline}
+            distance={activeScheme.project_distance}
+          ></SafetyVehicleModels>
+        )}
+        {false && (
+          <SafetyVehicle
+            vehicleRect={vehicleOutline}
+            forksUnderRect={forksUnderOutline}
+            distance={activeScheme.project_distance}
+          ></SafetyVehicle>
+        )}
         <SafetyObsLines lines={projectArea || []}></SafetyObsLines>
         {deviceList?.data?.length && <SafetySensors sensors={deviceList?.data || []}></SafetySensors>}
         {true && (
@@ -228,7 +237,7 @@ const Safety = () => {
         <></>
       </WsContainer>
       {/* )} */}
-      <SafetySensorTabs sensors={deviceList?.data || []}></SafetySensorTabs>
+      {true && <SafetySensorTabs sensors={deviceList?.data || []}></SafetySensorTabs>}
     </div>
   );
 };
