@@ -19,6 +19,7 @@ import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import PalletModel from './component/newCarComponents/palletModel';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
 import SensorsToMap from './component/newCarComponents/sensorsToMap';
+import TurmRegion from './component/newCarComponents/TurmRegion';
 import { MAX_SCALE, MIN_SCALE } from './constants/config';
 import { useSafety } from './hooks/useSafety';
 import { safetyConfig } from './service';
@@ -725,6 +726,7 @@ export default function RectDrawer() {
                       <SensorsToMap />
                     </Group>
                     <PalletModel />
+                    <TurmRegion />
                     {/* 绘制矩形 */}
                     {rects?.map((r) => (
                       <Group key={r.id} className='rect'>

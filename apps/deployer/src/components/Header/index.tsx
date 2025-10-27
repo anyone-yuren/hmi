@@ -1,4 +1,4 @@
-import { Badge, Button, ConfigProvider, Modal } from 'antd';
+import { Button, ConfigProvider, Modal } from 'antd';
 import { useResponsive, useTheme } from 'antd-style';
 import { useNavigate } from 'react-router-dom';
 import { SvgIcon } from 'ui';
@@ -56,13 +56,13 @@ const GlobalHeader = () => {
   const { styles } = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
-  const { powerStatus, setPowerStatus, systemDateTime, rcsIsOnline, taskInfo } = useVehicleStore(
+  const { powerStatus, setPowerStatus, systemDateTime, taskInfo } = useVehicleStore(
     useShallow((state) => {
       return {
         powerStatus: state.powerStatus,
         setPowerStatus: state.setPowerStatus,
         systemDateTime: state.systemDateTime,
-        rcsIsOnline: state.rcsIsOnline,
+        // rcsIsOnline: state.rcsIsOnline,
         taskInfo: state.taskInfo,
       };
     }),
@@ -127,41 +127,41 @@ const GlobalHeader = () => {
   return (
     <div className='flex flex-col h-full items-center justify-between px-4 py-2 text-white '>
       {contextHolder}
-      <Badge
+      {/* <Badge
         dot
         className={styles.dot}
         color={rcsIsOnline ? theme.colorPrimary : theme.colorError}
         status={rcsIsOnline ? 'processing' : 'default'}
         offset={[0, 10]}
+      > */}
+      <div
+        className='w-12 h-12 rounded-full flex items-center justify-center mt-2 mb-4'
+        style={{
+          backgroundColor: token ? '#00D1D1' : '#445260',
+        }}
+        onClick={() => {
+          if (!token) {
+            triggerLoginModal();
+          } else {
+            modal.confirm({
+              title: t('common.logoutTip'),
+              onOk: () => {
+                setToken('');
+                toast.success(t('common.actionSuccess'));
+                navigate('/');
+              },
+            });
+          }
+        }}
       >
-        <div
-          className='w-12 h-12 rounded-full flex items-center justify-center mt-2 mb-4'
-          style={{
-            backgroundColor: token ? '#00D1D1' : '#445260',
-          }}
-          onClick={() => {
-            if (!token) {
-              triggerLoginModal();
-            } else {
-              modal.confirm({
-                title: t('common.logoutTip'),
-                onOk: () => {
-                  setToken('');
-                  toast.success(t('common.actionSuccess'));
-                  navigate('/');
-                },
-              });
-            }
-          }}
-        >
-          {/* {token ? <SvgIcon name='user' size={28} /> : <SvgIcon name='unknowUser' size={28} />} */}
-          {token ? (
-            <span className='font-bold text-4xl'>{token.charAt(0)}</span>
-          ) : (
-            <SvgIcon name='unknowUser' size={28} />
-          )}
-        </div>
-      </Badge>
+        {/* {token ? <SvgIcon name='user' size={28} /> : <SvgIcon name='unknowUser' size={28} />} */}
+        {token ? (
+          <span className='font-bold text-4xl'>{token.charAt(0)}</span>
+        ) : (
+          <SvgIcon name='unknowUser' size={28} />
+        )}
+      </div>
+      {/* </Badge> */}
       <p className='text-md text-center font-bold mb-2'>{dayjs(systemDateTime).format('YYYY/MM/DD HH:mm:ss')}</p>
       <div className='flex flex-col items-center gap-2'>
         <BarBattery level={40} height={24} />
