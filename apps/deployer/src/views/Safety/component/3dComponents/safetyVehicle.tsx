@@ -97,7 +97,6 @@ function SafetyVehicle(props: any) {
       >
         <meshStandardMaterial color='#00d1d1' transparent opacity={0.8} depthTest={false} depthWrite={false} />
       </mesh>
-
       {/* 渲染叉臂立方体 */}
       <mesh
         geometry={new THREE.BoxGeometry(outlook.forks.width, outlook.forks.height, forkDepth)}
@@ -105,11 +104,19 @@ function SafetyVehicle(props: any) {
       >
         <meshStandardMaterial color='#00d1d1' transparent opacity={0.9} depthTest={false} depthWrite={false} />
       </mesh>
-
+      {/* 托盘 */}
       <mesh geometry={new THREE.BoxGeometry(pallet.width, pallet.height, palletDepth)} position={pallet.position}>
         <meshStandardMaterial color='yellow' transparent opacity={0.8} depthTest={false} depthWrite={false} />
       </mesh>
-
+      {/* 托盘上的货 */}
+      {obsInfo.has_goods && (
+        <mesh
+          geometry={new THREE.BoxGeometry(pallet.width, pallet.height, 1)}
+          position={[pallet.position[0], pallet.position[1], pallet.position[2] + 0.5 + palletDepth / 2]}
+        >
+          <meshStandardMaterial color='green' transparent opacity={0.8} depthTest={false} depthWrite={false} />
+        </mesh>
+      )}
       {/* 渲染保护区域立方体 */}
       {forksUnderProjectArea && forksUnderProjectArea.depth && (
         <mesh

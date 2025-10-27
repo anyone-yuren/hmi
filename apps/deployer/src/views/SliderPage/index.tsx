@@ -186,21 +186,19 @@ const SwiperPage = () => {
             </AuthComponent>
 
             <AuthComponent authKey={['', 'customer']}>
-              <AuthComponent authKey={['admin', 'customer']}>
-                <div
-                  className='flex flex-col items-center justify-center gap-2'
-                  onClick={() => {
-                    navigate('/setting');
-                  }}
-                >
-                  <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
-                    <SvgIcon name={'setting'} size={180} />
-                  </div>
-                  <Typography.Title className='!font-normal' level={3}>
-                    {t('deployer.sliderPage.setting')}
-                  </Typography.Title>
+              <div
+                className='flex flex-col items-center justify-center gap-2'
+                onClick={() => {
+                  navigate('/setting');
+                }}
+              >
+                <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                  <SvgIcon name={'setting'} size={180} />
                 </div>
-              </AuthComponent>
+                <Typography.Title className='!font-normal' level={3}>
+                  {t('deployer.sliderPage.setting')}
+                </Typography.Title>
+              </div>
               <div
                 className='flex flex-col items-center justify-center gap-2'
                 onClick={() => {
