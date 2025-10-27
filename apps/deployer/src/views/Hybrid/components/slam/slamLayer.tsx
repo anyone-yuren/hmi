@@ -44,9 +44,45 @@ const SlamLayer = () => {
     setStagePos({ x: 0, y: 0 });
     setStageScale(1);
   };
+  // 没有动画的版本
+  useUpdateEffect(() => {
+    console.log('开始定位到车', agvPosition, typeof hybirdStage, hybirdStage, map_to_cad, grid_map);
+    // 完整的前置条件检查
+    if (
+      typeof hybirdStage === 'string' ||
+      !hybirdStage ||
+      !agvPosition ||
+      !hybirdStage.width ||
+      !hybirdStage.height ||
+      !map_to_cad
+    ) {
+      console.log('条件不满足，取消定位');
+      return;
+    }
 
+    const stageWidth = hybirdStage.width();
+    const stageHeight = hybirdStage.height();
+
+    if (!stageWidth || !stageHeight) {
+      console.log('Stage 尺寸未准备好');
+      return;
+    }
+
+    const targetX = 0 - agvPosition.x / 50 + stageWidth / 2;
+    const targetY = agvPosition.y / 50 + stageHeight / 2;
+
+    // 直接设置位置，不使用动画
+    hybirdStage.position({ x: targetX, y: targetY });
+    hybirdStage.scale({ x: 0.8, y: 0.8 });
+    hybirdStage.batchDraw();
+    setStagePos({ x: targetX, y: targetY });
+    setStageScale(0.8);
+
+    console.log('直接定位完成', targetX, targetY);
+  }, [hybirdStage, map_to_cad, grid_map, agvPosition]);
   // 初始化定位到车辆  切换地图定位到车辆
   useUpdateEffect(() => {
+    return;
     console.log('开始定位到车', agvPosition, hybirdStage, map_to_cad, grid_map);
     if (typeof hybirdStage === 'string') return;
     hybirdStage &&

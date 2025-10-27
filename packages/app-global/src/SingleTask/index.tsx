@@ -202,7 +202,6 @@ const SingleTask = () => {
       point.type === 6 && charges.push(newPoint);
       (point.type === 1 || point.type === 4) && locations.push(newPoint);
     }
-    console.log(points);
     return { hashMap, points, charges, locations, render: !loading };
   }, [pointsData, offsetHashMap, loading]);
 
