@@ -213,17 +213,17 @@ const VehicleBattery = (props: any) => {
             {agvType && productImage() ? (
               <motion.img
                 src={productImage()}
-                initial={{ filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }}
-                animate={
-                  powerStatus.charge_status === 3
-                    ? { filter: 'drop-shadow(0 10px 10px rgba(255,0,255,0.5))' }
-                    : { filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }
-                }
-                transition={
-                  powerStatus.charge_status === 3
-                    ? { duration: 1.6, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }
-                    : { duration: 0 }
-                }
+                // initial={{ filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }}
+                // animate={
+                //   powerStatus.charge_status === 3
+                //     ? { filter: 'drop-shadow(0 10px 10px rgba(255,0,255,0.5))' }
+                //     : { filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }
+                // }
+                // transition={
+                //   powerStatus.charge_status === 3
+                //     ? { duration: 1.6, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }
+                //     : { duration: 0 }
+                // }
                 className='w-full absolute bottom-4 '
               />
             ) : null}

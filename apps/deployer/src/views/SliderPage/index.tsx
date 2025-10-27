@@ -186,19 +186,21 @@ const SwiperPage = () => {
             </AuthComponent>
 
             <AuthComponent authKey={['', 'customer']}>
-              <div
-                className='flex flex-col items-center justify-center gap-2'
-                onClick={() => {
-                  navigate('/setting');
-                }}
-              >
-                <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
-                  <SvgIcon name={'setting'} size={180} />
+              <AuthComponent authKey={['admin', 'customer']}>
+                <div
+                  className='flex flex-col items-center justify-center gap-2'
+                  onClick={() => {
+                    navigate('/setting');
+                  }}
+                >
+                  <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                    <SvgIcon name={'setting'} size={180} />
+                  </div>
+                  <Typography.Title className='!font-normal' level={3}>
+                    {t('deployer.sliderPage.setting')}
+                  </Typography.Title>
                 </div>
-                <Typography.Title className='!font-normal' level={3}>
-                  {t('deployer.sliderPage.setting')}
-                </Typography.Title>
-              </div>
+              </AuthComponent>
               <div
                 className='flex flex-col items-center justify-center gap-2'
                 onClick={() => {
@@ -212,24 +214,26 @@ const SwiperPage = () => {
                   {t('deployer.sliderPage.maintenance')}
                 </Typography.Title>
               </div>
-              <AuthComponent authKey={['']}>
-                <div className='flex flex-col items-center justify-center gap-2 invisible'>
-                  <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
-                    <SvgIcon name={'setting'} size={180} />
+              {
+                <AuthComponent authKey={['']}>
+                  <div className='flex flex-col items-center justify-center gap-2 invisible'>
+                    <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                      <SvgIcon name={'setting'} size={180} />
+                    </div>
+                    <Typography.Title className='!font-normal' level={3}>
+                      设置
+                    </Typography.Title>
                   </div>
-                  <Typography.Title className='!font-normal' level={3}>
-                    设置
-                  </Typography.Title>
-                </div>
-                <div className='flex flex-col items-center justify-center gap-2 invisible'>
-                  <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
-                    <SvgIcon name={'setting'} size={180} />
+                  <div className='flex flex-col items-center justify-center gap-2 invisible'>
+                    <div className='flex justify-center items-center w-44 h-44  rounded-3xl'>
+                      <SvgIcon name={'setting'} size={180} />
+                    </div>
+                    <Typography.Title className='!font-normal' level={3}>
+                      设置
+                    </Typography.Title>
                   </div>
-                  <Typography.Title className='!font-normal' level={3}>
-                    设置
-                  </Typography.Title>
-                </div>
-              </AuthComponent>
+                </AuthComponent>
+              }
             </AuthComponent>
           </div>
         </SwiperSlide>

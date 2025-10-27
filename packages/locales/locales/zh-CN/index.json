@@ -402,7 +402,7 @@
       "backDistance": "后退距离",
       "currentScheme": "当前避障方案",
       "densePointCloud": "原始点云",
-      "densePointCloudTips": "显示稠密点云",
+      "densePointCloudTips": "显示原始点云",
       "forwardDistance": "前进距离",
       "goodsStatus": "货物状态",
       "hasGoods": "有货",
