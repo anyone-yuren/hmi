@@ -3,6 +3,7 @@ import { Button } from 'antd';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import Flash from './flash';
 import LoadingCharging from './loadingCharging';
@@ -35,6 +36,8 @@ const AnimateBrush = (props) => {
       time: string;
     }[]
   >([]);
+
+  const { t } = useTranslation();
 
   const initViewState = () => {
     setThreeColor('green');
@@ -75,12 +78,12 @@ const AnimateBrush = (props) => {
       setVehicleChargingData([
         {
           key: '1',
-          message: '车辆发送光电',
+          message: t('common.charging.vehicleSendLight'),
           time: timeString,
         },
         {
           key: '2',
-          message: '等待充电桩伸出',
+          message: t('common.charging.waitChargeStationOn'),
           time: timeString,
         },
       ]);
@@ -93,12 +96,12 @@ const AnimateBrush = (props) => {
       setStationChargingData([
         {
           key: '1',
-          message: '充电桩伸出',
+          message: t('common.charging.chargeStationOn'),
           time: timeString,
         },
         {
           key: '2',
-          message: '等待充电桩发光',
+          message: t('common.charging.waitChargeStationLight'),
           time: timeString,
         },
       ]);
@@ -115,7 +118,7 @@ const AnimateBrush = (props) => {
           ...origin,
           {
             key: '3',
-            message: '充电桩发送光电',
+            message: t('common.charging.chargingStationLight'),
             time: timeString,
           },
         ];
