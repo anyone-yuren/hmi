@@ -65,13 +65,16 @@ export default function R3FBasicScene() {
           <Grid args={[100, 100]} {...gridConfig} />
 
           {/* <Forklift /> */}
-          <Sl14Model />
           <X20Model />
-          <X20sModel />
-          <Fork15lift />
-          {/* <O15Car /> */}
-          <O15Model />
-          <O30Model />
+          {false && (
+            <>
+              <Sl14Model />
+              <X20sModel />
+              <Fork15lift />
+              <O15Model />
+              <O30Model />
+            </>
+          )}
           <OrbitControls enablePan enableRotate enableZoom />
         </Suspense>
       </Canvas>

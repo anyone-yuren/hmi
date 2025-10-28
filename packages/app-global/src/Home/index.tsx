@@ -1,8 +1,10 @@
+import { useRequest } from 'ahooks';
 import { Skeleton } from 'antd';
 import { useResponsive } from 'antd-style';
 import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 import bg from '../assets/img/bg.png';
 import VehicleControl from './components/vehicleControl';
 import VehicleFork from './components/vehicleFork';
@@ -10,11 +12,28 @@ import VehiclePanel from './components/vehiclePanel';
 import VehicleStatus from './components/vehicleStatus';
 import VehicleTask from './components/vehicleTask';
 import WsContainer from './components/wsContainer';
+import { getDeviceList } from './services';
+import { useHomeStore } from './store';
 
 const Home = () => {
   const { t } = useTranslation();
   const responsive = useResponsive();
   const navigate = useNavigate();
+  const { setRobotRadarStatus } = useHomeStore(
+    useShallow((store) => {
+      return {
+        setRobotRadarStatus: store.setRobotRadarStatus,
+      };
+    }),
+  );
+  useRequest(getDeviceList, {
+    onSuccess: (res) => {
+      if (res?.data && res?.code === 200) {
+        setRobotRadarStatus(res.data);
+      }
+    },
+  });
+
   return (
     <div
       className='flex flex-col h-full w-full justify-between '

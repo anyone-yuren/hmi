@@ -1,4 +1,7 @@
-function Sl14Model() {
+import { useMemo } from 'react';
+
+function Sl14Model(props) {
+  const { forkHeight, headerRadar } = props;
   const SCALE = 0.001; // 毫米转米
 
   // 材质配置
@@ -9,6 +12,7 @@ function Sl14Model() {
     fork: { color: '#888', metalness: 0.4, roughness: 0.5 },
     topPlate: { color: '#555', metalness: 0.3, roughness: 0.6 },
     beacon: { color: '#ff0000', metalness: 0.3, roughness: 0.6 },
+    yyStrut: { color: '#ffffff', metalness: 0.3, roughness: 0.6 },
   };
 
   // 创建可复用的材质组件
@@ -22,37 +26,44 @@ function Sl14Model() {
       depth: 1004 * SCALE,
     },
     mast: {
-      height: 2000 * SCALE,
+      height: 1800 * SCALE,
     },
   };
 
   // 叉车主体
-  const ForkliftBody = () => (
-    <group position={[0.88, dimensions.body.height / 2, 0]}>
-      <mesh castShadow receiveShadow>
-        <boxGeometry args={[dimensions.body.width, dimensions.body.height, dimensions.body.depth]} />
-        {createMaterial('body')}
-      </mesh>
+  const ForkliftBody = useMemo(() => {
+    if (!headerRadar?.z) return null;
+    return (
+      <group position={[0.88, dimensions.body.height / 2, 0]}>
+        <mesh castShadow receiveShadow>
+          <boxGeometry args={[dimensions.body.width, dimensions.body.height, dimensions.body.depth]} />
+          {createMaterial('body')}
+        </mesh>
 
-      {/* 雷达杆 */}
-      <mesh position={[0, dimensions.body.height / 2 + 0.5, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.06, 1, 0.06]} />
-        {createMaterial('radar')}
-      </mesh>
+        {/* 雷达杆 */}
+        <mesh
+          position={[0.2, dimensions.body.height / 2 + (headerRadar?.z - dimensions.body.height) / 2, 0]}
+          castShadow
+          receiveShadow
+        >
+          <boxGeometry args={[0.06, headerRadar?.z - dimensions.body.height, 0.06]} />
+          {createMaterial('radar')}
+        </mesh>
 
-      {/* 顶部平台 */}
-      <mesh position={[0, dimensions.body.height / 2 + 1, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.2, 0.02, 0.2]} />
-        {createMaterial('topPlate')}
-      </mesh>
+        {/* 顶部平台 */}
+        <mesh position={[0.2, dimensions.body.height / 2 + 1, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.2, 0.02, 0.2]} />
+          {createMaterial('topPlate')}
+        </mesh>
 
-      {/* 警示灯 */}
-      <mesh position={[0, dimensions.body.height / 2 + 1 + 0.05, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.06, 0.06, 0.1, 32]} />
-        {createMaterial('beacon')}
-      </mesh>
-    </group>
-  );
+        {/* 警示灯 */}
+        <mesh position={[0.2, dimensions.body.height / 2 + 1 + 0.05, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.06, 0.06, 0.1, 32]} />
+          {createMaterial('beacon')}
+        </mesh>
+      </group>
+    );
+  }, [headerRadar]);
 
   // 机械臂组件
   const MastAssembly = () => {
@@ -65,19 +76,59 @@ function Sl14Model() {
     return (
       <group position={[0.62, dimensions.mast.height / 2, 0]}>
         {/* 左侧立柱 */}
-        <mesh castShadow receiveShadow position={[-0.15 / 2, 0, -0.4 + 0.15 / 2]}>
-          <boxGeometry args={beamArgs} />
-          {createMaterial('frame')}
-        </mesh>
+        <group position={[-0.15 / 2, 0, -0.4 + 0.15 / 2]}>
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={beamArgs} />
+            {createMaterial('frame')}
+          </mesh>
+          {/* 液压杆 */}
+          {forkHeight * SCALE > dimensions.mast.height ? (
+            <group position={[0, dimensions.mast.height / 2 + (forkHeight * SCALE - dimensions.mast.height) / 2, 0]}>
+              <mesh castShadow receiveShadow position={[0, 0, -0.05]}>
+                <cylinderGeometry args={[0.02, 0.02, forkHeight * SCALE - dimensions.mast.height + 0.15 / 2, 32]} />
+                {createMaterial('yyStrut')}
+              </mesh>
+              <mesh castShadow receiveShadow position={[0, 0, 0.05]}>
+                <boxGeometry args={[0.1, forkHeight * SCALE - dimensions.mast.height + 0.15 / 2, 0.05]} />
+                {createMaterial('frame')}
+              </mesh>
+            </group>
+          ) : null}
+        </group>
 
         {/* 右侧立柱 */}
-        <mesh castShadow receiveShadow position={[-0.15 / 2, 0, 0.4 - 0.15 / 2]}>
-          <boxGeometry args={beamArgs} />
-          {createMaterial('frame')}
-        </mesh>
+        <group position={[-0.15 / 2, 0, 0.4 - 0.15 / 2]}>
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={beamArgs} />
+            {createMaterial('frame')}
+          </mesh>
+          {/* 液压杆 */}
+          {forkHeight * SCALE > dimensions.mast.height ? (
+            <group position={[0, dimensions.mast.height / 2 + (forkHeight * SCALE - dimensions.mast.height) / 2, 0]}>
+              <mesh castShadow receiveShadow position={[0, 0, 0.05]}>
+                <cylinderGeometry args={[0.02, 0.02, forkHeight * SCALE - dimensions.mast.height + 0.15 / 2, 32]} />
+                {createMaterial('yyStrut')}
+              </mesh>
+              <mesh castShadow receiveShadow position={[0, 0, -0.05]}>
+                <boxGeometry args={[0.1, forkHeight * SCALE - dimensions.mast.height + 0.15 / 2, 0.05]} />
+                {createMaterial('frame')}
+              </mesh>
+            </group>
+          ) : null}
+        </group>
 
         {/* 顶部横梁 */}
-        <mesh castShadow receiveShadow position={[0, dimensions.mast.height / 2, 0]}>
+        <mesh
+          castShadow
+          receiveShadow
+          position={[
+            0,
+            forkHeight * SCALE > dimensions.mast.height
+              ? forkHeight * SCALE + 0.15 / 2 - dimensions.mast.height / 2
+              : dimensions.mast.height / 2,
+            0,
+          ]}
+        >
           <boxGeometry args={[0.15, 0.15 / 2, 0.8]} />
           {createMaterial('frame')}
         </mesh>
@@ -90,25 +141,40 @@ function Sl14Model() {
     const forkGeometry = <boxGeometry args={[1.206, 0.06, 0.17]} />;
 
     return (
-      <group position={[0, 0, 0]}>
-        {/* 左侧货叉 */}
-        <mesh castShadow receiveShadow position={[0.016, 0.03, -0.225]}>
-          {forkGeometry}
-          {createMaterial('fork')}
-        </mesh>
+      <>
+        <group position={[0, forkHeight * SCALE, 0]}>
+          {/* 左侧货叉 */}
+          <mesh castShadow receiveShadow position={[0.016, 0.03, -0.225]}>
+            {forkGeometry}
+            {createMaterial('fork')}
+          </mesh>
 
-        {/* 右侧货叉 */}
-        <mesh castShadow receiveShadow position={[0.016, 0.03, 0.225]}>
-          {forkGeometry}
-          {createMaterial('fork')}
-        </mesh>
-      </group>
+          {/* 右侧货叉 */}
+          <mesh castShadow receiveShadow position={[0.016, 0.03, 0.225]}>
+            {forkGeometry}
+            {createMaterial('fork')}
+          </mesh>
+        </group>
+        <group position={[0, 0, 0]}>
+          {/* 左侧货叉 */}
+          <mesh castShadow receiveShadow position={[0.016, 0.03, -0.225]}>
+            {forkGeometry}
+            {createMaterial('fork')}
+          </mesh>
+
+          {/* 右侧货叉 */}
+          <mesh castShadow receiveShadow position={[0.016, 0.03, 0.225]}>
+            {forkGeometry}
+            {createMaterial('fork')}
+          </mesh>
+        </group>
+      </>
     );
   };
 
   return (
     <group position={[0, 0, 0]} rotation={[0, Math.PI, 0]}>
-      <ForkliftBody />
+      {ForkliftBody}
       <MastAssembly />
       <Forks />
     </group>
