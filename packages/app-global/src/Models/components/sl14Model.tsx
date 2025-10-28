@@ -1,4 +1,7 @@
-function Sl14Model() {
+import { Base, Geometry, Subtraction } from '@react-three/csg';
+import { useMemo } from 'react';
+function Sl14Model(props) {
+  const { forksPositionZ = 0, palletVisible = false } = props;
   const SCALE = 0.001; // 毫米转米
 
   // 材质配置
@@ -9,6 +12,7 @@ function Sl14Model() {
     fork: { color: '#888', metalness: 0.4, roughness: 0.5 },
     topPlate: { color: '#555', metalness: 0.3, roughness: 0.6 },
     beacon: { color: '#ff0000', metalness: 0.3, roughness: 0.6 },
+    pallet: { color: '#D2B48C', metalness: 0.1, roughness: 0.7 },
   };
 
   // 创建可复用的材质组件
@@ -23,6 +27,11 @@ function Sl14Model() {
     },
     mast: {
       height: 2000 * SCALE,
+    },
+    pallet: {
+      width: 1,
+      length: 1,
+      height: 0.2,
     },
   };
 
@@ -86,31 +95,50 @@ function Sl14Model() {
   };
 
   // 货叉组件
-  const Forks = () => {
-    const forkGeometry = <boxGeometry args={[1.206, 0.06, 0.17]} />;
+  const Forks = () =>
+    useMemo(() => {
+      const forkGeometry = <boxGeometry args={[1.206, 0.06, 0.17]} />;
 
-    return (
-      <group position={[0, 0, 0]}>
-        {/* 左侧货叉 */}
-        <mesh castShadow receiveShadow position={[0.016, 0.03, -0.225]}>
-          {forkGeometry}
-          {createMaterial('fork')}
-        </mesh>
+      return (
+        <group position={[0, forksPositionZ * SCALE, 0]}>
+          {/* 左侧货叉 */}
+          <mesh castShadow receiveShadow position={[0.016, 0.03, -0.225]}>
+            {forkGeometry}
+            {createMaterial('fork')}
+          </mesh>
 
-        {/* 右侧货叉 */}
-        <mesh castShadow receiveShadow position={[0.016, 0.03, 0.225]}>
-          {forkGeometry}
-          {createMaterial('fork')}
-        </mesh>
-      </group>
-    );
-  };
+          {/* 右侧货叉 */}
+          <mesh castShadow receiveShadow position={[0.016, 0.03, 0.225]}>
+            {forkGeometry}
+            {createMaterial('fork')}
+          </mesh>
+
+          {palletVisible && (
+            <mesh key='pallet' castShadow receiveShadow position={[0, 0, 0]}>
+              <Geometry>
+                <Base>
+                  <boxGeometry
+                    args={[dimensions?.pallet.length, dimensions?.pallet.height, dimensions?.pallet.width]}
+                  />
+                </Base>
+                <Subtraction position={[0, -0.12, 0]}>
+                  <boxGeometry args={[1, 0.3, 0.8]} />
+                </Subtraction>
+              </Geometry>
+              {/* <Material type='pallet' /> */}
+              {createMaterial('pallet')}
+            </mesh>
+          )}
+        </group>
+      );
+    }, [palletVisible]);
 
   return (
     <group position={[0, 0, 0]} rotation={[0, Math.PI, 0]}>
       <ForkliftBody />
       <MastAssembly />
-      <Forks />
+      {/* <Forks /> */}
+      {Forks}
     </group>
   );
 }

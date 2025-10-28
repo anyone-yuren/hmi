@@ -82,6 +82,7 @@ function SafetyVehicle(props: any) {
 
   const forksUnderProjectArea: any = useMemo(() => {
     if (!forksUnderRect) return null;
+    console.log('[safetyVehicleModels.tsx: 73]: 叉臂高度', forksHeight);
     // 先用mockHeight来表示临时的叉臂高度
     return getProjectArea(forksUnderRect, forksHeight);
   }, [forksUnderRect, forksHeight]);
@@ -113,18 +114,24 @@ function SafetyVehicle(props: any) {
           <Sl14Model></Sl14Model>
         </group>
       )}
-      <group rotation={[(90 * Math.PI) / 180, Math.PI, 0]}>
-        <Fork15lift></Fork15lift>
-      </group>
+      {true && (
+        <group rotation={[(90 * Math.PI) / 180, Math.PI, 0]}>
+          <Fork15lift
+            forksPositionZ={forksHeight}
+            palletVisible={pallet.width >= 0}
+            goodsVisible={obsInfo.has_goods}
+          ></Fork15lift>
+        </group>
+      )}
       {/* 托盘上的货 */}
-      {obsInfo.has_goods && (
+      {/* {obsInfo.has_goods && (
         <mesh
           geometry={new THREE.BoxGeometry(pallet.width, pallet.height, 1)}
           position={[pallet.position[0], pallet.position[1], pallet.position[2] + 0.5 + palletDepth / 2]}
         >
           <meshStandardMaterial color='green' transparent opacity={0.8} depthTest={false} depthWrite={false} />
         </mesh>
-      )}
+      )} */}
       {/* 渲染保护区域立方体 */}
       {forksUnderProjectArea && forksUnderProjectArea.depth && (
         <mesh

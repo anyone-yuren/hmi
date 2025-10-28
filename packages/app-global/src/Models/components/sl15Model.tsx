@@ -1,4 +1,12 @@
-function Fork15lift() {
+import { Base, Geometry, Subtraction } from '@react-three/csg';
+import { useMemo } from 'react';
+interface IProps {
+  forksPositionZ?: number;
+  palletVisible?: boolean;
+  goodsVisible?: boolean;
+}
+function Fork15lift(props: IProps) {
+  const { forksPositionZ = 0, palletVisible = false, goodsVisible = false } = props;
   const SCALE = 0.001; // 毫米转米
 
   // 材质配置
@@ -10,6 +18,8 @@ function Fork15lift() {
     topPlate: { color: '#555', metalness: 0.3, roughness: 0.6 },
     beacon: { color: '#ff0000', metalness: 0.3, roughness: 0.6 },
     wheel: { color: '#ff0', metalness: 0.4, roughness: 0.5 },
+    pallet: { color: '#D2B48C', metalness: 0.1, roughness: 0.7 },
+    goods: { color: 'green', metalness: 0.1, roughness: 0.7 },
   };
 
   // 尺寸配置
@@ -37,6 +47,11 @@ function Fork15lift() {
       spacing: 0.305,
       offset: 0.016,
       verticalOffset: 0.03,
+    },
+    pallet: {
+      width: 1,
+      length: 1,
+      height: 0.2,
     },
     radar: {
       width: 0.06,
@@ -145,30 +160,56 @@ function Fork15lift() {
   };
 
   // 货叉组件
-  const Forks = () => {
+  const Forks = useMemo(() => {
     const { length, height, width, spacing, offset, verticalOffset } = dimensions.forks;
     const forkPositions: [number, number, number][] = [
       [offset, verticalOffset, -spacing],
       [offset, verticalOffset, spacing],
     ];
-
     return (
-      <group position={[-(1130 * SCALE) / 2, 0, 0]}>
+      <group position={[-(1130 * SCALE) / 2, forksPositionZ * SCALE, 0]}>
         {forkPositions.map((position, index) => (
           <mesh key={index} castShadow receiveShadow position={position}>
             <boxGeometry args={[length, height, width]} />
             <Material type='fork' />
           </mesh>
         ))}
+
+        {palletVisible && (
+          <mesh key='pallet' castShadow receiveShadow position={[offset - 0.1, verticalOffset, 0]}>
+            <Geometry>
+              <Base>
+                <boxGeometry args={[dimensions?.pallet.length, dimensions?.pallet.height, dimensions?.pallet.width]} />
+              </Base>
+              <Subtraction position={[0, -0.12, 0]}>
+                <boxGeometry args={[1, 0.3, 0.8]} />
+              </Subtraction>
+            </Geometry>
+            <Material type='pallet' />
+          </mesh>
+        )}
+
+        {goodsVisible && (
+          <mesh
+            key='goods'
+            castShadow
+            receiveShadow
+            position={[offset - 0.1, verticalOffset + 0.5 + dimensions?.pallet.height / 2, 0]}
+          >
+            <boxGeometry args={[1, 1, 1]} />
+            <Material type='goods' />
+          </mesh>
+        )}
       </group>
     );
-  };
+  }, [forksPositionZ, palletVisible, goodsVisible]);
 
   return (
     <group position={[0, 0, 0]} rotation={[0, Math.PI, 0]}>
       <ForkliftBody />
       <MastAssembly />
-      <Forks />
+      {/* <Forks /> */}
+      {Forks}
     </group>
   );
 }
