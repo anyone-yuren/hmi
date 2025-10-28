@@ -37,7 +37,7 @@ export enum AGVTYPES {
 // Hook 改造
 import { useGlobalStore } from '@gbeata/store';
 import { useShallow } from 'zustand/react/shallow';
-import { Fork15lift, Sl14Model } from '../Models/components/index';
+import { Fork15lift, Sl14Model, X20Model } from '../Models/components/index';
 
 // 定义一个映射表：数值 → 名称
 const AGV_MODELS: Record<number, any> = {
@@ -45,16 +45,23 @@ const AGV_MODELS: Record<number, any> = {
   [AGVTYPES.C05]: null,
   [AGVTYPES.C10]: null,
   [AGVTYPES.X1]: null,
-  [AGVTYPES.X20]: null,
+  [AGVTYPES.X20]: {
+    model: X20Model,
+    position: [-0.2, 0, 0],
+  },
   [AGVTYPES.X20S]: null,
   [AGVTYPES.T30]: null,
   [AGVTYPES.OT10]: null,
   [AGVTYPES.OT15]: null,
-  [AGVTYPES.SL14]: Sl14Model,
+  [AGVTYPES.SL14]: {
+    model: Sl14Model,
+  },
   [AGVTYPES.SL16]: null,
   [AGVTYPES.SL20]: null,
   [AGVTYPES.L20]: null,
-  [AGVTYPES.SE15]: Fork15lift,
+  [AGVTYPES.SE15]: {
+    model: Fork15lift,
+  },
   [AGVTYPES.SE20]: null,
   [AGVTYPES.SE30]: null,
   [AGVTYPES.E30]: null,
@@ -82,5 +89,9 @@ export const useAgvModels = () => {
     })),
   );
   console.log('[useAgvModels.tsx]:avgType', avgType);
-  return AGV_MODELS[avgType] ?? null;
+  return {
+    hasModel: AGV_MODELS[avgType] ? true : false,
+    model: AGV_MODELS[avgType].model ?? null,
+    position: AGV_MODELS[avgType].position ?? [0, 0, 0],
+  };
 };

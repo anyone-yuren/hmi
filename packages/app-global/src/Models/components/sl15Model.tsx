@@ -1,11 +1,7 @@
 import { Base, Geometry, Subtraction } from '@react-three/csg';
 import { useMemo } from 'react';
-interface IProps {
-  forksPositionZ?: number;
-  palletVisible?: boolean;
-  goodsVisible?: boolean;
-}
-function Fork15lift(props: IProps) {
+import { IModelProps } from './index.d';
+function Fork15lift(props: IModelProps) {
   const { forksPositionZ = 0, palletVisible = false, goodsVisible = false } = props;
   const SCALE = 0.001; // 毫米转米
 
@@ -19,7 +15,7 @@ function Fork15lift(props: IProps) {
     beacon: { color: '#ff0000', metalness: 0.3, roughness: 0.6 },
     wheel: { color: '#ff0', metalness: 0.4, roughness: 0.5 },
     pallet: { color: '#D2B48C', metalness: 0.1, roughness: 0.7 },
-    goods: { color: 'green', metalness: 0.1, roughness: 0.7 },
+    goods: { color: '#00d1d1', metalness: 0.1, roughness: 0.7 },
   };
 
   // 尺寸配置

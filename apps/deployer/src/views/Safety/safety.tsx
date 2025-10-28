@@ -94,7 +94,7 @@ const Safety = () => {
     })),
   );
   const { data: deviceList = {} } = useRequest(getDeviceList);
-  const AgvModel = useAgvModels();
+  const { hasModel } = useAgvModels();
   // const [wsContainerVisible, setWsContainerVisible] = useState(false);
 
   useEffect(() => {
@@ -208,7 +208,7 @@ const Safety = () => {
     <div className='relative w-full h-full'>
       <SafetyCanvas>
         <SafetyBase></SafetyBase>
-        {AgvModel ? (
+        {hasModel ? (
           <SafetyVehicleModels
             vehicleRect={vehicleOutline}
             forksUnderRect={forksUnderOutline}

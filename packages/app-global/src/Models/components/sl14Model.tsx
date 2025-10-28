@@ -15,7 +15,7 @@ function Sl14Model(props: IModelProps) {
     topPlate: { color: '#555', metalness: 0.3, roughness: 0.6 },
     beacon: { color: '#ff0000', metalness: 0.3, roughness: 0.6 },
     pallet: { color: '#D2B48C', metalness: 0.1, roughness: 0.7 },
-    goods: { color: 'green', metalness: 0.1, roughness: 0.7 },
+    goods: { color: '#00d1d1', metalness: 0.1, roughness: 0.7 },
   };
 
   // 创建可复用的材质组件

@@ -9,7 +9,7 @@ function SafetyVehicle(props: any) {
   const { vehicleRect, forksUnderRect, distance } = props;
   if (!distance?.length) return null;
 
-  const AgvModel = useAgvModels();
+  const { model: AgvModel, position: AgvPosition } = useAgvModels();
   const { forksHeight, obsInfo } = useSafetyStore(
     useShallow((store) => ({
       forksHeight: store.forksHeight,
@@ -111,15 +111,15 @@ function SafetyVehicle(props: any) {
         <meshStandardMaterial color='yellow' transparent opacity={0.8} depthTest={false} depthWrite={false} />
       </mesh> */}
       {/* 改成通用模型 */}
-      {AgvModel && (
-        <group rotation={[(90 * Math.PI) / 180, Math.PI, 0]}>
+      {
+        <group rotation={[(90 * Math.PI) / 180, Math.PI, 0]} position={AgvPosition}>
           <AgvModel
             forksPositionZ={forksHeight}
             palletVisible={pallet.width >= 0}
             goodsVisible={obsInfo.has_goods}
           ></AgvModel>
         </group>
-      )}
+      }
 
       {/* 托盘上的货 */}
       {/* {obsInfo.has_goods && (
