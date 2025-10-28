@@ -2,7 +2,10 @@ import { useEffect, useMemo } from 'react';
 import { Line } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import { useSafetyStore } from '../../store/safety.store';
-import { meterToPixel } from '../../utils';
+
+export const meterToPixel = (meter: number) => {
+  return Math.floor(meter * 1000);
+};
 
 const TurmRegion = () => {
   const { turnRegionData, setTurnRegionData } = useSafetyStore(
@@ -23,7 +26,6 @@ const TurmRegion = () => {
         return [meterToPixel(0 - y), meterToPixel(0 - x)];
       })
       .flat();
-
     return (
       <>
         <Line
