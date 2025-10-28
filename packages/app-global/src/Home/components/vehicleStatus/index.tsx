@@ -55,6 +55,7 @@ const VehicleInfo = () => {
         <Tag
           icon={single ? null : rcsIsOnline ? <CheckCircleOutlined /> : <StopOutlined />}
           color={single ? 'processing' : rcsIsOnline ? 'success' : 'error'}
+          className='text-base'
         >
           {single ? t('common.home.single') : t('common.home.multi')}
         </Tag>

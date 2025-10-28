@@ -1,48 +1,86 @@
 import { UploadOutlined } from '@ant-design/icons';
-import type { UploadProps } from 'antd';
-import { Button, message, Upload } from 'antd';
-import React, { useState } from 'react';
+import { useRequest } from 'ahooks';
+import { Button, message, Modal } from 'antd';
+import React, { useRef } from 'react';
+import { postImportPortList } from '../services';
 
-const JsonFileUploader: React.FC = () => {
-  const [jsonData, setJsonData] = useState<any>(null);
+const JsonFileUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
+  const [modal, contextHolder] = Modal.useModal();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 处理上传
-  const props: UploadProps = {
-    accept: '.json',
-    maxCount: 1,
-    showUploadList: false,
-    beforeUpload: (file) => {
-      // 类型检测
-      if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
-        message.error('请选择一个 JSON 文件！');
-        return Upload.LIST_IGNORE;
-      }
-
-      // 读取文件内容
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const text = e.target?.result as string;
-          const data = JSON.parse(text);
-          setJsonData(data);
-          message.success(`文件 ${file.name} 读取成功`);
-        } catch (err) {
-          message.error('JSON 解析失败，请检查文件内容是否正确！');
-        }
-      };
-      reader.readAsText(file);
-
-      // 阻止默认上传行为（不上传到服务器）
-      return false;
+  const { run: importPortList, loading: uploadLoading } = useRequest(postImportPortList, {
+    manual: true,
+    onSuccess: () => {
+      message.success('导入成功！');
+      onSuccess?.();
     },
+    onError: (err) => {
+      message.error(err?.message || '导入失败');
+    },
+  });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+      message.error('请选择一个 JSON 文件！');
+      event.target.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const text = e.target?.result as string;
+        const data = JSON.parse(text);
+
+        if (!Array.isArray(data)) {
+          message.warning('JSON 文件格式不正确，应为数组结构！');
+          return;
+        }
+
+        modal.confirm({
+          title: '确认导入这些规则吗？',
+          content: (
+            <div
+              style={{ maxHeight: 200, overflowY: 'auto' }}
+              className='rounded-xl bg-black text-white p-2'
+              onClick={(e) => e.stopPropagation()} // ✅ 阻止冒泡
+            >
+              <pre>{JSON.stringify(data.slice(0, 5), null, 2)}</pre>
+              {data.length > 5 && <div>... 共 {data.length} 条</div>}
+            </div>
+          ),
+          okText: '确认导入',
+          cancelText: '取消',
+          onOk: () => {
+            importPortList({ port_forwarding_list: data });
+          },
+        });
+      } catch {
+        message.error('JSON 解析失败，请检查文件内容！');
+      }
+    };
+    reader.readAsText(file);
+
+    // 清空 input，以便可再次上传同一文件
+    event.target.value = '';
   };
 
   return (
-    <Upload {...props}>
-      <Button size='small' icon={<UploadOutlined />}>
+    <>
+      <input ref={fileInputRef} type='file' accept='.json' style={{ display: 'none' }} onChange={handleFileChange} />
+      <Button
+        size='small'
+        icon={<UploadOutlined />}
+        loading={uploadLoading}
+        onClick={() => fileInputRef.current?.click()}
+      >
         上传
       </Button>
-    </Upload>
+      {contextHolder}
+    </>
   );
 };
 

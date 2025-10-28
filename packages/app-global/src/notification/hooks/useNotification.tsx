@@ -100,6 +100,11 @@ export const useNotification = () => {
         //   onClick: () => {},
         // },
       });
+    } else {
+      // 清除避障消息
+      if (obsMsg.current) {
+        sonnerToast.dismiss(obsMsg.current);
+      }
     }
   }, [obsInfo, i18n.language]);
 
