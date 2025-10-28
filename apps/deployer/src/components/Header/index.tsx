@@ -162,7 +162,9 @@ const GlobalHeader = () => {
         )}
       </div>
       {/* </Badge> */}
-      <p className='text-md text-center font-bold mb-2'>{dayjs(systemDateTime).format('YYYY/MM/DD HH:mm:ss')}</p>
+      <p className='text-md text-center font-bold mb-2'>
+        {systemDateTime ? dayjs(systemDateTime).format('YYYY/MM/DD HH:mm:ss') : '-'}
+      </p>
       <div className='flex flex-col items-center gap-2'>
         <BarBattery level={40} height={24} />
         <Signal />
