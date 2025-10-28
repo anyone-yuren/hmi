@@ -135,10 +135,7 @@ const GlobalHeader = () => {
         offset={[0, 10]}
       > */}
       <div
-        className='w-12 h-12 rounded-full flex items-center justify-center mt-2 mb-4'
-        style={{
-          backgroundColor: token ? '#00D1D1' : '#445260',
-        }}
+        className='w-full flex items-center justify-center'
         onClick={() => {
           if (!token) {
             triggerLoginModal();
@@ -154,12 +151,19 @@ const GlobalHeader = () => {
           }
         }}
       >
-        {/* {token ? <SvgIcon name='user' size={28} /> : <SvgIcon name='unknowUser' size={28} />} */}
-        {token ? (
-          <span className='font-bold text-4xl'>{token.charAt(0)}</span>
-        ) : (
-          <SvgIcon name='unknowUser' size={28} />
-        )}
+        <div
+          className='w-12 h-12 rounded-full flex items-center justify-center mt-2 mb-4'
+          style={{
+            backgroundColor: token ? '#00D1D1' : '#445260',
+          }}
+        >
+          {/* {token ? <SvgIcon name='user' size={28} /> : <SvgIcon name='unknowUser' size={28} />} */}
+          {token ? (
+            <span className='font-bold text-4xl'>{token.charAt(0)}</span>
+          ) : (
+            <SvgIcon name='unknowUser' size={28} />
+          )}
+        </div>
       </div>
       {/* </Badge> */}
       <p className='text-md text-center font-bold mb-2'>
