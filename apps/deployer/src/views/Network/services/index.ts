@@ -49,3 +49,8 @@ export const postDeletePort = (data: any) => {
 export const postUpdatePort = (data: any) => {
   return post('/mwrobot/wireless_client/update_port_fwd', data);
 };
+
+// 导入端口列表
+export const postImportPortList = (data: any) => {
+  return post('/mwrobot/wireless_client/set_port_fwd_list', data);
+};
