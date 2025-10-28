@@ -1,5 +1,6 @@
 import { useRequest } from 'ahooks';
 
+import { useAgvModels } from '@gbeata/app-global';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
@@ -93,6 +94,7 @@ const Safety = () => {
     })),
   );
   const { data: deviceList = {} } = useRequest(getDeviceList);
+  const AgvModel = useAgvModels();
   // const [wsContainerVisible, setWsContainerVisible] = useState(false);
 
   useEffect(() => {
@@ -206,7 +208,20 @@ const Safety = () => {
     <div className='relative w-full h-full'>
       <SafetyCanvas>
         <SafetyBase></SafetyBase>
-        {true && (
+        {AgvModel ? (
+          <SafetyVehicleModels
+            vehicleRect={vehicleOutline}
+            forksUnderRect={forksUnderOutline}
+            distance={activeScheme.project_distance}
+          ></SafetyVehicleModels>
+        ) : (
+          <SafetyVehicle
+            vehicleRect={vehicleOutline}
+            forksUnderRect={forksUnderOutline}
+            distance={activeScheme.project_distance}
+          ></SafetyVehicle>
+        )}
+        {false && (
           <SafetyVehicleModels
             vehicleRect={vehicleOutline}
             forksUnderRect={forksUnderOutline}

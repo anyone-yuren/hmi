@@ -3,6 +3,7 @@ import SubCharging from './src/Charging';
 import LoginDialog from './src/components/LoginDialog';
 import { triggerLoginModal } from './src/components/LoginDialog/hooks/useLogin';
 import HomePage from './src/Home';
+import { useAgvModels } from './src/hooks/useAgvModels';
 import https, { get, post } from './src/https';
 import * as commonServices from './src/https/global';
 import Maintenance from './src/Maintenance';
@@ -32,6 +33,7 @@ export {
   SubAbout,
   SubCharging,
   triggerLoginModal,
+  useAgvModels,
   useAuthPermission,
   useObsError,
 };

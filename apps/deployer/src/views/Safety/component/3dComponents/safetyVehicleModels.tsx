@@ -1,5 +1,5 @@
 import { useSafetyStore } from '@/views/Safety/store/safety.store';
-import { Fork15lift, Sl14Model } from '@gbeata/app-global/src/Models/components';
+import { useAgvModels } from '@gbeata/app-global';
 import { memo, useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
@@ -9,6 +9,7 @@ function SafetyVehicle(props: any) {
   const { vehicleRect, forksUnderRect, distance } = props;
   if (!distance?.length) return null;
 
+  const AgvModel = useAgvModels();
   const { forksHeight, obsInfo } = useSafetyStore(
     useShallow((store) => ({
       forksHeight: store.forksHeight,
@@ -109,20 +110,17 @@ function SafetyVehicle(props: any) {
       {/* <mesh geometry={new THREE.BoxGeometry(pallet.width, pallet.height, palletDepth)} position={pallet.position}>
         <meshStandardMaterial color='yellow' transparent opacity={0.8} depthTest={false} depthWrite={false} />
       </mesh> */}
-      {false && (
+      {/* 改成通用模型 */}
+      {AgvModel && (
         <group rotation={[(90 * Math.PI) / 180, Math.PI, 0]}>
-          <Sl14Model></Sl14Model>
-        </group>
-      )}
-      {true && (
-        <group rotation={[(90 * Math.PI) / 180, Math.PI, 0]}>
-          <Fork15lift
+          <AgvModel
             forksPositionZ={forksHeight}
             palletVisible={pallet.width >= 0}
             goodsVisible={obsInfo.has_goods}
-          ></Fork15lift>
+          ></AgvModel>
         </group>
       )}
+
       {/* 托盘上的货 */}
       {/* {obsInfo.has_goods && (
         <mesh
