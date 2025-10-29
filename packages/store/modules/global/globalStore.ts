@@ -29,7 +29,7 @@ export const useGlobalStore = create<State>()(
   persist(
     (set, get) => {
       return {
-        sessionTimeout: 60 * 60 * 1000,
+        sessionTimeout: 10 * 60 * 1000,
         showAnimate: false,
         setShowAnimate: (showAnimate: boolean) => set({ showAnimate }),
         cacheSave: true,

@@ -8,6 +8,7 @@ import {
   MinusCircleOutlined,
   StopOutlined,
 } from '@ant-design/icons';
+import { AuthComponent } from '@gbeata/app-global';
 import { useRequest } from 'ahooks';
 import { App, Button, Checkbox, Dropdown, Form, InputNumber, Popover, Space, theme, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
@@ -523,29 +524,31 @@ const DrawerContent = (props: IProps) => {
         className='w-full h-12 p-2 border-t absolute bottom-0 left-0 flex items-center justify-end gap-2'
         style={{ background: token.colorBgContainer, borderColor: token.colorBorder }}
       >
-        <Button
-          type='primary'
-          disabled={uploadLoading}
-          loading={uploadLoading}
-          onClick={async () => {
-            await form.validateFields();
-            const formValue = form.getFieldsValue();
-            const protectAreas = rects.map((item, index) => {
-              return {
-                id: typeof item.id === 'string' ? Number(item.id) : item.id,
-                associated_device: item?.associated_device ?? 1,
-                rectangle: getRectPoints(item.x, item.y, item.width, item.height),
-              };
-            });
-            const sendFormData = { ...initFormValue, ...formValue, protect_areas: protectAreas };
-            const res = await update({
-              ...sendFormData,
-            });
-            setOpenUpdateObsDrawer(false);
-          }}
-        >
-          修改
-        </Button>
+        <AuthComponent authKey={['admin']}>
+          <Button
+            type='primary'
+            disabled={uploadLoading}
+            loading={uploadLoading}
+            onClick={async () => {
+              await form.validateFields();
+              const formValue = form.getFieldsValue();
+              const protectAreas = rects.map((item, index) => {
+                return {
+                  id: typeof item.id === 'string' ? Number(item.id) : item.id,
+                  associated_device: item?.associated_device ?? 1,
+                  rectangle: getRectPoints(item.x, item.y, item.width, item.height),
+                };
+              });
+              const sendFormData = { ...initFormValue, ...formValue, protect_areas: protectAreas };
+              const res = await update({
+                ...sendFormData,
+              });
+              setOpenUpdateObsDrawer(false);
+            }}
+          >
+            修改
+          </Button>
+        </AuthComponent>
         <Button
           variant='outlined'
           color='red'
