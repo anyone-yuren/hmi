@@ -1,8 +1,8 @@
-import { Base, Geometry, Subtraction } from '@react-three/csg';
 import { useMemo } from 'react';
-import { IModelProps } from './index.d';
-function X20Model(props: IModelProps) {
-  const { forksPositionZ = 0, palletVisible = false, goodsVisible = false } = props;
+
+function X20Model(props) {
+  const { headerRadar, forkHeight } = props;
+
   const SCALE = 0.001; // 毫米转米
 
   // 材质配置
@@ -22,38 +22,77 @@ function X20Model(props: IModelProps) {
   };
 
   // 尺寸配置
-  const dimensions = {
-    body: {
-      width: 450 * SCALE,
-      height: 700 * SCALE,
-      depth: 780 * SCALE,
-      position: [0.852 + (450 * SCALE) / 2, (700 * SCALE) / 2, 0] as [number, number, number],
-    },
-    radar: {
-      width: 0.07,
-      height: 1.4,
-      depth: 0.07,
-      offsetY: 0.7,
-    },
-    topPlatform: {
-      width: 0.2,
-      height: 0.02,
-      depth: 0.2,
-    },
-    beacon: {
-      radius: 0.06,
-      height: 0.1,
-      offsetY: 0.05,
-    },
-    forks: {
-      length: 1.13,
-      height: 0.07,
-      width: 0.18,
-      offsetX: 0.287,
-      offsetY: 0.03,
-      positions: [-0.225, 0.225] as [number, number],
-    },
-  };
+  const dimensions = useMemo(() => {
+    if (headerRadar?.z) {
+      return {
+        body: {
+          width: 450 * SCALE,
+          height: 700 * SCALE,
+          depth: 780 * SCALE,
+          position: [0.852 + (450 * SCALE) / 2, (700 * SCALE) / 2, 0] as [number, number, number],
+        },
+        radar: {
+          width: 0.07,
+          height: headerRadar?.z - 0.7,
+          depth: 0.07,
+          offsetY: (headerRadar?.z - 0.7) / 2,
+        },
+        topPlatform: {
+          width: 0.2,
+          height: 0.02,
+          depth: 0.2,
+        },
+        // 雷达警示灯
+        beacon: {
+          radius: 0.06,
+          height: 0.1,
+          offsetY: 0.05,
+        },
+        forks: {
+          length: 1.13,
+          height: 0.07,
+          width: 0.18,
+          offsetX: 0.287,
+          offsetY: 0.03,
+          positions: [-0.225, 0.225] as [number, number],
+        },
+      };
+    } else {
+      return {
+        body: {
+          width: 450 * SCALE,
+          height: 700 * SCALE,
+          depth: 780 * SCALE,
+          position: [0.852 + (450 * SCALE) / 2, (700 * SCALE) / 2, 0] as [number, number, number],
+        },
+        radar: {
+          width: 0.07,
+          height: 1.4,
+          depth: 0.07,
+          offsetY: 0.7,
+        },
+        topPlatform: {
+          width: 0.2,
+          height: 0.02,
+          depth: 0.2,
+        },
+        // 雷达警示灯
+        beacon: {
+          radius: 0.06,
+          height: 0.1,
+          offsetY: 0.05,
+        },
+        forks: {
+          length: 1.13,
+          height: 0.07,
+          width: 0.18,
+          offsetX: 0.287,
+          offsetY: 0.03,
+          positions: [-0.225, 0.225] as [number, number],
+        },
+      };
+    }
+  }, [headerRadar]);
 
   // 创建材质组件
   const Material = ({ type }: { type: keyof typeof materials }) => <meshStandardMaterial {...materials[type]} />;
@@ -111,35 +150,16 @@ function X20Model(props: IModelProps) {
     const { length, height, width, offsetX, offsetY, positions } = dimensions.forks;
 
     return (
-      <group position={[0, forksPositionZ * SCALE, 0]}>
+      <group position={[0, forkHeight * SCALE, 0]}>
         {positions.map((zPosition, index) => (
           <mesh key={index} castShadow receiveShadow position={[offsetX, offsetY, zPosition]}>
             <boxGeometry args={[length, height, width]} />
             <Material type='fork' />
           </mesh>
         ))}
-        {palletVisible && (
-          <mesh key='pallet' castShadow receiveShadow position={[offsetX, offsetY, 0]}>
-            <Geometry>
-              <Base>
-                <boxGeometry args={[1, 0.2, 1]} />
-              </Base>
-              <Subtraction position={[0, -0.12, 0]}>
-                <boxGeometry args={[1, 0.3, 0.8]} />
-              </Subtraction>
-            </Geometry>
-            <Material type='pallet' />
-          </mesh>
-        )}
-        {goodsVisible && (
-          <mesh key='goods' castShadow receiveShadow position={[offsetX, offsetY + 0.5 + 0.1, 0]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <Material type='goods' />
-          </mesh>
-        )}
       </group>
     );
-  }, [forksPositionZ]);
+  }, [forkHeight]);
 
   return (
     <group position={[0, 0, 0]} rotation={[0, Math.PI, 0]}>

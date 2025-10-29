@@ -12,6 +12,8 @@ interface State {
   sessionTimeout: number;
   timer: any | null; // 存储定时器引用
   resetSessionTimeout: () => void;
+  rememberUser: boolean;
+  setRememberUser: () => void;
 
   // 车辆类型
   avgType: string;
@@ -27,7 +29,7 @@ export const useGlobalStore = create<State>()(
   persist(
     (set, get) => {
       return {
-        sessionTimeout: 60 * 60 * 1000,
+        sessionTimeout: 10 * 60 * 1000,
         showAnimate: false,
         setShowAnimate: (showAnimate: boolean) => set({ showAnimate }),
         cacheSave: true,
@@ -43,7 +45,7 @@ export const useGlobalStore = create<State>()(
           }
           set({ token });
           // 创建新定时器并存储引用
-          if (token) {
+          if (token && get().rememberUser) {
             const timer = setTimeout(() => {
               set({ token: "", timer: null });
             }, get().sessionTimeout);
@@ -52,6 +54,9 @@ export const useGlobalStore = create<State>()(
         },
         // 重置计时器
         resetSessionTimeout: () => {
+          if (!get().rememberUser) {
+            return;
+          }
           const { token, sessionTimeout, timer } = get();
           if (token) {
             if (timer) {
@@ -74,6 +79,9 @@ export const useGlobalStore = create<State>()(
         closeChargingTime: 0,
         setCloseChargingTime: (closeChargingTime: number) =>
           set({ closeChargingTime }),
+        rememberUser: false,
+        setRememberUser: (isRememberUser: boolean) =>
+          set({ rememberUser: isRememberUser }),
       };
     },
     {

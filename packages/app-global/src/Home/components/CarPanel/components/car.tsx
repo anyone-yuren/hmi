@@ -5,8 +5,9 @@ import { useMemo, useRef } from 'react';
 import { PointLightHelper, type DirectionalLight } from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgvType } from '../../../../hooks/useAgvType';
-import { Fork15lift, Sl14Model, X20Model } from '../../../../Models/components';
+import { Fork15lift, O15Model, Sl14Model, X20Model } from '../../../../Models/components';
 import { useHomeHybirdStore } from '../../../store/hybird';
+import { useHomeStore } from '../../../store/index';
 // import { PointLight } from "@react-three/drei";
 
 export const convertToMeters = (value: number) => value / 1000;
@@ -20,6 +21,20 @@ export const convertToMeters = (value: number) => value / 1000;
 const Car = (props) => {
   // const { agvPosition } = props;
   const agvType = useAgvType();
+
+  const { robotForkarmStatus, robotRadarStatus } = useHomeStore(
+    useShallow((state) => ({
+      robotForkarmStatus: state.robotForkarmStatus,
+      robotRadarStatus: state.robotRadarStatus,
+    })),
+  );
+
+  const headRadar = useMemo(() => {
+    const headData = robotRadarStatus?.filter((item) => item?.name?.includes('head'));
+    if (headData?.length) {
+      return headData[0];
+    }
+  }, [robotRadarStatus]);
 
   const { agvPosition } = useHomeHybirdStore(
     useShallow((state) => ({
@@ -62,12 +77,12 @@ const Car = (props) => {
 
   return (
     <>
-      <pointLight
+      {/* <pointLight
         // ref={directionalLightRef}
         position={[agvPosition.x / 1000, 0, agvPosition.y / 1000]} // 设置光源的位置与车辆同步
         color={'#00D1D1'} // 光源颜色
         castShadow={true} // 启用阴影投射
-      />
+      /> */}
       <group>
         <group
           scale={0.03}
@@ -87,9 +102,10 @@ const Car = (props) => {
           />
         </group>
         <animated.group position={groupProps.position as unknown as THREE.Vector3} rotation={[0, agvPosition.angel, 0]}>
-          {agvType === 'SE15' ? <Fork15lift /> : null}
-          {agvType === 'SL14' ? <Sl14Model /> : null}
-          {agvType === 'X20' ? <X20Model /> : null}
+          {agvType === 'SE15' ? <Fork15lift forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
+          {agvType === 'SL14' ? <Sl14Model forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
+          {agvType === 'X20' ? <X20Model forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
+          {agvType === 'O15' ? <O15Model /> : null}
         </animated.group>
         {/* <group position={[agvPosition.x / 1000, 0.01, agvPosition.y / 1000]} rotation={[0, deltaRotation, 0]}>
           {agvType === 'SE15' ? <Fork15lift /> : null}

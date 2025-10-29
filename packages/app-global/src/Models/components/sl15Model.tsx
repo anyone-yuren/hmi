@@ -1,8 +1,7 @@
-import { Base, Geometry, Subtraction } from '@react-three/csg';
 import { useMemo } from 'react';
-import { IModelProps } from './index.d';
-function Fork15lift(props: IModelProps) {
-  const { forksPositionZ = 0, palletVisible = false, goodsVisible = false } = props;
+
+function Fork15lift(props) {
+  const { forkHeight, headerRadar } = props;
   const SCALE = 0.001; // 毫米转米
 
   // 材质配置
@@ -14,10 +13,11 @@ function Fork15lift(props: IModelProps) {
     topPlate: { color: '#555', metalness: 0.3, roughness: 0.6 },
     beacon: { color: '#ff0000', metalness: 0.3, roughness: 0.6 },
     wheel: { color: '#ff0', metalness: 0.4, roughness: 0.5 },
-    pallet: { color: '#D2B48C', metalness: 0.1, roughness: 0.7 },
-    goods: { color: '#00d1d1', metalness: 0.1, roughness: 0.7 },
+    yyStrut: { color: '#ffffff', metalness: 0.3, roughness: 0.6 },
   };
 
+  // 创建可复用的材质组件
+  const createMaterial = (type) => <meshStandardMaterial {...materials[type]} />;
   // 尺寸配置
   const dimensions = {
     body: {
@@ -74,7 +74,8 @@ function Fork15lift(props: IModelProps) {
   const Material = ({ type }: { type: keyof typeof materials }) => <meshStandardMaterial {...materials[type]} />;
 
   // 叉车主体组件
-  const ForkliftBody = () => {
+  const ForkliftBody = useMemo(() => {
+    if (!headerRadar?.z) return null;
     const { size, position } = dimensions.body;
     const halfHeight = size / 2;
 
@@ -87,25 +88,29 @@ function Fork15lift(props: IModelProps) {
         </mesh>
 
         {/* 雷达杆 */}
-        <mesh position={[0, halfHeight + 0.5, 0]} castShadow receiveShadow>
-          <boxGeometry args={[dimensions.radar.width, dimensions.radar.height, dimensions.radar.depth]} />
-          <Material type='radar' />
-        </mesh>
+        <group position={[0, headerRadar?.z / 2, 0]}>
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[dimensions.radar.width, headerRadar?.z - size, dimensions.radar.depth]} />
+            <Material type='radar' />
+          </mesh>
 
-        {/* 顶部平台 */}
-        <mesh position={[0, halfHeight + 1, 0]} castShadow receiveShadow>
-          <boxGeometry args={[dimensions.topPlate.width, dimensions.topPlate.height, dimensions.topPlate.depth]} />
-          <Material type='topPlate' />
-        </mesh>
+          {/* 顶部平台 */}
+          <mesh position={[0, (headerRadar?.z - size) / 2, 0]} castShadow receiveShadow>
+            <boxGeometry args={[dimensions.topPlate.width, dimensions.topPlate.height, dimensions.topPlate.depth]} />
+            <Material type='topPlate' />
+          </mesh>
 
-        {/* 警示灯 */}
-        <mesh position={[0, halfHeight + 1 + 0.05, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[dimensions.beacon.radius, dimensions.beacon.radius, dimensions.beacon.height, 32]} />
-          <Material type='beacon' />
-        </mesh>
+          {/* 警示灯 */}
+          <mesh position={[0, (headerRadar?.z - size) / 2 + 0.05, 0]} castShadow receiveShadow>
+            <cylinderGeometry
+              args={[dimensions.beacon.radius, dimensions.beacon.radius, dimensions.beacon.height, 32]}
+            />
+            <Material type='beacon' />
+          </mesh>
+        </group>
       </group>
     );
-  };
+  }, [headerRadar]);
 
   // 机械臂组件
   const MastAssembly = () => {
@@ -120,14 +125,39 @@ function Fork15lift(props: IModelProps) {
       <group position={[0, halfHeight, 0]}>
         {/* 立柱 */}
         {beamPositions.map((position, index) => (
-          <mesh key={index} castShadow receiveShadow position={position}>
-            <boxGeometry args={[beam.width, height, beam.depth]} />
-            <Material type='frame' />
-          </mesh>
+          <group position={position}>
+            <mesh key={index} castShadow receiveShadow>
+              <boxGeometry args={[beam.width, height, beam.depth]} />
+              <Material type='frame' />
+            </mesh>
+            {/* 液压杆 */}
+            {forkHeight * SCALE > dimensions.mast.height ? (
+              <group position={[0, dimensions.mast.height / 2 + (forkHeight * SCALE - dimensions.mast.height) / 2, 0]}>
+                <mesh castShadow receiveShadow position={[0, 0, index === 0 ? -0.05 : 0.05]}>
+                  <cylinderGeometry args={[0.02, 0.02, forkHeight * SCALE - dimensions.mast.height + 0.15 / 2, 32]} />
+                  {createMaterial('yyStrut')}
+                </mesh>
+                <mesh castShadow receiveShadow position={[0, 0, index === 0 ? 0.05 : -0.05]}>
+                  <boxGeometry args={[0.1, forkHeight * SCALE - dimensions.mast.height + 0.15 / 2, 0.05]} />
+                  {createMaterial('frame')}
+                </mesh>
+              </group>
+            ) : null}
+          </group>
         ))}
 
         {/* 顶部横梁 */}
-        <mesh castShadow receiveShadow position={[0, halfHeight, 0]}>
+        <mesh
+          castShadow
+          receiveShadow
+          position={[
+            0,
+            forkHeight * SCALE > dimensions.mast.height
+              ? forkHeight * SCALE + 0.15 / 2 - dimensions.mast.height / 2
+              : dimensions.mast.height / 2,
+            0,
+          ]}
+        >
           <boxGeometry args={[crossbeam.width, crossbeam.height, crossbeam.depth]} />
           <Material type='frame' />
         </mesh>
@@ -163,46 +193,20 @@ function Fork15lift(props: IModelProps) {
       [offset, verticalOffset, spacing],
     ];
     return (
-      <group position={[-(1130 * SCALE) / 2, forksPositionZ * SCALE, 0]}>
+      <group position={[-(1130 * SCALE) / 2, forkHeight * SCALE, 0]}>
         {forkPositions.map((position, index) => (
           <mesh key={index} castShadow receiveShadow position={position}>
             <boxGeometry args={[length, height, width]} />
             <Material type='fork' />
           </mesh>
         ))}
-
-        {palletVisible && (
-          <mesh key='pallet' castShadow receiveShadow position={[offset - 0.1, verticalOffset, 0]}>
-            <Geometry>
-              <Base>
-                <boxGeometry args={[dimensions?.pallet.length, dimensions?.pallet.height, dimensions?.pallet.width]} />
-              </Base>
-              <Subtraction position={[0, -0.12, 0]}>
-                <boxGeometry args={[1, 0.3, 0.8]} />
-              </Subtraction>
-            </Geometry>
-            <Material type='pallet' />
-          </mesh>
-        )}
-
-        {goodsVisible && (
-          <mesh
-            key='goods'
-            castShadow
-            receiveShadow
-            position={[offset - 0.1, verticalOffset + 0.5 + dimensions?.pallet.height / 2, 0]}
-          >
-            <boxGeometry args={[1, 1, 1]} />
-            <Material type='goods' />
-          </mesh>
-        )}
       </group>
     );
-  }, [forksPositionZ, palletVisible, goodsVisible]);
+  }, [forkHeight]);
 
   return (
     <group position={[0, 0, 0]} rotation={[0, Math.PI, 0]}>
-      <ForkliftBody />
+      {ForkliftBody}
       <MastAssembly />
       {/* <Forks /> */}
       {Forks}

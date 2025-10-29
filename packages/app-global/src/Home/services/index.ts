@@ -16,3 +16,7 @@ export const getVehicleIp = (params: any) => get('/sirius/robot_config/vehicle_a
 
 // 获取车辆任务模式
 export const getVehicleTaskMode = (params: any) => get('/mwrobot/config/get_task_mode');
+
+export const getDeviceList = (): Promise<Result<[]>> => {
+  return get('/mwrobot/config/get_device_info');
+};

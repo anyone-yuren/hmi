@@ -220,6 +220,7 @@
     "plsInputParams": "パラメータを入力してください",
     "reTry": "Essayer à nouveau",
     "refresh": "rafraîchir",
+    "remeber": "Déconnexion automatique en dix minutes",
     "retryNetworkTips": "Le système se connectera automatiquement trois fois toutes les 10 secondes. Si les données ne peuvent toujours pas être chargées, veuillez essayer manuellement !",
     "safety": {
       "3dpoints": "Nuage de points 3D",

@@ -185,7 +185,7 @@ const SwiperPage = () => {
               </div>
             </AuthComponent>
 
-            <AuthComponent authKey={['', 'customer']}>
+            <AuthComponent authKey={['admin', 'customer']}>
               <div
                 className='flex flex-col items-center justify-center gap-2'
                 onClick={() => {
@@ -232,6 +232,14 @@ const SwiperPage = () => {
                   </div>
                 </AuthComponent>
               }
+            </AuthComponent>
+
+            <AuthComponent authKey={['']}>
+              <div className='flex flex-col items-center justify-center gap-2'></div>
+              <div className='flex flex-col items-center justify-center gap-2'></div>
+              <div className='flex flex-col items-center justify-center gap-2'>
+                <div className='w-44 h-44'></div>
+              </div>
             </AuthComponent>
           </div>
         </SwiperSlide>
