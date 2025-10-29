@@ -102,7 +102,7 @@ const Car = (props) => {
           />
         </group>
         <animated.group position={groupProps.position as unknown as THREE.Vector3} rotation={[0, agvPosition.angel, 0]}>
-          {agvType === 'SE15' ? <Fork15lift /> : null}
+          {agvType === 'SE15' ? <Fork15lift forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
           {agvType === 'SL14' ? <Sl14Model forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
           {agvType === 'X20' ? <X20Model forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
           {agvType === 'O15' ? <O15Model /> : null}
