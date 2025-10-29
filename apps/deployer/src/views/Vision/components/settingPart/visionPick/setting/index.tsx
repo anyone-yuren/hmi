@@ -70,6 +70,8 @@ const Setting = (props: any) => {
     base_pallet_model_detect_dist: false, // 使用不同进叉深度叉取不同托盘
     select_model: [],
     vision_move_vehicle_range_list: [], // 最大挪车次数
+    forkarmhead_pallet_dis: 0,
+    forkarmroot_pallet_dis: 0,
   });
 
   const { data: modelList } = useRequest(() => getModelList(), {});
@@ -169,8 +171,8 @@ const Setting = (props: any) => {
       // { title: t('deployer.vision.vehicleStartMidDist'), key: 'start_mid_dist' },
       // { title: t('deployer.vision.vehicleEndMidDist'), key: 'end_mid_dist' },
       { title: t('deployer.vision.extraForkLift'), key: 'extra_height' },
-      { title: t('deployer.vision.forkDistancePallet'), key: 'forkarmroot_pallet_dis' },
-      { title: t('deployer.vision.palletDistanceForksEnd'), key: 'forkarmhead_pallet_dis' },
+      { title: t('deployer.vision.forkDistancePallet'), key: 'forkarmhead_pallet_dis' },
+      { title: t('deployer.vision.palletDistanceForksEnd'), key: 'forkarmroot_pallet_dis' },
     ];
     return vehicle?.isTrilateral
       ? []
@@ -273,6 +275,8 @@ const Setting = (props: any) => {
         end_mid_dist: newValByKey,
         extra_height: newValByKey,
         select_model: newValByPath,
+        forkarmroot_pallet_dis: newValByKey,
+        forkarmhead_pallet_dis: newValByKey,
       },
       update: {
         // max_offset_value: updateValByIndex,
@@ -281,6 +285,8 @@ const Setting = (props: any) => {
         end_mid_dist: updateByKey,
         extra_height: updateByKey,
         select_model: updateValByPath,
+        forkarmroot_pallet_dis: updateByKey,
+        forkarmhead_pallet_dis: updateByKey,
       },
       validate: {
         // 暂时先验证这些
