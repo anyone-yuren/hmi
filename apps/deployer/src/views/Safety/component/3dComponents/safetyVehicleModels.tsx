@@ -1,5 +1,6 @@
 import { useSafetyStore } from '@/views/Safety/store/safety.store';
 import { useAgvModels } from '@gbeata/app-global';
+import SafetyPallet from '@gbeata/app-global/src/components/SafetyModels/Pallet';
 import { memo, useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
@@ -119,6 +120,7 @@ function SafetyVehicle(props: any) {
             palletVisible={pallet.width >= 0}
             goodsVisible={obsInfo.has_goods}
             headerRadar={{ z: maxHeight }}
+            pallet={<SafetyPallet></SafetyPallet>}
           ></AgvModel>
         </group>
       }

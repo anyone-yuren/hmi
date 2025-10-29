@@ -94,7 +94,6 @@ const SingleTask = () => {
   );
 
   const vehicleNum = useMemo(() => {
-    return 32;
     return agvInfo?.agv_id || 0;
   }, [agvInfo]);
 
