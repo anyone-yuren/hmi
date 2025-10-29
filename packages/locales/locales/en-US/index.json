@@ -216,6 +216,7 @@
     "plsInputParams": "Please input parameters",
     "reTry": "Retry",
     "refresh": "Refresh",
+    "remeber": "Automatically log out in ten minutes",
     "retryNetworkTips": "The system will automatically connect three times every 10 seconds. If the data still cannot be loaded, please try manually!",
     "safety": {
       "3dpoints": "3D Point Cloud",

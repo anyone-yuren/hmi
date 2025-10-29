@@ -216,6 +216,7 @@
     "plsInputParams": "请填写参数",
     "reTry": "重试",
     "refresh": "刷新",
+    "remeber": "十分钟自动退出",
     "retryNetworkTips": "系统会自动每隔10s连接三次，若依然无法加载数据，请手动尝试！",
     "safety": {
       "3dpoints": "3D点云",

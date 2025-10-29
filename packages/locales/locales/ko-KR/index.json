@@ -216,6 +216,7 @@
     "plsInputParams": "파라미터를 입력해주세요",
     "reTry": "다시 시도하세요",
     "refresh": "새로 고치다",
+    "remeber": "10분 후에 자동으로 로그아웃됩니다.",
     "retryNetworkTips": "10s마다 자동으로 세 번 연결됩니다. 데이터를 로드할 수 없으면 수동으로 시도하십시오!",
     "safety": {
       "3dpoints": "3D 포인트 클라우드",

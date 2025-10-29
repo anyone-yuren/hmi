@@ -1,7 +1,7 @@
 // components/LoginModalTrigger.tsx
 import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
-import { Form, Input, Modal } from 'antd';
+import { Checkbox, Form, Input, Modal } from 'antd';
 import { createStyles, ThemeProvider } from 'antd-style';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -40,15 +40,19 @@ export default function LoginModalTrigger() {
   );
   const { run, loading } = useRequest(postLogin, {
     manual: true,
-    onSuccess: (data) => {
+    onSuccess: (data, params) => {
+      const { remember } = params[0];
       if (data?.code === 200) {
         setToken(data?.data?.permission ?? 'admin');
-        toast.warning(t('common.loginSuccessTip'), {
-          // duration: Infinity,
-          classNames: {
-            closeButton: '!p-0',
-          },
-        });
+
+        remember
+          ? toast.warning(t('common.loginSuccessTip'), {
+              // duration: Infinity,
+              classNames: {
+                closeButton: '!p-0',
+              },
+            })
+          : toast.success(t('common.actionSuccess'));
       }
     },
   });
@@ -57,7 +61,19 @@ export default function LoginModalTrigger() {
 
   const showLoginModal = useCallback(() => {
     Modal.confirm({
-      title: t('common.login'),
+      title: (
+        <div
+          onClick={() => {
+            form.setFieldsValue({
+              username: 'admin',
+              password: 'mwadmin2025',
+              remember: false,
+            });
+          }}
+        >
+          {t('common.login')}
+        </div>
+      ),
       content: (
         <ThemeProvider themeMode='dark'>
           <Form
@@ -80,7 +96,10 @@ export default function LoginModalTrigger() {
               name='password'
               rules={[{ required: true, message: t('common.pleasePassword') }]}
             >
-              <Input type='password' />
+              <Input.Password />
+            </Form.Item>
+            <Form.Item name='remember' valuePropName='checked' label={null}>
+              <Checkbox>{t('common.remeber')}？</Checkbox>
             </Form.Item>
           </Form>
         </ThemeProvider>
