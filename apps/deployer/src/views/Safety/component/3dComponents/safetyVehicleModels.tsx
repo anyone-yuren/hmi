@@ -6,7 +6,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { generateRectanglePoints, getProjectArea } from '../../utils/index';
 const mockHeight = 685;
 function SafetyVehicle(props: any) {
-  const { vehicleRect, forksUnderRect, distance } = props;
+  const { vehicleRect, forksUnderRect, distance, maxHeight } = props;
   if (!distance?.length) return null;
 
   const { model: AgvModel, position: AgvPosition } = useAgvModels();
@@ -114,9 +114,11 @@ function SafetyVehicle(props: any) {
       {
         <group rotation={[(90 * Math.PI) / 180, Math.PI, 0]} position={AgvPosition}>
           <AgvModel
+            forkHeight={forksHeight}
             forksPositionZ={forksHeight}
             palletVisible={pallet.width >= 0}
             goodsVisible={obsInfo.has_goods}
+            headerRadar={{ z: maxHeight }}
           ></AgvModel>
         </group>
       }

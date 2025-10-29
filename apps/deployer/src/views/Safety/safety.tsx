@@ -107,6 +107,11 @@ const Safety = () => {
     };
   }, []);
 
+  const maxHeight = useMemo(() => {
+    const ary = deviceList?.data?.map((item) => item.z) || [];
+    return Math.max(...ary);
+  }, [deviceList]);
+
   useEffect(() => {
     return;
     if (
@@ -210,6 +215,7 @@ const Safety = () => {
         <SafetyBase></SafetyBase>
         {hasModel ? (
           <SafetyVehicleModels
+            maxHeight={maxHeight}
             vehicleRect={vehicleOutline}
             forksUnderRect={forksUnderOutline}
             distance={activeScheme.project_distance}

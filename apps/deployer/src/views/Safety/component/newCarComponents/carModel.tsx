@@ -16,8 +16,6 @@ const CarModel = (props: IProps) => {
     return vehicleOutline?.rectangle_list || [];
   }, [vehicleOutline]);
 
-  console.log(currentObsInfo, 'currentObsInfo');
-
   return (
     <Layer name='car'>
       {rectangle_list?.length ? <VehicleImg rectangleList={rectangle_list} /> : null}
