@@ -17,10 +17,11 @@ import { postStackPlaceMoveVehicleSave as save } from '../../../../services/inde
 
 interface IProps {
   initState: any;
+  getResponse: () => {};
 }
 // 货架设置
 const PlaceMove = (props: IProps) => {
-  const { initState } = props;
+  const { initState, getResponse } = props;
 
   const [updateHashMap, setUpdateHashMap] = useSetState<any>({
     auto_para_tuning: false, // 自动调参
@@ -278,6 +279,7 @@ const PlaceMove = (props: IProps) => {
               console.log('initState', initState, 'sendState', sendState);
               await save(sendState);
               toast.success(t('common.actionSuccess'));
+              getResponse();
             }}
           >
             {t('common.save')}

@@ -26,6 +26,7 @@ const NodeLogs = (props: IProps) => {
   const [downloadKey, setDownloadKey] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
   const size = useSize(containerRef);
+  const virtualListRef = useRef(null);
 
   const {
     data: logInfo,
@@ -108,6 +109,18 @@ const NodeLogs = (props: IProps) => {
       console.error('Failed to download log file:', error);
     }
   };
+
+  useEffect(() => {
+    if (renderList?.length && virtualListRef.current) {
+      // 延迟执行以确保 DOM 已更新
+      setTimeout(() => {
+        virtualListRef.current?.scrollTo({
+          index: renderList.length - 1,
+          align: 'bottom',
+        });
+      }, 0);
+    }
+  }, [renderList, virtualListRef]);
 
   return (
     <div
@@ -212,7 +225,13 @@ const NodeLogs = (props: IProps) => {
                   <div className='bg-black/80 rounded-lg w-full h-full p-2 overflow-y-auto flex-1'>
                     {renderList?.length ? (
                       <div ref={containerRef} className='h-full'>
-                        <VirtualList data={renderList} itemHeight={44} height={671} itemKey={'title'}>
+                        <VirtualList
+                          ref={virtualListRef}
+                          data={renderList}
+                          itemHeight={44}
+                          height={671}
+                          itemKey={'title'}
+                        >
                           {(item: any) => (
                             <Paragraph
                               className='!mb-2'

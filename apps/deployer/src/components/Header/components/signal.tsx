@@ -17,7 +17,6 @@ const Signal = () => {
   //     };
   //   }),
   // );
-  console.log(currentAp);
 
   const signalIcon = useMemo(() => {
     const signal = currentAp?.data?.signal || 0;

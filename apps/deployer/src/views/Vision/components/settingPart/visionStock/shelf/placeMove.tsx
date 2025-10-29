@@ -17,10 +17,11 @@ import Title from '../../comp/title';
 import Illustration from './illustration';
 interface IProps {
   initState: Record<string, any>;
+  getResponse: () => void;
 }
 // 货架设置
 const PlaceMove = (props: IProps) => {
-  const { initState } = props;
+  const { initState, getResponse } = props;
 
   const [updateHashMap, setUpdateHashMap] = useSetState<any>({
     auto_para_tuning: false, // 自动调参
@@ -183,27 +184,27 @@ const PlaceMove = (props: IProps) => {
                 return (
                   <TextChangeRow
                     title={item.title}
-                    value={updateHashMap?.['compensation']?.['left']?.[item.key]?.[item.index]}
+                    value={updateHashMap?.['compensation']?.['front']?.[item.key]?.[item.index]}
                     validateRange={[
-                      initState?.['compensation']?.['left']?.[item.key]?.min,
-                      initState?.['compensation']?.['left']?.[item.key]?.max,
+                      initState?.['compensation']?.['front']?.[item.key]?.min,
+                      initState?.['compensation']?.['front']?.[item.key]?.max,
                     ]}
                     onChange={(value: string) => {
-                      const val = updateHashMap?.['compensation']?.['left']?.[item.key];
+                      const val = updateHashMap?.['compensation']?.['front']?.[item.key];
                       val[item.index] = Number(value);
                       setUpdateHashMap({
                         ...updateHashMap,
                         compensation: {
                           ...updateHashMap?.['compensation'],
                           left: {
-                            ...updateHashMap?.['compensation']?.['left'],
+                            ...updateHashMap?.['compensation']?.['front'],
                             [item?.key]: val,
                           },
                         },
                       });
                     }}
                   >
-                    <div>{updateHashMap?.['compensation']?.['left']?.[item.key]?.[item.index] || 0}</div>
+                    <div>{updateHashMap?.['compensation']?.['front']?.[item.key]?.[item.index] || 0}</div>
                   </TextChangeRow>
                 );
               })}
@@ -314,6 +315,7 @@ const PlaceMove = (props: IProps) => {
               });
               await save(sendState);
               toast.success(t('common.actionSuccess'));
+              getResponse();
             }}
           >
             {t('common.save')}

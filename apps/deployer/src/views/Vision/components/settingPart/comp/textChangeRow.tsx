@@ -13,10 +13,11 @@ interface IProps {
   children: React.ReactNode;
   validateRange?: [number, number];
   className?: string;
+  type?: 'number' | 'text';
 }
 
 const TextChangeRow = (props: IProps) => {
-  const { onChange, value, title, validateRange } = props;
+  const { onChange, value, title, validateRange, type = 'number' } = props;
   const [tempValue, setTempValue, getTempValue] = useGetState('');
 
   const isMultiwayAgv = useMemo(() => {
@@ -63,7 +64,7 @@ const TextChangeRow = (props: IProps) => {
               autoFocus
               fullWidth
               defaultValue={!tempValue ? '' : tempValue}
-              type={'number'}
+              type={type}
               onChange={(event) => {
                 setTempValue(event.target.value as any);
               }}

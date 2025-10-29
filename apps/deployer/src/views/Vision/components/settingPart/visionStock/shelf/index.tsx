@@ -21,8 +21,8 @@ const ShelfSetting = () => {
     })),
   );
 
-  const { data: visionPlaceResponse } = useRequest(getShelfPlacePalletPositionDetectRead);
-  const { data: visionMoveResponse } = useRequest(getShelfPlaceMoveVehicleRead);
+  const { data: visionPlaceResponse, run: getPlaceResponse } = useRequest(getShelfPlacePalletPositionDetectRead);
+  const { data: visionMoveResponse, run: getMoveResponse } = useRequest(getShelfPlaceMoveVehicleRead);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -43,8 +43,8 @@ const ShelfSetting = () => {
   }, [visionPlaceResponse, visionMoveResponse]);
 
   const template: any = {
-    0: <PoseDetect initState={vision.place}></PoseDetect>,
-    1: <PlaceMove initState={vision.move}></PlaceMove>,
+    0: <PoseDetect initState={vision.place} getResponse={getPlaceResponse}></PoseDetect>,
+    1: <PlaceMove initState={vision.move} getResponse={getMoveResponse}></PlaceMove>,
   };
 
   return (

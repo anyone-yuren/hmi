@@ -14,8 +14,8 @@ const StackSetting = () => {
   const { t } = useTranslation();
   const [value, setValue] = React.useState(0);
 
-  const { data: visionPlaceResponse } = useRequest(getFlatPlacePalletPositionDetectRead);
-  const { data: visionMoveResponse } = useRequest(getFlatPlaceMoveVehicleRead);
+  const { data: visionPlaceResponse, run: getPlaceResponse } = useRequest(getFlatPlacePalletPositionDetectRead);
+  const { data: visionMoveResponse, run: getMoveResponse } = useRequest(getFlatPlaceMoveVehicleRead);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -36,8 +36,8 @@ const StackSetting = () => {
   }, [visionPlaceResponse, visionMoveResponse]);
 
   const template: any = {
-    0: <PoseDetect initState={vision.place}></PoseDetect>,
-    1: <PlaceMove initState={vision.move}></PlaceMove>,
+    0: <PoseDetect initState={vision.place} getResponse={getPlaceResponse}></PoseDetect>,
+    1: <PlaceMove initState={vision.move} getResponse={getMoveResponse}></PlaceMove>,
   };
 
   return (

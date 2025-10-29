@@ -35,13 +35,19 @@ const ParamsSetting = (props: any) => {
   const { data: palletResponse } = useRequest(getCompareRobotToolkitModelWithWebModelRead);
 
   const changeUpdateHashMap = (key: string, value: any) => {
+    console.log(key, value);
+    let _value = typeof value === 'string' ? Number(value) : value;
+    if (key === 'display_name') {
+      _value = value;
+    }
     setPropsState({
       ...propsState,
-      [key]: typeof value === 'string' ? Number(value) : value,
+      [key]: _value,
     });
   };
 
   const goodsValidateRange = useMemo(() => {
+    console.log('propsState', propsState);
     if (propsState?.type !== 'warehouse_shelves') return [0, 0];
     const { storage_width, legs_width, goods_width } = propsState;
     const maxGoodsNums = Math.floor((storage_width - legs_width * 2) / goods_width);
@@ -61,18 +67,28 @@ const ParamsSetting = (props: any) => {
   return (
     <LightTheme>
       <div className='text-black gap-[10px] justify-center'>
-        {
-          <TextChangeRow
-            className={'w-[260px]'}
-            title={t('deployer.vision.extraDepthCompensation')}
-            value={propsState?.['extra_deep_compensation']}
-            onChange={(value: string) => {
-              changeUpdateHashMap('extra_deep_compensation', value);
-            }}
-          >
-            <div>{propsState?.['extra_deep_compensation'] || 0}</div>
-          </TextChangeRow>
-        }
+        <TextChangeRow
+          className={'w-[260px]'}
+          title={t('deployer.vision.palletName')}
+          value={propsState?.['display_name']}
+          type='text'
+          onChange={(value: string) => {
+            changeUpdateHashMap('display_name', value);
+          }}
+        >
+          <div>{propsState?.['display_name'] || ''}</div>
+        </TextChangeRow>
+        <TextChangeRow
+          className={'w-[260px]'}
+          title={t('deployer.vision.extraDepthCompensation')}
+          value={propsState?.['extra_deep_compensation']}
+          onChange={(value: string) => {
+            changeUpdateHashMap('extra_deep_compensation', value);
+          }}
+        >
+          <div>{propsState?.['extra_deep_compensation'] || 0}</div>
+        </TextChangeRow>
+
         {propsState.type != 'tail_truck' && propsState.type != 'warehouse_shelves' && (
           <TextChangeRow
             className={'w-[260px]'}

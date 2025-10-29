@@ -61,7 +61,7 @@ const MapActionBar = forwardRef((props: any, ref) => {
   const changeMapTaskMode = async (task_mode: IMode) => {
     const { code }: any = await setTaskMode({ task_mode });
     if (code === 200) {
-      toast.success(t('common.actionSuccess'));
+      toast.success(t('common.actionSuccess') + '!' + t('deployer.singleTask.changeModeSuccessTips'));
       getMapTaskMode();
       setAnchorEl(null);
       setTaskVisible(false);

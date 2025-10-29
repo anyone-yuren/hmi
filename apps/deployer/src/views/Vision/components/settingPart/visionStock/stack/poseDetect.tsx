@@ -16,10 +16,11 @@ import Illustration from './illustration';
 import { postStackPlacePalletPositionDetectSave as save } from '../../../../services/index';
 interface IProps {
   initState: any;
+  getResponse: () => void;
 }
 // 堆叠放货 - 姿态识别
 const PoseDetect = (props: IProps) => {
-  const { initState } = props;
+  const { initState, getResponse } = props;
   const [updateHashMap, setUpdateHashMap] = useSetState<any>({
     auto_para_tuning: false, // 自动调参
     need_detect: false, // 是否启用
@@ -230,6 +231,7 @@ const PoseDetect = (props: IProps) => {
               });
               await save(sendState);
               toast.success(t('common.actionSuccess'));
+              getResponse();
             }}
           >
             {t('common.save')}

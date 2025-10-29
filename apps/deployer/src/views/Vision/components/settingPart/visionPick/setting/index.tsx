@@ -169,6 +169,8 @@ const Setting = (props: any) => {
       // { title: t('deployer.vision.vehicleStartMidDist'), key: 'start_mid_dist' },
       // { title: t('deployer.vision.vehicleEndMidDist'), key: 'end_mid_dist' },
       { title: t('deployer.vision.extraForkLift'), key: 'extra_height' },
+      { title: t('deployer.vision.forkDistancePallet'), key: 'forkarmroot_pallet_dis' },
+      { title: t('deployer.vision.palletDistanceForksEnd'), key: 'forkarmhead_pallet_dis' },
     ];
     return vehicle?.isTrilateral
       ? []
@@ -469,7 +471,7 @@ const Setting = (props: any) => {
                           },
                         }}
                       >
-                        <ListItemText primary={item.id} />
+                        <ListItemText primary={item.display_name || item.id} />
                       </MenuItem>
                     ))}
                   </CustomSelect>
@@ -604,6 +606,28 @@ const Setting = (props: any) => {
                 </TextUpdateRow>
               );
             })}
+
+            {/* <TextUpdateRow
+              onChange={(event: any) => {
+                setUpdateHashMap({
+                  forkarmroot_pallet_dis: event.target.checked,
+                });
+              }}
+            >
+              <div>{t('deployer.vision.forkDistancePallet')}</div>
+              <div>{updateHashMap['forkarmroot_pallet_dis']}</div>
+            </TextUpdateRow>
+
+            <TextUpdateRow
+              onChange={(event: any) => {
+                setUpdateHashMap({
+                  forkarmhead_pallet_dis: event.target.checked,
+                });
+              }}
+            >
+              <div>{t('deployer.vision.palletDistanceForksEnd')}</div>
+              <div>{updateHashMap['forkarmhead_pallet_dis']}</div>
+            </TextUpdateRow> */}
 
             {false && (
               <TextUpdateRow>

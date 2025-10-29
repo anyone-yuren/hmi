@@ -68,7 +68,7 @@ const ModelListSelect = (props: IProps) => {
                 },
               }}
             >
-              <ListItemText primary={item.id} />
+              <ListItemText primary={item.display_name || item.id} />
             </MenuItem>
           ))}
         </CustomSelect>

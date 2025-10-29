@@ -57,6 +57,7 @@ const ParamsSetting = (props: any) => {
       <div className='text-black h-full flex gap-[10px]'>
         <div className='w-[350px]'>
           <Title>{propsState.name}</Title>
+
           <TextChangeRow
             title={t('deployer.vision.extraDepthCompensation')}
             value={updateHashMap?.['extra_deep_compensation']}
