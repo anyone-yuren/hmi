@@ -71,7 +71,7 @@ const PortModules = () => {
       },
     },
     {
-      title: 'Action',
+      title: '操作',
       key: 'operation',
       fixed: 'right',
       width: 100,
@@ -132,6 +132,31 @@ const PortModules = () => {
     }
     message.success('保存成功！');
   };
+
+  const handleDownload = () => {
+    const list = portData?.data?.port_forwarding_list ?? [];
+    if (!list.length) {
+      message.warning('暂无可导出的数据');
+      return;
+    }
+
+    try {
+      const jsonStr = JSON.stringify(list, null, 2); // 美化格式
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `port_forwarding_${new Date().toISOString().slice(0, 19)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      message.error('导出失败');
+    }
+  };
   return (
     <>
       <h3 className='text-lg font-bold mb-2 flex items-center justify-between'>
@@ -148,6 +173,9 @@ const PortModules = () => {
             新增
           </Button>
           <JsonFileUploader />
+          <Button size='small' type='default' onClick={handleDownload}>
+            下载
+          </Button>
         </div>
       </h3>
       <div>

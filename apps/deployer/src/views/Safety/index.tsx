@@ -19,6 +19,7 @@ import ObsInfoPanel from './component/newCarComponents/obsInfo';
 import PalletModel from './component/newCarComponents/palletModel';
 import SafetyHeader from './component/newCarComponents/safetyHeader';
 import SensorsToMap from './component/newCarComponents/sensorsToMap';
+import TurmRegion from './component/newCarComponents/TurmRegion';
 import { MAX_SCALE, MIN_SCALE } from './constants/config';
 import { useSafety } from './hooks/useSafety';
 import { safetyConfig } from './service';
@@ -468,9 +469,9 @@ export default function RectDrawer() {
       duration: 0.6,
       easing: Konva.Easings.EaseInOut,
       x: width / 2,
-      y: height / 2,
-      scaleX: 0.25,
-      scaleY: 0.25,
+      y: height / 1.5,
+      scaleX: 0.2,
+      scaleY: 0.2,
       onFinish: () => {
         setScale(0.3);
         setReRenderLineGrid(!reRenderLineGrid);
@@ -719,12 +720,13 @@ export default function RectDrawer() {
                   style={stageStyle}
                 >
                   <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} lastPos={reRenderLineGrid} />
-                  <CarModel vehicleOutline={memoObstacleData?.vehicle_outline} />
+                  <CarModel vehicleOutline={memoObstacleData?.vehicle_outline} currentObsInfo={currentObsInfo} />
                   <Layer ref={layerRef}>
                     <Group name='sensor_list'>
                       <SensorsToMap />
                     </Group>
                     <PalletModel />
+                    <TurmRegion />
                     {/* 绘制矩形 */}
                     {rects?.map((r) => (
                       <Group key={r.id} className='rect'>

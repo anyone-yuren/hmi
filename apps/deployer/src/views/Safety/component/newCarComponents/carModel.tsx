@@ -7,19 +7,21 @@ interface IProps {
   vehicleOutline: {
     rectangle_list: any[];
   };
+  currentObsInfo: Record<string, any>;
 }
 
 const CarModel = (props: IProps) => {
-  const { vehicleOutline } = props;
+  const { vehicleOutline, currentObsInfo } = props;
   const rectangle_list = useMemo(() => {
     return vehicleOutline?.rectangle_list || [];
   }, [vehicleOutline]);
+
+  console.log(currentObsInfo, 'currentObsInfo');
 
   return (
     <Layer name='car'>
       {rectangle_list?.length ? <VehicleImg rectangleList={rectangle_list} /> : null}
       {rectangle_list?.map((rect) => {
-        const [a, b, c, d] = rect.rectangle;
         const { x, y, width, height } = getRect(rect.rectangle);
         // 不同机制用不同颜色区分
         let fill = 'rgba(0,188,212,0.4)'; // 默认 BODY 青色
@@ -28,15 +30,17 @@ const CarModel = (props: IProps) => {
         }
 
         return (
-          <Rect
-            key={rect.id}
-            name={`car-${rect.name.toLowerCase()}`}
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            fill={fill}
-          />
+          <>
+            <Rect
+              key={rect.id}
+              name={`car-${rect.name.toLowerCase()}`}
+              x={x}
+              y={y}
+              width={width}
+              height={height}
+              fill={fill}
+            />
+          </>
         );
       })}
       <SafetyCoordinate />

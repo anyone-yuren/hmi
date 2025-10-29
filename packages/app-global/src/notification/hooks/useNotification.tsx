@@ -101,6 +101,7 @@ export const useNotification = () => {
         // },
       });
     } else {
+      // 清除避障消息
       if (obsMsg.current) {
         sonnerToast.dismiss(obsMsg.current);
       }
