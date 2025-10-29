@@ -37,7 +37,7 @@ export enum AGVTYPES {
 // Hook 改造
 import { useGlobalStore } from '@gbeata/store';
 import { useShallow } from 'zustand/react/shallow';
-import { Fork15lift, Sl14Model, X20Model } from '../Models/components/index';
+import { Fork15lift, O15Model, Sl14Model, X20Model } from '../Models/components/index';
 
 // 定义一个映射表：数值 → 名称
 const AGV_MODELS: Record<number, any> = {
@@ -67,7 +67,10 @@ const AGV_MODELS: Record<number, any> = {
   [AGVTYPES.E30]: null,
   [AGVTYPES.E35]: null,
   [AGVTYPES.E40]: null,
-  [AGVTYPES.O15]: null,
+  [AGVTYPES.O15]: {
+    model: O15Model,
+    position: [0.2, 0, 0],
+  },
   [AGVTYPES.O20]: null,
   [AGVTYPES.O30]: null,
   [AGVTYPES.O40]: null,
