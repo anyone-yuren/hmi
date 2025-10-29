@@ -100,6 +100,10 @@ export const useNotification = () => {
         //   onClick: () => {},
         // },
       });
+    } else {
+      if (obsMsg.current) {
+        sonnerToast.dismiss(obsMsg.current);
+      }
     }
   }, [obsInfo, i18n.language]);
 

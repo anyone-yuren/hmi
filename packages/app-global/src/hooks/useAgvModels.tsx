@@ -91,7 +91,7 @@ export const useAgvModels = () => {
   console.log('[useAgvModels.tsx]:avgType', avgType);
   return {
     hasModel: AGV_MODELS[avgType] ? true : false,
-    model: AGV_MODELS[avgType].model ?? null,
-    position: AGV_MODELS[avgType].position ?? [0, 0, 0],
+    model: AGV_MODELS[avgType]?.model ?? null,
+    position: AGV_MODELS[avgType]?.position ?? [0, 0, 0],
   };
 };
