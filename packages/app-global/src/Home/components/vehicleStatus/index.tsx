@@ -9,18 +9,19 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import diqiu from '../../../assets/img/diqiu.png';
-import { getAgvInfo, getVehicleIp, getVehicleTaskMode } from '../../services';
+import { getVehicleIp, getVehicleTaskMode } from '../../services';
 import { useHomeStore } from '../../store/index';
 
 const VehicleInfo = () => {
   const { t } = useTranslation();
-  const { data: agv_info, loading } = useRequest(getAgvInfo);
+  // const { data: agv_info, loading } = useRequest(getAgvInfo);
   const { data: vehicle_ip, loading: loading_ip } = useRequest(getVehicleIp);
   const { data: task_mode, loading: loading_task_mode } = useRequest(getVehicleTaskMode);
-  const { rcsIsOnline } = useVehicleStore(
+  const { rcsIsOnline, taskInfo } = useVehicleStore(
     useShallow((state) => {
       return {
         rcsIsOnline: state.rcsIsOnline,
+        taskInfo: state.taskInfo,
       };
     }),
   );
@@ -96,9 +97,7 @@ const VehicleInfo = () => {
         <div className='flex-1 grid grid-cols-3 gap-2'>
           <div className='flex-1 col-span-3 flex flex-col gap-4'>
             <div className='text-[60px] md:text-[40px] flex gap-2 items-baseline'>
-              <span>
-                No.{loading ? <Skeleton variant='rounded' width={60} height={60} /> : agv_info?.agv_id || '-'}
-              </span>
+              <span>No.{taskInfo?.agv_id || '-'}</span>
               {/* <span
                 style={{
                   background: theme.colorPrimary,

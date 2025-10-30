@@ -126,6 +126,7 @@ const Current = () => {
                     error_code: record.error_code,
                     error_time: record.generate_time,
                   });
+                  window.open(`${window.location.origin}${data}`);
                 }}
               >
                 {t('deployer.diagnosis.downloadLog')}

@@ -33,6 +33,7 @@ interface ITaskInfo {
   error_x: number; //x误差，单位:mm
   error_y: number; //y误差，单位:mm
   error_angle: number; //角度误差，单位:度
+  agv_id: string;
 }
 interface State {
   powerStatus: IPowerStatus;
@@ -138,6 +139,7 @@ export const useVehicleStore = create<State>()(
         error_x: 10,
         error_y: 3,
         error_angle: 0.4,
+        agv_id: "",
       },
       setTaskInfo: (taskInfo: any) => {
         const { cacheSave } = useGlobalStore.getState();

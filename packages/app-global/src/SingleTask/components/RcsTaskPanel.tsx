@@ -26,6 +26,7 @@ import {
   updateRcsMissionState,
   updateRcsTemplateTaskList,
 } from '../services/index';
+import { useSingleTaskStore } from '../store/singleTask.store';
 import {
   generateUniqueId,
   InputGroup,
@@ -198,7 +199,18 @@ const RcsTaskPanel = (props: IProps) => {
     },
   });
 
+  const { refreshTaskList } = useSingleTaskStore((store) => ({
+    refreshTaskList: store.refreshTaskList,
+  }));
+
   const { TaskStatusHashMap } = useConstants();
+
+  useAsyncEffect(async () => {
+    console.log('refreshTaskList', refreshTaskList);
+    if (refreshTaskList > 1) {
+      getTaskListAsync();
+    }
+  }, [refreshTaskList]);
 
   const options: any = useMemo(() => {
     return heightResponse?.data || [];

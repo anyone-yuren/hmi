@@ -1,12 +1,21 @@
 import { RedoOutlined } from '@ant-design/icons';
 import { useRequest, useSize } from 'ahooks';
 import { Button, List, Radio, Result, Splitter, Typography } from 'antd';
+import pako from 'pako';
 import VirtualList from 'rc-virtual-list';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import LoadingPage from '../../components/PageLoading/Loading';
 import { viewLog } from '../services';
+
+function unzipText(str) {
+  if (!str) return '';
+  return pako.ungzip(
+    Uint8Array.from(atob(str), (c) => c.charCodeAt(0)),
+    { to: 'string' },
+  );
+}
 
 const { Paragraph } = Typography;
 interface IProps {
@@ -36,8 +45,13 @@ const NodeLogs = (props: IProps) => {
     manual: true,
   });
 
+  const translateData = (data) => {
+    const logString = unzipText(logInfo?.data);
+    return logString ? JSON.parse(logString) : [];
+  };
+
   const renderList = useMemo(() => {
-    const ary = logInfo?.data || [];
+    const ary = translateData(logInfo?.data);
     const typeKeys: any = ['info', 'error', 'warning'];
     const typeKeyHashmap: any = {
       info: 'info',
@@ -82,6 +96,7 @@ const NodeLogs = (props: IProps) => {
   const handleDownload = async (logData, path) => {
     try {
       // const logData = logInfo?.data;
+      console.log('logData', logData);
       if (!logData || logData.length === 0) {
         console.warn('No log data to download');
         return;
@@ -167,7 +182,7 @@ const NodeLogs = (props: IProps) => {
                           e.stopPropagation();
                           setDownloadKey(item);
                           const { data } = await getLogInfo({ path: `${nodeKey}/${item}` });
-                          handleDownload(data, `${nodeKey}/${item}`);
+                          handleDownload(translateData(data), `${nodeKey}/${item}`);
                         }}
                       >
                         {t('common.download')}

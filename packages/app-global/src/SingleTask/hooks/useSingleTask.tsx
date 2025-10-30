@@ -26,6 +26,8 @@ const HYBRID_URL =
 
 export const useSingleTask = () => {
   const [count, setCount] = useState(1);
+  // const [rcsTaskCount, setRcsTaskCount] = useState(1)
+  const [rcsTaskState, setRcsTaskState] = useState(0);
   const { setAgvPosition, setRcsInfo, setRefreshTaskList, setCloudPoints, setRobotCurrentStatus, setRealTimePoints } =
     useSingleTaskStore(
       useShallow((state) => {
@@ -49,12 +51,14 @@ export const useSingleTask = () => {
       const data = JSON.parse(message.data);
       if (data.uri == '/sirius/topics/test_task_info') {
         setCount((origin) => {
-          return origin + 1;
+          return origin + 10;
         });
       }
       if (data.uri == '/sirius/topics/rcs_info') {
         const { timestamp, ...rest } = data;
         setRcsInfo(rest);
+        // if (rest.task_state)
+        setRcsTaskState(rest.task_state);
       }
     },
   });
@@ -133,6 +137,14 @@ export const useSingleTask = () => {
   useEffect(() => {
     setRefreshTaskList(count);
   }, [count]);
+
+  useEffect(() => {
+    if (rcsTaskState === 2) {
+      setCount((origin) => {
+        return origin + 1;
+      });
+    }
+  }, ['rcsTaskState']);
 
   return {
     sendMessage,

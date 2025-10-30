@@ -58,6 +58,7 @@ import InputWidthKeyboard from './components/inputWithKeyboard';
 import MwConfirm from './components/MwConfirm';
 import { NavigationRegion } from './components/navigationRegion';
 import OnlinePoint from './components/onLinePoint';
+import PointCloudV1 from './components/pointCloudV1';
 import PointsCloudDiagV1 from './components/pointsCloudDiagV1';
 import PositionView from './components/reflector/positionView';
 import { postDeleteTargetReflectors } from './components/reflector/services';
@@ -550,7 +551,8 @@ const Mapping = () => {
                   </Group>
                   <CanvasOnline />
                 </Layer>
-                {<PointsCloudDiagV1 />}
+                {!!isShowNavigation(navigationType, 'LIDAR_SLAM_3D') && <PointsCloudDiagV1 />}
+                {!!isShowNavigation(navigationType, 'LIDAR_SLAM_2D') && <PointCloudV1 />}
               </InitStage>
             </Box>
           ) : (

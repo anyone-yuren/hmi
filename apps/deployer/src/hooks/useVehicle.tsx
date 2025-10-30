@@ -89,6 +89,7 @@ export const useVehicle = () => {
             error_x: data?.error_x,
             error_y: data?.error_y,
             error_angle: data?.error_angle,
+            agv_id: data?.agv_id,
           });
         }
       }
