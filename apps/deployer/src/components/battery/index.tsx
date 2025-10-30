@@ -75,10 +75,10 @@ const BarBattery = ({ level = 15, width = 60, height = 20 }) => {
         <rect x={width - 4} y={height * 0.25} width='4' height={height * 0.5} ry='1' fill='rgba(255,255,255,1)' />
         {/* 电量值条 */}
         <motion.rect
-          x='2'
-          y='2'
-          width={batteryWidth}
-          height={height - 4}
+          x='3'
+          y='3'
+          width={batteryWidth - 6}
+          height={height - 6}
           rx='4'
           fill={batteryColor}
           animate={controls}

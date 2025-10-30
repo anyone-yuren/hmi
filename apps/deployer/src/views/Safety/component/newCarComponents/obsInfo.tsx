@@ -92,17 +92,27 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
         >
           <div>
             <p className='text-xs mb-2'>避障策略</p>
-            <div className='grid grid-cols-2 gap-1 max-h-16 overflow-y-auto'>
-              {strategyTpye.map((item, index) => {
-                return (
-                  <div className='flex items-center justify-between p-1 shadow-sm hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold transition-all duration-300'>
-                    <p className='flex-1 truncate text-xs text-gray-500' title={item.name}>
-                      {item.name}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
+            {strategyTpye.length ? (
+              <div className='grid grid-cols-2 gap-1 max-h-16 overflow-y-auto'>
+                {strategyTpye.map((item, index) => {
+                  return (
+                    <div className='flex items-center justify-between p-1 shadow-sm hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold transition-all duration-300'>
+                      <p className='flex-1 truncate text-xs text-gray-500' title={item.name}>
+                        {item.name}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div
+                className={`group w-full gap-2 p-2 rounded-lg flex items-center justify-between ${!isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.9)_0%,rgba(0,0,0,0.1)_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,rgba(255,255,255,0.1)_0%)]'}
+  backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
+              >
+                <SvgIcon className='group-hover:scale-110 animation-all duration-300' name='noArea' size={38}></SvgIcon>
+                <p className='opacity-60 text-xs'>暂未关联策略</p>
+              </div>
+            )}
           </div>
         </div>
         <div className='flex flex-col gap-2'>
