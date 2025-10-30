@@ -96,7 +96,6 @@ const GlobalHeader = () => {
   }, [data]);
 
   useEffect(() => {
-    console.log(taskInfo?.operate_identification, powerStatus.charge_status);
     // 准备充电的时候就跳到充电页面
     if (taskInfo?.operate_identification === 3 || powerStatus.charge_status === 2) {
       navigate('/charging');
@@ -171,7 +170,7 @@ const GlobalHeader = () => {
       </p>
       <div className='flex flex-col items-center gap-2'>
         <BarBattery level={40} height={24} />
-        <Signal />
+        <Signal canLinkWifi={data?.support_wireless_configuration} />
       </div>
       <Selectlangulage />
       <ConfigProvider
