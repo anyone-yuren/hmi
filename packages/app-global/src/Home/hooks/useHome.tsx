@@ -77,7 +77,6 @@ export const useHome = () => {
       }
       if (data.uri == '/sirius/topics/segments_info') {
         const { timestamp, ...rest } = data;
-        debugger;
         setSegmentsInfo(rest?.segments);
       }
     },
