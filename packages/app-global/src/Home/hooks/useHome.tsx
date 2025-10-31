@@ -25,6 +25,7 @@ export const useHome = () => {
     setRobotIsensorStatus,
     setRobotGoodsStatus,
     setRobotForkarmStatus,
+    setSegmentsInfo,
   } = useHomeStore(
     useShallow((state) => {
       return {
@@ -34,6 +35,7 @@ export const useHome = () => {
         setRobotIsensorStatus: state.setRobotIsensorStatus,
         setRobotGoodsStatus: state.setRobotGoodsStatus,
         setRobotForkarmStatus: state.setRobotForkarmStatus,
+        setSegmentsInfo: state.setSegmentsInfo,
       };
     }),
   );
@@ -72,6 +74,11 @@ export const useHome = () => {
       if (data.uri == '/sirius/topics/robot_status_forkarm') {
         const { timestamp, ...rest } = data;
         setRobotForkarmStatus(rest);
+      }
+      if (data.uri == '/sirius/topics/segments_info') {
+        const { timestamp, ...rest } = data;
+        debugger;
+        setSegmentsInfo(rest?.segments);
       }
     },
   });
@@ -140,6 +147,7 @@ export const useHome = () => {
             '/sirius/topics/robot_status_isensor',
             '/sirius/topics/robot_status_goods',
             '/sirius/topics/robot_status_forkarm',
+            '/sirius/topics/segments_info',
           ],
         }),
       );

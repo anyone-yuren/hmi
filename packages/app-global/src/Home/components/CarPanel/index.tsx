@@ -1,4 +1,4 @@
-import { CameraControls, PerspectiveCamera } from '@react-three/drei';
+import { CameraControls, GizmoHelper, GizmoViewport, PerspectiveCamera } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { useRequest } from 'ahooks';
 import { Skeleton, Spin } from 'antd';
@@ -6,6 +6,7 @@ import { memo, Suspense } from 'react';
 import { getSegmentsInfo, getVehicleShape } from '../../services';
 import PageException from '../ErrorPage';
 import LocationPoint from '../point/locationPoint';
+import RouteWind from './components/activeRoute';
 import Car from './components/car';
 import MxwCar from './components/device';
 import RcsLines from './components/routeLiles';
@@ -13,6 +14,7 @@ import StageBase from './components/stageBase';
 const CarStage = () => {
   const { data: routeLinesData, loading: routeLinesLoading } = useRequest(getSegmentsInfo);
   const { data: vehicleShapeData, loading: vehicleShapeLoading } = useRequest(getVehicleShape);
+
   return (
     <Suspense fallback={<Spin />}>
       {routeLinesLoading ? (
@@ -78,18 +80,23 @@ const CarStage = () => {
         > */}
           <Car />
           <MxwCar />
+          <RouteWind
+            tubularSegments={80}
+            radius={0.05}
+            windAmplitude={0.01}
+            windFrequency={0.1}
+            position={[0, 0, 0]}
+            rotation={[0, 0, 0]}
+          />
           <LocationPoint />
           {routeLinesData?.data?.length ? <RcsLines mapEdges={routeLinesData?.data} /> : null}
           {/* <ActiveLine /> */}
           <StageBase />
           {/* </Stage> */}
           {/* <Gltf castShadow receiveShadow src="Perseverance-transformed.glb" /> */}
-          {/* <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
-          <GizmoViewport
-            axisColors={["red", "green", "blue"]}
-            labelColor="black"
-          />
-        </GizmoHelper> */}
+          <GizmoHelper alignment='bottom-right' margin={[80, 80]}>
+            <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='black' />
+          </GizmoHelper>
         </Canvas>
       ) : (
         <PageException status={401} />
