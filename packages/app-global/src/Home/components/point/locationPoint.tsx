@@ -80,7 +80,7 @@ const LocationPoint = () => {
                 rotation={[type !== 1 ? -Math.PI / 2 : 0, 0, 0]}
                 // receiveShadow
               />
-              <CanvasText text={item.id} position={[0, 0, 0]} fontSize={type !== 1 ? '4px' : '8px'} />
+              <CanvasText text={item.id} position={[0, 0, 0]} fontSize={type !== 1 ? '4px' : '6px'} />
             </group>
           );
         })}

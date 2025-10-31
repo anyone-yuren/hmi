@@ -34,8 +34,8 @@ const StageBase = (props) => {
 
   useEffect(() => {
     if (controls) {
-      controls.setPosition(0 - agvPosition.x / 1000 + 2, 3, agvPosition.y / 1000 + 4, true);
-      controls.setTarget(0 - agvPosition.x / 1000 - 1, 1, agvPosition.y / 1000, true);
+      controls.setPosition(0 - agvPosition.x / 1000 + 1, 4, agvPosition.y / 1000 + 4, true);
+      controls.setTarget(0 - agvPosition.x / 1000 - 2, 0, agvPosition.y / 1000, true);
     }
   }, [agvPosition]);
 
