@@ -6,9 +6,21 @@ import SignalCellularAlt1BarIcon from '@mui/icons-material/SignalCellularAlt1Bar
 import SignalCellularAlt2BarIcon from '@mui/icons-material/SignalCellularAlt2Bar';
 import WifiOffIcon from '@mui/icons-material/WifiOff';
 import { useRequest } from 'ahooks';
-import { useMemo } from 'react';
-const Signal = () => {
-  const { data: currentAp, loading: loadingAp, run: getCurrentAp } = useRequest(getApInfo);
+import { useEffect, useMemo } from 'react';
+const Signal = (props) => {
+  const { canLinkWifi } = props;
+  const {
+    data: currentAp,
+    loading: loadingAp,
+    run: getCurrentAp,
+  } = useRequest(getApInfo, {
+    manual: true,
+  });
+  useEffect(() => {
+    if (canLinkWifi) {
+      getCurrentAp();
+    }
+  }, [canLinkWifi]);
   // const { signal, setSignal } = useVehicleStore(
   //   useShallow((state) => {
   //     return {
