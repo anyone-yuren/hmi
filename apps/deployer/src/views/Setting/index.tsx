@@ -1,4 +1,5 @@
 import LoginModalTrigger, { triggerLoginModal } from '@/views/Network/components/loginClient';
+import { AuthComponent } from '@gbeata/app-global';
 import { styled } from '@mui/material';
 import { Button } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -35,15 +36,17 @@ const Setting = () => {
         </SwiperSlide>
       </Swiper>
       <LoginModalTrigger />
-      <Button
-        type='primary'
-        className='absolute bottom-4 right-4 z-10'
-        onClick={() => {
-          triggerLoginModal();
-        }}
-      >
-        {t('deployer.setting.networkSetting')}
-      </Button>
+      <AuthComponent authKey={['admin']}>
+        <Button
+          type='primary'
+          className='absolute bottom-4 right-4 z-10'
+          onClick={() => {
+            triggerLoginModal();
+          }}
+        >
+          {t('deployer.setting.networkSetting')}
+        </Button>
+      </AuthComponent>
     </SwiperWrapper>
   );
 };
