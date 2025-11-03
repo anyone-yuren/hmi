@@ -24,6 +24,7 @@
     "actionSuccess": "操作成功",
     "add": "添加",
     "all": "全部",
+    "amrLoadProtection": "AMR负载防护",
     "back": "返回",
     "backToHome": "返回主页",
     "cancel": "取消",
@@ -101,14 +102,18 @@
         "offsetEmptyTips": "偏移表的值不能同时为空或者0"
       }
     },
+    "doorFrameMoveProtection": "移动门架保护",
     "download": "下载",
     "edit": "编辑",
+    "endPathAdaptiveReduceRange": "末端路线自适应调整避障",
+    "endPathCloseProtection": "末端路线屏蔽叉尖避障",
     "endTime": "结束时间",
     "error": "错误",
     "errorMsg": {
       "title": "异常消息"
     },
     "exit": "退出",
+    "forkArm": "叉臂",
     "home": {
       "actualSpeed": "实际速度",
       "auto": "自动",
@@ -150,6 +155,7 @@
       "withoutAuth": "未授权，请重新登录"
     },
     "info": "信息",
+    "lineKeep": "直线保持",
     "login": "登录",
     "loginSuccessTip": "登录成功,若十分钟内无操作,系统将自动退出！",
     "logoutTip": "确认退出登录吗？",
@@ -216,6 +222,8 @@
       "view": "查看"
     },
     "password": "密码",
+    "pickCargoForkTipProtection": "取货叉尖保护",
+    "placeCargoSpaceProtection": "放货空间检测",
     "pleaseInput": "请输入",
     "pleaseInputNumber": "请输入正确的数字",
     "pleasePassword": "请输入密码",
@@ -243,9 +251,11 @@
     },
     "save": "保存",
     "search": "查询",
+    "self": "自身",
     "serverError": "对不起，服务器发生错误。",
     "setting": "设置",
     "severelyExpired": "严重超期",
+    "shakeArm": "摇头机构",
     "startTime": "开始时间",
     "status": "状态",
     "success": "完成",
@@ -264,8 +274,11 @@
       "unexecuted": "未执行"
     },
     "tips": "提示",
+    "topProtection": "顶部安全防护",
+    "topRadarLift": "顶部雷达升降杆",
     "triggered": "已触发",
     "unauthorized": "无地图数据",
+    "underForkProtection": "叉臂下方保护",
     "update": "修改",
     "username": "用户名",
     "warn": "警告"
@@ -462,6 +475,30 @@
       "sensorCloud": "传感器点云查看",
       "status": "避障信息",
       "stop_distance": "停车距离",
+      "strategyInfo": {
+        "associatedIoSensorList": "所使用的IO信号名字",
+        "associatedPcSensorList": "所使用的点云传感器名字",
+        "associatedSensorList": "所使用的传感器名字",
+        "cuboid": "立体保护区域",
+        "emptyLoadCuboid": "空载保护区域",
+        "forkForwardProtectDistance": "前方保护距离",
+        "forkLateralMoveProtectDistance": "横移保护距离",
+        "forkarmHeightCut": "需要屏蔽叉等上表面以下多少距离的空间",
+        "fullLoadCuboid": "满载保护区域",
+        "heightEnd": "后退最小保护距离",
+        "heightStart": "前进最小保护距离",
+        "minDistanceToTaskPointCloseThis": "距离任务点小于多少距离后关闭这个策略",
+        "minDistanceToTaskPointOpenThis": "距离任务点小于多少距离后开启这个策略",
+        "minForkarmHeightToOpenThis": "开启当前策略的最小叉臂高度",
+        "pickCargoPcCloseDistance": "屏蔽点云避障最大距离（取货）",
+        "pickCargoPeCloseDistance": "屏蔽光电避障最大距离（取货）",
+        "placeCargoPcCloseDistance": "屏蔽点云避障最大距离（放货）",
+        "placeCargoPeCloseDistance": "屏蔽光电避障最大距离（放货）",
+        "protectRange": "保护范围",
+        "startProtectHeight": "起始保护高度",
+        "steerAngleTolerance": "舵角阈值",
+        "subStrategy": "子策略"
+      },
       "switch_scheme": "切换避障",
       "title": "避障",
       "vehicleStatus": "车辆状态"

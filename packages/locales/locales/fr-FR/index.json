@@ -24,6 +24,7 @@
     "actionSuccess": "Opération réussie",
     "add": "Ajouter",
     "all": "tous",
+    "amrLoadProtection": "Protection de la charge utile AMR",
     "back": "Retour",
     "backToHome": "Retour à la page d'accueil",
     "cancel": "Annuler",
@@ -101,13 +102,17 @@
         "offsetEmptyTips": "La valeur de la table de décalage ne peut pas être vide ou 0 en même temps"
       }
     },
+    "doorFrameMoveProtection": "Protection de mât mobile",
     "edit": "Modifier",
+    "endPathAdaptiveReduceRange": "Ajustement adaptatif de l'itinéraire du terminal et évitement d'obstacles",
+    "endPathCloseProtection": "Blindage du tracé des bornes pour éviter les obstacles à la pointe de la fourche",
     "endTime": "Heure de fin",
     "error": "erreur",
     "errorMsg": {
       "title": "Message d'exception"
     },
     "exit": "Quitter",
+    "forkArm": "Épaulette",
     "home": {
       "actualSpeed": "Vitesse réelle",
       "auto": "automatique",
@@ -149,6 +154,7 @@
       "withoutAuth": "Non autorisé, veuillez vous reconnecter"
     },
     "info": "information",
+    "lineKeep": "maintien en ligne droite",
     "login": "Se connecter",
     "loginSuccessTip": "S'il n'y a pas d'opération dans les dix minutes, le système sortira automatiquement!",
     "logoutTip": "Confirmer la connexion?",
@@ -215,6 +221,8 @@
       "view": "Vérifier"
     },
     "password": "mot de passe",
+    "pickCargoForkTipProtection": "Protection de pointe de fourche de récupération",
+    "placeCargoSpaceProtection": "Inspection de l'espace de chargement",
     "pleaseInput": "Veuillez entrer",
     "pleaseInputNumber": "Veuillez saisir le bon numéro",
     "pleasePassword": "Veuillez saisir votre mot de passe",
@@ -242,9 +250,11 @@
     },
     "save": "Enregistrer",
     "search": "Requête",
+    "self": "lui-même",
     "serverError": "Désolé, une erreur s'est produite sur le serveur.",
     "setting": "Paramètres",
     "severelyExpired": "Sérieusement en retard",
+    "shakeArm": "Mécanisme de tête secouante",
     "startTime": "Heure de début",
     "status": "État",
     "success": "Terminé",
@@ -263,8 +273,11 @@
       "unexecuted": "Non exécuté"
     },
     "tips": "ヒント",
+    "topProtection": "Protection de sécurité optimale",
+    "topRadarLift": "Mât télescopique de radar au sommet",
     "triggered": "Déclenché",
     "unauthorized": "Pas de données de carte",
+    "underForkProtection": "Protection du triangle inférieur",
     "update": "Réviser",
     "username": "nom d'utilisateur",
     "warn": "avertir"
@@ -461,6 +474,30 @@
       "sensorCloud": "Visualisation du nuage de points du capteur",
       "status": "Informations d'évitement",
       "stop_distance": "distance de stationnement",
+      "strategyInfo": {
+        "associatedIoSensorList": "Le nom du signal IO utilisé",
+        "associatedPcSensorList": "Le nom du capteur de nuage de points utilisé",
+        "associatedSensorList": "Nom du capteur utilisé",
+        "cuboid": "Zone de protection tridimensionnelle",
+        "emptyLoadCuboid": "Zone de protection à vide",
+        "forkForwardProtectDistance": "Distance de protection avant",
+        "forkLateralMoveProtectDistance": "Distance de protection latérale",
+        "forkarmHeightCut": "Quel espace est nécessaire sous la surface supérieure de la fourche de blindage ?",
+        "fullLoadCuboid": "Zone de protection à pleine charge",
+        "heightEnd": "Distance minimale de protection vers l'arrière",
+        "heightStart": "Distance minimale de protection vers l'avant",
+        "minDistanceToTaskPointCloseThis": "Fermez cette stratégie une fois que la distance du point de tâche est inférieure à une certaine distance",
+        "minDistanceToTaskPointOpenThis": "Activez cette stratégie une fois que la distance du point de tâche est inférieure à une certaine distance",
+        "minForkarmHeightToOpenThis": "Activer la hauteur minimale du wishbone de la stratégie actuelle",
+        "pickCargoPcCloseDistance": "Distance maximale pour éviter les obstacles liés aux nuages ​​de points de protection (ramassage de marchandises)",
+        "pickCargoPeCloseDistance": "Distance maximale pour éviter les obstacles photoélectriques blindés (ramassage)",
+        "placeCargoPcCloseDistance": "Distance maximale pour éviter les obstacles en nuage de points de blindage (livraison)",
+        "placeCargoPeCloseDistance": "Distance maximale pour éviter les obstacles photoélectriques blindés (livraison)",
+        "protectRange": "étendue de la protection",
+        "startProtectHeight": "Hauteur de protection de départ",
+        "steerAngleTolerance": "Seuil d'angle de barre",
+        "subStrategy": "Substratégie"
+      },
       "switch_scheme": "Changer l'évitement d'obstacles",
       "title": "Évitez les obstacles",
       "vehicleStatus": "État du véhicule"

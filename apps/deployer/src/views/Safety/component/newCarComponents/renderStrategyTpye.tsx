@@ -30,30 +30,33 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
       case 'strategy_line_keep':
         return (
           <>
-            <div className='text-xs text-gray-500'>舵角阈值: {strategyData?.steer_angle_tolerance}°</div>
+            <div className='text-xs text-gray-500'>
+              {t('deployer.safety.strategyInfo.steerAngleTolerance')}: {strategyData?.steer_angle_tolerance}°
+            </div>
           </>
         );
       case 'strategy_under_fork_protection':
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              保护范围: <span>{strategyData?.rectangle}</span>
+              {t('deployer.safety.strategyInfo.protectRange')}: <span>{strategyData?.rectangle}</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              开启当前策略的最小叉臂高度: <span>{strategyData?.min_forkarm_height_to_open_this}</span>
+              {t('deployer.safety.strategyInfo.minForkarmHeightToOpenThis')}:{' '}
+              <span>{strategyData?.min_forkarm_height_to_open_this}</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              起始保护高度: <span>{strategyData?.height_start} mm</span>
+              {t('deployer.safety.strategyInfo.startProtectHeight')}: <span>{strategyData?.height_start} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              需要屏蔽叉等上表面以下多少距离的空间: <span>{strategyData?.forkarm_height_cut} mm</span>
+              {t('deployer.safety.strategyInfo.forkarmHeightCut')}: <span>{strategyData?.forkarm_height_cut} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              距离任务点小于多少距离后关闭这个策略:
+              {t('deployer.safety.strategyInfo.minDistanceToTaskPointCloseThis')}:
               <span>{strategyData?.min_distance_to_task_point_close_this} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              所使用的传感器名字:
+              {t('deployer.safety.strategyInfo.associatedSensorList')}:
               <div className='fle flex-wrap gap-1'>
                 {filterDevices(strategyData?.associated_sensor_list)?.map((item) => {
                   return <span key={item.key}>{serviceLanguage.includes('zh') ? item.ch_name : item.name} </span>;
@@ -66,13 +69,14 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              开启当前策略的最小叉臂高度: <span>{strategyData?.min_forkarm_height_to_open_this} mm</span>
+              {t('deployer.safety.strategyInfo.minForkarmHeightToOpenThis')}:{' '}
+              <span>{strategyData?.min_forkarm_height_to_open_this} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              立体保护区域: <span>{strategyData?.cuboid}</span>
+              {t('deployer.safety.strategyInfo.cuboid')}: <span>{strategyData?.cuboid}</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              所使用的传感器名字:
+              {t('deployer.safety.strategyInfo.associatedSensorList')}:
               <div className='fle flex-wrap gap-1'>
                 {filterDevices(strategyData?.associated_sensor_list)?.map((item) => {
                   return <span key={item.key}>{serviceLanguage.includes('zh') ? item.ch_name : item.name} </span>;
@@ -80,7 +84,8 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               </div>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              距离任务点小于多少距离后开启这个策略: <span>{strategyData?.min_distance_to_task_point_open_this} mm</span>
+              {t('deployer.safety.strategyInfo.minDistanceToTaskPointOpenThis')}:{' '}
+              <span>{strategyData?.min_distance_to_task_point_open_this} mm</span>
             </div>
           </div>
         );
@@ -88,10 +93,10 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              立体保护区域: <span>{strategyData?.rectangles}</span>
+              {t('deployer.safety.strategyInfo.cuboid')}: <span>{strategyData?.rectangles}</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              所使用的传感器名字:
+              {t('deployer.safety.strategyInfo.associatedSensorList')}:
               <div className='fle flex-wrap gap-1'>
                 {filterDevices(strategyData?.associated_sensor_list)?.map((item) => {
                   return <span key={item.key}>{serviceLanguage.includes('zh') ? item.ch_name : item.name} </span>;
@@ -99,7 +104,8 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               </div>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              距离任务点小于多少距离后开启这个策略: <span>{strategyData?.min_distance_to_task_point_open_this} mm</span>
+              {t('deployer.safety.strategyInfo.minDistanceToTaskPointOpenThis')}:{' '}
+              <span>{strategyData?.min_distance_to_task_point_open_this} mm</span>
             </div>
           </div>
         );
@@ -107,10 +113,10 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              前进最小保护距离: <span>{strategyData?.forward_min_protect_distance} mm</span>
+              {t('deployer.safety.strategyInfo.heightStart')}: <span>{strategyData?.height_start} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              后退最小保护距离: <span>{strategyData?.backward_min_protect_distance} mm</span>
+              {t('deployer.safety.strategyInfo.heightEnd')}: <span>{strategyData?.height_end} mm</span>
             </div>
           </div>
         );
@@ -118,10 +124,11 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              空载保护区域: <span>{strategyData?.empty_load_protect_cuboid}</span>
+              {t('deployer.safety.strategyInfo.emptyLoadCuboid')}:{' '}
+              <span>{strategyData?.empty_load_protect_cuboid}</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              所使用的传感器名字:
+              {t('deployer.safety.strategyInfo.associatedSensorList')}:
               <div className='fle flex-wrap gap-1'>
                 {filterDevices(strategyData?.associated_sensor_list)?.map((item) => {
                   return <span key={item.key}>{serviceLanguage.includes('zh') ? item.ch_name : item.name} </span>;
@@ -129,7 +136,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               </div>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              满载保护区域: <span>{strategyData?.full_load_protect_cuboid} </span>
+              {t('deployer.safety.strategyInfo.fullLoadCuboid')}: <span>{strategyData?.full_load_protect_cuboid} </span>
             </div>
           </div>
         );
@@ -137,10 +144,11 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
         return (
           <div className='flex flex-col gap-1'>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              前酸保护距离: <span>{strategyData?.fork_forward_protect_distance} mm</span>
+              {t('deployer.safety.strategyInfo.forkForwardProtectDistance')}:{' '}
+              <span>{strategyData?.fork_forward_protect_distance} mm</span>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              所使用的传感器名字:
+              {t('deployer.safety.strategyInfo.associatedSensorList')}:
               <div className='fle flex-wrap gap-1'>
                 {filterIoInput(strategyData?.associated_io_sensor_list)?.map((item) => {
                   return <span key={item.key}>{item.value} </span>;
@@ -148,7 +156,8 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               </div>
             </div>
             <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-              横移保护距离: <span>{strategyData?.fork_lateral_move_protect_distance} mm</span>
+              {t('deployer.safety.strategyInfo.forkLateralMoveProtectDistance')}:{' '}
+              <span>{strategyData?.fork_lateral_move_protect_distance} mm</span>
             </div>
           </div>
         );
@@ -156,24 +165,30 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
         return strategyData?.list?.length ? (
           strategyData.list.map((child, index) => (
             <div>
-              <p>子策略 {child?.id}</p>
+              <p>
+                {t('deployer.safety.strategyInfo.subStrategy')} {child?.id}
+              </p>
               <div
                 className={`flex flex-col gap-1 mb-2 ${idStrategyEndPathCloseProtection === child?.id ? 'bg-black/5' : ''}`}
               >
                 <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-                  屏蔽光电避障最大距离（取货）: <span>{child?.pick_cargo_pe_close_distance} mm</span>
+                  {t('deployer.safety.strategyInfo.pickCargoPeCloseDistance')}:{' '}
+                  <span>{child?.pick_cargo_pe_close_distance} mm</span>
                 </div>
                 <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-                  屏蔽光电避障最大距离（放货）: <span>{child?.place_cargo_pe_close_distance} mm</span>
+                  {t('deployer.safety.strategyInfo.placeCargoPeCloseDistance')}:{' '}
+                  <span>{child?.place_cargo_pe_close_distance} mm</span>
                 </div>
                 <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-                  屏蔽点云避障最大距离（取货）: <span>{child?.pick_cargo_pc_close_distance} mm</span>
+                  {t('deployer.safety.strategyInfo.pickCargoPcCloseDistance')}:{' '}
+                  <span>{child?.pick_cargo_pc_close_distance} mm</span>
                 </div>
                 <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-                  屏蔽点云避障最大距离（放货）: <span>{child?.place_cargo_pc_close_distance} mm</span>
+                  {t('deployer.safety.strategyInfo.placeCargoPcCloseDistance')}:{' '}
+                  <span>{child?.place_cargo_pc_close_distance} mm</span>
                 </div>
                 <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-                  所使用的点云传感器名字:
+                  {t('deployer.safety.strategyInfo.associatedPcSensorList')}:
                   <div className='fle flex-wrap gap-1'>
                     {filterDevices(child?.associated_pc_sensor_list)?.map((item) => {
                       return <span key={item.key}>{serviceLanguage.includes('zh') ? item.ch_name : item.name} </span>;
@@ -181,7 +196,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
                   </div>
                 </div>
                 <div className='text-xs text-gray-500 flex items-center justify-between p-1 hover:bg-black/5 hover:shadow-md  animation-all duration-300'>
-                  所使用的IO信号名字:
+                  {t('deployer.safety.strategyInfo.associatedIoSensorList')}:
                   <div className='fle flex-wrap gap-1'>
                     {filterIoInput(child?.associated_io_sensor_list)?.map((item) => {
                       return <span key={item.key}>{item.value} </span>;
@@ -201,7 +216,7 @@ const RenderStrategyTpye = (props: RenderStrategyTpyeProps) => {
               name='servicerror'
               size={80}
             ></SvgIcon>
-            <p className='opacity-60 text-xs'>暂无数据</p>
+            <p className='opacity-60 text-xs'>{t('common.noData')}</p>
           </div>
         );
 

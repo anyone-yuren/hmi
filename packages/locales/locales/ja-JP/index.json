@@ -24,6 +24,7 @@
     "actionSuccess": "操作は成功しました",
     "add": "增",
     "all": "全て",
+    "amrLoadProtection": "AMRペイロード保護",
     "back": "帰る",
     "backToHome": "ホームページに戻ります",
     "cancel": "キャンセル",
@@ -101,14 +102,18 @@
         "offsetEmptyTips": "オフセット テーブルの値を同時に空または 0 にすることはできません"
       }
     },
+    "doorFrameMoveProtection": "モバイルマスト保護",
     "download": "ダウンロード",
     "edit": "編集",
+    "endPathAdaptiveReduceRange": "ターミナルルートの適応調整と障害物回避",
+    "endPathCloseProtection": "ターミナルルートシールドフォーク先端障害物回避",
     "endTime": "終了時間",
     "error": "間違い",
     "errorMsg": {
       "title": "例外メッセージ"
     },
     "exit": "終了する",
+    "forkArm": "フォークアーム",
     "home": {
       "actualSpeed": "実際の速度",
       "auto": "自動",
@@ -150,6 +155,7 @@
       "withoutAuth": "未認証です。再ログインしてください。"
     },
     "info": "情報",
+    "lineKeep": "直線ホールド",
     "login": "ログイン",
     "loginSuccessTip": "ログイン成功,10分以内に操作がない場合、システムは自動的に終了します！",
     "logoutTip": "ログアウトを確認しますか？",
@@ -216,6 +222,8 @@
       "view": "チェック"
     },
     "password": "パスワード",
+    "pickCargoForkTipProtection": "リトリーブフォーク先端保護",
+    "placeCargoSpaceProtection": "貨物スペースの検査",
     "pleaseInput": "入力してください",
     "pleaseInputNumber": "正しい番号を入力してください",
     "pleasePassword": "パスワードを入力してください",
@@ -243,9 +251,11 @@
     },
     "save": "セーブ",
     "search": "クエリ",
+    "self": "自体",
     "serverError": "申し訳ありませんが、サーバーでエラーが発生しました。",
     "setting": "並べる",
     "severelyExpired": "真剣に遅れています",
+    "shakeArm": "首振り機構",
     "startTime": "開始時間",
     "status": "状態",
     "success": "終える",
@@ -264,8 +274,11 @@
       "unexecuted": "未実行"
     },
     "tips": "ヒント",
+    "topProtection": "最高の安全保護",
+    "topRadarLift": "上部レーダー昇降ポール",
     "triggered": "トリガー",
     "unauthorized": "マップデータはありません",
+    "underForkProtection": "下部ウィッシュボーンの保護",
     "update": "改訂",
     "username": "ユーザー名",
     "warn": "警告"
@@ -462,6 +475,30 @@
       "sensorCloud": "センサー点群表示",
       "status": "障害物回避情報",
       "stop_distance": "駐車距離",
+      "strategyInfo": {
+        "associatedIoSensorList": "使用されるIO信号名",
+        "associatedPcSensorList": "使用した点群センサーの名前",
+        "associatedSensorList": "使用されるセンサー名",
+        "cuboid": "立体的な保護エリア",
+        "emptyLoadCuboid": "無負荷保護領域",
+        "forkForwardProtectDistance": "前方保護距離",
+        "forkLateralMoveProtectDistance": "側面保護距離",
+        "forkarmHeightCut": "シールドフォークの上面から下にどのくらいのスペースが必要ですか?",
+        "fullLoadCuboid": "全負荷保護領域",
+        "heightEnd": "後方最小保護距離",
+        "heightStart": "最小前方保護距離",
+        "minDistanceToTaskPointCloseThis": "タスクポイントからの距離が一定の距離未満になったら、この戦略を終了します",
+        "minDistanceToTaskPointOpenThis": "タスク ポイントからの距離が一定の距離未満になった後、この戦略を有効にします。",
+        "minForkarmHeightToOpenThis": "現在のストラテジーのウィッシュボーンの最小高さを有効にします",
+        "pickCargoPcCloseDistance": "遮蔽点群障害物回避の最大距離（商品の受け取り）",
+        "pickCargoPeCloseDistance": "光電式遮蔽障害物回避の最大距離（ピックアップ）",
+        "placeCargoPcCloseDistance": "遮蔽点群障害物回避の最大距離（納品）",
+        "placeCargoPeCloseDistance": "遮蔽された光電障害物回避の最大距離（納品）",
+        "protectRange": "保護範囲",
+        "startProtectHeight": "始動保護高さ",
+        "steerAngleTolerance": "舵角閾値",
+        "subStrategy": "基質"
+      },
       "switch_scheme": "障害物回避スイッチ",
       "title": "障害を避けてください",
       "vehicleStatus": "車両状況"

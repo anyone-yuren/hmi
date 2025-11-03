@@ -1,24 +1,27 @@
+import { useTranslation } from 'react-i18next';
 const useActiveDevice = (activeDevices: number[] = []) => {
+  const { t } = useTranslation();
   const activeDevice = [
-    { value: 1, label: '叉臂' },
-    { value: 2, label: '顶部雷达升降杆' },
-    { value: 3, label: '自身' },
-    { value: 4, label: '摇头机构' },
+    { value: 1, label: t('common.forkArm') },
+    { value: 2, label: t('common.topRadarLift') },
+    { value: 3, label: t('common.self') },
+    { value: 4, label: t('common.shakeArm') },
   ];
   return activeDevice.filter((item) => activeDevices.includes(item.value));
 };
 
 export const useStrategyListName = () => {
+  const { t } = useTranslation();
   return {
-    strategy_line_keep: '直线保持',
-    strategy_under_fork_protection: '叉臂下方保护',
-    strategy_place_cargo_space_protection: '放货空间检测',
-    strategy_pick_cargo_fork_tip_protection: '取货叉尖保护',
-    strategy_end_path_adaptive_reduce_range: '末端路线自适应调整避障',
-    strategy_top_protection: '顶部安全防护',
-    strategy_door_frame_move_protection: '移动门架保护',
-    strategy_end_path_close_protection: '末端路线屏蔽叉尖避障',
-    strategy_amr_load_protection: 'AMR负载防护',
+    strategy_line_keep: t('common.lineKeep'),
+    strategy_under_fork_protection: t('common.underForkProtection'),
+    strategy_place_cargo_space_protection: t('common.placeCargoSpaceProtection'),
+    strategy_pick_cargo_fork_tip_protection: t('common.pickCargoForkTipProtection'),
+    strategy_end_path_adaptive_reduce_range: t('common.endPathAdaptiveReduceRange'),
+    strategy_top_protection: t('common.topProtection'),
+    strategy_door_frame_move_protection: t('common.doorFrameMoveProtection'),
+    strategy_end_path_close_protection: t('common.endPathCloseProtection'),
+    strategy_amr_load_protection: t('common.amrLoadProtection'),
   };
 };
 export default useActiveDevice;

@@ -24,6 +24,7 @@
     "actionSuccess": "Success",
     "add": "Add",
     "all": "All",
+    "amrLoadProtection": "AMR payload protection",
     "back": "Back",
     "backToHome": "Back home",
     "cancel": "Cancel",
@@ -101,14 +102,18 @@
         "offsetEmptyTips": "The value of the offset table cannot be empty or 0 at the same time"
       }
     },
+    "doorFrameMoveProtection": "Mobile mast protection",
     "download": "Download",
     "edit": "Edit",
+    "endPathAdaptiveReduceRange": "Terminal route adaptive adjustment and obstacle avoidance",
+    "endPathCloseProtection": "Terminal route shielding fork tip obstacle avoidance",
     "endTime": "End time",
     "error": "Error",
     "errorMsg": {
       "title": "Abnormal message"
     },
     "exit": "Quit",
+    "forkArm": "Fork arm",
     "home": {
       "actualSpeed": "V_actual",
       "auto": "Auto",
@@ -150,6 +155,7 @@
       "withoutAuth": "Unauthorized, please log in again"
     },
     "info": "Info",
+    "lineKeep": "straight line hold",
     "login": "Log in",
     "loginSuccessTip": "Login successful, if there is no operation within ten minutes, the system will automatically exit!",
     "logoutTip": "Confirm logging out?",
@@ -216,6 +222,8 @@
       "view": "View"
     },
     "password": "Password",
+    "pickCargoForkTipProtection": "Retrieval fork tip protection",
+    "placeCargoSpaceProtection": "Cargo space inspection",
     "pleaseInput": "Please enter",
     "pleaseInputNumber": "Please enter the correct number",
     "pleasePassword": "Please enter your password",
@@ -243,9 +251,11 @@
     },
     "save": "Save",
     "search": "Search",
+    "self": "Itself",
     "serverError": "Sorry, an error occurred on the server.",
     "setting": "Setting",
     "severelyExpired": "Seriously overdue",
+    "shakeArm": "Shaking head mechanism",
     "startTime": "Start time",
     "status": "State",
     "success": "Accomplish",
@@ -264,8 +274,11 @@
       "unexecuted": "Not executed"
     },
     "tips": "Tips",
+    "topProtection": "Top safety protection",
+    "topRadarLift": "Top radar lifting rod",
     "triggered": "Triggered",
     "unauthorized": "No map data",
+    "underForkProtection": "Lower wishbone protection",
     "update": "Update",
     "username": "Username",
     "warn": "Warn"
@@ -462,6 +475,30 @@
       "sensorCloud": "Viewing sensor point cloud",
       "status": "Obstacle avoidance information",
       "stop_distance": "Parking distance",
+      "strategyInfo": {
+        "associatedIoSensorList": "The IO signal name used",
+        "associatedPcSensorList": "The name of the point cloud sensor used",
+        "associatedSensorList": "Sensor name used",
+        "cuboid": "Three-dimensional protection area",
+        "emptyLoadCuboid": "No-load protection area",
+        "forkForwardProtectDistance": "Front protection distance",
+        "forkLateralMoveProtectDistance": "Lateral protection distance",
+        "forkarmHeightCut": "How much space below the upper surface of the shielding fork is required?",
+        "fullLoadCuboid": "Full load protection area",
+        "heightEnd": "Backward minimum protection distance",
+        "heightStart": "Minimum forward protection distance",
+        "minDistanceToTaskPointCloseThis": "Close this strategy after the distance from the task point is less than the certain distance",
+        "minDistanceToTaskPointOpenThis": "Enable this strategy after the distance from the task point is less than a certain distance",
+        "minForkarmHeightToOpenThis": "Enable the minimum wishbone height of the current strategy",
+        "pickCargoPcCloseDistance": "Maximum distance for shielding point cloud obstacle avoidance (picking up goods)",
+        "pickCargoPeCloseDistance": "Maximum distance for shielded photoelectric obstacle avoidance (pickup)",
+        "placeCargoPcCloseDistance": "Maximum distance for shielding point cloud obstacle avoidance (delivery)",
+        "placeCargoPeCloseDistance": "Maximum distance for shielded photoelectric obstacle avoidance (delivery)",
+        "protectRange": "Scope of protection",
+        "startProtectHeight": "Starting protection height",
+        "steerAngleTolerance": "Rudder angle threshold",
+        "subStrategy": "Substrategy"
+      },
       "switch_scheme": "Switch obstacle avoidance",
       "title": "Obstacle avoidance",
       "vehicleStatus": "Vehicle status"
