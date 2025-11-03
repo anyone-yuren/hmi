@@ -701,7 +701,7 @@
       "firstLayerGoodsHeight": "Hauteur d'une couche de marchandise",
       "firstVision": "Première détection visuelle",
       "firstVisualPoint": "Premier point de détection visuelle",
-      "forkDistancePallet": "Distance entre la cuspide de la dent et la surface avant du porte-empreinte",
+      "forkDistancePallet": "La distance entre la pointe de la dent et la surface de la palette lorsque la carrosserie du véhicule est alignée pendant la conduite",
       "forkExtendDistCompensation": "Compensation de distance de déploiement du bras de fourche",
       "forkExtendParams": "Compensation de hauteur de fourche supplémentaire",
       "forkUpPointCloud": "Nuage de points au-dessus du bras de fourche",

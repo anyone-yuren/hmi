@@ -702,7 +702,7 @@
       "firstLayerGoodsHeight": "1層目の貨物高さ",
       "firstVision": "最初の視覚",
       "firstVisualPoint": "最初の視覚ポイント",
-      "forkDistancePallet": "歯頭からトレイ前面までの距離",
+      "forkDistancePallet": "走行中に車体を整列させたときの歯先からパレット表面までの距離",
       "forkExtendDistCompensation": "ウィッシュボーンリーチ補正",
       "forkExtendParams": "エクストラフォーク高さ補償",
       "forkUpPointCloud": "フォーク上部の点群",

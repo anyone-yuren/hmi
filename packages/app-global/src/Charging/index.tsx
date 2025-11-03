@@ -1,7 +1,7 @@
 import { AppstoreOutlined, ColumnWidthOutlined, DotChartOutlined, SnippetsOutlined } from '@ant-design/icons';
 import { useVehicleStore } from '@gbeata/store';
 import { Divider, Stack } from '@mui/material';
-import { Button, Modal, Popconfirm, Result, Typography } from 'antd';
+import { Button, message, Modal, Popconfirm, Result, Typography } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -16,15 +16,19 @@ const Charging = () => {
   const { t, i18n } = useTranslation();
   const [modal, contextHolder] = Modal.useModal();
   const [hasTask, setHasTask] = useState(true);
-  const { powerStatus, chargePileStatus, taskInfo } = useVehicleStore(
+  const { powerStatus, chargePileStatus, taskInfo, auto_manual_status } = useVehicleStore(
     useShallow((state) => {
       return {
         powerStatus: state.powerStatus,
         chargePileStatus: state.chargePileStatus,
         taskInfo: state.taskInfo,
+        auto_manual_status: state.auto_manual_status,
       };
     }),
   );
+  const isAutoMode = useMemo(() => {
+    return auto_manual_status === 2;
+  }, [auto_manual_status]);
 
   const temperatureTitle = useMemo(() => {
     if (!chargePileStatus?.temperature_value) {
@@ -107,6 +111,10 @@ const Charging = () => {
                         okText: t('common.confirm'),
                         cancelText: t('common.cancel'),
                         async onOk() {
+                          if (!isAutoMode) {
+                            message.error(t('common.charging.confirm3'));
+                            return;
+                          }
                           await postChargingFunction({ cmd: 'StartCharge' });
                           setHasTask(true);
                         },
@@ -231,9 +239,11 @@ const Charging = () => {
                   setHasTask(false);
                 }}
               >
-                <Button variant='solid' className='absolute bottom-4 right-4 z-[100]' color='danger'>
-                  {t('common.charge.cancelChargeTask')}
-                </Button>
+                {isAutoMode && (
+                  <Button variant='solid' className='absolute bottom-4 right-4 z-[100]' color='danger'>
+                    {t('common.charge.cancelChargeTask')}
+                  </Button>
+                )}
               </Popconfirm>
             </div>
           </div>

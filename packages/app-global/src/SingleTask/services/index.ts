@@ -33,6 +33,7 @@ export const getRcsTaskList = (vehicleNum: number) =>
     {},
     '25018',
   );
+export const getRcsTaskInfo = (id: string) => get(`/api/v1/MissionItem/GetListAsync?missionId=${id}`, {}, '25018');
 
 export const createRcsTask = (data) => post('/api/v1/Mission/CreateAsync', data, '25018');
 

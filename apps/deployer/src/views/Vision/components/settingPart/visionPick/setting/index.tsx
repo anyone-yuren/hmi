@@ -17,11 +17,11 @@ import { getModelList, getVisionPickSetting, saveVisionPickSetting } from '../..
 import { useVisionStore } from '../../../../store/vision.store';
 import CustomSelect from '../../comp/customSelect';
 import CustomSwitch from '../../comp/customSwitch';
+import LoadingButton from '../../comp/loadingButton';
 import PointCloudFilter from '../../comp/pointCloudFilter';
 import TextChangeRow from '../../comp/textChangeRow';
 import TextUpdateRow from '../../comp/textUpdateRow';
 import Illustration from './illustration';
-
 const Title = (props: any) => {
   return (
     <Divider style={{ borderColor: 'black' }} orientation='left'>
@@ -816,9 +816,14 @@ const Setting = (props: any) => {
               </>
             )}
 
-            <Button fullWidth variant='contained' sx={{ color: 'white', marginBottom: '40px' }} onClick={handleSave}>
+            <LoadingButton
+              fullWidth
+              variant='contained'
+              sx={{ color: 'white', marginBottom: '40px' }}
+              onPress={handleSave}
+            >
               {t('common.save')}
-            </Button>
+            </LoadingButton>
           </div>
 
           <Illustration vehicleChassis={vehicleChassis}></Illustration>

@@ -19,6 +19,8 @@ interface State {
   setShowRealTimePoints: (showRealTimePoints: boolean) => void;
   agvViewLock: boolean;
   setAgvViewLock: (agvViewLock: boolean) => void;
+  subscriptionFeedList: string[];
+  setSubscriptionFeedList: (list: string[]) => void;
 }
 
 const storageOptions = {
@@ -78,6 +80,11 @@ const localAndMapStore = (
   agvViewLock: true,
   setAgvViewLock: (agvViewLock: boolean) => {
     set({ agvViewLock });
+  },
+
+  subscriptionFeedList: [],
+  setSubscriptionFeedList: (list: string[]) => {
+    set({ subscriptionFeedList: list });
   },
 });
 

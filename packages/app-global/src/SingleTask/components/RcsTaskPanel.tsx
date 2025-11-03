@@ -4,7 +4,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, MenuItem, Tab, Tabs, Typography } from '@mui/material';
-import { useAsyncEffect, useRequest } from 'ahooks';
+import { useAsyncEffect, useRequest, useUpdateEffect } from 'ahooks';
 import { Input } from 'antd';
 import dayjs from 'dayjs';
 import _ from 'lodash';
@@ -21,6 +21,7 @@ import {
   deleteRcsTemplateTask,
   getHeightInfo,
   getPalletList,
+  getRcsTaskInfo,
   getRcsTaskList,
   getRcsTemplateTaskList,
   updateRcsMissionState,
@@ -83,6 +84,7 @@ interface IProps {
   charges: any[];
   locations: any[];
   isKVehicle: boolean;
+  rcsModalConfig: {};
   setRcsModalConfig: (obj: any) => void;
   vehicleNum: number;
 }
@@ -97,6 +99,7 @@ const RcsTaskPanel = (props: IProps) => {
     charges,
     locations,
     isKVehicle = false,
+    rcsModalConfig = {},
     setRcsModalConfig,
     vehicleNum,
   } = props;
@@ -104,12 +107,13 @@ const RcsTaskPanel = (props: IProps) => {
   const [activeKey, setActiveKey] = useState<IActive>('task');
   const [loading, setLoading] = useState(false);
   const [loopTime, setLoopTime] = useState(1);
-  const [palletNo, setPalletNo] = useState(null);
+  const [palletNo, setPalletNo] = useState('');
   const [templateId, setTemplateId] = useState('');
   const [templateName, setTemplateName] = useState('');
   const [templateTaskList, setTemplateTaskList] = useState([]);
   const [taskList, setTaskList] = useState([]);
   const [taskMode, setTaskMode] = useState('create');
+  const [missionId, setMissionId] = useState('');
   const { data: heightResponse } = useRequest(() => getHeightInfo(), {});
   const taskActionRef = useRef<any>(null);
 
@@ -206,11 +210,22 @@ const RcsTaskPanel = (props: IProps) => {
   const { TaskStatusHashMap } = useConstants();
 
   useAsyncEffect(async () => {
-    console.log('refreshTaskList', refreshTaskList);
     if (refreshTaskList > 1) {
       getTaskListAsync();
     }
   }, [refreshTaskList]);
+
+  useUpdateEffect(() => {
+    if (refreshTaskList > 1 && missionId) {
+      getRcsTaskInfo(missionId).then((res) => {
+        const { data } = res;
+        setRcsModalConfig({
+          ...rcsModalConfig,
+          rows: data,
+        });
+      });
+    }
+  }, [missionId, refreshTaskList]);
 
   const options: any = useMemo(() => {
     return heightResponse?.data || [];
@@ -241,9 +256,9 @@ const RcsTaskPanel = (props: IProps) => {
     isTask ? await getTaskListAsync() : await getTemplateTaskListAsync();
   }, [isTask]);
 
-  useEffect(() => {
-    console.log('palletList', palletList);
-  }, [palletList]);
+  // useEffect(() => {
+  //   console.log('palletList', palletList);
+  // }, [palletList]);
   const handleAdd = () => {
     const list = _.cloneDeep([...preTaskList]);
     const obj = { ...initTaskActionRow, id: generateUniqueId() };
@@ -530,11 +545,14 @@ const RcsTaskPanel = (props: IProps) => {
     setActiveKey('task');
   };
 
-  const handleOption = (option, type) => {
+  const handleOption = async (option, type) => {
+    const { data } = await getRcsTaskInfo(option.id);
+    setMissionId(option.id);
     setRcsModalConfig({
       visible: true,
-      rows: option?.tasks,
+      rows: data,
       mode: type,
+      // id: option.id,
     });
   };
 
