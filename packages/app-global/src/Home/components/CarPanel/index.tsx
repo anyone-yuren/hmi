@@ -6,7 +6,6 @@ import { memo, Suspense } from 'react';
 import { getSegmentsInfo, getVehicleShape } from '../../services';
 import PageException from '../ErrorPage';
 import LocationPoint from '../point/locationPoint';
-import RouteWind from './components/activeRoute';
 import Car from './components/car';
 import MxwCar from './components/device';
 import RcsLines from './components/routeLiles';
@@ -80,14 +79,14 @@ const CarStage = () => {
         > */}
           <Car />
           <MxwCar />
-          <RouteWind
+          {/* <RouteWind
             tubularSegments={80}
             radius={0.05}
             windAmplitude={0.01}
             windFrequency={0.1}
             position={[0, 0, 0]}
             rotation={[0, 0, 0]}
-          />
+          /> */}
           <LocationPoint />
           {routeLinesData?.data?.length ? <RcsLines mapEdges={routeLinesData?.data} /> : null}
           {/* <ActiveLine /> */}
