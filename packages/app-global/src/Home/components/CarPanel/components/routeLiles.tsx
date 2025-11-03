@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 
 import { useFrame, useThree } from '@react-three/fiber';
 import { BufferGeometry, CatmullRomCurve3, LineBasicMaterial, Vector3 } from 'three';
-import CanvasText from '../../point/cavansText';
+// import CanvasText from '../../point/cavansText';
 
 const convertToMeters = (value: number) => {
   return value / 1000;
@@ -58,7 +58,7 @@ const RcsLines = ({ mapEdges = [] }) => {
             fontSize={0.3}
             color="white"
           /> */}
-          <CanvasText text={edgeId} position={center} fontSize={'4px'} />
+          {/* <CanvasText text={edgeId} position={center} fontSize={'4px'} /> */}
         </group>
       );
     });

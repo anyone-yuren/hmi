@@ -66,7 +66,7 @@ const DrawerContent = (props: IProps) => {
   const { modal } = App.useApp();
   const { token } = useToken();
   const [form] = Form.useForm();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const {
     data: IoResponse,
     mutate: updateIoResponse,
@@ -93,7 +93,7 @@ const DrawerContent = (props: IProps) => {
     manual: true,
     onSuccess: (res) => {
       if (res?.code === 200) {
-        toast.success('更新成功', {
+        toast.success(t('common.actionSuccess'), {
           position: 'bottom-center',
         });
         refreshCurrentObsInfo(currentObsInfo.scheme_id, true);
@@ -166,7 +166,7 @@ const DrawerContent = (props: IProps) => {
           onClick={() => getDevice()}
         >
           <SvgIcon className='group-hover:scale-110 animation-all duration-300' name='servicerror' size={80}></SvgIcon>
-          <p className='opacity-60 text-xs'>请求失败，请重试！</p>
+          <p className='opacity-60 text-xs'>{t('common.requestFailed')}</p>
         </div>
       );
     return deviceList?.data ? (
@@ -186,7 +186,7 @@ const DrawerContent = (props: IProps) => {
   backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
       >
         <SvgIcon className='group-hover:scale-110 animation-all duration-300' name='noArea' size={128}></SvgIcon>
-        <p className='opacity-60 text-xs'>暂无传感器数据，请添加</p>
+        <p className='opacity-60 text-xs'>{t('common.noSensorData')}</p>
       </div>
     );
   }, [currentObsInfo, deviceList?.data, serviceLanguage, loadingDevice]);
@@ -229,8 +229,8 @@ const DrawerContent = (props: IProps) => {
   // 批量删除
   const handleBatchDelete = () => {
     modal.confirm({
-      title: '确认删除？',
-      okText: '确认',
+      title: t('common.confirmDelete'),
+      okText: t('common.confirm'),
       onOk: () => {
         setRects(rects.filter((item) => !checkedList.includes(item.id)));
         setCheckedList([]);
@@ -245,14 +245,16 @@ const DrawerContent = (props: IProps) => {
         <div className='flex flex-col gap-2'>
           <Tooltip placement='topRight' title='修改避障策略参数，请使用roboToolkit'>
             <p className='text-md font-bold relative pb-2 flex justify-between items-center'>
-              避障策略
+              {t('deployer.safety.obs_strategy')}
               <ExclamationCircleOutlined className='text-md' />
               <Line1px />
             </p>
           </Tooltip>
 
           <Checkbox.Group className='grid grid-cols-1  rounded-md' value={currentObsInfo?.strategy_list}>
-            {Object.keys(propStrategyList).length === 0 && <p className='text-xs text-gray-500'>暂无数据</p>}
+            {Object.keys(propStrategyList).length === 0 && (
+              <p className='text-xs text-gray-500'>{t('common.noData')}</p>
+            )}
             {Object.keys(propStrategyList).map((item) => {
               return (
                 <div
@@ -289,7 +291,7 @@ const DrawerContent = (props: IProps) => {
         <div className='flex flex-col gap-2'>
           <Tooltip placement='topRight' title='修改关联IO信号，请使用roboToolkit'>
             <p className='text-md font-bold relative py-2 flex justify-between items-center'>
-              IO信号（输入）
+              {t('deployer.safety.io_signal')}
               <ExclamationCircleOutlined className='text-md' />
               <Line1px />
             </p>
@@ -310,7 +312,7 @@ const DrawerContent = (props: IProps) => {
                   size={80}
                 ></SvgIcon>
                 <p className='opacity-60 text-xs' onClick={() => getIoResponse()}>
-                  请求失败，请重试！
+                  {t('common.requestFailed')}
                 </p>
               </div>
             )}
@@ -333,46 +335,48 @@ const DrawerContent = (props: IProps) => {
         <div className='flex flex-col gap-2'>
           <div className='flex flex-col gap-2'>
             <p className='text-md font-bold relative py-2'>
-              停车距离
+              {t('deployer.safety.stop_distance')}
               <Line1px />
             </p>
             <div className='flex flex-col gap-2'>
               <div className='flex flex-col gap-2'>
-                <p className='text-xs text-nowrap shrink-0'>前方安全停车距离</p>
+                <p className='text-xs text-nowrap shrink-0'>{t('deployer.safety.forward_stop_distance')}</p>
                 <Form.Item
                   className='!mb-0 flex-1'
                   name='forward_stop_distance'
-                  rules={[{ required: true, message: '请输入' }]}
+                  rules={[{ required: true, message: t('common.pleaseInput') }]}
                 >
                   <InputNumber className='w-full' />
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
-                <p className='text-xs text-nowrap shrink-0'>后方安全停车距离</p>
+                <p className='text-xs text-nowrap shrink-0'>{t('deployer.safety.backward_stop_distance')}</p>
                 <Form.Item
                   className='!mb-0 flex-1'
                   name='backward_stop_distance'
-                  rules={[{ required: true, message: '请输入' }]}
+                  rules={[{ required: true, message: t('common.pleaseInput') }]}
                 >
                   <InputNumber className='w-full' />
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
-                <p className='text-xs text-nowrap shrink-0'>自旋安全停车距离</p>
+                <p className='text-xs text-nowrap shrink-0'>{t('deployer.safety.rotate_stop_distance')}</p>
                 <Form.Item
                   className='!mb-0 flex-1'
                   name='rotate_stop_distance'
-                  rules={[{ required: true, message: '请输入' }]}
+                  rules={[{ required: true, message: t('common.pleaseInput') }]}
                 >
                   <InputNumber className='w-full' />
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
-                <p className='text-xs text-nowrap shrink-0 min-w-[150px]'>地面滤波</p>
+                <p className='text-xs text-nowrap shrink-0 min-w-[150px]'>
+                  {t('deployer.safety.ground_filter_height')}
+                </p>
                 <Form.Item
                   className='!mb-0 flex-1'
                   name='ground_filter_height'
-                  rules={[{ required: true, message: '请输入' }]}
+                  rules={[{ required: true, message: t('common.pleaseInput') }]}
                 >
                   <InputNumber className='w-full' />
                 </Form.Item>
@@ -381,7 +385,10 @@ const DrawerContent = (props: IProps) => {
           </div>
         </div>
 
-        <Accordion title={<p className='text-md font-bold relative py-2'>点云传感器</p>} defaultOpen={false}>
+        <Accordion
+          title={<p className='text-md font-bold relative py-2'>{t('deployer.safety.pc_sensor')}</p>}
+          defaultOpen={false}
+        >
           <Form.Item className='mb-0' name='pc_sensor_list'>
             <Checkbox.Group className='grid w-full'>
               <div className='flex flex-col gap-2 mt-2'>{memoDeviceList}</div>
@@ -393,7 +400,7 @@ const DrawerContent = (props: IProps) => {
 
       <div className='flex flex-col gap-2'>
         <p className='flex justify-between items-center text-md font-bold relative pb-2'>
-          安全保护区域
+          {t('deployer.safety.safetyLateral')}
           {!isBatchDelete ? (
             <MinusCircleOutlined
               className={`${rects.length ? '' : 'hidden'} text-lg cursor-pointer opacity-60 hover:opacity-100 hover:scale-125 animation-all duration-300`}
@@ -514,7 +521,7 @@ const DrawerContent = (props: IProps) => {
   backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
             >
               <SvgIcon className='group-hover:scale-110 animation-all duration-300' name='noArea' size={128}></SvgIcon>
-              <p className='opacity-60 text-xs'>暂无区域数据，请添加</p>
+              <p className='opacity-60 text-xs'>{t('deployer.safety.no_area_data')}</p>
             </div>
           )}
         </Checkbox.Group>
@@ -546,7 +553,7 @@ const DrawerContent = (props: IProps) => {
               setOpenUpdateObsDrawer(false);
             }}
           >
-            修改
+            {t('common.update')}
           </Button>
         </AuthComponent>
         <Button
@@ -556,8 +563,8 @@ const DrawerContent = (props: IProps) => {
             const hasChange = isFormChanged();
             if (hasChange) {
               modal.confirm({
-                title: '当前数据有变更，是否确认退出',
-                okText: '确认',
+                title: t('deployer.safety.confirm_exit'),
+                okText: t('common.confirm'),
                 onOk: () => {
                   refreshCurrentObsInfo(null);
                   setOpenUpdateObsDrawer(false);
@@ -568,7 +575,7 @@ const DrawerContent = (props: IProps) => {
             }
           }}
         >
-          取消
+          {t('common.cancel')}
         </Button>
       </div>
     </div>

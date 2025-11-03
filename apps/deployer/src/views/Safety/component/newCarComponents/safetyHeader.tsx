@@ -3,6 +3,7 @@ import { Button, Select, Skeleton, Switch } from 'antd';
 import { useResponsive } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { useSafetyStore } from '../../store/safety.store';
@@ -17,6 +18,7 @@ interface IProps {
   refreshCurrentObsInfo: (scheme_id: number) => void;
 }
 const SafetyHeader = (props: IProps) => {
+  const { t } = useTranslation();
   const { isDark, setOpenUpdateObsDrawer, setIsDark, show, setShow, obsData, loading, refreshCurrentObsInfo } = props;
 
   const [showSelect, setShowSelect] = useState(false);
@@ -47,7 +49,7 @@ const SafetyHeader = (props: IProps) => {
               onClick={() => setShow(!show)}
             />
             <p className='shrink-0'>
-              当前避障方案：
+              {t('deployer.safety.current_scheme')}：
               <span
                 className={`px-4 py-1 cursor-pointer ${
                   !isDark
@@ -57,7 +59,7 @@ const SafetyHeader = (props: IProps) => {
                 onClick={() => {
                   const currentObs = obsData?.find((item) => item?.scheme_id === obsInfo?.scheme_id);
                   if (!(currentObs && currentObs.scheme_id)) {
-                    toast.error('当前方案不存在');
+                    toast.error(t('deployer.safety.current_scheme_not_exist'));
                     return;
                   }
                   setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(true);
@@ -85,7 +87,7 @@ const SafetyHeader = (props: IProps) => {
                     icon={<SwapOutlined />}
                     onClick={() => setShowSelect(true)}
                   >
-                    切换避障
+                    {t('deployer.safety.switch_scheme')}
                   </Button>
                 </motion.div>
               ) : (
@@ -124,7 +126,7 @@ const SafetyHeader = (props: IProps) => {
                       setOpenUpdateObsDrawer && setOpenUpdateObsDrawer(false);
                     }}
                   >
-                    取消
+                    {t('deployer.safety.cancel')}
                   </Button>
                 </motion.div>
               )}

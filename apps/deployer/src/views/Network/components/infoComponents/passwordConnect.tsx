@@ -1,20 +1,28 @@
 import PanelLock from '@/components/lockPanel';
 import { useRequest } from 'ahooks';
 import { Button, Checkbox, Form, Input, InputNumber, Select, Switch, message } from 'antd';
-import { useMemo } from 'react';
-import { postConnectAp } from '../../services';
+import { useEffect, useMemo } from 'react';
+import { getRoamingInfo, postConnectAp } from '../../services';
 
 const PasswordConnect = (props) => {
   const { selectNetwork, currentAp } = props;
   const [form] = Form.useForm();
 
+  const { data: roamingData } = useRequest(getRoamingInfo);
+
   const initValues = useMemo(() => {
     return {
       encryption: '-',
       turbo_roam: true,
-      rssi_threshold: -70,
+      rssi_threshold: -75,
     };
-  }, [currentAp]);
+  }, [selectNetwork]);
+
+  useEffect(() => {
+    if (roamingData?.data) {
+      form.setFieldsValue(roamingData?.data);
+    }
+  }, [roamingData?.data]);
 
   const { runAsync: connectAp, loading } = useRequest(postConnectAp, {
     manual: true,
@@ -35,6 +43,13 @@ const PasswordConnect = (props) => {
     label: v,
     value: v,
   }));
+
+  const renderOption = useMemo(() => {
+    if (selectNetwork?.hwmode === '2.4G') {
+      return option24g;
+    }
+    return options;
+  }, [selectNetwork, currentAp]);
 
   /** ✅ 提交函数 */
   const submit = async () => {
@@ -129,7 +144,7 @@ const PasswordConnect = (props) => {
             name='turbo_freqlist'
             rules={[{ required: true, message: '请选择至少一个信道' }]}
           >
-            <Checkbox.Group options={options} />
+            <Checkbox.Group options={renderOption} />
           </Form.Item>
 
           {/* 漫游开关 */}

@@ -10,6 +10,7 @@ import Hammer from 'hammerjs';
 import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Group, Layer, Line, Rect, Stage, Text, Transformer } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import CarModel from './component/newCarComponents/carModel';
@@ -29,6 +30,7 @@ import { buildCarEdgeGuides, getRectBox, getRelativePointerPosition, normalizeRe
 const snap = 10;
 
 export default function RectDrawer() {
+  const { t } = useTranslation();
   const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const stageRef = useRef<Konva.Stage>(null);
   const layerRef = useRef<Konva.Layer>(null);
@@ -693,11 +695,13 @@ export default function RectDrawer() {
               <Maphandles centerOriginWithAnimation={centerOriginWithAnimation} />
               <div className='p-2 flex items-center gap-3 absolute bottom-0 left-0 right-0'>
                 {isMobile ? (
-                  <div className='text-sm opacity-80'>绘制与编辑安全区域，请使用PC进行操作</div>
+                  <div className='text-sm opacity-80'>{t('deployer.safety.draw_safety_area')}</div>
                 ) : (
                   <>
-                    <span className='text-sm opacity-80'>左键拖拽绘制矩形；按住 Shift 约束为正方形；Esc 取消。</span>
-                    <span className='ml-auto text-sm opacity-60'>当前缩放：{Math.round(scale * 100)}%</span>
+                    <span className='text-sm opacity-80'>{t('deployer.safety.draw_description')}</span>
+                    <span className='ml-auto text-sm opacity-60'>
+                      {t('deployer.safety.current_zoom')}：{Math.round(scale * 100)}%
+                    </span>
                   </>
                 )}
               </div>
@@ -857,7 +861,7 @@ export default function RectDrawer() {
         </div>
 
         <Drawer
-          title='避障方案调整'
+          title={t('deployer.safety.obs_drawer_title')}
           open={openUpdateObsDrawer}
           onClose={() => setOpenUpdateObsDrawer(false)}
           width={'360px'}

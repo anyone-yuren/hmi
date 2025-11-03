@@ -24,6 +24,10 @@ interface State {
   // 雷达数据
   robotRadarStatus: Record<any, any>[];
   setRobotRadarStatus: (data: Record<any, any>[]) => void;
+
+  // 获取当前正在行驶的路线数据
+  segmentsInfo: Record<any, any>[];
+  setSegmentsInfo: (data: Record<any, any>[]) => void;
 }
 
 export const useHomeStore = create<State>()(
@@ -76,6 +80,13 @@ export const useHomeStore = create<State>()(
         // 使用lodash isEqual与对象比较
         if (!isEqual(data, get().robotRadarStatus)) {
           set({ robotRadarStatus: data });
+        }
+      },
+      segmentsInfo: [],
+      setSegmentsInfo: (data) => {
+        // 使用lodash isEqual与对象比较
+        if (!isEqual(data, get().segmentsInfo)) {
+          set({ segmentsInfo: data });
         }
       },
     }),

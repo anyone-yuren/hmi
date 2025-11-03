@@ -54,3 +54,8 @@ export const postUpdatePort = (data: any) => {
 export const postImportPortList = (data: any) => {
   return post('/mwrobot/wireless_client/set_port_fwd_list', data);
 };
+
+// 获取当前连接信号信道
+export const getRoamingInfo = () => {
+  return get('/mwrobot/wireless_client/get_roaming_info');
+};

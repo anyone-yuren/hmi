@@ -16,7 +16,8 @@ import { getApInfo, getApList } from './services';
 const CONTAINER_HEIGHT = 250; // 虚拟列表容器高度，可按需要调整
 
 const NetworkPage = () => {
-  const [isLinked, setIsLinked] = useState('MultiwayRobot-4G');
+  const [isLinked, setIsLinked] = useState('');
+  const genKey = (ssid, channel, hwmode, address) => `${ssid}-${channel}-${hwmode}-${address}`;
 
   const [selectNetwork, setSelectNetwork] = useState(null);
   const {
@@ -43,13 +44,13 @@ const NetworkPage = () => {
 
   /** 渲染单个网络项 */
   const renderNetworkItem = (network: any, index) => {
-    const { ssid, channel, encryption, quality, hwmode } = network;
-    const puuid = `${ssid}-${channel}-${hwmode}-${index}`;
+    const { ssid, channel, encryption, quality, hwmode, address } = network;
+    const puuid = genKey(ssid.trim(), channel, hwmode, address);
     return (
       <div
         // key={puuid}
         className={`group !mb-2 w-full bg-white/10 rounded-xl flex flex-row gap-2 justify-between items-center p-2 hover:bg-white/5 hover:shadow-lg hover:font-bold animation-all duration-300 cursor-pointer ${
-          isLinked === puuid ? 'bg-teal-400/60 shadow-lg' : ''
+          isLinked === puuid ? '!bg-teal-400/60 shadow-lg' : ''
         }`}
         onClick={() => {
           setSelectNetwork(network);
@@ -91,8 +92,9 @@ const NetworkPage = () => {
         <div
           className='bg-teal-500/10 p-2 rounded-lg flex items-center justify-between shadow-sm shadow-teal-300 font-bold cursor-pointer'
           onClick={() => {
-            const { ssid, channel, hwmode } = currentAp?.data || {};
-            setSelectNetwork(ssid + channel + hwmode);
+            const { ssid, channel, hwmode, address } = currentAp?.data || {};
+            setSelectNetwork(currentAp?.data);
+            setIsLinked(genKey(ssid, channel, hwmode, address));
           }}
         >
           <p>当前连接</p>
@@ -104,7 +106,7 @@ const NetworkPage = () => {
           <h3 className='mb-2 font-bold text-lg'>5G</h3>
           {networkList?.ap_list_5G?.length ? (
             <VirtualList
-              data={networkList.ap_list_5G.filter((item) => item.ssid?.trim())}
+              data={networkList.ap_list_5G.filter((item, index) => item.ssid?.trim())}
               height={CONTAINER_HEIGHT}
               // itemHeight={60}
               itemKey={(item) => `${item.ssid}-${item.channel}-${item.hwmode}`}

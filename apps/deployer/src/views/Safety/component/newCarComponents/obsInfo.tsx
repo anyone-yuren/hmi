@@ -79,7 +79,7 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
         style={{ backgroundColor: token.colorBgElevated }}
       >
         <p className='text-md font-bold relative pb-2'>
-          避障信息
+          {t('deployer.safety.obs_info')}
           <Line1px />
         </p>
         <div
@@ -91,7 +91,7 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
           // style={{ aspectRatio: '4/3' }}
         >
           <div>
-            <p className='text-xs mb-2'>避障策略</p>
+            <p className='text-xs mb-2'>{t('deployer.safety.obs_strategy')}</p>
             {strategyTpye.length ? (
               <div className='grid grid-cols-2 gap-1 max-h-16 overflow-y-auto'>
                 {strategyTpye.map((item, index) => {
@@ -110,43 +110,43 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
   backdrop-blur-[6px] hover:shadow-lg animation-all duration-300`}
               >
                 <SvgIcon className='group-hover:scale-110 animation-all duration-300' name='noArea' size={38}></SvgIcon>
-                <p className='opacity-60 text-xs'>暂未关联策略</p>
+                <p className='opacity-60 text-xs'>{t('deployer.safety.no_strategy_associated')}</p>
               </div>
             )}
           </div>
         </div>
         <div className='flex flex-col gap-2'>
           <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
-            <p className='text-md'>车辆状态</p>
+            <p className='text-md'>{t('deployer.safety.obs_status')}</p>
             {iMotionStatus[motionStatus]}
           </div>
           <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
-            <p className='text-md'>避障类型</p>
+            <p className='text-md'>{t('deployer.safety.obs_type')}</p>
             {getObsMsg(obsInfo.type)}
           </div>
           {obsInfo?.sensor_description?.length ? (
             <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
-              <p className='min-w-[40%]'>避障传感器</p>
+              <p className='min-w-[40%]'>{t('deployer.safety.obs_sensor')}</p>
               <p className='break-words flex items-center gap-2 flex-col'>
                 {obsInfo?.sensor_description?.map((item) => <span className='bg-black/5 px-1'>{item}</span>) || '-'}
               </p>
             </div>
           ) : null}
           <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
-            <p className='text-md'>货物状态</p>
+            <p className='text-md'>{t('deployer.safety.goods_status')}</p>
             {goodsInfo?.good_status ? (
               <Tag className='!m-0' color='green'>
-                有货
+                {t('common.safety.has_goods')}
               </Tag>
             ) : (
-              <Tag className='!m-0'>无货</Tag>
+              <Tag className='!m-0'>{t('common.safety.no_goods')}</Tag>
             )}
           </div>
         </div>
         {!client ? (
           <>
             <p className='text-md font-bold relative pb-2'>
-              点云查看
+              {t('common.safety.view3dpoints')}
               <Line1px />
             </p>
             <div
@@ -160,7 +160,7 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
             >
               <SvgIcon name='points' size={128} className='group-hover:scale-110 animation-all duration-300' />
               <p className='text-xs opacity-60'>
-                {currentObsData?.pc_sensor_list?.length ? '查看点云' : t('common.safety.noDevice')}
+                {currentObsData?.pc_sensor_list?.length ? t('common.safety.view3dpoints') : t('common.safety.noDevice')}
               </p>
             </div>
           </>

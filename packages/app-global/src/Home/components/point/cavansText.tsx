@@ -1,17 +1,10 @@
-import { Html } from "@react-three/drei";
-import { Button } from "antd";
-import { Suspense } from "react";
-import * as THREE from "three";
+import { Html } from '@react-three/drei';
+import { Suspense } from 'react';
 // 使用canvas绘制文字
-const HtmlPanel = ({ text, position, fontSize = "8px" }) => {
+const HtmlPanel = ({ text, position, fontSize = '8px' }) => {
   return (
     <Suspense>
-      <Html
-        distanceFactor={20}
-        position={position}
-        rotation={[-Math.PI / 2, 0, 0]}
-        transform
-      >
+      <Html distanceFactor={20} position={position} rotation={[-Math.PI / 2, 0, 0]} transform>
         <span
           style={{
             fontSize,
