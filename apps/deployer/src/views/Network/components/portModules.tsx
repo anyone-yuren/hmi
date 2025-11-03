@@ -2,6 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { Button, message, Modal, Switch, Table, TableColumnsType } from 'antd';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getPortList, postDeletePort, postPortFwdList, postUpdatePort } from '../services';
 import PortRuleDrawer, { PortRule } from './editorDrawer';
 import JsonFileUploader from './jsonFileUploader';
@@ -14,6 +15,7 @@ interface DataType {
 }
 
 const PortModules = () => {
+  const { t } = useTranslation();
   const [modal, contextHolder] = Modal.useModal();
   const { data: portData, loading, run } = useRequest(getPortList);
   // const [modal, contextHolder] = Modal.useModal();
@@ -41,19 +43,19 @@ const PortModules = () => {
 
   const columns: TableColumnsType<DataType> = [
     {
-      title: 'WAN端口号',
+      title: t('deployer.network.wanPort'),
       dataIndex: 'dest_port',
     },
     {
-      title: 'LAN端口IP地址',
+      title: t('deployer.network.lanIpAddress'),
       dataIndex: 'dest_ip',
     },
     {
-      title: 'LAN端口号',
+      title: t('deployer.network.lanPort'),
       dataIndex: 'src_port',
     },
     {
-      title: '应用状态',
+      title: t('deployer.network.enabled'),
       dataIndex: 'enabled',
       render: (value, row) => {
         return (
@@ -71,7 +73,7 @@ const PortModules = () => {
       },
     },
     {
-      title: '操作',
+      title: t('deployer.network.operation'),
       key: 'operation',
       fixed: 'right',
       width: 100,
@@ -84,15 +86,15 @@ const PortModules = () => {
               handleEdit(row);
             }}
           >
-            编辑
+            {t('common.edit')}
           </Button>
           <Button
             variant='text'
             color='red'
             onClick={() => {
               modal.confirm({
-                title: '确认删除吗？',
-                okText: '确认',
+                title: t('common.confirmDel'),
+                okText: t('common.confirm'),
                 okType: 'danger',
                 onOk: () => {
                   delPort({
@@ -102,7 +104,7 @@ const PortModules = () => {
               });
             }}
           >
-            删除
+            {t('common.delete')}
           </Button>
         </div>
       ),
@@ -130,13 +132,13 @@ const PortModules = () => {
     } else {
       addRun(values);
     }
-    message.success('保存成功！');
+    message.success(t('common.saveSuccess'));
   };
 
   const handleDownload = () => {
     const list = portData?.data?.port_forwarding_list ?? [];
     if (!list.length) {
-      message.warning('暂无可导出的数据');
+      message.warning(t('deployer.network.noExport'));
       return;
     }
 
@@ -154,13 +156,13 @@ const PortModules = () => {
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error(error);
-      message.error('导出失败');
+      message.error(t('deployer.network.failedExport'));
     }
   };
   return (
     <>
       <h3 className='text-lg font-bold mb-2 flex items-center justify-between'>
-        端口映射
+        {t('deployer.network.portMapping')}
         <div className='flex items-center gap-2'>
           <Button
             size='small'
@@ -170,11 +172,11 @@ const PortModules = () => {
               handleAdd();
             }}
           >
-            新增
+            {t('common.add')}
           </Button>
           <JsonFileUploader />
           <Button size='small' type='default' onClick={handleDownload}>
-            下载
+            {t('common.download')}
           </Button>
         </div>
       </h3>

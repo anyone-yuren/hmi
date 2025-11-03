@@ -2,11 +2,13 @@ import PanelLoading from '@/components/PanelLoading';
 import { useRequest } from 'ahooks';
 import { Button, Form } from 'antd';
 import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { getLanInfo, postLanNet } from '../../services';
 import Ipv4v6Input from '../ip4v6Input';
 
 const LanSetting = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const { data: lanInfo, loading, run } = useRequest(getLanInfo);
   const innitValues = useMemo(() => {
@@ -25,7 +27,7 @@ const LanSetting = () => {
     manual: true,
     onSuccess: (res) => {
       if (res?.code === 200) {
-        toast.success('LAN设置成功', {
+        toast.success(t('deployer.network.lanSettingSuccess'), {
           position: 'bottom-center',
         });
       }
@@ -39,7 +41,7 @@ const LanSetting = () => {
 
   return (
     <>
-      <h3 className='text-lg font-bold mb-2'>LAN设置</h3>
+      <h3 className='text-lg font-bold mb-2'>{t('deployer.network.lanSetting')}</h3>
       <div className='relative bg-white/10 rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:shadow-teal-400/20 hover:bg-white/5 shadow-lg '>
         {/* <PanelLock /> */}
         {loading ? <PanelLoading loading={loading} isDark={true} /> : null}
@@ -52,10 +54,10 @@ const LanSetting = () => {
           initialValues={innitValues}
         >
           <div className='flex gap-2 items-center'>
-            <Ipv4v6Input label='IP地址' name='ipaddr' disabled={false} />
+            <Ipv4v6Input label={t('deployer.network.ipAddress')} name='ipaddr' disabled={false} />
           </div>
           <div className='flex gap-2 items-center'>
-            <Ipv4v6Input label='子网掩码' name='netmask' disabled={false} />
+            <Ipv4v6Input label={t('deployer.network.subnetMask')} name='netmask' disabled={false} />
           </div>
           <div className='flex  gap-2'>
             <Button
@@ -66,7 +68,7 @@ const LanSetting = () => {
                 onSubmit();
               }}
             >
-              保存
+              {t('common.save')}
             </Button>
           </div>
         </Form>

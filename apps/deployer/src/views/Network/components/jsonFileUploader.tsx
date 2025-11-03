@@ -2,20 +2,22 @@ import { UploadOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { Button, message, Modal } from 'antd';
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { postImportPortList } from '../services';
 
 const JsonFileUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
+  const { t } = useTranslation();
   const [modal, contextHolder] = Modal.useModal();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { run: importPortList, loading: uploadLoading } = useRequest(postImportPortList, {
     manual: true,
     onSuccess: () => {
-      message.success('导入成功！');
+      message.success(t('common.exportSuccess'));
       onSuccess?.();
     },
     onError: (err) => {
-      message.error(err?.message || '导入失败');
+      message.error(err?.message || t('deployer.network.failedImport'));
     },
   });
 
@@ -24,7 +26,7 @@ const JsonFileUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) =
     if (!file) return;
 
     if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
-      message.error('请选择一个 JSON 文件！');
+      message.error(t('deployer.network.invalidJson'));
       event.target.value = '';
       return;
     }
@@ -36,12 +38,12 @@ const JsonFileUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) =
         const data = JSON.parse(text);
 
         if (!Array.isArray(data)) {
-          message.warning('JSON 文件格式不正确，应为数组结构！');
+          message.warning(t('deployer.network.invalidJsonFormat'));
           return;
         }
 
         modal.confirm({
-          title: '确认导入这些规则吗？',
+          title: t('deployer.network.confirmImport'),
           content: (
             <div
               style={{ maxHeight: 200, overflowY: 'auto' }}
@@ -52,14 +54,14 @@ const JsonFileUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) =
               {data.length > 5 && <div>... 共 {data.length} 条</div>}
             </div>
           ),
-          okText: '确认导入',
-          cancelText: '取消',
+          okText: t('common.confirm'),
+          cancelText: t('common.cancel'),
           onOk: () => {
             importPortList({ port_forwarding_list: data });
           },
         });
       } catch {
-        message.error('JSON 解析失败，请检查文件内容！');
+        message.error(t('deployer.network.parseJsonFailed'));
       }
     };
     reader.readAsText(file);
@@ -77,7 +79,7 @@ const JsonFileUploader: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) =
         loading={uploadLoading}
         onClick={() => fileInputRef.current?.click()}
       >
-        上传
+        {t('common.upload')}
       </Button>
       {contextHolder}
     </>

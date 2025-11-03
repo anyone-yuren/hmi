@@ -3,11 +3,13 @@ import PanelLoading from '@/components/PanelLoading';
 import { useRequest } from 'ahooks';
 import { Button, Form } from 'antd';
 import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { getWanInfo, postWanNet } from '../../services';
 import Ipv4v6Input from '../ip4v6Input';
 
 const WanSetting = (props) => {
+  const { t } = useTranslation();
   const { selectNetwork, currentAp } = props;
   const [form] = Form.useForm();
   const { data: wanInfo, loading } = useRequest(getWanInfo);
@@ -37,7 +39,7 @@ const WanSetting = (props) => {
 
   return (
     <>
-      <h3 className='text-lg font-bold mb-2'>WAN设置</h3>
+      <h3 className='text-lg font-bold mb-2'>{t('deployer.network.wanSetting')}</h3>
       <div className='relative bg-white/10 rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:shadow-teal-400/20 hover:bg-white/5 shadow-lg '>
         {loading ? <PanelLoading isDark={true} /> : null}
         {selectNetwork?.ssid || (currentAp && currentAp.ssid) ? null : <PanelLock />}
@@ -67,11 +69,16 @@ const WanSetting = (props) => {
                     </Form.Item>
                   </div> */}
 
-                  <Ipv4v6Input label='IP地址' name='ipaddr' disabled={false} />
-                  <Ipv4v6Input label='子网掩码' name='netmask' disabled={false} />
-                  <Ipv4v6Input label='默认网关' name='gateway' disabled={false} />
-                  <Ipv4v6Input label='首选DNS' name='first_dns' disabled={false} />
-                  <Ipv4v6Input label='备用DNS' name='second_dns' disabled={false} required={false} />
+                  <Ipv4v6Input label={t('deployer.network.ipAddress')} name='ipaddr' disabled={false} />
+                  <Ipv4v6Input label={t('deployer.network.subnetMask')} name='netmask' disabled={false} />
+                  <Ipv4v6Input label={t('deployer.network.defaultGateway')} name='gateway' disabled={false} />
+                  <Ipv4v6Input label={t('deployer.network.primaryDns')} name='first_dns' disabled={false} />
+                  <Ipv4v6Input
+                    label={t('deployer.network.secondaryDns')}
+                    name='second_dns'
+                    disabled={false}
+                    required={false}
+                  />
                 </>
               );
             }}
@@ -85,7 +92,7 @@ const WanSetting = (props) => {
               disabled={uploadLoading}
               onClick={onSubmit}
             >
-              保存
+              {t('common.save')}
             </Button>
           </div>
         </Form>

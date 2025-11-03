@@ -2,9 +2,11 @@ import PanelLock from '@/components/lockPanel';
 import { useRequest } from 'ahooks';
 import { Button, Checkbox, Form, Input, InputNumber, Select, Switch, message } from 'antd';
 import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getRoamingInfo, postConnectAp } from '../../services';
 
 const PasswordConnect = (props) => {
+  const { t } = useTranslation();
   const { selectNetwork, currentAp } = props;
   const [form] = Form.useForm();
 
@@ -81,7 +83,7 @@ const PasswordConnect = (props) => {
 
   return (
     <>
-      <h3 className='text-lg font-bold mb-2'>连接设置</h3>
+      <h3 className='text-lg font-bold mb-2'>{t('deployer.network.connectSetting')}</h3>
       <div className='relative bg-white/10 rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:shadow-teal-400/20 hover:bg-white/5 shadow-lg'>
         {selectNetwork?.ssid || (currentAp && currentAp.ssid) ? null : <PanelLock />}
         <Form
@@ -95,24 +97,24 @@ const PasswordConnect = (props) => {
           {/* 密码 */}
           <Form.Item
             className='!mb-0'
-            label='连接密码'
+            label={t('deployer.network.password')}
             name='password'
-            rules={[{ required: true, message: '请输入连接密码' }]}
+            rules={[{ required: true, message: t('deployer.network.pleaseSettingPassword') }]}
           >
-            <Input.Password placeholder='请输入连接密码' />
+            <Input.Password placeholder={t('deployer.network.pleaseSettingPassword')} />
           </Form.Item>
 
           {/* 加密方式 */}
           <Form.Item
             className='!mb-0'
-            label='加密方式'
+            label={t('deployer.network.encryptionMethod')}
             name='encryption'
-            rules={[{ required: true, message: '请选择加密方式' }]}
+            rules={[{ required: true, message: t('deployer.network.pleaseSelectEncryptionMethod') }]}
           >
             <Select
-              placeholder='请选择加密方式'
+              placeholder={t('deployer.network.pleaseSelectEncryptionMethod')}
               options={[
-                { label: '不加密', value: '-' },
+                { label: t('deployer.network.noEncryption'), value: '-' },
                 { label: 'WPA2', value: 'WPA2' },
                 { label: 'WPA/WPA2', value: 'WPA/WPA2' },
                 { label: 'WPA3', value: 'WPA3' },
@@ -124,12 +126,12 @@ const PasswordConnect = (props) => {
           {/* 加密算法 */}
           <Form.Item
             className='!mb-0'
-            label='加密算法'
+            label={t('deployer.network.encryptionAlgorithm')}
             name='method'
-            rules={[{ required: true, message: '请选择加密算法' }]}
+            rules={[{ required: true, message: t('deployer.network.pleaseSelectEncryptionAlgorithm') }]}
           >
             <Select
-              placeholder='请选择加密算法'
+              placeholder={t('deployer.network.pleaseSelectEncryptionAlgorithm')}
               options={[
                 { label: 'AEC', value: 'AEC' },
                 { label: 'TKIP/AES', value: 'TKIP/AES' },
@@ -140,9 +142,9 @@ const PasswordConnect = (props) => {
           {/* 信道 */}
           <Form.Item
             className='!mb-0 col-span-full'
-            label='信道'
+            label={t('deployer.network.channel')}
             name='turbo_freqlist'
-            rules={[{ required: true, message: '请选择至少一个信道' }]}
+            rules={[{ required: true, message: t('deployer.network.pleaseSelectAtLeastOneChannel') }]}
           >
             <Checkbox.Group options={renderOption} />
           </Form.Item>
@@ -150,10 +152,10 @@ const PasswordConnect = (props) => {
           {/* 漫游开关 */}
           <Form.Item
             className='!mb-0'
-            label='漫游开关'
+            label={t('deployer.network.roamSwitch')}
             name='turbo_roam'
             valuePropName='checked'
-            rules={[{ required: true, message: '请选择是否启用漫游' }]}
+            rules={[{ required: true, message: t('deployer.network.pleaseSelectRoamSwitch') }]}
           >
             <Switch />
           </Form.Item>
@@ -161,17 +163,17 @@ const PasswordConnect = (props) => {
           {/* 漫游阈值 */}
           <Form.Item
             className='!mb-0'
-            label='漫游阈值'
+            label={t('deployer.network.roamThreshold')}
             name='rssi_threshold'
-            rules={[{ required: true, message: '请输入漫游阈值' }]}
+            rules={[{ required: true, message: t('deployer.network.pleaseInputRoamThreshold') }]}
           >
-            <InputNumber min={-97} max={-45} placeholder='请输入漫游阈值' />
+            <InputNumber min={-97} max={-45} placeholder={t('deployer.network.pleaseInputRoamThreshold')} />
           </Form.Item>
 
           {/* 按钮 */}
           <div className='flex items-end gap-2'>
             <Button type='primary' loading={loading} onClick={submit}>
-              保存
+              {t('common.save')}
             </Button>
           </div>
         </Form>

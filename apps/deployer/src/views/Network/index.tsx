@@ -9,6 +9,7 @@ import { Button, Skeleton } from 'antd';
 import { motion } from 'framer-motion';
 import VirtualList from 'rc-virtual-list';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SvgIcon } from 'ui';
 import NetworkInfo from './components/netWorkInfo';
 import { getApInfo, getApList } from './services';
@@ -16,6 +17,7 @@ import { getApInfo, getApList } from './services';
 const CONTAINER_HEIGHT = 250; // 虚拟列表容器高度，可按需要调整
 
 const NetworkPage = () => {
+  const { t } = useTranslation();
   const [isLinked, setIsLinked] = useState('');
   const genKey = (ssid, channel, hwmode, address) => `${ssid}-${channel}-${hwmode}-${address}`;
 
@@ -71,7 +73,8 @@ const NetworkPage = () => {
       <div className='w-1/4 p-4 bg-white/10 rounded-2xl flex flex-col gap-2'>
         <div>
           <h3 className='text-lg font-bold flex justify-between items-center'>
-            网络设置 <Button type='text' icon={<RedoOutlined />} disabled={loading} onClick={reloadApList} />
+            {t('deployer.network.networkSetting')}{' '}
+            <Button type='text' icon={<RedoOutlined />} disabled={loading} onClick={reloadApList} />
           </h3>
 
           {/* 渐变分隔线 */}
@@ -97,7 +100,7 @@ const NetworkPage = () => {
             setIsLinked(genKey(ssid, channel, hwmode, address));
           }}
         >
-          <p>当前连接</p>
+          <p>{t('deployer.network.currentConnected')}</p>
           <p>{loadingAp ? <Skeleton.Button size='small' active /> : (currentAp?.data?.ssid ?? '-')}</p>
         </div>
 
@@ -116,7 +119,7 @@ const NetworkPage = () => {
           ) : (
             <div className='bg-white/5 flex flex-col items-center justify-center rounded-2xl p-4 mt-4 group'>
               <SvgIcon name='noNetwork' size={140} className='mx-auto transition opacity-70 group-hover:scale-110' />
-              <p>暂无信号</p>
+              <p>{t('deployer.network.noSignal')}</p>
             </div>
           )}
           {loading && <PanelLoading isDark={true} />}
@@ -137,7 +140,7 @@ const NetworkPage = () => {
           ) : (
             <div className='bg-white/5 flex flex-col items-center justify-center rounded-2xl p-4 mt-4 group'>
               <SvgIcon name='noNetwork' size={140} className='mx-auto transition opacity-70 group-hover:scale-110' />
-              <p>暂无信号</p>
+              <p>{t('deployer.network.noSignal')}</p>
             </div>
           )}
           {loading && <PanelLoading isDark={true} />}
