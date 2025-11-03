@@ -16,8 +16,8 @@ const HYBRID_URL = import.meta.env.DEV
 
 export const useNotification = () => {
   const { t, i18n } = useTranslation();
-  const errorMsg = useRef<any>();
   const obsMsg = useRef<any>();
+  const activeErrorToasts = useRef<Record<string, string>>({}); // 用于记录已弹出的 error toast
   const { getObsMsg } = useObsError();
   const [obsInfo, setObsInfo] = useState<any>();
   const [errorMessage, setErrorMessage] = useState<any>();
@@ -28,66 +28,81 @@ export const useNotification = () => {
       if (message?.data?.includes('/sirius/topics/safety_obs_info')) {
         const data = JSON.parse(message.data);
         setObsInfo((prev) => {
-          if (prev?.type === data.type) {
-            return prev;
-          }
+          if (prev?.type === data.type) return prev;
           return data.type;
         });
       }
+
       if (message?.data?.includes('/sirius/topics/error_description')) {
-        // TODO 此处需要改造成json格式
         const data = JSON.parse(message.data);
         setErrorMessage((prev) => {
-          if (isEqual(prev, data.data)) {
-            return prev;
-          }
+          if (isEqual(prev, data.data)) return prev;
           return data.data;
         });
       }
     },
   });
+  // 定义异常严重程度，0普通 1警告 2错误 3失败
+  const levelColor = ['!bg-gray-300', '!bg-[#f59e0b]', '!bg-[#d90707]', '!bg-[#991b1b]'];
+
+  // 分别弹出每条错误信息
   useEffect(() => {
-    if (errorMessage && errorMessage?.length) {
-      if (errorMsg.current) {
-        sonnerToast.dismiss(errorMessage.current);
-      }
-      errorMsg.current = toast({
-        title: (
-          <>
+    const currentToasts = activeErrorToasts.current;
+
+    // 如果没有错误信息，清除所有旧的弹窗
+    if (!errorMessage || errorMessage.length === 0) {
+      Object.values(currentToasts).forEach((id) => sonnerToast.dismiss(id));
+      activeErrorToasts.current = {};
+      return;
+    }
+
+    // 处理新的错误信息
+    const newToastKeys: Record<string, string> = {};
+
+    errorMessage.forEach((item: any) => {
+      const key = item.error_code?.toString() || Math.random().toString();
+      const level = item.level;
+      const exists = currentToasts[key];
+
+      // 若该错误未展示过，则弹出
+      if (!exists) {
+        const toastId = toast({
+          title: (
             <div className='flex items-center justify-between'>
               <div className='text-white font-bold'>{t('common.errorMsg.title')}</div>
             </div>
-          </>
-        ),
-        description: (
-          <div className=''>
-            {errorMessage.map((item: any, index) => {
-              return (
-                <div key={item.error_code} className='mb-2'>
-                  <p>
-                    {index + 1} . {item?.description || '-'}
-                  </p>
-                  <div className=''>
-                    <p className='opacity-50'>{item?.solution}</p>
-                    <p className='opacity-50'>{dayjs.unix(item?.time).format('YYYY-MM-DD HH:mm:ss')}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ),
-        className: 'bg-[#d90707]',
-      });
-    } else {
-      if (errorMsg.current) {
-        sonnerToast.dismiss(errorMsg.current);
+          ),
+          description: (
+            <div>
+              <p>{item?.description || '-'}</p>
+              <div className='opacity-50'>
+                <p>{item?.solution}</p>
+                <p>{dayjs.unix(item?.time).format('YYYY-MM-DD HH:mm:ss')}</p>
+              </div>
+            </div>
+          ),
+          className: levelColor[level ?? 0],
+          closable: true,
+        });
+        newToastKeys[key] = toastId;
+      } else {
+        newToastKeys[key] = exists; // 保留已有的
       }
-    }
+    });
+
+    // 移除已不在 errorMessage 列表中的旧 toast
+    Object.entries(currentToasts).forEach(([key, id]) => {
+      const stillExists = errorMessage.some((item: any) => item.error_code?.toString() === key);
+      if (!stillExists) sonnerToast.dismiss(id);
+    });
+
+    // 更新记录
+    activeErrorToasts.current = newToastKeys;
   }, [errorMessage, i18n.language]);
 
+  // 处理避障提示
   useEffect(() => {
     if (obsInfo !== 1 && getObsMsg(obsInfo)) {
-      // if (getObsMsg(obsInfo)) {
       if (obsMsg.current) {
         sonnerToast.dismiss(obsMsg.current);
       }
@@ -95,19 +110,15 @@ export const useNotification = () => {
         title: t('common.obsError.title'),
         description: getObsMsg(obsInfo),
         closable: true,
-        // button: {
-        //   label: t('common.obsError.view'),
-        //   onClick: () => {},
-        // },
       });
     } else {
-      // 清除避障消息
       if (obsMsg.current) {
         sonnerToast.dismiss(obsMsg.current);
       }
     }
   }, [obsInfo, i18n.language]);
 
+  // 初始化订阅
   useEffect(() => {
     if (readyState === 1) {
       sendMessage(

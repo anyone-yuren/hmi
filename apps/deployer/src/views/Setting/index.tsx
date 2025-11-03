@@ -17,8 +17,13 @@ export const SwiperWrapper = styled('div')(({ theme }) => ({
   },
 }));
 
+import { useRequest } from 'ahooks';
+import { config_agv_info } from './service';
+
 const Setting = () => {
   const { t } = useTranslation();
+
+  const { data, loading } = useRequest(config_agv_info);
   return (
     <SwiperWrapper>
       <Swiper
@@ -38,7 +43,9 @@ const Setting = () => {
       <LoginModalTrigger />
       <AuthComponent authKey={['admin']}>
         <Button
+          loading={loading}
           type='primary'
+          disabled={!data?.support_wireless_configuration}
           className='absolute bottom-4 right-4 z-10'
           onClick={() => {
             triggerLoginModal();
