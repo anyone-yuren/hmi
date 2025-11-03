@@ -27,7 +27,7 @@ const getImage = (imageName: string) => {
 };
 
 const VehicleBattery = (props: any) => {
-  const { current = 0, voltage = 0 } = props;
+  const { current = 0, voltage = 0, isAutoMode = false } = props;
   const { t } = useTranslation();
   const agvType = useAgvType();
 

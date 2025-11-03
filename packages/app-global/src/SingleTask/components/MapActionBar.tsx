@@ -38,12 +38,21 @@ const MapActionBar = forwardRef((props: any, ref) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const { showRealTimePoints, setShowRealTimePoints, agvViewLock, setAgvViewLock } = useSingleTaskStore(
+  const {
+    showRealTimePoints,
+    setShowRealTimePoints,
+    agvViewLock,
+    setAgvViewLock,
+    subscriptionFeedList,
+    setSubscriptionFeedList,
+  } = useSingleTaskStore(
     useShallow((state) => ({
       showRealTimePoints: state.showRealTimePoints,
       setShowRealTimePoints: state.setShowRealTimePoints,
       agvViewLock: state.agvViewLock,
       setAgvViewLock: state.setAgvViewLock,
+      subscriptionFeedList: state.subscriptionFeedList,
+      setSubscriptionFeedList: state.setSubscriptionFeedList,
     })),
   );
 
@@ -57,6 +66,16 @@ const MapActionBar = forwardRef((props: any, ref) => {
   const mapTaskMode: IMode = useMemo(() => {
     return taskMode?.data?.task_mode ?? 100;
   }, [taskMode]);
+
+  useEffect(() => {
+    let ary = [...subscriptionFeedList];
+    if (showRealTimePoints) {
+      ary.push('/navigation/real_time_data/scan_head');
+    } else {
+      ary = ary.filter((item) => item !== '/navigation/real_time_data/scan_head');
+    }
+    setSubscriptionFeedList(ary);
+  }, [showRealTimePoints]);
 
   const changeMapTaskMode = async (task_mode: IMode) => {
     const { code }: any = await setTaskMode({ task_mode });

@@ -28,19 +28,27 @@ export const useSingleTask = () => {
   const [count, setCount] = useState(1);
   // const [rcsTaskCount, setRcsTaskCount] = useState(1)
   const [rcsTaskState, setRcsTaskState] = useState(0);
-  const { setAgvPosition, setRcsInfo, setRefreshTaskList, setCloudPoints, setRobotCurrentStatus, setRealTimePoints } =
-    useSingleTaskStore(
-      useShallow((state) => {
-        return {
-          setAgvPosition: state.setAgvPosition,
-          setRcsInfo: state.setRcsInfo,
-          setRefreshTaskList: state.setRefreshTaskList,
-          setCloudPoints: state.setCloudPoints,
-          setRobotCurrentStatus: state.setRobotCurrentStatus,
-          setRealTimePoints: state.setRealTimePoints,
-        };
-      }),
-    );
+  const {
+    setAgvPosition,
+    setRcsInfo,
+    setRefreshTaskList,
+    setCloudPoints,
+    setRobotCurrentStatus,
+    setRealTimePoints,
+    subscriptionFeedList,
+  } = useSingleTaskStore(
+    useShallow((state) => {
+      return {
+        setAgvPosition: state.setAgvPosition,
+        setRcsInfo: state.setRcsInfo,
+        setRefreshTaskList: state.setRefreshTaskList,
+        setCloudPoints: state.setCloudPoints,
+        setRobotCurrentStatus: state.setRobotCurrentStatus,
+        setRealTimePoints: state.setRealTimePoints,
+        subscriptionFeedList: state.subscriptionFeedList,
+      };
+    }),
+  );
   const { sendMessage, latestMessage, readyState } = useWebSocket(VEHICLE_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
@@ -109,19 +117,19 @@ export const useSingleTask = () => {
 
   useEffect(() => {
     if (readyState10001 === 1) {
+      const ary = [
+        '/navigation/robot_current_status',
+        '/navigation/scan_head',
+        '/navigation/robot_status_localizer_result',
+      ];
       sendMessage10001(
         JSON.stringify({
           uri: 'subscribe',
-          topics: [
-            '/navigation/robot_current_status',
-            '/navigation/scan_head',
-            '/navigation/robot_status_localizer_result',
-            '/navigation/real_time_data/scan_head',
-          ],
+          topics: [...ary, ...subscriptionFeedList],
         }),
       );
     }
-  }, [readyState10001]);
+  }, [readyState10001, subscriptionFeedList]);
 
   useEffect(() => {
     if (readyState === 1) {

@@ -8,11 +8,12 @@ import {
   TableRow,
   ThemeProvider,
 } from '@mui/material';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RenderItemRow } from '../Style';
 const RcsTaskModal = (props: any) => {
-  const { rows, mode } = props;
+  const { rows, mode, missionId } = props;
+
   const { t } = useTranslation();
   const isTask = useMemo(() => {
     return mode === 'task';
@@ -29,6 +30,18 @@ const RcsTaskModal = (props: any) => {
       0: t('common.taskStatus.running'),
     },
   };
+  const getStateText = useCallback(
+    (state) => {
+      if ([1].includes(state)) {
+        return t('common.taskStatus.unexecuted');
+      } else if ([5, 8].includes(state)) {
+        return t('common.success');
+      } else {
+        return t('common.taskStatus.running');
+      }
+    },
+    [t],
+  );
   return (
     <div className='bg-[white]'>
       <RenderItemRow>
@@ -59,10 +72,13 @@ const RcsTaskModal = (props: any) => {
                 {rows.map((row, index) => {
                   return (
                     <TableRow key={row?.id}>
-                      <TableCell align='center'>{row?.point}</TableCell>
-                      <TableCell align='center'>{missionItemHashMap['type'][row?.type]}</TableCell>
+                      <TableCell align='center'>{row?.destination}</TableCell>
+                      <TableCell align='center'>{missionItemHashMap['type'][row?.missionItemType]}</TableCell>
                       {false && isTask && <TableCell align='center'>{row?.loop}</TableCell>}
-                      {isTask && <TableCell align='center'>{missionItemHashMap.state[row?.state]}</TableCell>}
+                      {isTask && (
+                        <TableCell align='center'>{getStateText(row?.missionItemState)}</TableCell>
+                        // <TableCell align='center'>{missionItemHashMap.state[row?.missionItemState]}</TableCell>
+                      )}
                     </TableRow>
                   );
                 })}

@@ -61,6 +61,7 @@ const SingleTask = () => {
     visible: false,
     mode: 'task',
     rows: [],
+    id: '',
   });
 
   const [moveToTarget, setMoveToTarget] = useState({ x: null, y: null });
@@ -309,6 +310,7 @@ const SingleTask = () => {
             preTaskList={preTaskList}
             setPreTaskList={setPreTaskList}
             initTaskActionRow={initTaskActionRow}
+            rcsModalConfig={rcsModalConfig}
             setRcsModalConfig={setRcsModalConfig}
             vehicleNum={vehicleNum}
           ></RcsTaskPanel>
@@ -529,7 +531,11 @@ const SingleTask = () => {
           fullScreen={false}
           sx={{ zIndex: 1213, width: '600px!important' }}
         >
-          <RcsTaskModal rows={rcsModalConfig.rows} mode={rcsModalConfig.mode}></RcsTaskModal>
+          <RcsTaskModal
+            rows={rcsModalConfig.rows}
+            mode={rcsModalConfig.mode}
+            missionId={rcsModalConfig.id}
+          ></RcsTaskModal>
         </SecondaryPage>
       </MapContainer>
       <WsContainer></WsContainer>

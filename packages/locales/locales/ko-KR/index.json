@@ -573,7 +573,7 @@
       "firstLayerGoodsHeight": "한 층 화물 높이",
       "firstVision": "첫 번째 비전",
       "firstVisualPoint": "첫 번째 비전 포인트",
-      "forkDistancePallet": "치아 교두에서 트레이 전면까지의 거리",
+      "forkDistancePallet": "주행 중 차체가 정렬되었을 때 톱니 끝과 팔레트 표면 사이의 거리",
       "forkExtendDistCompensation": "포크 도달 범위 보상",
       "forkExtendParams": "",
       "forkUpPointCloud": "포크 암 상단 포인트 클라우드",
