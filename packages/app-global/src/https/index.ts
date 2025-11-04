@@ -73,6 +73,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data, config } = response;
+    debugger;
     // 如果没有 code 字段，直接返回原始数据（适配数组或对象）
     if (!data || typeof data === 'string' || !('code' in data)) {
       return data;
@@ -105,7 +106,7 @@ instance.interceptors.response.use(
     }
 
     // 其他错误
-    toast.error(t('common.http.error'), {
+    toast.error(config.url + ' ' + t('common.http.error'), {
       position: 'top-center',
     });
     return Promise.reject(msg || t('common.http.error'));
