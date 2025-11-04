@@ -1,4 +1,4 @@
-import { CameraControls, GizmoHelper, GizmoViewport, PerspectiveCamera } from '@react-three/drei';
+import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { useRequest } from 'ahooks';
 import { Skeleton, Spin } from 'antd';
@@ -93,9 +93,9 @@ const CarStage = () => {
           <StageBase />
           {/* </Stage> */}
           {/* <Gltf castShadow receiveShadow src="Perseverance-transformed.glb" /> */}
-          <GizmoHelper alignment='bottom-right' margin={[80, 80]}>
+          {/* <GizmoHelper alignment='bottom-right' margin={[80, 80]}>
             <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='black' />
-          </GizmoHelper>
+          </GizmoHelper> */}
         </Canvas>
       ) : (
         <PageException status={401} />
