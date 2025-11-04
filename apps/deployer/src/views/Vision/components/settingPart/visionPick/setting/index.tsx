@@ -19,6 +19,7 @@ import CustomSelect from '../../comp/customSelect';
 import CustomSwitch from '../../comp/customSwitch';
 import LoadingButton from '../../comp/loadingButton';
 import PointCloudFilter from '../../comp/pointCloudFilter';
+import PointCloudFilter2D from '../../comp/pointCloudFilter2D';
 import TextChangeRow from '../../comp/textChangeRow';
 import TextUpdateRow from '../../comp/textUpdateRow';
 import Illustration from './illustration';
@@ -395,8 +396,11 @@ const Setting = (props: any) => {
                 />
               </div>
             </TextUpdateRow>
-
+            {/* <div className='flex gap-[8px] justify-between'> */}
             <PointCloudFilter type={'pick_pallet_position_detect'}></PointCloudFilter>
+            <div className='h-[12px]'></div>
+            <PointCloudFilter2D type={'pick_pallet_position_detect'}></PointCloudFilter2D>
+            {/* </div> */}
 
             {/* <Title>{t("载具最大偏移阈值")}</Title>
             {maxOffsetOptions.map((item: any) => {

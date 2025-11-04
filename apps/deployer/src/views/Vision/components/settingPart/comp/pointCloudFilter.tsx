@@ -15,7 +15,6 @@ import {
 } from '../../../services/index';
 import { useVisionStore } from '../../../store/vision.store';
 import MwConfirm from '../../MwConfirm';
-import InputWidthKeyboard from '../../inputWithKeyboard';
 import PointCloud3D from '../3d/pointCloud3d';
 
 import { EditOutlined } from '@ant-design/icons';
@@ -94,7 +93,6 @@ const PointCloudFilter = (props: IProps) => {
       setPointsCloudKey: store.setPointsCloudKey,
     })),
   );
-  console.log('[shelf]: type', type);
 
   const showStorageCalibrationAssistant = useMemo(() => {
     // shelf_pallet_position_detect,shelf_place_move_vehicle
@@ -107,10 +105,6 @@ const PointCloudFilter = (props: IProps) => {
     ];
     return ary.includes(type);
   }, [type]);
-
-  const isMultiwayAgv = useMemo(() => {
-    return false;
-  }, []);
 
   useEffect(() => {
     setPointsCloudKey(type);
@@ -283,25 +277,14 @@ const PointCloudFilter = (props: IProps) => {
       title: newState?.[key]?.label,
       content: (
         <>
-          {isMultiwayAgv ? (
-            <InputWidthKeyboard
-              input={getInputString()}
-              setInput={(val: any) => {
-                setInputString(val);
-              }}
-              placeholder={`${t('common.plsInput')}`}
-              mode={'numbers'}
-            ></InputWidthKeyboard>
-          ) : (
-            <TextField
-              fullWidth
-              autoFocus
-              defaultValue={newState?.[key]?.value ? '' : newState?.[key]?.value}
-              onChange={(event) => {
-                setInputString(event.target.value);
-              }}
-            ></TextField>
-          )}
+          <TextField
+            fullWidth
+            autoFocus
+            defaultValue={newState?.[key]?.value ? '' : newState?.[key]?.value}
+            onChange={(event) => {
+              setInputString(event.target.value);
+            }}
+          ></TextField>
         </>
       ),
       onOk: async () => {
@@ -343,7 +326,7 @@ const PointCloudFilter = (props: IProps) => {
           setOpen(true);
         }}
       >
-        {t('deployer.vision.pointsCloud')}
+        {'3D' + t('deployer.vision.pointsCloud')}
       </Button>
       <SecondaryPage
         open={open}

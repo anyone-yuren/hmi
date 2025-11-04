@@ -36,6 +36,7 @@ const Current = () => {
   const isMultiwayAgv = useMemo(() => {
     return false;
   }, []);
+
   const columns: any[] = [
     {
       title: t('deployer.diagnosis.time'),
