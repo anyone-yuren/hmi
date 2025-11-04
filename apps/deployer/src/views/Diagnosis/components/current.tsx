@@ -2,7 +2,7 @@ import EmptyBox from '@/components/Empty';
 import { useRequest } from 'ahooks';
 import { Button, Space, Table, Tag } from 'antd';
 import * as dayjs from 'dayjs';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LevelColor, LevelEnum } from '../enum';
 import { error_log_download, getCurrent, postErrorCode } from '../services';
@@ -33,9 +33,6 @@ const Current = () => {
       }
     },
   });
-  const isMultiwayAgv = useMemo(() => {
-    return false;
-  }, []);
   const columns: any[] = [
     {
       title: t('deployer.diagnosis.time'),
@@ -118,20 +115,18 @@ const Current = () => {
             >
               {record?.diagnosis_result ? t('deployer.diagnosis.diagnosed') : t('deployer.diagnosis.diagnosis')}
             </Button>
-            {!isMultiwayAgv && (
-              <Button
-                size='small'
-                onClick={async () => {
-                  const { data } = await error_log_download({
-                    error_code: record.error_code,
-                    error_time: record.generate_time,
-                  });
-                  window.open(`${window.location.origin}${data}`);
-                }}
-              >
-                {t('deployer.diagnosis.downloadLog')}
-              </Button>
-            )}
+            <Button
+              size='small'
+              onClick={async () => {
+                const { data } = await error_log_download({
+                  error_code: record.error_code,
+                  error_time: record.generate_time,
+                });
+                window.open(`${window.location.origin}${data}`);
+              }}
+            >
+              {t('deployer.diagnosis.downloadLog')}
+            </Button>
           </Space>
         );
       },
