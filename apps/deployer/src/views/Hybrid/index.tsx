@@ -551,8 +551,9 @@ const Mapping = () => {
                   </Group>
                   <CanvasOnline />
                 </Layer>
-                {!!isShowNavigation(navigationType, 'LIDAR_SLAM_3D') && <PointsCloudDiagV1 />}
-                {!!isShowNavigation(navigationType, 'LIDAR_SLAM_2D') && <PointCloudV1 />}
+                <PointsCloudDiagV1 />
+                {false && !!isShowNavigation(navigationType, 'LIDAR_SLAM_3D') && <PointsCloudDiagV1 />}
+                {false && !!isShowNavigation(navigationType, 'LIDAR_SLAM_2D') && <PointCloudV1 />}
               </InitStage>
             </Box>
           ) : (

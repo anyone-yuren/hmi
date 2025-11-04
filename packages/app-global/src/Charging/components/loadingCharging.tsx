@@ -89,7 +89,7 @@ const LoadingCharging = (props) => {
   const textHashmap = useMemo(() => {
     return {
       1: t('common.charging.runCharging'),
-      2: '准备充电',
+      2: t('common.charging.readyCharging'),
       3: '正在充电',
     };
   }, [i18n.language]);

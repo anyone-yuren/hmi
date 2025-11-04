@@ -385,6 +385,7 @@ const RcsTaskPanel = (props: IProps) => {
             CompleteValue: obj['param'][1],
           };
           obj['destination'] = obj['task_point_id'];
+          obj['vehicleNum'] = vehicleNum;
           return _.pick(obj, ['missionItemType', 'extraProperties', 'vehicleNum', 'destination']);
         },
       },
