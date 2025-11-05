@@ -43,7 +43,7 @@ export const useNotification = () => {
     },
   });
   // 定义异常严重程度，0普通 1警告 2错误 3失败
-  const levelColor = ['!bg-gray-300', '!bg-[#f59e0b]', '!bg-[#d90707]', '!bg-[#991b1b]'];
+  const levelColor = ['!bg-teal-600', '!bg-[#f59e0b]', '!bg-[#d90707]', '!bg-[#991b1b]'];
 
   // 分别弹出每条错误信息
   useEffect(() => {
