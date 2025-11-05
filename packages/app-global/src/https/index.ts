@@ -73,7 +73,6 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data, config } = response;
-    debugger;
     // 如果没有 code 字段，直接返回原始数据（适配数组或对象）
     if (!data || typeof data === 'string' || !('code' in data)) {
       return data;
