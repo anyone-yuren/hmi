@@ -1,7 +1,7 @@
 // import { useHybirdStore } from '@/components/Pages/Hybrid/store/hybird.store';
 import { animated, useSpring } from '@react-spring/three';
-import { Svg, useHelper } from '@react-three/drei';
-import { useMemo, useRef } from 'react';
+import { useHelper } from '@react-three/drei';
+import { useEffect, useMemo, useRef } from 'react';
 import { PointLightHelper, type DirectionalLight } from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { useAgvType } from '../../../../hooks/useAgvType';
@@ -63,45 +63,42 @@ const Car = (props) => {
     [agvPosition.angel],
   );
 
-  const [groupProps] = useSpring(
-    () => ({
-      position,
-      config: { tension: 170, friction: 26 },
-      // easing: (t) => t * (2 - t),
-      // rotation: [0, rotationY, 0], // 转换为弧度
-    }),
-    [position],
-  );
+  // const [groupProps] = useSpring(
+  //   () => ({
+  //     position,
+  //     config: { tension: 170, friction: 26 },
+  //     // easing: (t) => t * (2 - t),
+  //     // rotation: [0, rotationY, 0], // 转换为弧度
+  //   }),
+  //   [position],
+  // );
+  const [groupProps, api] = useSpring(() => ({
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+    // config: { mass: 1, tension: 180, friction: 30, precision: 0.0001 },
+    config: { duration: 1000 },
+  }));
+
+  useEffect(() => {
+    api.start({
+      position: [-agvPosition.x / 1000, 0, agvPosition.y / 1000],
+      rotation: [0, agvPosition.angel, 0],
+    });
+  }, [agvPosition.x, agvPosition.y, agvPosition.angel]);
 
   // 将角度变化转为弧度
 
   return (
     <>
-      {/* <pointLight
-        // ref={directionalLightRef}
+      <pointLight
+        ref={directionalLightRef}
         position={[agvPosition.x / 1000, 0, agvPosition.y / 1000]} // 设置光源的位置与车辆同步
         color={'#00D1D1'} // 光源颜色
         castShadow={true} // 启用阴影投射
-      /> */}
+      />
       <group>
-        <group
-          scale={0.03}
-          position={[agvPosition.x / 1000, 0.01, agvPosition.y / 1000]}
-          rotation={[Math.PI / 2, 0, deltaRotation]}
-        >
-          {/* <PointCloud /> */}
-          {/* 使 Svg 旋转，确保是绕中心旋转 */}
-          <Svg
-            src={process.env.NODE_ENV == 'development' ? '/assets/direction.svg' : '/assets/direction.svg'}
-            position={[-12, 12, 0]}
-            fillMaterial={
-              {
-                // color: "green",
-              }
-            }
-          />
-        </group>
         <animated.group position={groupProps.position as unknown as THREE.Vector3} rotation={[0, agvPosition.angel, 0]}>
+          {/* <PointCloud /> */}
           {agvType === 'SE15' ? <Fork15lift forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
           {agvType === 'SL14' ? <Sl14Model forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
           {agvType === 'X20' ? <X20Model forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}

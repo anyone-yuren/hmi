@@ -16,7 +16,6 @@ const Signal = (props) => {
   } = useRequest(getApInfo, {
     manual: true,
   });
-  console.log(currentAp);
   useEffect(() => {
     if (canLinkWifi) {
       getCurrentAp();

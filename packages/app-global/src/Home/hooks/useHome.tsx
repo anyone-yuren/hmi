@@ -1,5 +1,6 @@
 import { useWebSocket } from 'ahooks';
-import { useEffect } from 'react';
+import { debounce, throttle } from 'lodash';
+import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useHomeStore } from '../store';
 import { useHomeHybirdStore } from '../store/hybird';
@@ -47,6 +48,50 @@ export const useHome = () => {
       };
     }),
   );
+
+  // 在 hook 内，保证 debounce/ref 在第一次 render 就存在
+  const latestSetAgvPositionRef = useRef(setAgvPosition);
+  useEffect(() => {
+    latestSetAgvPositionRef.current = setAgvPosition;
+  }, [setAgvPosition]);
+
+  // 方案 A: 使用 debounce（默认 trailing）
+  // 创建一次、贯穿生命周期，不在 render 中重建
+  const debounceSetAgvPositionRef = useRef(
+    debounce(
+      (pos) => {
+        try {
+          // 使用最新的 setter 引用，避免闭包引用过期
+          latestSetAgvPositionRef.current(pos);
+          console.log('[debounce] fired', pos);
+        } catch (e) {
+          console.error('[debounce] inner error', e);
+        }
+      },
+      1000,
+      { leading: false, trailing: true },
+    ),
+  );
+
+  // 方案 B: 如果你需要定期更新（更适合高频位置），使用 throttle（推荐用于位置）
+  const throttleSetAgvPositionRef = useRef(
+    throttle((pos) => {
+      try {
+        latestSetAgvPositionRef.current(pos);
+      } catch (e) {
+        console.error('[throttle] inner error', e);
+      }
+    }, 1000),
+  );
+
+  // 清理
+  useEffect(() => {
+    return () => {
+      debounceSetAgvPositionRef.current?.cancel?.();
+      throttleSetAgvPositionRef.current?.cancel?.();
+    };
+  }, []);
+
   const { sendMessage, latestMessage, readyState } = useWebSocket(VEHICLE_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
@@ -103,18 +148,18 @@ export const useHome = () => {
         data.pose.theta = Math.round(data.pose.theta * 100) / 100;
         // TODO 转整数
         if (!agvPosition) {
-          setAgvPosition({
+          throttleSetAgvPositionRef.current({
             angel: data.pose.theta,
             x: data.pose.x,
             y: data.pose.y,
           });
         }
-        const diffX = Math.abs(data.pose.x - agvPosition.x);
-        const diffY = Math.abs(data.pose.y - agvPosition.y);
+        // const diffX = Math.abs(data.pose.x - agvPosition.x);
+        // const diffY = Math.abs(data.pose.y - agvPosition.y);
 
         // if (diffX > 1 || diffY > 1) {
         // }
-        setAgvPosition({
+        throttleSetAgvPositionRef.current({
           angel: data.pose.theta,
           x: data.pose.x,
           y: data.pose.y,

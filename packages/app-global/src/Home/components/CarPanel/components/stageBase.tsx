@@ -16,6 +16,7 @@ const StageBase = (props) => {
       agvPosition: state.agvPosition,
     })),
   );
+
   const { camera, controls } = useThree();
 
   // const directionalLightRef = useRef<DirectionalLight>(null!);
@@ -41,14 +42,14 @@ const StageBase = (props) => {
 
   // 设置网格样式
   const gridConfig = {
-    cellSize: 0.5,
+    cellSize: 1,
     cellThickness: 0.8,
     cellColor: '#808080',
     sectionSize: 2,
     sectionThickness: 1, // 截面厚度
     sectionColor: '#808080',
-    fadeDistance: 100, // 视距，多大开始模糊
-    fadeStrength: 1,
+    fadeDistance: 30, // 视距，多大开始模糊
+    fadeStrength: 1, // 模糊强度
   };
 
   return (
@@ -62,10 +63,10 @@ const StageBase = (props) => {
       {/* 定向光 */}
       {/* <directionalLight
         castShadow
-        color="red"
+        color='red'
         ref={directionalLightRef}
         intensity={2.5}
-        position={(agvPosition.x / 1000, 0, 0 - agvPosition.y / 1000)}
+        position={(agvPosition.x / 1000, 4, agvPosition.y / 1000)}
         shadow-mapSize={[1024, 1024]}
       ></directionalLight> */}
     </>
