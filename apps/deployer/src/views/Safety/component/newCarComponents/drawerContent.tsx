@@ -346,7 +346,7 @@ const DrawerContent = (props: IProps) => {
                   name='forward_stop_distance'
                   rules={[{ required: true, message: t('common.pleaseInput') }]}
                 >
-                  <InputNumber className='w-full' />
+                  <InputNumber min={100} className='w-full' />
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
@@ -356,7 +356,7 @@ const DrawerContent = (props: IProps) => {
                   name='backward_stop_distance'
                   rules={[{ required: true, message: t('common.pleaseInput') }]}
                 >
-                  <InputNumber className='w-full' />
+                  <InputNumber min={100} className='w-full' />
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
@@ -366,7 +366,7 @@ const DrawerContent = (props: IProps) => {
                   name='rotate_stop_distance'
                   rules={[{ required: true, message: t('common.pleaseInput') }]}
                 >
-                  <InputNumber className='w-full' />
+                  <InputNumber min={100} className='w-full' />
                 </Form.Item>
               </div>
               <div className='flex flex-col gap-2'>
