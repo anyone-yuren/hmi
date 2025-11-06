@@ -22,7 +22,7 @@ const ModelListSelect = (props: IProps) => {
   const modelHashMap = useMemo(() => {
     const hashMap: any = {};
     modelList?.data?.forEach((item: any) => {
-      hashMap[item.id] = item.id;
+      hashMap[item.id] = item.display_name || item.id;
     });
     return hashMap;
   }, [modelList]);

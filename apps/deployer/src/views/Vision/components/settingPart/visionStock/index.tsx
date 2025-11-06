@@ -1,6 +1,6 @@
 import { Button, ListItemText, MenuItem } from '@mui/material';
 import { useAsyncEffect, useRequest, useSetState } from 'ahooks';
-import { memo, Suspense, useEffect, useState } from 'react';
+import { memo, Suspense, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { toast } from 'sonner';
@@ -25,7 +25,7 @@ const VisionBox = (props: any) => {
 };
 
 const VisionStock = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [updateHashMap, setUpdateHashMap] = useSetState<any>({
     __isSubmit: false,
     need_detect_shelf: false,
@@ -63,6 +63,18 @@ const VisionStock = () => {
       sensor_model_list: data?.sensor_model_list?.value,
     });
   }, [visualPlace]);
+
+  const sensorSelectList = useMemo(() => {
+    const origin = visualPlace?.data?.sensor_model_list?.value;
+    const cn_origin = visualPlace?.data?.ch_sensor_model_list?.value;
+    const isChinese = i18n.language === 'zh_CN';
+    return origin?.map((item, index) => {
+      return {
+        value: item,
+        label: isChinese ? cn_origin[index] : item,
+      };
+    });
+  }, [i18n.language, visualPlace]);
 
   const options = [
     {
@@ -160,9 +172,9 @@ const VisionStock = () => {
                     });
                   }}
                 >
-                  {updateHashMap?.sensor_model_list?.map((name) => (
-                    <MenuItem key={name} value={name}>
-                      <ListItemText primary={name} />
+                  {sensorSelectList?.map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      <ListItemText primary={item.label} />
                     </MenuItem>
                   ))}
                 </CustomSelect>

@@ -705,6 +705,7 @@
       "forkDistancePallet": "During the process, when the AGV body returns to its upright position, the distance between the tip of the fork arm and the front surface of the pallet",
       "forkExtendDistCompensation": "Fork arm extension distance compensation",
       "forkExtendParams": "Extra fork height compensation",
+      "forkFinalWidth": "Fork arm opening area",
       "forkUpPointCloud": "Point Cloud Above Fork Arm",
       "forkWidth": "Fork width",
       "forkWidthPallet": "Use different fork depths to handle different types of pallets",

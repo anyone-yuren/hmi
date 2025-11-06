@@ -138,7 +138,7 @@ const Setting = (props: any) => {
   const modelHashMap = useMemo(() => {
     const hashMap: any = {};
     modelList?.data?.forEach((item: any) => {
-      hashMap[item.id] = item.id;
+      hashMap[item.id] = item.display_name || item.id;
     });
     return hashMap;
   }, [modelList]);
@@ -446,6 +446,7 @@ const Setting = (props: any) => {
                     variant='standard'
                     value={updateHashMap?.pallet_model_list}
                     renderValue={(value: any) => {
+                      console.log('value', value);
                       return (
                         <div className='flex flex-wrap'>
                           {value?.map((item: any, index: number) => {

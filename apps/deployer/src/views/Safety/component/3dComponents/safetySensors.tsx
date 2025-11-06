@@ -1,7 +1,7 @@
 import { Line, Text } from '@react-three/drei';
 import { memo, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-
+import CanvasText from './canvasText';
 interface ISensor {
   x: number;
   y: number;
@@ -72,16 +72,19 @@ function SafetySensors({ sensors }: IProps) {
           <Line points={yAxisPoints} color='lime' lineWidth={3} />
           <Line points={zAxisPoints} color='blue' lineWidth={3} />
         </group>
-        <Text
-          position={[position[0], position[1] - 0.1, position[2]]} // 在坐标轴下方显示名称
-          color='white'
-          fontSize={0.15}
-          anchorX='center'
-          anchorY='middle'
-          rotation={[Math.PI / 2, 0, 0]}
-        >
-          {name}
-        </Text>
+        <CanvasText text={name} position={[position[0], position[1] - 0.1, position[2]]} fontSize={'4px'} />
+        {false && (
+          <Text
+            position={[position[0], position[1] - 0.1, position[2]]} // 在坐标轴下方显示名称
+            color='white'
+            fontSize={0.15}
+            anchorX='center'
+            anchorY='middle'
+            rotation={[Math.PI / 2, 0, 0]}
+          >
+            {name}
+          </Text>
+        )}
       </group>
     );
   };

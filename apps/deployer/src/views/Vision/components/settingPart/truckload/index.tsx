@@ -10,7 +10,7 @@ import CustomSelect from '../comp/customSelect';
 import LightTheme from '../comp/lightTheme';
 
 const TruckLoad = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [modalConfig, setModalConfig] = useState({
     open: false,
     key: '',
@@ -84,6 +84,18 @@ const TruckLoad = () => {
       sensor_model_list: data?.sensor_model_list?.value || [],
     });
   }, [truckLoad]);
+
+  const sensorSelectList = useMemo(() => {
+    const origin = truckLoad?.data?.sensor_model_list?.value;
+    const cn_origin = truckLoad?.data?.ch_sensor_model_list?.value;
+    const isChinese = i18n.language === 'zh_CN';
+    return origin?.map((item, index) => {
+      return {
+        value: item,
+        label: isChinese ? cn_origin[index] : item,
+      };
+    });
+  }, [i18n.language, truckLoad]);
 
   useUpdateEffect(() => {
     if (!modalConfig?.open && modalConfig.key === 'load') {
@@ -170,9 +182,9 @@ const TruckLoad = () => {
                                 });
                               }}
                             >
-                              {updateHashMap?.sensor_model_list?.map((name) => (
-                                <MenuItem key={name} value={name}>
-                                  <ListItemText primary={name} />
+                              {sensorSelectList?.map((item) => (
+                                <MenuItem key={item.value} value={item.value}>
+                                  <ListItemText primary={item.label} />
                                 </MenuItem>
                               ))}
                             </CustomSelect>

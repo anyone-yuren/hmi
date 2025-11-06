@@ -18,10 +18,24 @@ const SettingPart = (props: any) => {
   const { disconnect, sendMessage, readyState, connect } = useVision();
   const { t } = useTranslation();
 
-  const { pointCloudParams, setChassis, pointsCloudHeart, pointsCloudKey, setPointsCloudHeart } = useVisionStore(
+  const {
+    pointCloudParams,
+    setPointCloudParams,
+    setChassis,
+    pointsCloudHeart,
+    pointsCloudKey,
+    setPointsCloudKey,
+    setPointsCloudHeart,
+    pointCloud2dKey,
+    setPointCloud2dKey,
+  } = useVisionStore(
     useShallow((store: any) => ({
       pointsCloudKey: store.pointsCloudKey,
+      setPointsCloudKey: store.setPointsCloudKey,
+      pointCloud2dKey: store.pointCloud2dKey,
+      setPointCloud2dKey: store.setPointCloud2dKey,
       pointCloudParams: store.pointCloudParams,
+      setPointCloudParams: store.setPointCloudParams,
       setChassis: store.setChassis,
       pointsCloudHeart: store.pointsCloudHeart,
       setPointsCloudHeart: store.setPointsCloudHeart,
@@ -36,9 +50,25 @@ const SettingPart = (props: any) => {
     agvInfo?.executor && setChassis(agvInfo?.executor);
   }, [agvInfo]);
 
+  useEffect(() => {
+    setPointCloudParams({});
+    setPointCloud2dKey('');
+    setPointsCloudKey('');
+  }, []);
+
   useUpdateEffect(() => {
-    readyState === 1 && sendMessage(JSON.stringify({ uri: '/cv_mwrobot/roi_dist', data: pointCloudParams }));
+    readyState === 1 &&
+      pointCloudParams &&
+      Object.keys(pointCloudParams).length &&
+      sendMessage(JSON.stringify({ uri: '/cv_mwrobot/roi_dist', data: pointCloudParams }));
   }, [pointCloudParams, readyState]);
+
+  useUpdateEffect(() => {
+    console.log('useUpdateEffect pointsCloud2dKey', pointCloud2dKey);
+    readyState === 1 &&
+      pointCloud2dKey &&
+      sendMessage(JSON.stringify({ uri: '/cv_mwrobot/roi_dist_2d', data: { task_id: pointCloud2dKey } }));
+  }, [pointCloud2dKey, readyState]);
 
   useUpdateEffect(() => {
     readyState === 1 &&

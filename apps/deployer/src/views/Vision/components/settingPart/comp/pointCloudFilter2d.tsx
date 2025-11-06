@@ -1,8 +1,11 @@
 import { Button } from '@mui/material';
-import { useSize } from 'ahooks';
+import { useSize, useUpdateEffect } from 'ahooks';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Circle, Layer, Rect, Stage, Transformer } from 'react-konva';
+import { useShallow } from 'zustand/react/shallow';
+import { exitPointCloud2d } from '../../../services/index';
+import { useVisionStore } from '../../../store/vision.store';
 import SecondaryPage, { SecondaryPaper } from '../../SecondaryPage';
 import LightTheme from './lightTheme';
 
@@ -16,13 +19,6 @@ interface ITransform {
   scale: number;
   x: number;
   y: number;
-}
-
-interface IBox {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
 }
 
 interface Point {
@@ -43,7 +39,7 @@ const generateRandomPoints = (count: number, width: number, height: number): Poi
   }));
 };
 
-const PointCloudView = ({ title, sharedTransform, setSharedTransform, sharedBox, setSharedBox }: any) => {
+const PointCloudView = ({ title, sharedTransform, setSharedTransform }: any) => {
   const ref = useRef(null);
   const size = useSize(ref);
   const stageRef = useRef<any>(null);
@@ -51,6 +47,7 @@ const PointCloudView = ({ title, sharedTransform, setSharedTransform, sharedBox,
   const trRef = useRef<any>(null);
 
   const [isInteracting, setIsInteracting] = useState(false);
+  const [box, setBox] = useState({ x: 100, y: 100, width: 100, height: 80 });
 
   const points = useMemo(() => generateRandomPoints(2000, 500, 500), []);
 
@@ -61,15 +58,6 @@ const PointCloudView = ({ title, sharedTransform, setSharedTransform, sharedBox,
     stageRef.current.position({ x: sharedTransform.x, y: sharedTransform.y });
     stageRef.current.batchDraw();
   }, [sharedTransform, isInteracting]);
-
-  // 同步 box
-  useEffect(() => {
-    if (rectRef.current) {
-      rectRef.current.position({ x: sharedBox.x, y: sharedBox.y });
-      rectRef.current.size({ width: sharedBox.width, height: sharedBox.height });
-      rectRef.current.getLayer()?.batchDraw();
-    }
-  }, [sharedBox]);
 
   // 鼠标滚轮缩放
   const handleWheel = (e: any) => {
@@ -134,7 +122,7 @@ const PointCloudView = ({ title, sharedTransform, setSharedTransform, sharedBox,
     };
     node.scaleX(1);
     node.scaleY(1);
-    setSharedBox(newBox);
+    setBox(newBox);
   };
 
   return (
@@ -157,15 +145,15 @@ const PointCloudView = ({ title, sharedTransform, setSharedTransform, sharedBox,
 
           <Rect
             ref={rectRef}
-            {...sharedBox}
+            {...box}
             stroke='red'
             strokeWidth={2}
             draggable
             onClick={handleSelectRect}
             onTap={handleSelectRect}
             onDragEnd={(e) => {
-              setSharedBox({
-                ...sharedBox,
+              setBox({
+                ...box,
                 x: e.target.x(),
                 y: e.target.y(),
               });
@@ -188,6 +176,7 @@ const PointCloudView = ({ title, sharedTransform, setSharedTransform, sharedBox,
   );
 };
 
+let timer: any = null;
 const PointCloudFilter2D = (props: IProps) => {
   const { type, background, titleColor } = props;
   const { t } = useTranslation();
@@ -198,13 +187,34 @@ const PointCloudFilter2D = (props: IProps) => {
     x: 0,
     y: 0,
   });
+  const { setPointCloud2dKey, setPointsCloudHeart } = useVisionStore(
+    useShallow((store: any) => ({
+      setPointCloud2dKey: store.setPointCloud2dKey,
+      setPointsCloudHeart: store.setPointsCloudHeart,
+    })),
+  );
 
-  const [sharedBox, setSharedBox] = useState<IBox>({
-    x: 100,
-    y: 100,
-    width: 100,
-    height: 80,
-  });
+  useEffect(() => {
+    if (open) {
+      timer = setInterval(() => {
+        setPointsCloudHeart(new Date().getTime());
+      }, 2000);
+      setPointCloud2dKey(type);
+    } else {
+      setPointsCloudHeart(0);
+      setPointCloud2dKey('');
+    }
+    return () => {
+      setPointCloud2dKey('');
+      setPointsCloudHeart(0);
+    };
+  }, [open]);
+
+  useUpdateEffect(() => {
+    if (!open) {
+      exitPointCloud2d();
+    }
+  }, [open]);
 
   return (
     <div>
@@ -236,15 +246,11 @@ const PointCloudFilter2D = (props: IProps) => {
                     title='主视图'
                     sharedTransform={sharedTransform}
                     setSharedTransform={setSharedTransform}
-                    sharedBox={sharedBox}
-                    setSharedBox={setSharedBox}
                   />
                   <PointCloudView
                     title='俯视图'
                     sharedTransform={sharedTransform}
                     setSharedTransform={setSharedTransform}
-                    sharedBox={sharedBox}
-                    setSharedBox={setSharedBox}
                   />
                 </div>
               </div>

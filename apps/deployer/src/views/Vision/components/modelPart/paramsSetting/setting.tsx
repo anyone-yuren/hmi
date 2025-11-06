@@ -101,6 +101,18 @@ const ParamsSetting = (props: any) => {
             <div>{propsState?.['forkarm_final_width'] || 0}</div>
           </TextChangeRow>
         )}
+        {propsState.type != 'tail_truck' && (
+          <TextChangeRow
+            className={'w-[260px]'}
+            title={t('deployer.vision.forkFinalWidth')}
+            value={propsState?.['forkarm_final_width']}
+            onChange={(value: string) => {
+              changeUpdateHashMap('forkarm_final_width', value);
+            }}
+          >
+            <div>{propsState?.['forkarm_final_width'] || 0}</div>
+          </TextChangeRow>
+        )}
 
         {propsState.type === 'warehouse_shelves' && (
           <TextChangeRow
