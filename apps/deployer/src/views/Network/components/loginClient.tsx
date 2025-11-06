@@ -1,14 +1,14 @@
 // components/LoginModalTrigger.tsx
 import { useGlobalStore } from '@gbeata/store';
 import { useRequest } from 'ahooks';
-import { Form, Input, Modal } from 'antd';
+import { Form, Input, Modal, Select } from 'antd';
 import { createStyles, ThemeProvider } from 'antd-style';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
-import { clientLogin } from '../services';
+import { clientLogin, getAgvInfo } from '../services';
 
 let showLoginModalExternal: (() => void) | null = null;
 
@@ -35,6 +35,8 @@ const useStyles = createStyles(({ css, token }) => {
 export default function LoginModalTrigger() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { data: agvInfo, loading: agvLoading } = useRequest(getAgvInfo);
+
   const { setToken } = useGlobalStore(
     useShallow((state) => ({
       setToken: state.setToken,
@@ -70,9 +72,26 @@ export default function LoginModalTrigger() {
             autoComplete='off'
             clearOnDestroy
             labelAlign='right'
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            initialValues={{
+              wireless_client_brand: agvInfo?.wireless_client_brand,
+            }}
           >
+            <Form.Item
+              label={t('deployer.network.wireless')}
+              name='wireless_client_brand'
+              rules={[{ required: true, message: t('deployer.network.selectWireless') }]}
+            >
+              <Select
+                options={
+                  agvInfo?.wireless_client_list?.map((item) => ({
+                    label: item,
+                    value: item,
+                  })) || []
+                }
+              />
+            </Form.Item>
             <Form.Item
               label={t('common.username')}
               name='username'
@@ -100,7 +119,7 @@ export default function LoginModalTrigger() {
       },
       rootClassName: styles.loginModal,
     });
-  }, [i18n.language]);
+  }, [i18n.language, agvInfo]);
 
   showLoginModalExternal = showLoginModal;
 

@@ -479,12 +479,14 @@
       "roamSwitch": "로밍 스위치",
       "roamThreshold": "로밍 임계값",
       "secondaryDns": "대체 DNS",
+      "selectWireless": "무선 클라이언트를 선택해 주세요",
       "srcPort": "소스 포트",
       "srcPortRequired": "원본 포트를 입력하세요.",
       "subnetMask": "서브넷 마스크",
       "such": "예를 들어",
       "wanPort": "WAN 포트",
-      "wanSetting": "WAN 설정"
+      "wanSetting": "WAN 설정",
+      "wireless": "무선 클라이언트:"
     },
     "safety": {
       "backDistance": "후진 거리",
