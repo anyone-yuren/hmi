@@ -9,7 +9,6 @@ import PageException from '../ErrorPage';
 import LocationPoint from '../point/locationPoint';
 import RouteWind from './components/activeRoute';
 import Car from './components/car';
-import MxwCar from './components/device';
 import RcsLines from './components/routeLiles';
 import StageBase from './components/stageBase';
 const CarStage = () => {
@@ -83,7 +82,7 @@ const CarStage = () => {
           adjustCamera={1}
         > */}
           <Car />
-          <MxwCar />
+          {/* <MxwCar /> */}
           {isAndroid ? null : (
             <RouteWind
               tubularSegments={80}

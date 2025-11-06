@@ -1,6 +1,6 @@
-import { Grid } from '@react-three/drei';
+import { Grid, Html } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useHomeHybirdStore } from '../../../store/hybird';
 // interface IProps {
@@ -16,6 +16,9 @@ const StageBase = (props) => {
       agvPosition: state.agvPosition,
     })),
   );
+
+  const renderCount = useRef(0);
+  renderCount.current++;
 
   const { camera, controls } = useThree();
 
@@ -51,6 +54,7 @@ const StageBase = (props) => {
     fadeDistance: 30, // 视距，多大开始模糊
     fadeStrength: 1, // 模糊强度
   };
+  const [showHtml, setShowHtml] = useState(false);
 
   return (
     <>
@@ -59,6 +63,23 @@ const StageBase = (props) => {
         // position={[agvPosition.x / 1000, -0.1, agvPosition.y / 1000]}
         {...gridConfig}
       />
+      {showHtml ? (
+        <Html position={[0 - agvPosition.x / 1000, 0, agvPosition.y / 1000]}>
+          <div
+            style={{
+              background: 'rgba(0,0,0,0.5)',
+              color: '#0f0',
+              padding: '6px 12px',
+              borderRadius: 8,
+              fontFamily: 'monospace',
+              fontSize: 14,
+            }}
+          >
+            <div>Stage渲染次数: {renderCount.current}</div>
+            <div>坐标：{JSON.stringify(agvPosition)}</div>
+          </div>
+        </Html>
+      ) : null}
       {/* <ambientLight intensity={2.5} /> */}
       {/* 定向光 */}
       {/* <directionalLight
