@@ -399,7 +399,7 @@ const Setting = (props: any) => {
             {/* <div className='flex gap-[8px] justify-between'> */}
             <PointCloudFilter type={'pick_pallet_position_detect'}></PointCloudFilter>
             <div className='h-[12px]'></div>
-            <PointCloudFilter2D type={'pick_pallet_position_detect'}></PointCloudFilter2D>
+            {false && <PointCloudFilter2D type={'pick_pallet_position_detect'}></PointCloudFilter2D>}
             {/* </div> */}
 
             {/* <Title>{t("载具最大偏移阈值")}</Title>
