@@ -3,7 +3,6 @@ import { useVehicleStore } from '@gbeata/store';
 import { Skeleton } from '@mui/material';
 import { useRequest } from 'ahooks';
 import { Divider, Space, Tag, Typography } from 'antd';
-import { useTheme } from 'antd-style';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +31,6 @@ const VehicleInfo = () => {
       };
     }),
   );
-  const theme = useTheme();
 
   const getNavigationType = (type: number) => {
     switch (type) {

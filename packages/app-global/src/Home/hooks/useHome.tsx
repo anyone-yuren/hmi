@@ -1,8 +1,9 @@
 import { useWebSocket } from 'ahooks';
-import { useEffect } from 'react';
+import { throttle } from 'lodash';
+import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { useHomeStore } from '../store';
 import { useHomeHybirdStore } from '../store/hybird';
+import useDebouncedHomeStore from './useDebounce';
 
 // 动态获取当前 host
 const currentHost = window.location.hostname;
@@ -18,27 +19,8 @@ const VEHICLE_URL_10001 =
     : `ws://${currentHost}:10001`; // 生产环境使用真实地址
 
 export const useHome = () => {
-  const {
-    setTaskInfo,
-    setControlStatus,
-    setRobotCurrentStatus,
-    setRobotIsensorStatus,
-    setRobotGoodsStatus,
-    setRobotForkarmStatus,
-    setSegmentsInfo,
-  } = useHomeStore(
-    useShallow((state) => {
-      return {
-        setTaskInfo: state.setTaskInfo,
-        setControlStatus: state.setControlStatus,
-        setRobotCurrentStatus: state.setRobotCurrentStatus,
-        setRobotIsensorStatus: state.setRobotIsensorStatus,
-        setRobotGoodsStatus: state.setRobotGoodsStatus,
-        setRobotForkarmStatus: state.setRobotForkarmStatus,
-        setSegmentsInfo: state.setSegmentsInfo,
-      };
-    }),
-  );
+  const debounced = useDebouncedHomeStore();
+
   const { agvPosition, setAgvPosition } = useHomeHybirdStore(
     useShallow((state) => {
       return {
@@ -47,6 +29,30 @@ export const useHome = () => {
       };
     }),
   );
+
+  // 在 hook 内，保证 debounce/ref 在第一次 render 就存在
+  const latestSetAgvPositionRef = useRef(setAgvPosition);
+  useEffect(() => {
+    latestSetAgvPositionRef.current = setAgvPosition;
+  }, [setAgvPosition]);
+
+  const throttleSetAgvPositionRef = useRef(
+    throttle((pos) => {
+      try {
+        latestSetAgvPositionRef.current(pos);
+      } catch (e) {
+        console.error('[throttle] inner error', e);
+      }
+    }, 1000),
+  );
+
+  // 清理
+  useEffect(() => {
+    return () => {
+      throttleSetAgvPositionRef.current?.cancel?.();
+    };
+  }, []);
+
   const { sendMessage, latestMessage, readyState } = useWebSocket(VEHICLE_URL, {
     reconnectLimit: 10,
     reconnectInterval: 5000,
@@ -57,27 +63,27 @@ export const useHome = () => {
       const data = JSON.parse(message.data);
       if (data.uri == '/sirius/topics/task_info') {
         const { timestamp, ...rest } = data;
-        setTaskInfo(rest);
+        debounced.setTaskInfo(rest);
       }
       if (data.uri == '/sirius/topics/control_status') {
         const { timestamp, ...rest } = data;
-        setControlStatus(rest);
+        debounced.setControlStatus(rest);
       }
       if (data.uri == '/sirius/topics/robot_status_isensor') {
         const { timestamp, ...rest } = data;
-        setRobotIsensorStatus(rest);
+        debounced.setRobotIsensorStatus(rest);
       }
       if (data.uri == '/sirius/topics/robot_status_goods') {
         const { timestamp, ...rest } = data;
-        setRobotGoodsStatus(rest);
+        debounced.setRobotGoodsStatus(rest);
       }
       if (data.uri == '/sirius/topics/robot_status_forkarm') {
         const { timestamp, ...rest } = data;
-        setRobotForkarmStatus(rest);
+        debounced.setRobotForkarmStatus(rest);
       }
       if (data.uri == '/sirius/topics/segments_info') {
         const { timestamp, ...rest } = data;
-        setSegmentsInfo(rest?.segments);
+        debounced.setSegmentsInfo(rest?.segments);
       }
     },
   });
@@ -95,7 +101,7 @@ export const useHome = () => {
       const data = JSON.parse(message.data);
       if (data.uri == '/navigation/robot_current_status') {
         const { timestamp, ...rest } = data;
-        setRobotCurrentStatus(rest);
+        debounced.setRobotCurrentStatus(rest);
       }
       if (data?.uri === '/navigation/robot_status_localizer_result') {
         data.pose.x = Math.round(data.pose.x * 1000 * 100) / 100;
@@ -103,18 +109,18 @@ export const useHome = () => {
         data.pose.theta = Math.round(data.pose.theta * 100) / 100;
         // TODO 转整数
         if (!agvPosition) {
-          setAgvPosition({
+          throttleSetAgvPositionRef.current({
             angel: data.pose.theta,
             x: data.pose.x,
             y: data.pose.y,
           });
         }
-        const diffX = Math.abs(data.pose.x - agvPosition.x);
-        const diffY = Math.abs(data.pose.y - agvPosition.y);
+        // const diffX = Math.abs(data.pose.x - agvPosition.x);
+        // const diffY = Math.abs(data.pose.y - agvPosition.y);
 
         // if (diffX > 1 || diffY > 1) {
         // }
-        setAgvPosition({
+        throttleSetAgvPositionRef.current({
           angel: data.pose.theta,
           x: data.pose.x,
           y: data.pose.y,
