@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 function X20Model(props) {
-  const { headerRadar, forkHeight } = props;
+  const { headerRadar, forkHeight = 0 } = props;
 
   const SCALE = 0.001; // 毫米转米
 

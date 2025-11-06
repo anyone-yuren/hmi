@@ -102,7 +102,7 @@ const Car = (props) => {
           {agvType === 'SE15' ? <Fork15lift forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
           {agvType === 'SL14' ? <Sl14Model forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
           {agvType === 'X20' ? <X20Model forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
-          {agvType === 'O15' ? <O15Model /> : null}
+          {agvType === 'O15' ? <O15Model forkX={robotForkarmStatus.x} forkHeight={robotForkarmStatus.z} /> : null}
         </animated.group>
         {/* <group position={[agvPosition.x / 1000, 0.01, agvPosition.y / 1000]} rotation={[0, deltaRotation, 0]}>
           {agvType === 'SE15' ? <Fork15lift /> : null}

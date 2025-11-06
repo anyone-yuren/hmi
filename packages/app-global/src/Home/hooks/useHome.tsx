@@ -36,7 +36,6 @@ export const useHome = () => {
     latestSetAgvPositionRef.current = setAgvPosition;
   }, [setAgvPosition]);
 
-  // 方案 B: 如果你需要定期更新（更适合高频位置），使用 throttle（推荐用于位置）
   const throttleSetAgvPositionRef = useRef(
     throttle((pos) => {
       try {

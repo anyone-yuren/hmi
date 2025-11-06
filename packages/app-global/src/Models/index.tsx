@@ -65,13 +65,13 @@ export default function R3FBasicScene() {
           <Grid args={[100, 100]} {...gridConfig} />
 
           {/* <Forklift /> */}
-          <X20Model />
+          <O15Model />
           {false && (
             <>
+              <X20Model />
               <Sl14Model />
               <X20sModel />
               <Fork15lift />
-              <O15Model />
               <O30Model />
             </>
           )}
