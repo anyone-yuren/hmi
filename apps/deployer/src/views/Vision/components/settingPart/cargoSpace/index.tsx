@@ -105,36 +105,38 @@ const Setting = () => {
               changeUpdateHashMap('need_detect', checked);
             }}
           />
-          <TextUpdateRow>
-            <div>{t('deployer.vision.sensorBind')}</div>
-            <CustomSelect
-              variant='standard'
-              value={updateHashMap.sensor_model}
-              onChange={(event: any) => {
-                setUpdateHashMap({
-                  __isSubmit: true,
-                  sensor_model: event.target.value,
-                });
-              }}
-            >
-              {updateHashMap?.sensor_model_list?.map((name: any) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  sx={{
-                    '&.Mui-selected': {
-                      backgroundColor: '#00d1d1ad', // 修改选中项的背景色
-                    },
-                    '&.Mui-selected:hover': {
-                      backgroundColor: '#00d1d1ad', // 修改选中项的背景色
-                    },
-                  }}
-                >
-                  <ListItemText primary={name} />
-                </MenuItem>
-              ))}
-            </CustomSelect>
-          </TextUpdateRow>
+          {false && (
+            <TextUpdateRow>
+              <div>{t('deployer.vision.sensorBind')}</div>
+              <CustomSelect
+                variant='standard'
+                value={updateHashMap.sensor_model}
+                onChange={(event: any) => {
+                  setUpdateHashMap({
+                    __isSubmit: true,
+                    sensor_model: event.target.value,
+                  });
+                }}
+              >
+                {updateHashMap?.sensor_model_list?.map((name: any) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    sx={{
+                      '&.Mui-selected': {
+                        backgroundColor: '#00d1d1ad', // 修改选中项的背景色
+                      },
+                      '&.Mui-selected:hover': {
+                        backgroundColor: '#00d1d1ad', // 修改选中项的背景色
+                      },
+                    }}
+                  >
+                    <ListItemText primary={name} />
+                  </MenuItem>
+                ))}
+              </CustomSelect>
+            </TextUpdateRow>
+          )}
           <PointCloudFilter type={'place_space_detect'}></PointCloudFilter>
 
           {[

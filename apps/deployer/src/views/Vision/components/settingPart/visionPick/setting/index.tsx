@@ -176,7 +176,7 @@ const Setting = (props: any) => {
       { title: t('deployer.vision.palletDistanceForksEnd'), key: 'forkarmroot_pallet_dis' },
     ];
     return vehicle?.isTrilateral
-      ? []
+      ? options.filter((item: any) => item.key == 'extra_height')
       : vehicle.isPallet
         ? options.filter((item: any) => item.key != 'extra_height')
         : options;
@@ -446,7 +446,6 @@ const Setting = (props: any) => {
                     variant='standard'
                     value={updateHashMap?.pallet_model_list}
                     renderValue={(value: any) => {
-                      console.log('value', value);
                       return (
                         <div className='flex flex-wrap'>
                           {value?.map((item: any, index: number) => {

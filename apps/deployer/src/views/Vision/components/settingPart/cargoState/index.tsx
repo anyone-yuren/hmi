@@ -47,12 +47,12 @@ const CargoState = () => {
 
   const sensorSelectList = useMemo(() => {
     const origin = cargoStateSetting?.data?.sensor_model_list?.value;
-    const cn_origin = cargoStateSetting?.data?.ch_sensor_model_list?.value;
+    const cn_origin = cargoStateSetting?.data?.ch_sensor_model_list?.value || [];
     const isChinese = i18n.language === 'zh_CN';
     return origin?.map((item, index) => {
       return {
         value: item,
-        label: isChinese ? cn_origin[index] : item,
+        label: isChinese ? cn_origin?.[index] : item,
       };
     });
   }, [i18n.language, cargoStateSetting]);

@@ -203,16 +203,20 @@ const PointCloudFilter2D = (props: IProps) => {
     } else {
       setPointsCloudHeart(0);
       setPointCloud2dKey('');
+      clearInterval(timer);
     }
     return () => {
       setPointCloud2dKey('');
       setPointsCloudHeart(0);
+      clearInterval(timer);
     };
   }, [open]);
 
   useUpdateEffect(() => {
     if (!open) {
+      setPointsCloudHeart(0);
       exitPointCloud2d();
+      clearInterval(timer);
     }
   }, [open]);
 
