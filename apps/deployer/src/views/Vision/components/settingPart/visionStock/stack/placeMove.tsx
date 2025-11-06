@@ -286,7 +286,7 @@ const PlaceMove = (props: IProps) => {
           </LoadingButton>
         </div>
         <div className='flex-1'>
-          <Illustration type='move' />
+          <Illustration type='detect' />
         </div>
       </div>
     </>

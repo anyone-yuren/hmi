@@ -708,6 +708,7 @@
       "forkDistancePallet": "行驶过程中车身回正时牙尖离托盘表面的距离",
       "forkExtendDistCompensation": "叉臂伸出距离补偿",
       "forkExtendParams": "额外进叉高度补偿",
+      "forkFinalWidth": "叉臂张开区域",
       "forkUpPointCloud": "叉臂上方点云",
       "forkWidth": "进叉宽度",
       "forkWidthPallet": "使用不同进叉深度叉取不同类型托盘",

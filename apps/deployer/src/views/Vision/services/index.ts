@@ -148,3 +148,6 @@ export const getCompareRobotToolkitModelWithWebModelRead = () =>
 
 export const getMultiCageModelRead = () => get('/cv_mwrobot/multi_cage_model/read', {}, '10010');
 // /cv_mwrobot/multi_cage_model/read
+
+// 2d点云退出
+export const exitPointCloud2d = () => get('/cv_mwrobot/point_cloud_monitoring_2D/back', {}, '10010');

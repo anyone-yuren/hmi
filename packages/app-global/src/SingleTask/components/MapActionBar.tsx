@@ -142,7 +142,7 @@ const MapActionBar = forwardRef((props: any, ref) => {
     >
       <div>
         {modeHashMap?.title?.[mapTaskMode]}
-        {mapTaskMode === 0 ? `，${t('deployer.singleTask.modeTips')}` : ''}
+        {/* {mapTaskMode === 0 ? `，${t('deployer.singleTask.modeTips')}` : ''} */}
       </div>
       <div style={{ display: 'flex', gap: 10, marginTop: 5 }}>
         <>

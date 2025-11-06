@@ -707,6 +707,7 @@
       "forkDistancePallet": "주행 중 차체가 정렬되었을 때 톱니 끝과 팔레트 표면 사이의 거리",
       "forkExtendDistCompensation": "포크 도달 범위 보상",
       "forkExtendParams": "",
+      "forkFinalWidth": "포크 팔 벌리기 영역",
       "forkUpPointCloud": "포크 암 상단 포인트 클라우드",
       "forkWidth": "포크 폭",
       "forkWidthPallet": "다양한 유형의 팔레트는 서로 다른 포크 깊이로 포크됩니다.",

@@ -19,6 +19,7 @@ import CustomSelect from '../../comp/customSelect';
 import CustomSwitch from '../../comp/customSwitch';
 import LoadingButton from '../../comp/loadingButton';
 import PointCloudFilter from '../../comp/pointCloudFilter';
+import PointCloudFilter2D from '../../comp/pointCloudFilter2D';
 import TextChangeRow from '../../comp/textChangeRow';
 import TextUpdateRow from '../../comp/textUpdateRow';
 import Illustration from './illustration';
@@ -137,7 +138,7 @@ const Setting = (props: any) => {
   const modelHashMap = useMemo(() => {
     const hashMap: any = {};
     modelList?.data?.forEach((item: any) => {
-      hashMap[item.id] = item.id;
+      hashMap[item.id] = item.display_name || item.id;
     });
     return hashMap;
   }, [modelList]);
@@ -175,7 +176,7 @@ const Setting = (props: any) => {
       { title: t('deployer.vision.palletDistanceForksEnd'), key: 'forkarmroot_pallet_dis' },
     ];
     return vehicle?.isTrilateral
-      ? []
+      ? options.filter((item: any) => item.key == 'extra_height')
       : vehicle.isPallet
         ? options.filter((item: any) => item.key != 'extra_height')
         : options;
@@ -395,8 +396,11 @@ const Setting = (props: any) => {
                 />
               </div>
             </TextUpdateRow>
-
+            {/* <div className='flex gap-[8px] justify-between'> */}
             <PointCloudFilter type={'pick_pallet_position_detect'}></PointCloudFilter>
+            <div className='h-[12px]'></div>
+            {false && <PointCloudFilter2D type={'pick_pallet_position_detect'}></PointCloudFilter2D>}
+            {/* </div> */}
 
             {/* <Title>{t("载具最大偏移阈值")}</Title>
             {maxOffsetOptions.map((item: any) => {

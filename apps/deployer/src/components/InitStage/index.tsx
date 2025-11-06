@@ -22,18 +22,29 @@ interface IProps {
 
 const InitStage = (props: IProps) => {
   const { handleTouchMove, handleTouchStart, handleTouchEnd, handleDragMove } = useStageEvents();
-  const { mapLoading, setHybirdStage, beginPose, setRadarVisible, setStageScale, setStagePos, setIsDrag } =
-    useHybirdStore(
-      useShallow((state) => ({
-        mapLoading: state.mapLoading,
-        setHybirdStage: state.setHybirdStage,
-        beginPose: state.beginPose,
-        setRadarVisible: state.setRadarVisible,
-        setStageScale: state.setStageScale,
-        setStagePos: state.setStagePos,
-        setIsDrag: state.setIsDrag,
-      })),
-    );
+  const {
+    mapLoading,
+    setHybirdStage,
+    beginPose,
+    setRadarVisible,
+    setStageScale,
+    setStagePos,
+    setIsDrag,
+    stagePos,
+    stageScale,
+  } = useHybirdStore(
+    useShallow((state) => ({
+      mapLoading: state.mapLoading,
+      setHybirdStage: state.setHybirdStage,
+      beginPose: state.beginPose,
+      setRadarVisible: state.setRadarVisible,
+      setStageScale: state.setStageScale,
+      setStagePos: state.setStagePos,
+      setIsDrag: state.setIsDrag,
+      stagePos: state.stagePos,
+      stageScale: state.stageScale,
+    })),
+  );
 
   const { size = null, children, onWheelCallback, minScale, draggable = true, ...rest } = props;
   const { stageRef, onWheel } = useStage({
@@ -41,9 +52,20 @@ const InitStage = (props: IProps) => {
     minScale: minScale,
   });
   const [loading, setLoading] = useState(mapLoading);
+
   useEffect(() => {
     setLoading(mapLoading);
   }, [mapLoading]);
+
+  // 当舞台位置或缩放变化时，强制刷新
+  useEffect(() => {
+    if (stageRef.current) {
+      const stage = stageRef.current.getStage();
+      if (stage) {
+        stage.batchDraw();
+      }
+    }
+  }, [stagePos, stageScale, stageRef]);
 
   useEffect(() => {
     if (!size) return;
@@ -52,6 +74,7 @@ const InitStage = (props: IProps) => {
       stage.batchDraw();
     }
   }, [size]);
+
   useEffect(() => {
     if (!stageRef.current) return;
     const stage = stageRef.current?.getStage();
@@ -78,6 +101,7 @@ const InitStage = (props: IProps) => {
       setRadarVisible(true);
     });
   }, [size]);
+
   useEffect(() => {
     if (!stageRef.current) return;
     const stage = stageRef.current!;
@@ -124,6 +148,7 @@ const InitStage = (props: IProps) => {
       hammer.destroy();
     };
   }, [stageRef.current]);
+
   return (
     <>
       {loading && <PageLoading></PageLoading>}
@@ -143,7 +168,7 @@ const InitStage = (props: IProps) => {
           onMouseUp={handleTouchEnd}
           {...rest}
         >
-          <LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} />
+          {<LineGrid CanvasWidth={size?.width} CanvasHeight={size?.height} />}
           {children}
         </Stage>
       )}

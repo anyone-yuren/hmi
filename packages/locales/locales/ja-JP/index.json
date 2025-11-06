@@ -708,6 +708,7 @@
       "forkDistancePallet": "走行中に車体を整列させたときの歯先からパレット表面までの距離",
       "forkExtendDistCompensation": "ウィッシュボーンリーチ補正",
       "forkExtendParams": "エクストラフォーク高さ補償",
+      "forkFinalWidth": "フォークアーム開き領域",
       "forkUpPointCloud": "フォーク上部の点群",
       "forkWidth": "フォーク幅",
       "forkWidthPallet": "パレットの種類が異なれば、フォークの深さも異なります",

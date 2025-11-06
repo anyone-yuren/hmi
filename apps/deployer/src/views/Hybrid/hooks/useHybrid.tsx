@@ -114,6 +114,9 @@ export const useHybrid = () => {
             '/navigation/robot_current_status',
             '/navigation/slam_extending_map',
             '/navigation/real_time_data/scan_head',
+            '/navigation/real_time_data/mismatched_reflectors',
+            '/navigation/real_time_data/matched_reflectors',
+            '/navigation/real_time_data/current_reflector_map',
           ],
         }),
       );

@@ -173,7 +173,7 @@ const Charging = () => {
                     {powerStatusHashmap[powerStatus.charge_status]?.label}
                   </Typography.Text>
                 </div>
-                <span className='text-xs text-white/50'>{t('common.charging.totalTimes')}</span>
+                {/* <span className='text-xs text-white/50'>{t('common.charging.totalTimes')}</span> */}
               </div>
             </div>
             {/* 充电任务 */}

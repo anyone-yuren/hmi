@@ -33,7 +33,7 @@ function MouseEvent(props: IMouseEvent) {
     >
       <Paper>
         <MenuList sx={{ '& .MuiMenuItem-root': { justifyContent: 'center' } }}>
-          {type === 1 && (
+          {(type === 1 || type === 4) && (
             <>
               <MenuItem
                 dense

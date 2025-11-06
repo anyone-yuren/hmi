@@ -4,7 +4,8 @@ import { Circle, FastLayer } from 'react-konva';
 import { useShallow } from 'zustand/react/shallow';
 import { useHybirdStore } from '../../store/hybird.store';
 
-export default function PointsCloudDiag() {
+export default function PointsCloudDiag(props: any) {
+  const { alignment } = props;
   const [minIntensity, setMinIntensity] = useState(0);
   const [maxIntensity, setMaxIntensity] = useState(0);
 
@@ -27,11 +28,16 @@ export default function PointsCloudDiag() {
 
   // 将强度映射到红橙黄绿青蓝紫
   const getColorFromIntensity = (intensity: number) => {
-    return `hsl(0, 100%, 50%)`;
     if (minIntensity === 0 && maxIntensity === 0) return `hsl(0, 100%, 50%)`;
-    const normalized = (intensity - minIntensity) / (maxIntensity - minIntensity); // 归一化到 0-1
+    // console.log('intensity', intensity, maxIntensity, minIntensity);
+    let normalized = (intensity - minIntensity) / (maxIntensity - minIntensity); // 归一化到 0-1
+    if (normalized < 0.1) {
+      normalized = 0;
+    } else {
+      // normalized = 0.9;
+    }
     const hue = normalized * 300; // 映射到 HSL 的 0-300（红橙黄绿青蓝紫）
-    return `hsl(${hue}, 100%, 50%)`; // 高饱和度和中等亮度
+    return alignment === 'slam' ? `hsl(0, 100%, 50%)` : `hsl(${hue}, 100%, 50%)`;
   };
 
   return (
@@ -56,7 +62,7 @@ export default function PointsCloudDiag() {
               key={index}
               x={point.x / 50}
               y={0 - point.y / 50}
-              radius={1.8}
+              radius={alignment === 'slam' ? 1.8 : 0.5}
               fill={getColorFromIntensity(point.intensity)}
             ></Circle>
           );

@@ -395,10 +395,6 @@ const Mapping = () => {
     },
   };
 
-  useEffect(() => {
-    console.log('floor', floor);
-  }, [floor]);
-
   if (!isConnectSuccess) {
     return (
       <WsContainer ref={wsRef}>
@@ -551,8 +547,9 @@ const Mapping = () => {
                   </Group>
                   <CanvasOnline />
                 </Layer>
-                {!!isShowNavigation(navigationType, 'LIDAR_SLAM_3D') && <PointsCloudDiagV1 />}
-                {!!isShowNavigation(navigationType, 'LIDAR_SLAM_2D') && <PointCloudV1 />}
+                <PointsCloudDiagV1 alignment={alignment} />
+                {false && !!isShowNavigation(navigationType, 'LIDAR_SLAM_3D') && <PointsCloudDiagV1 />}
+                {false && !!isShowNavigation(navigationType, 'LIDAR_SLAM_2D') && <PointCloudV1 />}
               </InitStage>
             </Box>
           ) : (

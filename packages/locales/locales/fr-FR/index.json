@@ -707,6 +707,7 @@
       "forkDistancePallet": "La distance entre la pointe de la dent et la surface de la palette lorsque la carrosserie du véhicule est alignée pendant la conduite",
       "forkExtendDistCompensation": "Compensation de distance de déploiement du bras de fourche",
       "forkExtendParams": "Compensation de hauteur de fourche supplémentaire",
+      "forkFinalWidth": "Zone d'ouverture des bras de fourche",
       "forkUpPointCloud": "Nuage de points au-dessus du bras de fourche",
       "forkWidth": "Largeur de la fourche",
       "forkWidthPallet": "Utiliser différentes profondeurs de fourche pour différents types de palettes",

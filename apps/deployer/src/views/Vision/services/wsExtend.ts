@@ -2,10 +2,11 @@ import { useShallow } from 'zustand/react/shallow';
 import { useVisionStore } from '../store/vision.store';
 
 export default function useVisionWsExtend() {
-  const { setVisionPickSetting, setPointCloud } = useVisionStore(
+  const { setVisionPickSetting, setPointCloud, setPointCloud2d } = useVisionStore(
     useShallow((store) => ({
       setVisionPickSetting: store.setVisionPickSetting,
       setPointCloud: store.setPointCloud,
+      setPointCloud2d: store.setPointCloud2d,
     })),
   );
 
@@ -18,6 +19,11 @@ export default function useVisionWsExtend() {
         const ary = JSON.parse(data.data);
         setPointCloud(ary);
       }
+    },
+    '/cv_mwrobot/point_cloud_2D': (data) => {
+      if (!data.data) return;
+      const ary = JSON.parse(data.data);
+      setPointCloud2d(ary);
     },
   };
 }

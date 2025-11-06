@@ -62,6 +62,8 @@ const MultiCage = forwardRef((props: any, ref) => {
         width: 0,
       },
     ],
+    above_model_id: '',
+    below_model_id: '',
   });
   const divRef = useRef(null);
   const divSize = useSize(divRef);
@@ -82,7 +84,7 @@ const MultiCage = forwardRef((props: any, ref) => {
   useImperativeHandle(ref, () => ({
     getParams: () => {
       return {
-        ...props,
+        ...propsState,
       };
     },
   }));

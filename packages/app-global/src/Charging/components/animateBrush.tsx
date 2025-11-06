@@ -1,4 +1,5 @@
 import { useVehicleStore } from '@gbeata/store';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Button } from 'antd';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
@@ -95,13 +96,13 @@ const AnimateBrush = (props) => {
       const timeString = dayjs().format('HH:mm:ss');
       setStationChargingData([
         {
-          key: '1',
-          message: t('common.charging.chargeStationOn'),
+          key: '2',
+          message: t('common.charging.waitChargeStationLight'),
           time: timeString,
         },
         {
-          key: '2',
-          message: t('common.charging.waitChargeStationLight'),
+          key: '1',
+          message: t('common.charging.chargeStationOn'),
           time: timeString,
         },
       ]);
@@ -278,7 +279,7 @@ const AnimateBrush = (props) => {
           <div className='absolute -left-full flex flex-col divide-y divide-slate-400/40'>
             {vehicleChargingData.map((item, index) => (
               <motion.div
-                className='py-2'
+                className='py-2 flex items-center justify-center gap-[2px]'
                 key={item.key}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -287,8 +288,11 @@ const AnimateBrush = (props) => {
                   delay: 0.5 * index,
                 }}
               >
-                <div className='text-white font-bold'>{item.message}</div>
-                <div className='text-xs text-white/50'>{item.time}</div>
+                <CheckCircleIcon style={{ color: '#4caf50' }} size='large' />
+                <div className='flex-1'>
+                  <div className='text-white font-bold'>{item.message}</div>
+                  <div className='text-xs text-white/50'>{item.time}</div>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -349,7 +353,7 @@ const AnimateBrush = (props) => {
           <div className='absolute -right-full flex flex-col divide-y divide-slate-400/40'>
             {stationChargingData.map((item, index) => (
               <motion.div
-                className='py-2'
+                className='py-2 flex items-center justify-center gap-[2px]'
                 key={item.key}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -358,8 +362,11 @@ const AnimateBrush = (props) => {
                   delay: 0.5 * index,
                 }}
               >
-                <div className='text-white font-bold'>{item.message}</div>
-                <div className='text-xs text-white/50'>{item.time}</div>
+                <CheckCircleIcon style={{ color: '#4caf50' }} size='large' />
+                <div className='flex-1'>
+                  <div className='text-white font-bold'>{item.message}</div>
+                  <div className='text-xs text-white/50'>{item.time}</div>
+                </div>
               </motion.div>
             ))}
           </div>

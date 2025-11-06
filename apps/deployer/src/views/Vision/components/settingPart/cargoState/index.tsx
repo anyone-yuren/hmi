@@ -1,6 +1,6 @@
 import { Button, ListItemText, MenuItem } from '@mui/material';
 import { useAsyncEffect, useRequest, useSetState, useUpdateEffect } from 'ahooks';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -21,7 +21,7 @@ const RowBox = (props: any) => {
   );
 };
 const CargoState = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [settingHashMap, setSettingHashMap] = useState<any>({});
   const [updateHashMap, setUpdateHashMap] = useSetState<any>({
     __isSubmit: false,
@@ -44,6 +44,18 @@ const CargoState = () => {
       sensor_model_list: data?.sensor_model_list?.value,
     });
   }, [cargoStateSetting]);
+
+  const sensorSelectList = useMemo(() => {
+    const origin = cargoStateSetting?.data?.sensor_model_list?.value;
+    const cn_origin = cargoStateSetting?.data?.ch_sensor_model_list?.value || [];
+    const isChinese = i18n.language === 'zh_CN';
+    return origin?.map((item, index) => {
+      return {
+        value: item,
+        label: isChinese ? cn_origin?.[index] : item,
+      };
+    });
+  }, [i18n.language, cargoStateSetting]);
 
   useAsyncEffect(async () => {
     if (!updateHashMap.__isSubmit) {
@@ -93,9 +105,9 @@ const CargoState = () => {
                   });
                 }}
               >
-                {updateHashMap?.sensor_model_list?.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    <ListItemText primary={name} />
+                {sensorSelectList?.map((item) => (
+                  <MenuItem key={item.value} value={item.value}>
+                    <ListItemText primary={item.label} />
                   </MenuItem>
                 ))}
               </CustomSelect>
