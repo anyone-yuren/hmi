@@ -46,7 +46,7 @@ export default function LoginModalTrigger() {
       if (data?.code === 200) {
         navigate('/network');
       } else {
-        toast.error(data?.msg || t('deployer.network.loginTip'));
+        toast.error(t('deployer.network.loginTip'));
       }
 
       // toast.warning(t('common.loginSuccessTip'), {

@@ -33,3 +33,5 @@ export const getPeripheralControlParam = (): Promise<any> => {
 export const postPeripheralControlParam = (params: any): Promise<any> => {
   return post('/robot_config/peripheral_param/config_interactor_peripheral', params);
 };
+
+export const config_agv_info = () => get('/robot_config/base_param/config_agv_info');

@@ -105,7 +105,7 @@ instance.interceptors.response.use(
     }
 
     // 其他错误
-    toast.error(msg || t('common.http.error'), {
+    toast.error(config.url + ' ' + t('common.http.error'), {
       position: 'top-center',
     });
     return Promise.reject(msg || t('common.http.error'));

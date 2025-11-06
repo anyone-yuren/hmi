@@ -14,7 +14,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <GlobalProvider>
       {/* <RouterProvider router={router} /> */}
       <App />
-      <Toaster richColors visibleToasts={2} expand={true} position={'top-center'} />
+      <Toaster richColors visibleToasts={5} expand={true} position={'top-center'} />
     </GlobalProvider>
   </React.StrictMode>,
 );

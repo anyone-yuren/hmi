@@ -1,9 +1,10 @@
-import { CameraControls, GizmoHelper, GizmoViewport, PerspectiveCamera } from '@react-three/drei';
+import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { useRequest } from 'ahooks';
 import { Skeleton, Spin } from 'antd';
 import { memo, Suspense } from 'react';
 import { getSegmentsInfo, getVehicleShape } from '../../services';
+import { isAndroidEnv } from '../../utils';
 import PageException from '../ErrorPage';
 import LocationPoint from '../point/locationPoint';
 import Car from './components/car';
@@ -13,18 +14,21 @@ import StageBase from './components/stageBase';
 const CarStage = () => {
   const { data: routeLinesData, loading: routeLinesLoading } = useRequest(getSegmentsInfo);
   const { data: vehicleShapeData, loading: vehicleShapeLoading } = useRequest(getVehicleShape);
-
+  const isAndroid = isAndroidEnv();
   return (
     <Suspense fallback={<Spin />}>
       {routeLinesLoading ? (
         <Skeleton.Button active className='!h-full !w-full' />
       ) : routeLinesData?.data ? (
         <Canvas
-          dpr={[1, 2]}
+          dpr={isAndroid ? 1 : [1, 2]}
+          shadows={!isAndroid}
           gl={{
-            alpha: true,
+            antialias: !isAndroid,
+            alpha: false,
+            powerPreference: isAndroid ? 'low-power' : 'high-performance',
           }}
-          shadows
+          frameloop={isAndroid ? 'demand' : 'always'}
           // scene={{
           //   fog: new Fog("#fff", 3, 6),
           // }}
@@ -93,9 +97,9 @@ const CarStage = () => {
           <StageBase />
           {/* </Stage> */}
           {/* <Gltf castShadow receiveShadow src="Perseverance-transformed.glb" /> */}
-          <GizmoHelper alignment='bottom-right' margin={[80, 80]}>
+          {/* <GizmoHelper alignment='bottom-right' margin={[80, 80]}>
             <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='black' />
-          </GizmoHelper>
+          </GizmoHelper> */}
         </Canvas>
       ) : (
         <PageException status={401} />
