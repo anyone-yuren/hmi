@@ -79,7 +79,7 @@ const SlamLayer = () => {
     setStageScale(0.8);
 
     console.log('直接定位完成', targetX, targetY);
-  }, [hybirdStage, map_to_cad, grid_map, agvPosition]);
+  }, [hybirdStage, map_to_cad, grid_map]);
   // 初始化定位到车辆  切换地图定位到车辆
   useUpdateEffect(() => {
     return;
