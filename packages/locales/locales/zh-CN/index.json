@@ -456,6 +456,7 @@
       "lanPort": "LAN端口",
       "lanSetting": "LAN设置",
       "lanSettingSuccess": "LAN设置成功",
+      "login": "登录无线客户端",
       "loginTip": "登录失败",
       "name": "备注名称",
       "nameRequired": "请输入备注名称",

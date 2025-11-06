@@ -62,7 +62,7 @@ export default function LoginModalTrigger() {
 
   const showLoginModal = useCallback(() => {
     Modal.confirm({
-      title: t('common.login'),
+      title: t('deployer.network.login'),
       content: (
         <ThemeProvider themeMode='dark'>
           <Form

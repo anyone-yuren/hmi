@@ -456,6 +456,7 @@
       "lanPort": "LANポート",
       "lanSetting": "LAN設定",
       "lanSettingSuccess": "LANのセットアップが成功しました",
+      "login": "ワイヤレスクライアントにログインする",
       "loginTip": "ログインに失敗しました",
       "name": "音名",
       "nameRequired": "ノート名を入力してください",

@@ -455,6 +455,7 @@
       "lanPort": "LAN 포트",
       "lanSetting": "LAN 설정",
       "lanSettingSuccess": "LAN 설정 성공",
+      "login": "무선 클라이언트에 로그인",
       "loginTip": "로그인 실패",
       "name": "메모 이름",
       "nameRequired": "메모 이름을 입력하세요.",

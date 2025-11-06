@@ -456,6 +456,7 @@
       "lanPort": "LAN port",
       "lanSetting": "LAN settings",
       "lanSettingSuccess": "LAN setup successful",
+      "login": "Log in to wireless client",
       "loginTip": "Login failed",
       "name": "Note name",
       "nameRequired": "Please enter the note name",

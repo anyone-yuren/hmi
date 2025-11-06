@@ -455,6 +455,7 @@
       "lanPort": "Port réseau local",
       "lanSetting": "Paramètres réseau",
       "lanSettingSuccess": "Configuration du réseau local réussie",
+      "login": "Connectez-vous au client sans fil",
       "loginTip": "La connexion a échoué",
       "name": "Nom de la note",
       "nameRequired": "Veuillez saisir le nom de la note",
