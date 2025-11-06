@@ -90,12 +90,12 @@ const Car = (props) => {
 
   return (
     <>
-      <pointLight
+      {/* <pointLight
         ref={directionalLightRef}
         position={[agvPosition.x / 1000, 0, agvPosition.y / 1000]} // 设置光源的位置与车辆同步
         color={'#00D1D1'} // 光源颜色
         castShadow={true} // 启用阴影投射
-      />
+      /> */}
       <group>
         <animated.group position={groupProps.position as unknown as THREE.Vector3} rotation={[0, agvPosition.angel, 0]}>
           {/* <PointCloud /> */}

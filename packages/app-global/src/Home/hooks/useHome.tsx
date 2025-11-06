@@ -1,9 +1,9 @@
 import { useWebSocket } from 'ahooks';
-import { debounce, throttle } from 'lodash';
+import { throttle } from 'lodash';
 import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { useHomeStore } from '../store';
 import { useHomeHybirdStore } from '../store/hybird';
+import useDebouncedHomeStore from './useDebounce';
 
 // 动态获取当前 host
 const currentHost = window.location.hostname;
@@ -19,27 +19,8 @@ const VEHICLE_URL_10001 =
     : `ws://${currentHost}:10001`; // 生产环境使用真实地址
 
 export const useHome = () => {
-  const {
-    setTaskInfo,
-    setControlStatus,
-    setRobotCurrentStatus,
-    setRobotIsensorStatus,
-    setRobotGoodsStatus,
-    setRobotForkarmStatus,
-    setSegmentsInfo,
-  } = useHomeStore(
-    useShallow((state) => {
-      return {
-        setTaskInfo: state.setTaskInfo,
-        setControlStatus: state.setControlStatus,
-        setRobotCurrentStatus: state.setRobotCurrentStatus,
-        setRobotIsensorStatus: state.setRobotIsensorStatus,
-        setRobotGoodsStatus: state.setRobotGoodsStatus,
-        setRobotForkarmStatus: state.setRobotForkarmStatus,
-        setSegmentsInfo: state.setSegmentsInfo,
-      };
-    }),
-  );
+  const debounced = useDebouncedHomeStore();
+
   const { agvPosition, setAgvPosition } = useHomeHybirdStore(
     useShallow((state) => {
       return {
@@ -55,24 +36,6 @@ export const useHome = () => {
     latestSetAgvPositionRef.current = setAgvPosition;
   }, [setAgvPosition]);
 
-  // 方案 A: 使用 debounce（默认 trailing）
-  // 创建一次、贯穿生命周期，不在 render 中重建
-  const debounceSetAgvPositionRef = useRef(
-    debounce(
-      (pos) => {
-        try {
-          // 使用最新的 setter 引用，避免闭包引用过期
-          latestSetAgvPositionRef.current(pos);
-          console.log('[debounce] fired', pos);
-        } catch (e) {
-          console.error('[debounce] inner error', e);
-        }
-      },
-      1000,
-      { leading: false, trailing: true },
-    ),
-  );
-
   // 方案 B: 如果你需要定期更新（更适合高频位置），使用 throttle（推荐用于位置）
   const throttleSetAgvPositionRef = useRef(
     throttle((pos) => {
@@ -87,7 +50,6 @@ export const useHome = () => {
   // 清理
   useEffect(() => {
     return () => {
-      debounceSetAgvPositionRef.current?.cancel?.();
       throttleSetAgvPositionRef.current?.cancel?.();
     };
   }, []);
@@ -102,27 +64,27 @@ export const useHome = () => {
       const data = JSON.parse(message.data);
       if (data.uri == '/sirius/topics/task_info') {
         const { timestamp, ...rest } = data;
-        setTaskInfo(rest);
+        debounced.setTaskInfo(rest);
       }
       if (data.uri == '/sirius/topics/control_status') {
         const { timestamp, ...rest } = data;
-        setControlStatus(rest);
+        debounced.setControlStatus(rest);
       }
       if (data.uri == '/sirius/topics/robot_status_isensor') {
         const { timestamp, ...rest } = data;
-        setRobotIsensorStatus(rest);
+        debounced.setRobotIsensorStatus(rest);
       }
       if (data.uri == '/sirius/topics/robot_status_goods') {
         const { timestamp, ...rest } = data;
-        setRobotGoodsStatus(rest);
+        debounced.setRobotGoodsStatus(rest);
       }
       if (data.uri == '/sirius/topics/robot_status_forkarm') {
         const { timestamp, ...rest } = data;
-        setRobotForkarmStatus(rest);
+        debounced.setRobotForkarmStatus(rest);
       }
       if (data.uri == '/sirius/topics/segments_info') {
         const { timestamp, ...rest } = data;
-        setSegmentsInfo(rest?.segments);
+        debounced.setSegmentsInfo(rest?.segments);
       }
     },
   });
@@ -140,7 +102,7 @@ export const useHome = () => {
       const data = JSON.parse(message.data);
       if (data.uri == '/navigation/robot_current_status') {
         const { timestamp, ...rest } = data;
-        setRobotCurrentStatus(rest);
+        debounced.setRobotCurrentStatus(rest);
       }
       if (data?.uri === '/navigation/robot_status_localizer_result') {
         data.pose.x = Math.round(data.pose.x * 1000 * 100) / 100;
