@@ -768,6 +768,7 @@
       "other": "其他",
       "outDiameter": "外直径",
       "overPalletThreshold": "超托阈值",
+      "palletDisplayName": "别名",
       "palletDistanceForksEnd": "取到货之后托盘前表面到叉臂根部的距离",
       "palletHasGoodCheck": "托盘货物有无检测",
       "palletHeight": "托盘高度",

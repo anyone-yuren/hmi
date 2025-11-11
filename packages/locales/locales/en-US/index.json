@@ -768,6 +768,7 @@
       "other": "Other",
       "outDiameter": "Max diameter",
       "overPalletThreshold": "Pallet threshold",
+      "palletDisplayName": "Alias",
       "palletDistanceForksEnd": "The distance between the front surface of the pallet and the root end of the fork arm",
       "palletHasGoodCheck": "Pallet detection",
       "palletHeight": "Pallet height",

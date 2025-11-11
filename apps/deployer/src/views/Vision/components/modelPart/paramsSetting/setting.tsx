@@ -69,7 +69,7 @@ const ParamsSetting = (props: any) => {
       <div className='text-black gap-[10px] justify-center'>
         <TextChangeRow
           className={'w-[260px]'}
-          title={t('deployer.vision.palletName')}
+          title={t('deployer.vision.palletDisplayName')}
           value={propsState?.['display_name']}
           type='text'
           onChange={(value: string) => {
@@ -101,7 +101,7 @@ const ParamsSetting = (props: any) => {
             <div>{propsState?.['forkarm_final_width'] || 0}</div>
           </TextChangeRow>
         )}
-        {propsState.type != 'tail_truck' && (
+        {propsState.type != 'tail_truck' && propsState.type != 'warehouse_shelves' && (
           <TextChangeRow
             className={'w-[260px]'}
             title={t('deployer.vision.forkFinalWidth')}

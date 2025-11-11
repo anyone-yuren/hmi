@@ -314,6 +314,7 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
 
         {/* 点位理论上不会变的 */}
         <Layer name='points' listening={true}>
+          <Rect x={0} y={0} width={1} height={1} fill={'green'}></Rect>
           {commonVisible && visibleConfig.commonPoints && (
             <Points.Common
               points={commonPoints}

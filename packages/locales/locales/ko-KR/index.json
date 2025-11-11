@@ -767,6 +767,7 @@
       "other": "기타",
       "outDiameter": "외경",
       "overPalletThreshold": "초과 팔레트 임계값",
+      "palletDisplayName": "별명",
       "palletDistanceForksEnd": "팔레트 전면에서 포크 암 루트까지의 거리",
       "palletHasGoodCheck": "팔레트 유무 감지",
       "palletHeight": "팔레트 높이",

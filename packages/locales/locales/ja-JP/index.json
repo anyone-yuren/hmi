@@ -768,6 +768,7 @@
       "other": "その他",
       "outDiameter": "外径",
       "overPalletThreshold": "超パレットしきい値",
+      "palletDisplayName": "エイリアス",
       "palletDistanceForksEnd": "パレットの前面からフォークアームの根元までの距離",
       "palletHasGoodCheck": "パレット有無検出",
       "palletHeight": "パレットの高さ",

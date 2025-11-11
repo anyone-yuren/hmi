@@ -84,6 +84,11 @@ const AnimateBrush = (props) => {
         },
         {
           key: '2',
+          message: t('common.charging.waitChargeStationLight'),
+          time: timeString,
+        },
+        {
+          key: '3',
           message: t('common.charging.waitChargeStationOn'),
           time: timeString,
         },
@@ -95,11 +100,6 @@ const AnimateBrush = (props) => {
       setStretch(true);
       const timeString = dayjs().format('HH:mm:ss');
       setStationChargingData([
-        {
-          key: '2',
-          message: t('common.charging.waitChargeStationLight'),
-          time: timeString,
-        },
         {
           key: '1',
           message: t('common.charging.chargeStationOn'),
@@ -124,14 +124,6 @@ const AnimateBrush = (props) => {
           },
         ];
       });
-      // setStationChargingData([
-      //   ...stationChargingData,
-      //   {
-      //     key: '3',
-      //     message: '充电桩发送光电',
-      //     time: timeString,
-      //   },
-      // ]);
     }
   }, [chargePileStatus.pe_charge_input]);
   return (

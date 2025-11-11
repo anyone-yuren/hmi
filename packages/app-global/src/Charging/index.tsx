@@ -223,7 +223,7 @@ const Charging = () => {
                       {t('common.charging.targetEnergy')}
                     </div>
                     <div className='text-sm opacity-70'>
-                      {`${taskInfo.task_value2 || 100}${taskInfo.task_value1 === 3 ? 'h' : '%'}`}
+                      {`${taskInfo.task_value2 || 100}${taskInfo.task_value1 === 3 ? 's' : '%'}`}
                     </div>
                   </div>
                 </Stack>
