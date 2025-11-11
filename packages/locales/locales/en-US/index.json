@@ -456,6 +456,7 @@
       "lanPort": "LAN port",
       "lanSetting": "LAN settings",
       "lanSettingSuccess": "LAN setup successful",
+      "login": "Log in to wireless client",
       "loginTip": "Login failed",
       "name": "Note name",
       "nameRequired": "Please enter the note name",
@@ -479,12 +480,14 @@
       "roamSwitch": "Roaming switch",
       "roamThreshold": "roaming threshold",
       "secondaryDns": "Alternative DNS",
+      "selectWireless": "Please select wireless client",
       "srcPort": "Source port",
       "srcPortRequired": "Please enter the source port",
       "subnetMask": "Subnet mask",
       "such": "For example",
       "wanPort": "WAN port",
-      "wanSetting": "WAN settings"
+      "wanSetting": "WAN settings",
+      "wireless": "Wireless client:"
     },
     "safety": {
       "backDistance": "Retreat distance",

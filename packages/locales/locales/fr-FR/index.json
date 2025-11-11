@@ -455,6 +455,7 @@
       "lanPort": "Port réseau local",
       "lanSetting": "Paramètres réseau",
       "lanSettingSuccess": "Configuration du réseau local réussie",
+      "login": "Connectez-vous au client sans fil",
       "loginTip": "La connexion a échoué",
       "name": "Nom de la note",
       "nameRequired": "Veuillez saisir le nom de la note",
@@ -478,12 +479,14 @@
       "roamSwitch": "Commutateur d'itinérance",
       "roamThreshold": "seuil d'itinérance",
       "secondaryDns": "DNS alternatif",
+      "selectWireless": "Veuillez sélectionner un client sans fil",
       "srcPort": "port source",
       "srcPortRequired": "Veuillez entrer le port source",
       "subnetMask": "masque de sous-réseau",
       "such": "Par exemple",
       "wanPort": "Port WAN",
-      "wanSetting": "Paramètres WAN"
+      "wanSetting": "Paramètres WAN",
+      "wireless": "client sans fil:"
     },
     "safety": {
       "backDistance": "Distance de recul",

@@ -59,3 +59,7 @@ export const postImportPortList = (data: any) => {
 export const getRoamingInfo = () => {
   return get('/mwrobot/wireless_client/get_roaming_info');
 };
+
+export const getAgvInfo = () => {
+  return get('/robot_config/base_param/config_agv_info');
+};

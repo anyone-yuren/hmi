@@ -2,7 +2,7 @@ import EmptyPage from '@/components/EmptyPage';
 import ErrorPage from '@/components/ErrorPage';
 import { LineGrid } from '@/components/InitStage/components/LineGrid';
 import { useHybirdStore } from '@/views/Hybrid/store/hybird.store';
-import { useObsError } from '@gbeata/app-global';
+import { useAuthPermission, useObsError } from '@gbeata/app-global';
 import { useHashQuery } from '@gbeata/layout-ui';
 import { useRequest, useSize } from 'ahooks';
 import { ConfigProvider, Drawer, theme } from 'antd';
@@ -31,6 +31,9 @@ const snap = 10;
 
 export default function RectDrawer() {
   const { t } = useTranslation();
+  const { auth } = useAuthPermission();
+
+  const isAdmin = auth(['admin']);
   const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const stageRef = useRef<Konva.Stage>(null);
   const layerRef = useRef<Konva.Layer>(null);
@@ -133,6 +136,7 @@ export default function RectDrawer() {
 
   // 绘制 - MouseDown
   const handleMouseDown = useCallback((e: KonvaEventObject<MouseEvent>) => {
+    if (!isAdmin) return;
     if (!noData) return;
     if (e.target === e.target.getStage()) setSelectedId(null);
     if (e.target instanceof Konva.Rect && e.target.parent?.attrs?.className === 'rect') {
@@ -765,15 +769,22 @@ export default function RectDrawer() {
                           strokeWidth={selectedId === String(r.id) ? 1.5 : 2}
                           dash={[4, 4]}
                           fill={'rgba(255,211,61,0.2)'}
-                          draggable={noData}
+                          draggable={!isAdmin ? false : noData}
                           onTransform={handleTransform}
                           onTransformStart={handleTransformStart}
                           onTransformEnd={handleTransformEnd}
                           onDragMove={handleDragMove}
                           onDragEnd={handleDragEnd}
-                          onClick={() => noData && setSelectedId(String(r.id))}
-                          onTap={() => noData && setSelectedId(String(r.id))}
+                          onClick={() => {
+                            if (!isAdmin) return;
+                            noData && setSelectedId(String(r.id));
+                          }}
+                          onTap={() => {
+                            if (!isAdmin) return;
+                            noData && setSelectedId(String(r.id));
+                          }}
                           onDragStart={(e) => {
+                            if (!isAdmin) return;
                             const node = e.target as Konva.Rect;
                             node.setAttrs({
                               startPos: {
@@ -839,20 +850,22 @@ export default function RectDrawer() {
                       />
                     ))}
                     {/* 形变 */}
-                    <Transformer
-                      ref={transformerRef}
-                      rotateEnabled={false}
-                      anchorStroke='#22d3ee'
-                      anchorFill='#ffffff'
-                      anchorCornerRadius={4} // 圆角
-                      anchorStrokeWidth={2}
-                      borderStroke='#22d3ee' // 外框描边
-                      borderStrokeWidth={1.5}
-                      borderDash={[6, 4]}
-                      borderCornerRadius={4} // 外框圆角
-                      name='transformer'
-                      boundBoxFunc={(oldBox, newBox) => (newBox.width < 5 || newBox.height < 5 ? oldBox : newBox)}
-                    />
+                    {isAdmin ? (
+                      <Transformer
+                        ref={transformerRef}
+                        rotateEnabled={false}
+                        anchorStroke='#22d3ee'
+                        anchorFill='#ffffff'
+                        anchorCornerRadius={4} // 圆角
+                        anchorStrokeWidth={2}
+                        borderStroke='#22d3ee' // 外框描边
+                        borderStrokeWidth={1.5}
+                        borderDash={[6, 4]}
+                        borderCornerRadius={4} // 外框圆角
+                        name='transformer'
+                        boundBoxFunc={(oldBox, newBox) => (newBox.width < 5 || newBox.height < 5 ? oldBox : newBox)}
+                      />
+                    ) : null}
                   </Layer>
                 </Stage>
               ) : null}

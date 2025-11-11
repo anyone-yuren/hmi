@@ -1,13 +1,13 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useRequest } from 'ahooks';
 import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { BoxGeometry, CircleGeometry, MeshStandardMaterial, Vector3 } from 'three';
 import { getPointsList } from '../../services';
 import { convertToMeters } from '../CarPanel/components/car';
 import CanvasText from './cavansText';
 const LocationPoint = () => {
-  const { t } = useTranslation();
+  // const renderCount = useRef(0);
+  // renderCount.current++;
   const { data: pointsData }: Record<string, any> = useRequest(getPointsList);
   if (!pointsData && pointsData?.length === 0) {
     return null;
@@ -36,7 +36,7 @@ const LocationPoint = () => {
   useFrame(() => {
     // 只有相机位置发生变化时，才更新状态
     const newPosition = camera.position.clone();
-    if (!newPosition.equals(cameraPosition)) {
+    if (newPosition.y !== cameraPosition.y) {
       setCameraPosition(newPosition);
     }
   });
@@ -69,9 +69,22 @@ const LocationPoint = () => {
           if (distance > 15) {
             return null;
           }
-
           return (
             <group key={item.pointId} position={position} receiveShadow>
+              {/* <Html position={[0, 0, 0]}>
+                <div
+                  style={{
+                    background: 'rgba(0,0,0,0.5)',
+                    color: '#0f0',
+                    padding: '6px 12px',
+                    borderRadius: 8,
+                    fontFamily: 'monospace',
+                    fontSize: 14,
+                  }}
+                >
+                  <div>点次数: {renderCount.current}</div>
+                </div>
+              </Html> */}
               {/* 使用 Clone 实例化重复的 Mesh */}
               <mesh
                 // geometry={baseMesh.geometry}

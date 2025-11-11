@@ -456,6 +456,7 @@
       "lanPort": "LANポート",
       "lanSetting": "LAN設定",
       "lanSettingSuccess": "LANのセットアップが成功しました",
+      "login": "ワイヤレスクライアントにログインする",
       "loginTip": "ログインに失敗しました",
       "name": "音名",
       "nameRequired": "ノート名を入力してください",
@@ -479,12 +480,14 @@
       "roamSwitch": "ローミングスイッチ",
       "roamThreshold": "ローミングしきい値",
       "secondaryDns": "代替DNS",
+      "selectWireless": "ワイヤレスクライアントを選択してください",
       "srcPort": "送信元ポート",
       "srcPortRequired": "送信元ポートを入力してください",
       "subnetMask": "サブネットマスク",
       "such": "例えば",
       "wanPort": "WANポート",
-      "wanSetting": "WAN設定"
+      "wanSetting": "WAN設定",
+      "wireless": "ワイヤレスクライアント:"
     },
     "safety": {
       "backDistance": "後退距離",

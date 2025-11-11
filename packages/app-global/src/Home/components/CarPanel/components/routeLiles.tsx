@@ -14,7 +14,7 @@ const RcsLines = ({ mapEdges = [] }) => {
   useFrame(() => {
     // 只有相机位置发生变化时，才更新状态
     const newPosition = camera.position.clone();
-    if (!newPosition.equals(cameraPosition)) {
+    if (newPosition.y !== cameraPosition.y) {
       setCameraPosition(newPosition);
     }
   });

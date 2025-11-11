@@ -456,6 +456,7 @@
       "lanPort": "LAN端口",
       "lanSetting": "LAN设置",
       "lanSettingSuccess": "LAN设置成功",
+      "login": "登录无线客户端",
       "loginTip": "登录失败",
       "name": "备注名称",
       "nameRequired": "请输入备注名称",
@@ -479,12 +480,14 @@
       "roamSwitch": "漫游开关",
       "roamThreshold": "漫游阈值",
       "secondaryDns": "备选DNS",
+      "selectWireless": "请选择无线客户端",
       "srcPort": "源端口",
       "srcPortRequired": "请输入源端口",
       "subnetMask": "子网掩码",
       "such": "例如",
       "wanPort": "WAN端口",
-      "wanSetting": "WAN设置"
+      "wanSetting": "WAN设置",
+      "wireless": "无线客户端:"
     },
     "safety": {
       "backDistance": "后退距离",
