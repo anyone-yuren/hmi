@@ -1,6 +1,6 @@
-import { Grid, Html } from '@react-three/drei';
+import { Grid } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useHomeHybirdStore } from '../../../store/hybird';
 // interface IProps {
@@ -17,8 +17,8 @@ const StageBase = (props) => {
     })),
   );
 
-  const renderCount = useRef(0);
-  renderCount.current++;
+  // const renderCount = useRef(0);
+  // renderCount.current++;
 
   const { camera, controls } = useThree();
 
@@ -63,7 +63,7 @@ const StageBase = (props) => {
         // position={[agvPosition.x / 1000, -0.1, agvPosition.y / 1000]}
         {...gridConfig}
       />
-      {showHtml ? (
+      {/* {showHtml ? (
         <Html position={[0 - agvPosition.x / 1000, 0, agvPosition.y / 1000]}>
           <div
             style={{
@@ -79,7 +79,7 @@ const StageBase = (props) => {
             <div>坐标：{JSON.stringify(agvPosition)}</div>
           </div>
         </Html>
-      ) : null}
+      ) : null} */}
       {/* <ambientLight intensity={2.5} /> */}
       {/* 定向光 */}
       {/* <directionalLight
