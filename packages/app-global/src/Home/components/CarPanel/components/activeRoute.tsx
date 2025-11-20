@@ -15,16 +15,47 @@ type Segment = {
 
 const MM2M = 0.001;
 
-function mergeSegments(segments: Segment[]) {
+function mergeSegments(segments: Segment[]): Point2D[] {
+  // 防呆处理：检查输入是否有效
+  if (!segments || !Array.isArray(segments) || segments.length === 0) {
+    return [];
+  }
+
   const seq: Point2D[] = [];
+
   for (let i = 0; i < segments.length; i++) {
     const s = segments[i];
-    if (i === 0) seq.push(s.start_point);
-    for (const cp of s.control_points) seq.push(cp);
-    const last = seq[seq.length - 1];
-    const end = s.end_point;
-    if (!last || last.x !== end.x || last.y !== end.y) seq.push(end);
+
+    // 防呆处理：检查当前段是否存在且具有必要属性
+    if (!s) continue;
+
+    // 添加起点（仅第一段）
+    if (i === 0 && s.start_point) {
+      seq.push(s.start_point);
+    }
+
+    // 添加控制点
+    if (s.control_points && Array.isArray(s.control_points)) {
+      for (const cp of s.control_points) {
+        // 防呆处理：检查控制点是否有效
+        if (cp && typeof cp.x === 'number' && typeof cp.y === 'number') {
+          seq.push(cp);
+        }
+      }
+    }
+
+    // 添加终点（避免重复点）
+    if (s.end_point && typeof s.end_point.x === 'number' && typeof s.end_point.y === 'number') {
+      const last = seq[seq.length - 1];
+      const end = s.end_point;
+
+      // 只有当终点与上一个点不同时才添加
+      if (!last || last.x !== end.x || last.y !== end.y) {
+        seq.push(end);
+      }
+    }
   }
+
   return seq;
 }
 

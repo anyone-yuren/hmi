@@ -49,7 +49,7 @@ const StorageStage = (props: IProps) => {
   const lines = useMemo(() => {
     const ary: any = [];
     for (let index = 0; index < linesList?.data?.length; index++) {
-      const { id, end_point, start_point, control_points } = linesList?.data?.[index];
+      const { id, end_point, start_point, control_points = [] } = linesList?.data?.[index];
       ary.push({
         id,
         type: 1,
