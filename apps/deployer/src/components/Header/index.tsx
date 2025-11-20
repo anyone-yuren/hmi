@@ -121,11 +121,7 @@ const GlobalHeader = () => {
       const diff = Number(systemDateTime) - closeChargingTime;
       diff > 10 * 60 * 1000 && setCloseChargingTime(0);
     }
-    // 每次冲完了就给他状态重置了
-    if (powerStatus.charge_status === 1 && closeChargingTime != 0) {
-      setCloseChargingTime(0);
-    }
-  }, [systemDateTime, closeChargingTime, powerStatus]);
+  }, [systemDateTime, closeChargingTime]);
 
   return (
     <div className='flex flex-col h-full items-center justify-between px-4 py-2 text-white '>
@@ -255,11 +251,11 @@ const GlobalHeader = () => {
           onClick={() => {
             setShowChargingDialog(false);
             setCloseChargingTime(new Date().getTime());
-            // setPowerStatus({
-            //   ...powerStatus,
-            //   charge_status: 0,
-            //   // power: 0,
-            // });
+            setPowerStatus({
+              ...powerStatus,
+              charge_status: 0,
+              // power: 0,
+            });
           }}
         />
       )}
