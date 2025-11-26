@@ -22,7 +22,7 @@ export const useNotification = () => {
   const [obsInfo, setObsInfo] = useState<any>();
   const [errorMessage, setErrorMessage] = useState<any>();
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
-    reconnectLimit: 10,
+    reconnectLimit: Infinity,
     reconnectInterval: 5000,
     onMessage: (message) => {
       if (message?.data?.includes('/sirius/topics/safety_obs_info')) {
