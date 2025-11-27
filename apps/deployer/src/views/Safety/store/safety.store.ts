@@ -19,8 +19,8 @@ interface State {
   setObsInfo: (data: any) => void;
   seniorPoints: any[];
   setSeniorPoints: (data: any) => void;
-  goodsInfo: any;
-  setGoodsInfo: (data: any) => void;
+  // goodsInfo: any;
+  // setGoodsInfo: (data: any) => void;
   showPointCloud: boolean;
   setShowPointCloud: (data: any) => void;
   cloudCategory: Array<any>;
@@ -70,8 +70,8 @@ export const useSafetyStore = create<State>()(
       },
       seniorPoints: [],
       setSeniorPoints: (data) => set({ seniorPoints: data }),
-      goodsInfo: {},
-      setGoodsInfo: (data) => set({ goodsInfo: data }),
+      // goodsInfo: {},
+      // setGoodsInfo: (data) => set({ goodsInfo: data }),
       showPointCloud: false,
       setShowPointCloud: (data) => set({ showPointCloud: data }),
       cloudCategory: [],

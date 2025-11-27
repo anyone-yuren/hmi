@@ -88,7 +88,7 @@ export const useSafety = () => {
             '/sirius/topics/safety_obs_info',
             // '/sirius/topics/compose_sensor_point',
             '/sirius/topics/safety_compose_sensor_points',
-            '/sirius/topics/goods_info',
+            // '/sirius/topics/goods_info',
             '/sirius/topics/safety_protect_region',
             '/sirius/topics/task_status_motion',
             '/sirius/topics/robot_status_forkarm',

@@ -26,11 +26,11 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
   const [open, setOpen] = useState(false);
   const { show = true, isDark = false, currentObsData, strategyList, loading, client } = props;
   const { token } = theme.useToken();
-  const { motionStatus, obsInfo, goodsInfo } = useSafetyStore(
+  const { motionStatus, obsInfo } = useSafetyStore(
     useShallow((store) => ({
       motionStatus: store.motionStatus,
       obsInfo: store.obsInfo,
-      goodsInfo: store.goodsInfo,
+      // goodsInfo: store.goodsInfo,
     })),
   );
   const strategyListName = useStrategyListName();
@@ -134,7 +134,7 @@ const ObsInfoPanel = (props: ObsInfoPanelProps) => {
           ) : null}
           <div className='shadow-sm rounded-md flex items-center justify-between p-2  hover:bg-black/5 hover:shadow-lg hover:-translate-y-0.5 hover:font-bold  animation-all duration-300 '>
             <p className='text-md'>{t('deployer.safety.goods_status')}</p>
-            {goodsInfo?.good_status ? (
+            {obsInfo?.has_goods ? (
               <Tag className='!m-0' color='green'>
                 {t('common.safety.has_goods')}
               </Tag>
