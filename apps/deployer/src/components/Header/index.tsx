@@ -254,7 +254,8 @@ const GlobalHeader = () => {
         <ChargingAnimation
           onClick={() => {
             setShowChargingDialog(false);
-            setCloseChargingTime(new Date().getTime());
+            // setCloseChargingTime(new Date().getTime());
+            setCloseChargingTime(Number(systemDateTime) || new Date().getTime());
             // setPowerStatus({
             //   ...powerStatus,
             //   charge_status: 0,

@@ -1,9 +1,9 @@
-import { Space, Switch } from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
+import { Button, InputNumber, Popover, Space, Switch } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import { useSafetyStore } from '../../store/safety.store';
-
 interface ISensor {
   name: string;
   topic: string;
@@ -18,13 +18,23 @@ interface IProps {
 
 function SafetySensorTabs({ sensors }: IProps) {
   const { t, i18n } = useTranslation();
-  const { setSensorPointsKey, obsInfo, isDensePointCloud, setIsDensePointCloud, setSensorPoints } = useSafetyStore(
+  const {
+    setSensorPointsKey,
+    obsInfo,
+    isDensePointCloud,
+    setIsDensePointCloud,
+    setSensorPoints,
+    pointCloudFilter,
+    setPointCloudFilter,
+  } = useSafetyStore(
     useShallow((store) => ({
       setSensorPointsKey: store.setSensorPointsKey,
       isDensePointCloud: store.isDensePointCloud,
       setIsDensePointCloud: store.setIsDensePointCloud,
       setSensorPoints: store.setSensorPoints,
       obsInfo: store.obsInfo,
+      pointCloudFilter: store.pointCloudFilter,
+      setPointCloudFilter: store.setPointCloudFilter,
     })),
   );
 
@@ -90,32 +100,76 @@ function SafetySensorTabs({ sensors }: IProps) {
   };
 
   return (
-    <div className='absolute z-10 bottom-4 left-[0px]'>
-      <Space size={'middle'}>
-        <div className='bg-[#319796] text-[white] rounded-lg flex p-2 items-center gap-2'>
-          <div>
-            <div className='text-[14px]'>{t('deployer.safety.densePointCloud')}</div>
-            <div className='text-[12px]'>{t('deployer.safety.densePointCloudTips')}</div>
-          </div>
-          <Switch value={isDensePointCloud} onChange={onPointTypeChange} />
-        </div>
-        {sensorList?.map((sensor) => {
-          return (
-            <div
-              key={sensor.topic}
-              className='text-[white] rounded-lg flex p-2 items-center gap-2'
-              style={{ background: activeSensor.includes(sensor.name) ? '#ff000087' : '#319796' }}
-            >
-              <div>
-                <div className='text-[14px]'>{sensor.ch_name}</div>
-                <div className='text-[12px]'>{lidarTypeHashMap?.[sensor.type] || '-'}</div>
+    <>
+      <div className='absolute left-[0px] bottom-[80px]'>
+        <Popover
+          content={
+            <>
+              <div className='flex gap-[10px] items-center justify-center'>
+                <div>高度范围</div>
+                <InputNumber
+                  value={pointCloudFilter?.minY}
+                  onChange={(value) => {
+                    setPointCloudFilter({
+                      ...pointCloudFilter,
+                      minY: value,
+                    });
+                  }}
+                />
+                <InputNumber
+                  value={pointCloudFilter?.maxY}
+                  onChange={(value) => {
+                    setPointCloudFilter({
+                      ...pointCloudFilter,
+                      maxY: value,
+                    });
+                  }}
+                />
               </div>
-              <Switch value={sensor.select} onChange={() => handleSensor(sensor)} />
+            </>
+          }
+          placement='right'
+          title={'点云筛选设置'}
+          trigger={'click'}
+        >
+          <Button
+            shape='circle'
+            size={'large'}
+            type={'primary'}
+            icon={<SettingOutlined style={{ fontSize: '22px' }} />}
+            classNames={{
+              icon: 'flex items-center justify-center',
+            }}
+          />
+        </Popover>
+      </div>
+      <div className='absolute z-10 bottom-4 left-[0px]'>
+        <Space size={'middle'}>
+          <div className='bg-[#319796] text-[white] rounded-lg flex p-2 items-center gap-2'>
+            <div>
+              <div className='text-[14px]'>{t('deployer.safety.densePointCloud')}</div>
+              <div className='text-[12px]'>{t('deployer.safety.densePointCloudTips')}</div>
             </div>
-          );
-        })}
-      </Space>
-    </div>
+            <Switch value={isDensePointCloud} onChange={onPointTypeChange} />
+          </div>
+          {sensorList?.map((sensor) => {
+            return (
+              <div
+                key={sensor.topic}
+                className='text-[white] rounded-lg flex p-2 items-center gap-2'
+                style={{ background: activeSensor.includes(sensor.name) ? '#ff000087' : '#319796' }}
+              >
+                <div>
+                  <div className='text-[14px]'>{sensor.ch_name}</div>
+                  <div className='text-[12px]'>{lidarTypeHashMap?.[sensor.type] || '-'}</div>
+                </div>
+                <Switch value={sensor.select} onChange={() => handleSensor(sensor)} />
+              </div>
+            );
+          })}
+        </Space>
+      </div>
+    </>
   );
 }
 

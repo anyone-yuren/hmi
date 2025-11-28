@@ -40,10 +40,17 @@ interface State {
 
   isDensePointCloud: boolean;
   setIsDensePointCloud: (isDensePointCloud: boolean) => void;
+
   sensorPoints: {};
   setSensorPoints: (key: string, data: any) => void;
   setAllSensorPoints: (sensorPoints: any) => void;
   clearSensorPoints: () => void;
+
+  pointCloudFilter: {
+    minY: number;
+    maxY: number;
+  };
+  setPointCloudFilter: (data) => void;
 }
 
 export const useSafetyStore = create<State>()(
@@ -94,6 +101,12 @@ export const useSafetyStore = create<State>()(
       setSensorPoints: (key, data) => set({ sensorPoints: { ...get().sensorPoints, [key]: data } }),
       setAllSensorPoints: (sensorPoints) => set({ sensorPoints }),
       clearSensorPoints: () => set({ sensorPoints: {} }),
+
+      pointCloudFilter: {
+        mixY: 0,
+        maxY: 100,
+      },
+      setPointCloudFilter: (pointCloudFilter) => set({ pointCloudFilter }),
     }),
     {
       name: 'safety-store',
