@@ -50,8 +50,6 @@ const GlobalHeader = () => {
           content={
             <Menu
               className={styles.menu}
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
               items={[
                 {
                   key: '1',
@@ -72,7 +70,7 @@ const GlobalHeader = () => {
               ]}
             />
           }
-          title='设置'
+          title={null}
         >
           <IconifyIcon
             icon='ant-design:setting-outlined'

@@ -34,11 +34,11 @@ export const ToolkitLayout = (props: IProps) => {
     <ThemeProvider appearance='dark'>
       <Layout className='h-full flex !flex-col'>
         <Header className='h-9 leading-9 !py-0 flex items-center bg-black border-b border-white/10 px-2'>{top}</Header>
-        <div className='flex flex-1'>
+        <div className='flex flex-1 overflow-hidden'>
           <Sider className='bg-white/10' width={client ? 0 : 50}>
             {header}
           </Sider>
-          <Content className='overflow-y-auto relative bg-black'>
+          <Content className='overflow-y-auto relative bg-black flex-1 overflow-hidden'>
             <ErrorBoundary>
               <Outlet key={key} />
             </ErrorBoundary>

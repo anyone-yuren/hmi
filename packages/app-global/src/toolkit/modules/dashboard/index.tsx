@@ -1,6 +1,8 @@
+import { useNavigate } from 'react-router-dom';
 import { IconifyIcon } from 'ui';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   return (
     <div className='bg-white/5 h-full flex gap-4 items-center justify-center'>
       <div className='flex flex-col gap-4'>
@@ -23,7 +25,7 @@ const Dashboard = () => {
             </div>
             <h4 className='text-xl'>最近打开</h4>
             <div className='handle-list w-full flex flex-col gap-4 text-teal-400'>
-              <div className='flex items-center gap-4'>
+              <div className='flex items-center gap-4 cursor-pointer' onClick={() => navigate('/dashboard')}>
                 <span>CA25046 KW（RFP）Project</span>
               </div>
               <div className='flex items-center gap-4'>

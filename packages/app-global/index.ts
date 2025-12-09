@@ -13,7 +13,7 @@ import GlobalNotification from './src/notification';
 import useObsError from './src/notification/hooks/useObsError';
 import SingleTask from './src/SingleTask';
 import { InitStage } from './src/SingleTask/stage/index';
-import Toolkit from './Toolkit';
+import Toolkit from './src/toolkit';
 
 // 获取权限
 import AuthComponent, { useAuthPermission } from './src/hooks/useAuth';
