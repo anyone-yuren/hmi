@@ -1,4 +1,5 @@
 import { Icon, type IconProps } from '@iconify/react';
+import classNames from 'classnames';
 
 import useStyles from './style';
 
@@ -8,5 +9,5 @@ interface IconifyIconProps extends IconProps {
 
 export default function IconifyIcon({ icon, size, ...props }: IconifyIconProps) {
   const { styles } = useStyles();
-  return <Icon icon={icon} {...props} className={styles.anticon} width={size} />;
+  return <Icon icon={icon} {...props} className={classNames(styles.anticon, props.className)} width={size} />;
 }
