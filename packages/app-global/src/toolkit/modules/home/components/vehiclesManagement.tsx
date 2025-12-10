@@ -3,6 +3,7 @@ import { Badge, Button, Divider, Dropdown, Segmented, Space, Tooltip } from 'ant
 import { createStyles, useAntdToken } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GlowingCard, IconifyIcon } from 'ui';
 import AsyncSettings from '../../../components/asyncSettings';
 import CardHover from './CarHover';
@@ -39,6 +40,7 @@ const itemVariants = {
 const VehiclesManagement = () => {
   const token = useAntdToken();
   const { styles } = useStyles();
+  const navigate = useNavigate();
   const [asyncSettingsVisible, setAsyncSettingsVisible] = useState(false); // 👈 新增：异步设置抽屉开关
   const [showGroup, setShowGroup] = useState(false); // 👈 新增：分组抽屉开关
 
@@ -256,7 +258,7 @@ const VehiclesManagement = () => {
                   }}
                 >
                   <GlowingCard title={vehicle.name}>
-                    <div className='flex flex-col group'>
+                    <div className='flex flex-col group gap-2'>
                       <div className='flex items-center gap-2'>
                         <span className='bg-red-500 opacity-0 group-hover:opacity-70  group-hover:pointer-events-auto pointer-events-none transition-all duration-300 ease-in rounded-full cursor-pointer hover:bg-red-700 hover:opacity-100 flex items-center justify-center p-0.5'>
                           <IconifyIcon icon='mynaui:minus-solid' size={10} />
@@ -272,9 +274,57 @@ const VehiclesManagement = () => {
                       </div>
 
                       <div className='flex items-center justify-between'>
-                        <div>车号：{vehicle.no}</div>
+                        <div className='flex items-center gap-4'>
+                          <div className='relative'>
+                            <div
+                              className={
+                                vehicle.status === '在线'
+                                  ? 'absolute -inset-1 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 opacity-30 blur-sm transition-opacity duration-300 group-hover:opacity-40'
+                                  : 'absolute -inset-1 rounded-xl bg-gradient-to-r from-red-500 to-red-500 opacity-30 blur-sm transition-opacity duration-300 group-hover:opacity-40'
+                              }
+                            ></div>
+                            <div className='relative flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900'>
+                              {vehicle.status === '在线' ? (
+                                <IconifyIcon
+                                  icon='qlementine-icons:success-12'
+                                  size={24}
+                                  className='text-emerald-500'
+                                />
+                              ) : (
+                                <IconifyIcon icon='ant-design:stop-outlined' size={24} className='text-red-500' />
+                              )}
+                            </div>
+                          </div>
+
+                          <div>
+                            <h3 className='font-semibold text-white'>车号：{vehicle.no}</h3>
+                            <p className='text-sm text-slate-400'>Version 20250930</p>
+                          </div>
+                        </div>
+
+                        <div className='flex flex-col items-end gap-1'>
+                          <span className='text-xs text-slate-400'>2 min ago</span>
+                          <span className='inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-500'>
+                            <span className='h-1 w-1 rounded-full bg-emerald-500'></span>
+                            运行时间
+                          </span>
+                        </div>
+                      </div>
+                      <div className='space-y-2'>
+                        <div className='flex items-center justify-between text-xs'>
+                          <span className='font-medium text-white'>电量</span>
+                          <span className='text-slate-400'>89%</span>
+                        </div>
+
+                        <div className='h-1.5 overflow-hidden rounded-full bg-slate-900'>
+                          <div className='h-full w-[89%] rounded-full bg-gradient-to-r from-emerald-500 to-teal-500'>
+                            <div className='h-full w-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/25 to-transparent'></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className='flex items-center justify-between absolute top-2 right-2'>
                         <div className='flex items-center gap-2'>
-                          <motion.div
+                          {/* <motion.div
                             className='inline-block w-2 h-2 rounded-full mr-1'
                             animate={{
                               scale: [1, 1.1, 1],
@@ -289,10 +339,14 @@ const VehiclesManagement = () => {
                               repeat: Infinity,
                             }}
                           />
-                          {vehicle.status}
+                          {vehicle.status} */}
 
                           <Tooltip title='工具'>
-                            <Button size='small' icon={<IconifyIcon icon='si:hammer-duotone' size={14} />} />
+                            <Button
+                              size='small'
+                              icon={<IconifyIcon icon='si:hammer-duotone' size={14} />}
+                              onClick={() => navigate('/toolDashboard')}
+                            />
                           </Tooltip>
 
                           <Dropdown
