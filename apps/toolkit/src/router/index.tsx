@@ -35,6 +35,10 @@ const router = createHashRouter([
         element: LazyLoad(lazy(() => import('@/views/dashboard'))),
       },
       {
+        path: 'ftp',
+        element: LazyLoad(lazy(() => import('@/views/Ftp'))),
+      },
+      {
         path: 'maintenance',
         element: LazyLoad(lazy(() => import('@/views/maintenance'))),
       },

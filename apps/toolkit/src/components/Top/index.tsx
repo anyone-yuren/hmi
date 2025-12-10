@@ -1,12 +1,41 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Select } from 'antd';
+import { Dropdown, Select } from 'antd';
+import { useLocation } from 'react-router-dom';
 import { IconifyIcon } from 'ui';
 
 const TopPanel = () => {
+  const location = useLocation();
   return (
     <div className='w-full flex items-center justify-between'>
-      <div></div>
-      <div>
+      <div className={location.pathname === '/' ? 'hidden' : 'flex items-center gap-2 text-xs font-bold'}>
+        <Dropdown
+          trigger={['click']}
+          menu={{
+            items: [
+              { label: '新建', key: 1 },
+              { label: '打开', key: 2 },
+              { label: '保存', key: 3 },
+            ],
+          }}
+        >
+          <div className='flex items-center gap-1'>
+            <span>文件</span>
+          </div>
+        </Dropdown>
+        <Dropdown
+          menu={{
+            items: [
+              { label: '模板管理', key: 1 },
+              { label: '重做', key: 2 },
+            ],
+          }}
+        >
+          <div className='flex items-center gap-1'>
+            <span>编辑</span>
+          </div>
+        </Dropdown>
+      </div>
+      <div className={location.pathname === '/' ? 'hidden' : ''}>
         <Select
           prefix={<SearchOutlined />}
           size='small'

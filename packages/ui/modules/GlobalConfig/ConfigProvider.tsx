@@ -113,6 +113,15 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
             /* 这里是你的组件 token */
             // headerColor: 'white',
           },
+          Dropdown: {
+            paddingBlock: 2,
+            fontSize: 12,
+            controlPaddingHorizontal: 16,
+          },
+          Menu: {
+            itemHeight: 24,
+            fontSize: 12,
+          },
           Segmented: {
             itemActiveBg: '#00D1D1',
             itemSelectedBg: '#00D1D1',

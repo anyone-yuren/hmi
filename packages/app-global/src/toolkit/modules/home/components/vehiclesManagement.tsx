@@ -4,6 +4,7 @@ import { createStyles, useAntdToken } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { GlowingCard, IconifyIcon } from 'ui';
+import AsyncSettings from '../../../components/asyncSettings';
 import CardHover from './CarHover';
 
 const useStyles = createStyles(({ token }) => ({
@@ -38,7 +39,7 @@ const itemVariants = {
 const VehiclesManagement = () => {
   const token = useAntdToken();
   const { styles } = useStyles();
-
+  const [asyncSettingsVisible, setAsyncSettingsVisible] = useState(false); // 👈 新增：异步设置抽屉开关
   const [showGroup, setShowGroup] = useState(false); // 👈 新增：分组抽屉开关
 
   const vehicles = [
@@ -324,6 +325,19 @@ const VehiclesManagement = () => {
                                     { key: '2-2', label: '测试区' },
                                   ],
                                 },
+                                {
+                                  key: '5',
+                                  label: '同步到',
+                                  icon: <IconifyIcon icon='fluent:share-32-regular' size={16} />,
+                                  onClick: () => {
+                                    setAsyncSettingsVisible(true);
+                                  },
+                                },
+                                {
+                                  key: '6',
+                                  label: '拉取至',
+                                  icon: <IconifyIcon icon='flowbite:download-outline' size={16} />,
+                                },
                               ],
                             }}
                           >
@@ -341,6 +355,11 @@ const VehiclesManagement = () => {
           </div>
         </div>
       </div>
+      <AsyncSettings
+        open={asyncSettingsVisible}
+        onCancel={() => setAsyncSettingsVisible(false)}
+        onOk={() => setAsyncSettingsVisible(false)}
+      />
     </div>
   );
 };
