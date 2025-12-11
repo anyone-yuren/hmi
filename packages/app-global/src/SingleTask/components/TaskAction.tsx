@@ -7,7 +7,7 @@ import { useRequest } from 'ahooks';
 import { toast } from 'sonner';
 import 'swiper/css';
 import { InputGroup, MapTaskPanelAction, MapTaskSelect, SubTaskContainer } from '../Style';
-import { addTemplate, createTask, getHeightInfo, updateTemplate } from '../services';
+import { addTemplate, createTask, getHeightInfo, getPalletList, updateTemplate } from '../services';
 import MainButton from './MainButton';
 import MwConfirm from './MwConfirm';
 import PointOrLineBox, { PointCardContainer } from './PointOrLineBox';
@@ -22,6 +22,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { Modal } from 'antd';
 import { useShallow } from 'zustand/react/shallow';
+import useTransRequest from '../hooks/useTransRequest';
 import { transformTaskListToParams } from '../utils/index';
 import StartIcon from './SvgIcon/StartIcon';
 
@@ -59,6 +60,19 @@ const TaskAction = forwardRef((props: any, ref) => {
       },
     },
   );
+
+  const { data: palletList }: any = useTransRequest(getPalletList, {
+    translate: (response) => {
+      return (
+        response?.data?.map((item) => {
+          return {
+            id: item.pallet_id,
+            name: item.pallet_name,
+          };
+        }) || []
+      );
+    },
+  });
 
   const [modal, contextHolder] = Modal.useModal();
   const { t } = useTranslation();
@@ -394,6 +408,28 @@ const TaskAction = forwardRef((props: any, ref) => {
                       </div>
                       {task.expand && (
                         <div className='flex gap-[5px] pb-[5px]'>
+                          <InputGroup sx={{ flex: 1 }}>
+                            <div className='title'>{t('deployer.singleTask.pallet')}</div>
+                            <MapTaskSelect
+                              variant={'outlined'}
+                              displayEmpty
+                              value={task?.palletNo}
+                              onChange={(event: any) => {
+                                const name = event.target.value;
+                                onValueChange('palletNo', index, name);
+                              }}
+                            >
+                              {palletList?.length ? (
+                                palletList?.map((item: any) => {
+                                  return <MenuItem value={item.id}>{item.name}</MenuItem>;
+                                })
+                              ) : (
+                                <MenuItem value={'no-data'} disabled>
+                                  {t('common.noData')}
+                                </MenuItem>
+                              )}
+                            </MapTaskSelect>
+                          </InputGroup>
                           {isKVehicle ? (
                             <InputGroup>
                               <div className='title'>{t('deployer.singleTask.forkDirection')}</div>

@@ -42,6 +42,7 @@ const initTaskActionRow = {
   expand: false,
   params1: 0,
   params2: 0,
+  palletNo: 1,
 };
 
 const SingleTask = () => {

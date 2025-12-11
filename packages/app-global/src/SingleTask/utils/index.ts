@@ -52,6 +52,7 @@ export const transformTaskListToParams = (params: any, isKVehicle) => {
       obj['param'][1] = Number(obj?.task_high_height) || 0;
       obj['param'][2] = isKVehicle ? Number(obj?.fork_direction) : Number(obj.params1);
       obj['param'][3] = Number(obj.params2);
+      obj['pallet_id'] = Number(obj.palletNo);
       return obj;
     },
     Place: (obj: any) => {
@@ -59,6 +60,7 @@ export const transformTaskListToParams = (params: any, isKVehicle) => {
       obj['param'][1] = Number(obj?.task_high_height) || 0;
       obj['param'][2] = isKVehicle ? Number(obj?.fork_direction) : Number(obj.params1);
       obj['param'][3] = Number(obj.params2);
+      obj['pallet_id'] = Number(obj.palletNo);
       return obj;
     },
     Null: (obj: any) => {
@@ -83,6 +85,7 @@ export const transformTaskListToParams = (params: any, isKVehicle) => {
     delete obj.expand;
     delete obj.params1;
     delete obj.params2;
+    delete obj.palletNo;
   }
 
   return newParams;
