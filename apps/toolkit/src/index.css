@@ -87,3 +87,8 @@ button {
 .floor_menu li {
   color: black !important;
 }
+
+/* antd dropdown 菜单宽度 */
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
+  min-width: 100px !important;
+}

@@ -1,14 +1,11 @@
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { IconifyIcon } from 'ui';
 import sl15 from '../../assets/vehicles/MW_SE15.png';
 import GrowPanel from '../home/components/growpanel';
 import LineChart from './components/lineChart';
 const ToolDashboard = () => {
-  const obstacleList = [
-    { id: 1, type: '前方检测', level: '中', detail: '距离障碍物 1.2 m' },
-    { id: 2, type: '侧方检测', level: '低', detail: '距离障碍物 2.8 m' },
-    { id: 3, type: '尾部检测', level: '高', detail: '距离障碍物 0.6 m' },
-  ];
+  const navigate = useNavigate();
   return (
     <div
       className='bg-white/15 h-full flex flex-col gap-2 p-2 overflow-hidden overflow-y-auto'
@@ -222,7 +219,10 @@ const ToolDashboard = () => {
           </div>
           <div className='shadow-sm rounded-s-md'>
             <GrowPanel>
-              <div className='h-full flex flex-col justify-center gap-2 p-4 items-center'>
+              <div
+                className='h-full flex flex-col justify-center gap-2 p-4 items-center'
+                onClick={() => navigate('/models')}
+              >
                 <div className='flex items-center justify-center w-24 h-24 rounded-full bg-white/5'>
                   <IconifyIcon icon='bi:robot' size={40} />
                 </div>

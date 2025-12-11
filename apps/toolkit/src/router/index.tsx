@@ -43,6 +43,10 @@ const router = createHashRouter([
         element: LazyLoad(lazy(() => import('@/views/ToolDashboard'))),
       },
       {
+        path: 'models',
+        element: LazyLoad(lazy(() => import('@/views/Models'))),
+      },
+      {
         path: 'maintenance',
         element: LazyLoad(lazy(() => import('@/views/maintenance'))),
       },
@@ -119,10 +123,6 @@ const router = createHashRouter([
         loader: () => ({ status: ExceptionEnum.SERVER_ERROR, withCard: false }),
       },
     ],
-  },
-  {
-    path: 'models',
-    element: LazyLoad(lazy(() => import('@/views/Models'))),
   },
   // {
   //   path: 'safetyPointsCloud',

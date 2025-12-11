@@ -102,6 +102,7 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
       theme={{
         // token: { colorTextHeading: '#fff' },
         token: {
+          fontSize: 12,
           colorPrimary: '#00D1D1',
           // colorText: 'white',
           fontFamily:
@@ -126,6 +127,17 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
             itemActiveBg: '#00D1D1',
             itemSelectedBg: '#00D1D1',
             // itemSelectedColor: 'white',
+          },
+          Collapse: {
+            // 设置padding 4 2
+            headerPadding: '2px 8px',
+            contentPadding: '8px',
+            contentBg: 'transparent',
+          },
+          Form: {
+            itemMarginBottom: 4,
+            labelHeight: 24,
+            controlHeight: 24,
           },
         },
       }}

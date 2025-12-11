@@ -1,0 +1,527 @@
+/*
+R车模型组件
+包含分段升降逻辑：fork-left → first-door → second-door
+添加选中部件的发光效果
+*/
+import { useFBX } from '@react-three/drei';
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { SkeletonUtils } from 'three-stdlib';
+
+const SCALE = 0.1;
+// 升降阶段阈值（单位：毫米）
+const FIRST_STAGE_MAX = 2200; // fork-left 最大升高2.5m
+const SECOND_STAGE_MAX = 4400; // first-door 最大升高5m
+
+// 创建材质副本，处理单个材质和材质数组
+const createMaterialClone = (originalMaterial) => {
+  if (!originalMaterial) return null;
+
+  if (Array.isArray(originalMaterial)) {
+    // 如果是材质数组，克隆数组中的每个材质
+    return originalMaterial.map((mat) => mat.clone());
+  } else {
+    // 如果是单个材质，直接克隆
+    return originalMaterial.clone();
+  }
+};
+
+// 更新材质透明度，处理单个材质和材质数组
+const updateMaterialOpacity = (material, opacity) => {
+  if (!material) return;
+
+  if (Array.isArray(material)) {
+    // 如果是材质数组，更新数组中的每个材质
+    material.forEach((mat) => {
+      mat.transparent = opacity < 1;
+      mat.opacity = opacity;
+      mat.needsUpdate = true;
+    });
+  } else {
+    // 如果是单个材质，直接更新
+    material.transparent = opacity < 1;
+    material.opacity = opacity;
+    material.needsUpdate = true;
+  }
+};
+
+// 添加发光材质创建函数
+const createGlowMaterial = (originalMaterial, glowIntensity = 2) => {
+  if (!originalMaterial) return null;
+
+  const createGlowMat = (mat) => {
+    const glowMat = mat.clone();
+
+    // 增强自发光效果
+    if (glowMat.emissive) {
+      glowMat.emissive.set(0x00ff00); // 绿色发光
+      glowMat.emissiveIntensity = glowIntensity;
+    }
+
+    // 提高材质亮度
+    if (glowMat.color) {
+      const originalColor = glowMat.color.clone();
+      const brighterColor = originalColor.multiplyScalar(1.5);
+      glowMat.color.copy(brighterColor);
+    }
+
+    glowMat.needsUpdate = true;
+    return glowMat;
+  };
+
+  if (Array.isArray(originalMaterial)) {
+    return originalMaterial.map(createGlowMat);
+  } else {
+    return createGlowMat(originalMaterial);
+  }
+};
+
+// 货叉组件 - 第一阶段升降
+const ForkLeft = forwardRef(({ forkMesh, forkHeight, children, isSelected, onClick, opacity }, ref) => {
+  // 第一阶段：0-2.5m，货叉单独升高
+  const stage1Height = Math.min(forkHeight, FIRST_STAGE_MAX) * SCALE;
+
+  // 创建材质副本
+  const [clonedMaterial, setClonedMaterial] = useState(null);
+  const [glowMaterial, setGlowMaterial] = useState(null);
+  const meshRef = useRef();
+
+  useEffect(() => {
+    if (forkMesh && forkMesh.material) {
+      const material = createMaterialClone(forkMesh.material);
+      const glowMat = createGlowMaterial(forkMesh.material);
+      setClonedMaterial(material);
+      setGlowMaterial(glowMat);
+    }
+  }, [forkMesh]);
+
+  useEffect(() => {
+    if (clonedMaterial) {
+      updateMaterialOpacity(clonedMaterial, opacity);
+    }
+    if (glowMaterial) {
+      updateMaterialOpacity(glowMaterial, opacity);
+    }
+  }, [clonedMaterial, glowMaterial, opacity]);
+
+  if (!forkMesh || !clonedMaterial) return null;
+
+  return (
+    <group position={[0, stage1Height, 0]}>
+      <mesh
+        ref={ref || meshRef}
+        geometry={forkMesh.geometry}
+        material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+        scale={forkMesh.scale}
+        castShadow
+        receiveShadow
+        onClick={onClick}
+      >
+        {isSelected && (
+          // 添加额外的发光层
+          <mesh geometry={forkMesh.geometry} scale={1.02}>
+            <meshBasicMaterial
+              color={0x00ff00}
+              transparent
+              opacity={0.3}
+              side={2} // 双面渲染
+            />
+          </mesh>
+        )}
+      </mesh>
+      {children}
+    </group>
+  );
+});
+
+// 第一门架组件 - 第二阶段升降
+interface FirstDoorProps {
+  doorMesh: any;
+  forkHeight: number;
+  children?: React.ReactNode;
+  isSelected?: boolean;
+  onClick?: (event: any) => void;
+  opacity?: number;
+}
+
+const FirstDoor = forwardRef<any, FirstDoorProps>(
+  ({ doorMesh, forkHeight, children, isSelected, onClick, opacity }, ref) => {
+    // 第二阶段：2.5m-5m，第一门架开始升高
+    const stage2Height =
+      forkHeight > FIRST_STAGE_MAX ? Math.min(forkHeight - FIRST_STAGE_MAX, FIRST_STAGE_MAX) * SCALE : 0;
+
+    // 创建材质副本
+    const [clonedMaterial, setClonedMaterial] = useState(null);
+    const [glowMaterial, setGlowMaterial] = useState(null);
+    const meshRef = useRef();
+
+    useEffect(() => {
+      if (doorMesh && doorMesh.material) {
+        const material = createMaterialClone(doorMesh.material);
+        const glowMat = createGlowMaterial(doorMesh.material);
+        setClonedMaterial(material);
+        setGlowMaterial(glowMat);
+      }
+    }, [doorMesh]);
+
+    useEffect(() => {
+      if (clonedMaterial) {
+        updateMaterialOpacity(clonedMaterial, opacity);
+      }
+      if (glowMaterial) {
+        updateMaterialOpacity(glowMaterial, opacity);
+      }
+    }, [clonedMaterial, glowMaterial, opacity]);
+
+    if (!doorMesh || !clonedMaterial) return null;
+
+    return (
+      <group position={[0, stage2Height, 0]}>
+        <mesh
+          ref={ref || meshRef}
+          geometry={doorMesh.geometry}
+          material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+          scale={doorMesh.scale}
+          castShadow
+          receiveShadow
+          onClick={onClick}
+        >
+          {isSelected && (
+            <mesh geometry={doorMesh.geometry} scale={1.02}>
+              <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+            </mesh>
+          )}
+        </mesh>
+        {children}
+      </group>
+    );
+  },
+);
+
+// 第二门架组件 - 第三阶段升降
+interface SecondDoorProps {
+  doorMesh: any;
+  forkHeight: number;
+  children?: React.ReactNode;
+  isSelected?: boolean;
+  onClick?: React.MouseEventHandler;
+  opacity?: number;
+}
+
+const SecondDoor = forwardRef<any, SecondDoorProps>(
+  ({ doorMesh, forkHeight, children, isSelected, onClick, opacity }, ref) => {
+    // 第三阶段：5m以上，第二门架开始升高
+    const stage3Height = forkHeight > SECOND_STAGE_MAX ? (forkHeight - SECOND_STAGE_MAX) * SCALE : 0;
+
+    // 创建材质副本
+    const [clonedMaterial, setClonedMaterial] = useState(null);
+    const [glowMaterial, setGlowMaterial] = useState(null);
+    const meshRef = useRef();
+
+    useEffect(() => {
+      if (doorMesh && doorMesh.material) {
+        const material = createMaterialClone(doorMesh.material);
+        const glowMat = createGlowMaterial(doorMesh.material);
+        setClonedMaterial(material);
+        setGlowMaterial(glowMat);
+      }
+    }, [doorMesh]);
+
+    useEffect(() => {
+      if (clonedMaterial) {
+        updateMaterialOpacity(clonedMaterial, opacity);
+      }
+      if (glowMaterial) {
+        updateMaterialOpacity(glowMaterial, opacity);
+      }
+    }, [clonedMaterial, glowMaterial, opacity]);
+
+    if (!doorMesh || !clonedMaterial) return null;
+
+    return (
+      <group position={[0, stage3Height, 0]}>
+        <mesh
+          ref={ref || meshRef}
+          geometry={doorMesh.geometry}
+          material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+          scale={doorMesh.scale}
+          castShadow
+          receiveShadow
+          onClick={onClick}
+        >
+          {isSelected && (
+            <mesh geometry={doorMesh.geometry} scale={1.02}>
+              <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+            </mesh>
+          )}
+        </mesh>
+        {children}
+      </group>
+    );
+  },
+);
+
+// 立柱组件 - 固定不动
+const BaseDoor = forwardRef(({ columnMesh, isSelected, onClick, opacity }, ref) => {
+  // 创建材质副本
+  const [clonedMaterial, setClonedMaterial] = useState(null);
+  const [glowMaterial, setGlowMaterial] = useState(null);
+  const meshRef = useRef();
+
+  useEffect(() => {
+    if (columnMesh && columnMesh.material) {
+      const material = createMaterialClone(columnMesh.material);
+      const glowMat = createGlowMaterial(columnMesh.material);
+
+      // 设置立柱的特殊颜色
+      const updateMaterialColor = (mat) => {
+        if (mat.color) mat.color.setHex(0xffffff);
+        if (mat.specular) mat.specular.setHex(0x222222);
+      };
+
+      if (Array.isArray(material)) {
+        material.forEach(updateMaterialColor);
+      } else {
+        updateMaterialColor(material);
+      }
+
+      setClonedMaterial(material);
+      setGlowMaterial(glowMat);
+    }
+  }, [columnMesh]);
+
+  useEffect(() => {
+    if (clonedMaterial) {
+      updateMaterialOpacity(clonedMaterial, opacity);
+    }
+    if (glowMaterial) {
+      updateMaterialOpacity(glowMaterial, opacity);
+    }
+  }, [clonedMaterial, glowMaterial, opacity]);
+
+  if (!columnMesh || !clonedMaterial) return null;
+
+  return (
+    <mesh
+      ref={ref || meshRef}
+      geometry={columnMesh.geometry}
+      material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+      scale={columnMesh.scale}
+      castShadow
+      onClick={onClick}
+    >
+      {isSelected && (
+        <mesh geometry={columnMesh.geometry} scale={1.02}>
+          <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+        </mesh>
+      )}
+    </mesh>
+  );
+});
+
+// 车身组件 - 固定不动
+const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
+  // 创建材质副本
+  const [clonedMaterial, setClonedMaterial] = useState(null);
+  const [glowMaterial, setGlowMaterial] = useState(null);
+  const meshRef = useRef();
+
+  useEffect(() => {
+    if (bodyMesh && bodyMesh.material) {
+      const material = createMaterialClone(bodyMesh.material);
+      const glowMat = createGlowMaterial(bodyMesh.material);
+      setClonedMaterial(material);
+      setGlowMaterial(glowMat);
+    }
+  }, [bodyMesh]);
+
+  useEffect(() => {
+    if (clonedMaterial) {
+      updateMaterialOpacity(clonedMaterial, opacity);
+    }
+    if (glowMaterial) {
+      updateMaterialOpacity(glowMaterial, opacity);
+    }
+  }, [clonedMaterial, glowMaterial, opacity]);
+
+  if (!bodyMesh || !clonedMaterial) return null;
+
+  return (
+    <mesh
+      ref={ref || meshRef}
+      geometry={bodyMesh.geometry}
+      material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+      scale={bodyMesh.scale}
+      castShadow
+      onClick={onClick}
+    >
+      {isSelected && (
+        <mesh geometry={bodyMesh.geometry} scale={1.02}>
+          <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+        </mesh>
+      )}
+    </mesh>
+  );
+});
+
+// 颜色漆面
+const ColorMesh = forwardRef(({ colorMesh, isSelected, onClick, opacity }, ref) => {
+  // 创建材质副本
+  const [clonedMaterial, setClonedMaterial] = useState(null);
+  const [glowMaterial, setGlowMaterial] = useState(null);
+  const meshRef = useRef();
+
+  useEffect(() => {
+    if (colorMesh && colorMesh.material) {
+      const material = createMaterialClone(colorMesh.material);
+      const glowMat = createGlowMaterial(colorMesh.material);
+      setClonedMaterial(material);
+      setGlowMaterial(glowMat);
+    }
+  }, [colorMesh]);
+
+  useEffect(() => {
+    if (clonedMaterial) {
+      updateMaterialOpacity(clonedMaterial, opacity);
+    }
+    if (glowMaterial) {
+      updateMaterialOpacity(glowMaterial, opacity);
+    }
+  }, [clonedMaterial, glowMaterial, opacity]);
+
+  if (!colorMesh || !clonedMaterial) return null;
+
+  return (
+    <mesh
+      ref={ref || meshRef}
+      geometry={colorMesh.geometry}
+      material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+      scale={colorMesh.scale}
+      castShadow
+      receiveShadow
+      onClick={onClick}
+    >
+      {isSelected && (
+        <mesh geometry={colorMesh.geometry} scale={1.02}>
+          <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+        </mesh>
+      )}
+    </mesh>
+  );
+});
+
+export default function RModelFbx(props) {
+  const { isHasGoods, forkHeight = 0 } = props;
+  const [bodyMesh, setBodyMesh] = useState(null);
+  const [forkLeftMesh, setForkLeftMesh] = useState(null);
+  const [firstDoorMesh, setFirstDoorMesh] = useState(null);
+  const [secondDoorMesh, setSecondDoorMesh] = useState(null);
+  const [colorMesh, setColorMesh] = useState(null);
+  const [baseDoorMesh, setBaseDoorMesh] = useState(null);
+
+  // 选中状态管理
+  const [selectedPart, setSelectedPart] = useState(null);
+
+  // 区分生产环境和开发环境
+  const isProd = process.env.NODE_ENV === 'production';
+  const fbxPath = isProd ? '/analysis/static/fbx/r15-14.fbx' : '/static/fbx/r15-14.fbx';
+  const fbx = useFBX(fbxPath);
+  const clonedFbx = useMemo(() => SkeletonUtils.clone(fbx), [fbx]);
+
+  // 分离各个网格组件
+  useEffect(() => {
+    if (clonedFbx) {
+      clonedFbx.children.forEach((child) => {
+        if (child?.isMesh) {
+          switch (child.name) {
+            case 'fork-left':
+              setForkLeftMesh(child);
+              break;
+            case 'first-door':
+              setFirstDoorMesh(child);
+              break;
+            case 'second-door':
+              setSecondDoorMesh(child);
+              break;
+            case 'body':
+              setBodyMesh(child);
+              break;
+            case 'base-door':
+              setBaseDoorMesh(child);
+              break;
+            case 'color-mesh':
+              setColorMesh(child);
+              break;
+            default:
+              // 其他未命名的mesh归为车身
+              if (!bodyMesh) setBodyMesh(child);
+              break;
+          }
+        }
+      });
+    }
+  }, [clonedFbx, bodyMesh]);
+
+  // 处理部件点击事件
+  const handlePartClick = (partName) => (event) => {
+    event.stopPropagation(); // 阻止事件冒泡
+    setSelectedPart(selectedPart === partName ? null : partName);
+    console.log('Selected part:', partName);
+  };
+
+  // 计算透明度：选中的部件不透明，其他部件半透明
+  const getOpacity = (partName) => {
+    if (!selectedPart) return 1; // 没有选中任何部件时，所有部件都不透明
+    return selectedPart === partName ? 1 : 0.5;
+  };
+
+  return (
+    <group rotation={[Math.PI, 0, 0 - Math.PI]} scale={0.1} position={[0, 0, 0]}>
+      {/* 固定部件 */}
+      <RBody
+        bodyMesh={bodyMesh}
+        isSelected={selectedPart === 'body'}
+        onClick={handlePartClick('body')}
+        opacity={getOpacity('body')}
+      />
+      <ColorMesh
+        colorMesh={colorMesh}
+        isSelected={selectedPart === 'color-mesh'}
+        onClick={handlePartClick('color-mesh')}
+        opacity={getOpacity('color-mesh')}
+      />
+      <BaseDoor
+        columnMesh={baseDoorMesh}
+        isSelected={selectedPart === 'base-door'}
+        onClick={handlePartClick('base-door')}
+        opacity={getOpacity('base-door')}
+      />
+
+      {/* 升降部件 - 按升降顺序嵌套 */}
+      <SecondDoor
+        doorMesh={secondDoorMesh}
+        forkHeight={forkHeight}
+        isSelected={selectedPart === 'second-door'}
+        onClick={handlePartClick('second-door')}
+        opacity={getOpacity('second-door')}
+      >
+        <FirstDoor
+          doorMesh={firstDoorMesh}
+          forkHeight={forkHeight}
+          isSelected={selectedPart === 'first-door'}
+          onClick={handlePartClick('first-door')}
+          opacity={getOpacity('first-door')}
+        >
+          <ForkLeft
+            forkMesh={forkLeftMesh}
+            forkHeight={forkHeight}
+            isSelected={selectedPart === 'fork-left'}
+            onClick={handlePartClick('fork-left')}
+            opacity={getOpacity('fork-left')}
+          >
+            {/* 商品模型 - 跟随货叉移动 */}
+          </ForkLeft>
+        </FirstDoor>
+      </SecondDoor>
+    </group>
+  );
+}
