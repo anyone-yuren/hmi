@@ -96,7 +96,7 @@ function SafetyPointCloud({ sensors }: SafetyPointCloudProps) {
         (sensorPoints[key] as { x: number; y: number; z: number }[]).forEach((p) => {
           tempVec.set(p.x, p.y, p.z);
           tempVec.applyMatrix4(tmpMat);
-          if (minY <= tempVec.z && tempVec.z <= maxY) {
+          if (minY / 1000 <= tempVec.z && tempVec.z <= maxY / 1000) {
             positions.push(tempVec.x, tempVec.y, tempVec.z);
           }
 

@@ -103,8 +103,8 @@ export const useSafetyStore = create<State>()(
       clearSensorPoints: () => set({ sensorPoints: {} }),
 
       pointCloudFilter: {
-        mixY: 0,
-        maxY: 100,
+        minY: 0,
+        maxY: 9999,
       },
       setPointCloudFilter: (pointCloudFilter) => set({ pointCloudFilter }),
     }),

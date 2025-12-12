@@ -106,8 +106,10 @@ function SafetySensorTabs({ sensors }: IProps) {
           content={
             <>
               <div className='flex gap-[10px] items-center justify-center'>
-                <div>高度范围</div>
+                <div>{t('deployer.safety.heightRange')}</div>
                 <InputNumber
+                  className='w-[120px]'
+                  suffix='mm'
                   value={pointCloudFilter?.minY}
                   onChange={(value) => {
                     setPointCloudFilter({
@@ -117,6 +119,8 @@ function SafetySensorTabs({ sensors }: IProps) {
                   }}
                 />
                 <InputNumber
+                  className='w-[120px]'
+                  suffix='mm'
                   value={pointCloudFilter?.maxY}
                   onChange={(value) => {
                     setPointCloudFilter({
@@ -129,7 +133,7 @@ function SafetySensorTabs({ sensors }: IProps) {
             </>
           }
           placement='right'
-          title={'点云筛选设置'}
+          title={t('deployer.safety.pointCloudSetting')}
           trigger={'click'}
         >
           <Button
