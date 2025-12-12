@@ -12,6 +12,7 @@ const useDebouncedHomeStore = () => {
     setRobotGoodsStatus,
     setRobotForkarmStatus,
     setSegmentsInfo,
+    setIsContentWss,
   } = useHomeStore(
     useShallow((state) => ({
       setTaskInfo: state.setTaskInfo,
@@ -21,6 +22,7 @@ const useDebouncedHomeStore = () => {
       setRobotGoodsStatus: state.setRobotGoodsStatus,
       setRobotForkarmStatus: state.setRobotForkarmStatus,
       setSegmentsInfo: state.setSegmentsInfo,
+      setIsContentWss: state.setIsContentWss,
     })),
   );
 
@@ -33,6 +35,7 @@ const useDebouncedHomeStore = () => {
     setRobotGoodsStatus: debounce(setRobotGoodsStatus, 1000),
     setRobotForkarmStatus: debounce(setRobotForkarmStatus, 1000),
     setSegmentsInfo: debounce(setSegmentsInfo, 1000),
+    setIsContentWss: debounce(setIsContentWss, 1000),
   });
 
   // 清理防抖函数

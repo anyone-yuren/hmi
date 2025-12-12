@@ -131,7 +131,12 @@ export const useHome = () => {
   });
 
   useEffect(() => {
+    debounced.setIsContentWss(false);
+  }, []);
+
+  useEffect(() => {
     if (readyState10001 === 1) {
+      debounced.setIsContentWss(true);
       sendMessage10001(
         JSON.stringify({
           uri: 'subscribe',

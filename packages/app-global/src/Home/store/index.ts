@@ -28,6 +28,9 @@ interface State {
   // 获取当前正在行驶的路线数据
   segmentsInfo: Record<any, any>[];
   setSegmentsInfo: (data: Record<any, any>[]) => void;
+
+  isContentWss: boolean;
+  setIsContentWss: (data: boolean) => void;
 }
 
 export const useHomeStore = create<State>()(
@@ -88,6 +91,10 @@ export const useHomeStore = create<State>()(
         if (!isEqual(data, get().segmentsInfo)) {
           set({ segmentsInfo: data });
         }
+      },
+      isContentWss: false,
+      setIsContentWss: (data) => {
+        set({ isContentWss: data });
       },
     }),
     {
