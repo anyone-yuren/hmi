@@ -20,6 +20,7 @@ export const useVehicle = () => {
     setSystemDateTime,
     setRcsIsOnline,
     setTaskInfo,
+    setIsContentWss,
   } = useVehicleStore(
     useShallow((state) => ({
       setPowerStatus: state.setPowerStatus,
@@ -31,6 +32,7 @@ export const useVehicle = () => {
       setSystemDateTime: state.setSystemDateTime,
       setRcsIsOnline: state.setRcsIsOnline,
       setTaskInfo: state.setTaskInfo,
+      setIsContentWss: state.setIsContentWss,
     })),
   );
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
@@ -97,7 +99,12 @@ export const useVehicle = () => {
   });
 
   useEffect(() => {
+    setIsContentWss(false);
+  }, []);
+
+  useEffect(() => {
     if (readyState === 1) {
+      setIsContentWss(true);
       sendMessage(
         JSON.stringify({
           uri: 'subscribe',
