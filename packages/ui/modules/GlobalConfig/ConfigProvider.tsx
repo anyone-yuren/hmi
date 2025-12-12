@@ -139,6 +139,16 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
             labelHeight: 24,
             controlHeight: 24,
           },
+          Select: {
+            fontSize: 12,
+            optionHeight: 24,
+            optionPadding: 6,
+            optionLineHeight: 1,
+          },
+          Checkbox: {
+            fontSize: 12,
+            controlInteractiveSize: 14,
+          },
         },
       }}
       {...rest}

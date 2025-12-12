@@ -92,3 +92,15 @@ button {
 .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
   min-width: 100px !important;
 }
+
+.ant-form-item .ant-form-item-label > label {
+  white-space: break-spaces;
+  height: auto;
+}
+.ant-row {
+  align-items: baseline;
+}
+.ant-form-item-label {
+  display: flex !important;
+  justify-content: end !important;
+}

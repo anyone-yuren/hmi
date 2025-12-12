@@ -3,9 +3,14 @@ R车模型组件
 包含分段升降逻辑：fork-left → first-door → second-door
 添加选中部件的发光效果
 */
+import { animated, useSpring } from '@react-spring/three';
 import { useFBX } from '@react-three/drei';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { BoxGeometry, MeshBasicMaterial } from 'three';
 import { SkeletonUtils } from 'three-stdlib';
+import { useShallow } from 'zustand/react/shallow';
+import { useModelStore } from '../store';
+import { useSafetyStore } from '../store/safity';
 
 const SCALE = 0.1;
 // 升降阶段阈值（单位：毫米）
@@ -78,7 +83,40 @@ const createGlowMaterial = (originalMaterial, glowIntensity = 2) => {
 // 货叉组件 - 第一阶段升降
 const ForkLeft = forwardRef(({ forkMesh, forkHeight, children, isSelected, onClick, opacity }, ref) => {
   // 第一阶段：0-2.5m，货叉单独升高
-  const stage1Height = Math.min(forkHeight, FIRST_STAGE_MAX) * SCALE;
+  // const stage1Height = Math.min(forkHeight, FIRST_STAGE_MAX) * SCALE;
+
+  const MIN_HEIGHT = 100; // mm
+  const MAX_HEIGHT = forkHeight * SCALE;
+
+  const { mode } = useModelStore(
+    useShallow((state) => {
+      return {
+        mode: state.mode,
+      };
+    }),
+  );
+  const { displayStrategies, setSelectMeshName, selectMeshName } = useSafetyStore(
+    useShallow((state) => {
+      return {
+        displayStrategies: state.displayStrategies,
+        setSelectMeshName: state.setSelectMeshName,
+        selectMeshName: state.selectMeshName,
+      };
+    }),
+  );
+
+  // 🟢 react-spring 动画
+  // const { y } = useSpring({
+  //   from: { y: MIN_HEIGHT, positionY: 50, scaleY: 1 },
+  //   to: { y: MAX_HEIGHT, positionY: MAX_HEIGHT / 2, scaleY: 3 },
+  //   config: {
+  //     mass: 1,
+  //     tension: 120,
+  //     friction: 20,
+  //     duration: 2000,
+  //   },
+  //   loop: { reverse: mode === 'obstacleAvoidance' }, // ✨ 上下往返循环
+  // });
 
   // 创建材质副本
   const [clonedMaterial, setClonedMaterial] = useState(null);
@@ -103,33 +141,109 @@ const ForkLeft = forwardRef(({ forkMesh, forkHeight, children, isSelected, onCli
     }
   }, [clonedMaterial, glowMaterial, opacity]);
 
+  const { scaleY, positionY, y } = useSpring({
+    from: {
+      scaleY: 1,
+      y: MIN_HEIGHT,
+      positionY: 50, // 初始位置补偿，使底部在原点
+    },
+    to: async (next) => {
+      while (true) {
+        // 向上拉伸到3倍
+        await next({ scaleY: 1, positionY: 25, y: MAX_HEIGHT });
+        // 恢复
+        await next({ scaleY: 2, positionY: 50, y: MIN_HEIGHT });
+      }
+    },
+    config: { mass: 1, tension: 120, friction: 20, duration: 2000 },
+    loop: { reverse: mode === 'obstacleAvoidance' }, // ✨ 上下往返循环
+  });
+
   if (!forkMesh || !clonedMaterial) return null;
 
   return (
-    <group position={[0, stage1Height, 0]}>
-      <mesh
-        ref={ref || meshRef}
-        geometry={forkMesh.geometry}
-        material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
-        scale={forkMesh.scale}
-        castShadow
-        receiveShadow
-        onClick={onClick}
-      >
-        {isSelected && (
-          // 添加额外的发光层
-          <mesh geometry={forkMesh.geometry} scale={1.02}>
-            <meshBasicMaterial
-              color={0x00ff00}
-              transparent
-              opacity={0.3}
-              side={2} // 双面渲染
+    <>
+      <animated.group position-y={y}>
+        {mode === 'obstacleAvoidance' && displayStrategies.includes('dropSpaceDetection') ? (
+          <>
+            <mesh
+              position={[-150, 0, 0]}
+              geometry={new BoxGeometry(100, 10, 100)}
+              material={new MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.3 })}
             />
-          </mesh>
-        )}
-      </mesh>
-      {children}
-    </group>
+          </>
+        ) : null}
+        {/* 叉尖 */}
+        {mode === 'obstacleAvoidance' && displayStrategies.includes('pickupTipProtection') ? (
+          <>
+            <mesh
+              position={[-110, 5, 25]}
+              geometry={new BoxGeometry(20, 1, 20)}
+              material={
+                new MeshBasicMaterial({
+                  color: 0x00ffff,
+                  transparent: true,
+                  opacity: 0.3,
+                  depthTest: false,
+                  depthWrite: false,
+                })
+              }
+            />
+            <mesh
+              position={[-110, 5, -25]}
+              geometry={new BoxGeometry(20, 1, 20)}
+              material={
+                new MeshBasicMaterial({
+                  color: 0x00ffff,
+                  transparent: true,
+                  opacity: 0.3,
+                  depthTest: false,
+                  depthWrite: false,
+                })
+              }
+            />
+          </>
+        ) : null}
+
+        <mesh
+          ref={ref || meshRef}
+          geometry={forkMesh.geometry}
+          material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+          scale={forkMesh.scale}
+          castShadow
+          receiveShadow
+          onClick={onClick}
+        >
+          {isSelected && (
+            // 添加额外的发光层
+            <mesh geometry={forkMesh.geometry} scale={1.02}>
+              <meshBasicMaterial
+                color={0x00ff00}
+                transparent
+                opacity={0.3}
+                side={2} // 双面渲染
+              />
+            </mesh>
+          )}
+        </mesh>
+        {children}
+      </animated.group>
+      {mode === 'obstacleAvoidance' && displayStrategies.includes('underForkProtection') ? (
+        <>
+          <animated.mesh
+            position-y={positionY}
+            scale-y={scaleY}
+            position-x={-50}
+            onClick={(e) => {
+              setSelectMeshName(selectMeshName === 'underForkProtection' ? '' : 'underForkProtection');
+            }}
+          >
+            <boxGeometry args={[100, 50, 100]} />
+            <meshStandardMaterial color='hotpink' transparent opacity={0.3} />
+          </animated.mesh>
+        </>
+      ) : null}
+    </>
   );
 });
 
@@ -320,6 +434,20 @@ const BaseDoor = forwardRef(({ columnMesh, isSelected, onClick, opacity }, ref) 
 
 // 车身组件 - 固定不动
 const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
+  const { mode } = useModelStore(
+    useShallow((state) => {
+      return {
+        mode: state.mode,
+      };
+    }),
+  );
+  const { displayStrategies } = useSafetyStore(
+    useShallow((state) => {
+      return {
+        displayStrategies: state.displayStrategies,
+      };
+    }),
+  );
   // 创建材质副本
   const [clonedMaterial, setClonedMaterial] = useState(null);
   const [glowMaterial, setGlowMaterial] = useState(null);
@@ -344,22 +472,40 @@ const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
   }, [clonedMaterial, glowMaterial, opacity]);
 
   if (!bodyMesh || !clonedMaterial) return null;
-
   return (
-    <mesh
-      ref={ref || meshRef}
-      geometry={bodyMesh.geometry}
-      material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
-      scale={bodyMesh.scale}
-      castShadow
-      onClick={onClick}
-    >
-      {isSelected && (
-        <mesh geometry={bodyMesh.geometry} scale={1.02}>
-          <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
-        </mesh>
-      )}
-    </mesh>
+    <>
+      {/* 顶部绘制一个发光的保护区域 */}
+      {mode === 'obstacleAvoidance' && displayStrategies.includes('topProtection') ? (
+        <>
+          <mesh
+            position={[-100, FIRST_STAGE_MAX * SCALE, 0]}
+            geometry={new BoxGeometry(100, 10, 100)}
+            material={new MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.3 })}
+          />
+
+          <mesh
+            position={[-100, FIRST_STAGE_MAX * SCALE - 100, 0]}
+            geometry={new BoxGeometry(100, 10, 100)}
+            material={new MeshBasicMaterial({ color: 0xffff00, transparent: true, opacity: 0.3 })}
+          />
+        </>
+      ) : null}
+
+      <mesh
+        ref={ref || meshRef}
+        geometry={bodyMesh.geometry}
+        material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+        scale={bodyMesh.scale}
+        castShadow
+        onClick={onClick}
+      >
+        {isSelected && (
+          <mesh geometry={bodyMesh.geometry} scale={1.02}>
+            <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+          </mesh>
+        )}
+      </mesh>
+    </>
   );
 });
 
@@ -410,14 +556,13 @@ const ColorMesh = forwardRef(({ colorMesh, isSelected, onClick, opacity }, ref) 
 });
 
 export default function RModelFbx(props) {
-  const { isHasGoods, forkHeight = 0 } = props;
+  const { isHasGoods, forkHeight = 500 } = props;
   const [bodyMesh, setBodyMesh] = useState(null);
   const [forkLeftMesh, setForkLeftMesh] = useState(null);
   const [firstDoorMesh, setFirstDoorMesh] = useState(null);
   const [secondDoorMesh, setSecondDoorMesh] = useState(null);
   const [colorMesh, setColorMesh] = useState(null);
   const [baseDoorMesh, setBaseDoorMesh] = useState(null);
-
   // 选中状态管理
   const [selectedPart, setSelectedPart] = useState(null);
 

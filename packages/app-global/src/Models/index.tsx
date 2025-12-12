@@ -1,26 +1,19 @@
-import { GizmoHelper, GizmoViewport, Grid, Html, OrbitControls, SoftShadows, useProgress } from '@react-three/drei';
+import { Html, useProgress } from '@react-three/drei';
 import { Canvas, MeshProps, useFrame, useThree } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { IconifyIcon } from 'ui';
-import Radar2dPanel from './components/2dRadarPanel';
 import RModelFbx from './components/r20';
+import RightPanel from './components/rightPanel';
 import TabsPanel from './components/tabsPanel';
+import BaseElement from './threeComponent/base';
 
 interface RightTriangularPrismProps extends MeshProps {
   width?: number; // 直角三角形一条直角边长度 (X 方向)
   height?: number; // 直角三角形另一条直角边长度 (Y 方向)
   depth?: number; // 拉伸深度 (Z 方向)
   color?: string | number;
-}
-
-function SceneHelpers() {
-  return (
-    <>
-      <axesHelper args={[5]} />
-    </>
-  );
 }
 
 function CameraLimit() {
@@ -142,17 +135,6 @@ function CarModel() {
 }
 
 export default function R3FBasicScene() {
-  const gridConfig = {
-    cellSize: 0.5,
-    cellThickness: 0.8,
-    cellColor: '#808080',
-    sectionSize: 2,
-    sectionThickness: 1,
-    sectionColor: '#808080',
-    fadeDistance: 100,
-    fadeStrength: 1,
-  };
-
   const [panelWidth, setPanelWidth] = useState(300);
   const [isOpen, setIsOpen] = useState(true); // true 表示面板打开
 
@@ -169,50 +151,19 @@ export default function R3FBasicScene() {
         <Canvas
           shadows
           className='h-full w-full'
-          gl={{ antialias: true }}
-          camera={{ position: [2, 3, 2], fov: 50, near: 0.1, far: 1000 }}
+          dpr={[1.5, 2]}
+          gl={{ logarithmicDepthBuffer: true, antialias: true, alpha: true }}
           onCreated={({ scene }) => {
             scene.fog = new THREE.FogExp2('#cccccc', 0.02); // 更柔和的雾效
           }}
         >
           <color attach='background' args={['#2f2f2f']} />
           <Suspense fallback={<Html center>Loading...</Html>}>
-            <ambientLight intensity={0.4} />
-            {/* 主方向光 */}
-            <directionalLight
-              castShadow
-              position={[0, 3, 0]}
-              intensity={1}
-              shadow-mapSize-width={2048}
-              shadow-mapSize-height={2048}
-              shadow-camera-far={50}
-              shadow-camera-left={-20}
-              shadow-camera-right={20}
-              shadow-camera-top={20}
-              shadow-camera-bottom={-20}
-            />
-
-            {/* 补充光 */}
-            <pointLight position={[-10, 10, -10]} intensity={0.5} />
-
-            {/* 柔和的阴影 */}
-            <SoftShadows size={25} samples={16} />
-
-            <SceneHelpers />
-            <Grid args={[100, 100]} {...gridConfig} />
-
             {/* <Forklift /> */}
             {/* <O15Model /> */}
             <CarModel />
             <CameraLimit />
-            <OrbitControls enablePan enableRotate enableZoom />
-            {/* 添加坐标参考 */}
-            <GizmoHelper
-              alignment='bottom-right' // 显示位置
-              margin={[80, 80]} // 距离边缘的间距（可调）
-            >
-              <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='white' />
-            </GizmoHelper>
+            <BaseElement />
           </Suspense>
         </Canvas>
       </motion.div>
@@ -228,7 +179,7 @@ export default function R3FBasicScene() {
           width: panelWidth,
         }}
       >
-        <Radar2dPanel />
+        <RightPanel />
       </motion.div>
 
       {/* 右侧折叠按钮 */}
