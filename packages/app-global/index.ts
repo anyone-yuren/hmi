@@ -5,6 +5,7 @@ import { triggerLoginModal } from './src/components/LoginDialog/hooks/useLogin';
 import https, { get, post } from './src/https';
 import * as commonServices from './src/https/global';
 import Maintenance from './src/Maintenance';
+import MapEditor from './src/mapEditor';
 import Models from './src/Models';
 import GlobalNotification from './src/notification';
 import useObsError from './src/notification/hooks/useObsError';
@@ -23,6 +24,7 @@ export {
   InitStage,
   LoginDialog,
   Maintenance,
+  MapEditor,
   Models,
   post,
   SingleTask,

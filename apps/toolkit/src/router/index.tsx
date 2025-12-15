@@ -47,6 +47,10 @@ const router = createHashRouter([
         element: LazyLoad(lazy(() => import('@/views/Models'))),
       },
       {
+        path: 'mapEditor',
+        element: LazyLoad(lazy(() => import('@/views/MapEditor'))),
+      },
+      {
         path: 'maintenance',
         element: LazyLoad(lazy(() => import('@/views/maintenance'))),
       },

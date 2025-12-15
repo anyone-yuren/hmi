@@ -1,10 +1,21 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Dropdown, Select } from 'antd';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { IconifyIcon } from 'ui';
+import TemplateManagement from './components/TemplateManagement';
+function vanillaToggleFullscreen() {
+  const isFullscreen = !!document.fullscreenElement;
 
+  if (isFullscreen) {
+    document.exitFullscreen();
+  } else {
+    document.documentElement.requestFullscreen();
+  }
+}
 const TopPanel = () => {
   const location = useLocation();
+  const [visible, setVisible] = useState(false);
   return (
     <div className='w-full flex items-center justify-between'>
       <div className={location.pathname === '/' ? 'hidden' : 'flex items-center gap-2 text-xs font-bold'}>
@@ -25,7 +36,7 @@ const TopPanel = () => {
         <Dropdown
           menu={{
             items: [
-              { label: '模板管理', key: 1 },
+              { label: '模板管理', key: 1, onClick: () => setVisible(true) },
               { label: '重做', key: 2 },
             ],
           }}
@@ -78,9 +89,10 @@ const TopPanel = () => {
       </div>
       <div className='flex items-center gap-2 font-bold'>
         <IconifyIcon icon='mynaui:minus-solid' size={20} className='opacity-80' />
-        <IconifyIcon icon='ion:resize' size={20} className='opacity-80' />
+        <IconifyIcon icon='ion:resize' size={20} className='opacity-80' onClick={vanillaToggleFullscreen} />
         <IconifyIcon icon='ic:baseline-close' size={20} className='opacity-80' />
       </div>
+      <TemplateManagement open={visible} onClick={() => setVisible(false)} />
     </div>
   );
 };

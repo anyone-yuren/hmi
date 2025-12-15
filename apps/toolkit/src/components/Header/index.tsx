@@ -43,6 +43,7 @@ const GlobalHeader = () => {
                 icon='carbon:map'
                 size={24}
                 className='opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'
+                onClick={() => navigate(`/mapEditor`)}
               />
             </Tooltip>
             <Tooltip title='车辆管理' placement='right'>
