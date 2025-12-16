@@ -242,7 +242,13 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
           <div className='w-1/3 bg-white/5 cursor-pointer p-2 overflow-auto max-h-[50vh]'>
             <Collapse items={items} defaultActiveKey={['1', '2']} />
           </div>
-          <div className='w-2/3 bg-white/5 p-2 cursor-pointer overflow-auto '>
+          <div className='w-2/3 bg-white/5 p-2 cursor-pointer overflow-auto flex flex-col gap-2'>
+            <p className='flex items-center justify-end gap-2'>
+              {/* 复制 */}
+              <IconifyIcon icon='icon-park-outline:copy' size={14} />
+              {/* 删除 */}
+              <IconifyIcon icon='ic:round-close' size={16} />
+            </p>
             <Collapse items={items1} defaultActiveKey={['1', '2', '3']} />
           </div>
         </div>

@@ -69,17 +69,18 @@ export default function DrawBSpline() {
   const sampleCurve = (points: THREE.Vector3[]) => {
     if (points.length < 2) return points;
     const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal');
+    // 参数：points, closed=false, curveType='centripetal'
     return curve.getPoints(CURVE_SEGMENTS);
   };
 
   /* ------------------- 鼠标 ------------------- */
   const onMouseDown = (e: MouseEvent) => {
     if (selectDrawType !== 'bspline') return;
-    if (selectedId !== null || dragging.current) return; // ❌ 编辑或选中状态下不绘制
+    if (selectedId !== null || dragging.current) return; // 编辑或拖拽中不绘制
 
     const p = pick(e);
-    if (!p) return; // ✅ 这里必须判断
-    const point = p.clone(); // 只有在 p 存在时 clone
+    if (!p) return;
+    const point = p.clone();
 
     setDrawingPoints((prev) => {
       const newPoints = [...prev, point];
@@ -103,7 +104,7 @@ export default function DrawBSpline() {
     if (!dragging.current) return;
 
     const p = pick(e);
-    if (!p) return; // ✅ 判断有效
+    if (!p) return;
     const point = p.clone();
 
     setCurves((prev) =>
@@ -186,11 +187,12 @@ export default function DrawBSpline() {
               onPointerDown={(e) => {
                 e.stopPropagation();
                 if (c.id === selectedId) {
-                  // ✅ 仅在选中时允许拖拽
+                  // 仅选中时允许拖拽
                   dragging.current = { id: c.id, index: i };
                 }
               }}
             >
+              <sphereGeometry args={[0.06, 12, 12]} />
               <meshStandardMaterial color='#00aaff' />
             </mesh>
           ))}
