@@ -1,7 +1,6 @@
 import { GizmoHelper, GizmoViewport, Grid, MapControls, PerspectiveCamera } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
-import { MouseTracker } from './mouseTracker';
 
 function ResizeCamera({ size }) {
   const { camera } = useThree();
@@ -18,10 +17,10 @@ const BaseElement = ({ size }) => {
   const gridConfig = {
     cellSize: 0.5,
     cellThickness: 0.8,
-    cellColor: '#808080',
+    cellColor: '#80808040',
     sectionSize: 2,
     sectionThickness: 1,
-    sectionColor: '#808080',
+    sectionColor: '#80808080',
     fadeDistance: 100,
     fadeStrength: 1,
   };
@@ -56,7 +55,7 @@ const BaseElement = ({ size }) => {
           <meshStandardMaterial color='red' />
         </mesh>
         <ambientLight intensity={1} />
-        <MouseTracker />
+        {/* <MouseTracker /> */}
         <GizmoHelper alignment='bottom-right' margin={[80, 80]}>
           <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='white' disabled={true} />
         </GizmoHelper>

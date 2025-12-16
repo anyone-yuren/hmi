@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../store';
-import DrawPointsParamsPanel from '../drawPoints/components/paramspanel';
+import DrawLinesParamsPanel from '../drawLine/components/paramspanel';
 
 const ParamsPanel = () => {
   const { paramsPanelCollapsed } = useMapEditorStore(
@@ -15,7 +15,7 @@ const ParamsPanel = () => {
   return (
     <motion.div
       animate={{
-        width: !paramsPanelCollapsed ? 0 : 300,
+        width: !paramsPanelCollapsed ? 0 : 400,
         opacity: !paramsPanelCollapsed ? 0 : 1,
       }}
       transition={{
@@ -25,7 +25,8 @@ const ParamsPanel = () => {
       }}
       className='bg-white/5 overflow-hidden flex'
     >
-      <DrawPointsParamsPanel />
+      {/* <DrawPointsParamsPanel /> */}
+      <DrawLinesParamsPanel />
     </motion.div>
   );
 };

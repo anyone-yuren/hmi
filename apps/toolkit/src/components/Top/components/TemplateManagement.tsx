@@ -104,7 +104,7 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
             <Input size='small' />
           </Form.Item>
           <Form.Item label='模板颜色' name='templateColor' rules={[{ required: true, message: '请输入模板颜色' }]}>
-            <ColorPicker defaultValue='#001d1d' size='small' showText className='w-full' />
+            <ColorPicker defaultValue='#00d1d1' size='small' showText className='w-full' />
           </Form.Item>
         </Form>
       ),
@@ -228,6 +228,15 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
           onClick?.();
         }}
         width={'60%'}
+        classNames={{
+          content: '!p-2',
+        }}
+        okButtonProps={{
+          size: 'small',
+        }}
+        cancelButtonProps={{
+          size: 'small',
+        }}
       >
         <div className='flex items-stretch h-full gap-2 max-h-[50vh]'>
           <div className='w-1/3 bg-white/5 cursor-pointer p-2 overflow-auto max-h-[50vh]'>

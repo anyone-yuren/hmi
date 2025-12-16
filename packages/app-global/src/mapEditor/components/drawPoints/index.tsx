@@ -1,20 +1,29 @@
 import { Form, Radio, Select } from 'antd';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../store';
 
 const DrawPointsSelect = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const { setParamsPanelCollapsed } = useMapEditorStore(
+  const { setParamsPanelCollapsed, selectDrawType, setSelectDrawType } = useMapEditorStore(
     useShallow((state) => {
       return {
         setParamsPanelCollapsed: state.setParamsPanelCollapsed,
+        selectDrawType: state.selectDrawType,
+        setSelectDrawType: state.setSelectDrawType,
       };
     }),
   );
+  useEffect(() => {
+    if (selectDrawType === 'point') {
+      setCollapsed(false);
+    } else {
+      setCollapsed(true);
+    }
+  }, [selectDrawType]);
   const [form] = Form.useForm();
   const vehicleOptions = [
     {
@@ -33,10 +42,13 @@ const DrawPointsSelect = () => {
         className={classNames(
           'flex gap-0.5 px-1 items-center cursor-pointer text-white hover:bg-[#00d1d1]/20 rounded-md',
           {
-            'bg-[#00d1d1]/20': !collapsed,
+            'bg-[#00d1d1]/20': selectDrawType === 'point',
           },
         )}
-        onClick={() => setCollapsed(!collapsed)}
+        onClick={() => {
+          setCollapsed(false);
+          setSelectDrawType('point');
+        }}
       >
         <IconifyIcon icon='gis:copy-point' size={20} />
         <span>点</span>
@@ -44,7 +56,7 @@ const DrawPointsSelect = () => {
       <motion.div
         animate={{
           opacity: collapsed ? 0 : 1,
-          y: collapsed ? -5 : 0,
+          y: collapsed ? -10 : 0,
           zIndex: collapsed ? -1 : 1,
         }}
         className='absolute left-0 top-full w-full bg-[#1a1a1a]/80'

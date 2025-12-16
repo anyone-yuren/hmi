@@ -5,6 +5,8 @@ interface State {
   // 参数面板是否折叠
   paramsPanelCollapsed: boolean;
   setParamsPanelCollapsed: (paramsPanelCollapsed: boolean) => void;
+  selectDrawType: string;
+  setSelectDrawType: (selectDrawType: string) => void;
 }
 
 export const useMapEditorStore = create<State>()(
@@ -14,6 +16,12 @@ export const useMapEditorStore = create<State>()(
       setParamsPanelCollapsed: (paramsPanelCollapsed: boolean) => {
         set(() => ({
           paramsPanelCollapsed,
+        }));
+      },
+      selectDrawType: 'point',
+      setSelectDrawType: (selectDrawType: string) => {
+        set(() => ({
+          selectDrawType,
         }));
       },
     }),

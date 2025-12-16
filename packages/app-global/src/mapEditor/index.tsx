@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import { useRef, useState } from 'react';
 import CursorGuideLine from './components/cursorGuideLine';
 import DrawHandle from './components/draw';
+import DrawLine from './components/drawLine/draw';
 import DrawPoints from './components/drawPoints/draw';
 import ParamsPanel from './components/paramPanel';
 import BaseElement from './three/base';
@@ -29,19 +30,16 @@ const MapEditor = () => {
           </Button>
 
           {/* Canvas 必须套一层 div 才能正确 resize */}
-          <div className='absolute inset-0 pointer-events-none'>
+          <div className='absolute inset-0 '>
             {size?.width && size?.height && (
               <Canvas
                 resize={{ scroll: false, offsetSize: true }} // R3F 官方推荐的 resize 配置
                 className=' w-full h-full'
-                onPointerMove={(e) => {
-                  console.log(e);
-                  // 获取当前鼠标三维中的坐标位置
-                }}
               >
                 <BaseElement size={size} />
 
                 <DrawPoints />
+                <DrawLine />
                 <CursorGuideLine />
               </Canvas>
             )}

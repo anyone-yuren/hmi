@@ -15,6 +15,7 @@ function vanillaToggleFullscreen() {
 }
 const TopPanel = () => {
   const location = useLocation();
+  console.log('location.pathname', location);
   const [visible, setVisible] = useState(false);
   return (
     <div className='w-full flex items-center justify-between'>
@@ -45,6 +46,13 @@ const TopPanel = () => {
             <span>编辑</span>
           </div>
         </Dropdown>
+        {location.pathname.includes('mapEditor') ? (
+          <>
+            <span className='cursor-pointer' onClick={() => setVisible(true)}>
+              模板管理
+            </span>
+          </>
+        ) : null}
       </div>
       <div className={location.pathname === '/' ? 'hidden' : ''}>
         <Select
