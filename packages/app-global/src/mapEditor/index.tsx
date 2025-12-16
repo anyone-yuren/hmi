@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import { useRef, useState } from 'react';
 import CursorGuideLine from './components/cursorGuideLine';
 import DrawHandle from './components/draw';
+import DrawBsline from './components/drawLine/deawBsline';
 import DrawLine from './components/drawLine/draw';
 import DrawPoints from './components/drawPoints/draw';
 import ParamsPanel from './components/paramPanel';
@@ -40,6 +41,7 @@ const MapEditor = () => {
 
                 <DrawPoints />
                 <DrawLine />
+                <DrawBsline />
                 <CursorGuideLine />
               </Canvas>
             )}

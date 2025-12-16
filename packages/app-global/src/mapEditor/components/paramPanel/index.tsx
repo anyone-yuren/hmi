@@ -2,16 +2,18 @@ import { motion } from 'framer-motion';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../store';
 import DrawLinesParamsPanel from '../drawLine/components/paramspanel';
+import DrawPointsParamsPanel from '../drawPoints/components/paramspanel';
 
 const ParamsPanel = () => {
-  const { paramsPanelCollapsed } = useMapEditorStore(
+  const { paramsPanelCollapsed, selectDrawType } = useMapEditorStore(
     useShallow((state) => {
       return {
         paramsPanelCollapsed: state.paramsPanelCollapsed,
+        selectDrawType: state.selectDrawType,
       };
     }),
   );
-
+  console.log(selectDrawType);
   return (
     <motion.div
       animate={{
@@ -25,8 +27,8 @@ const ParamsPanel = () => {
       }}
       className='bg-white/5 overflow-hidden flex'
     >
-      {/* <DrawPointsParamsPanel /> */}
-      <DrawLinesParamsPanel />
+      {selectDrawType === 'point' && <DrawPointsParamsPanel />}
+      {(selectDrawType === 'line' || selectDrawType === 'bspline') && <DrawLinesParamsPanel />}
     </motion.div>
   );
 };

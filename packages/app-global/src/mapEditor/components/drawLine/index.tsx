@@ -16,6 +16,7 @@ const DrawLinesSelect = () => {
       };
     }),
   );
+  console.log('selectDrawType', selectDrawType);
   const [form] = Form.useForm();
   const vehicleOptions = [
     {
@@ -28,7 +29,7 @@ const DrawLinesSelect = () => {
     },
   ];
   useEffect(() => {
-    if (selectDrawType === 'line') {
+    if (selectDrawType === 'line' || selectDrawType === 'bspline') {
       setCollapsed(false);
     } else {
       setCollapsed(true);
@@ -41,7 +42,7 @@ const DrawLinesSelect = () => {
         className={classNames(
           'flex gap-0.5 px-1 items-center cursor-pointer text-white hover:bg-[#00d1d1]/20 rounded-md',
           {
-            'bg-[#00d1d1]/20': selectDrawType === 'line',
+            'bg-[#00d1d1]/60': selectDrawType === 'line' || selectDrawType === 'bspline',
           },
         )}
         onClick={() => {
@@ -70,16 +71,20 @@ const DrawLinesSelect = () => {
         <div className='flex items-center justify-between px-2 py-1'>
           <div className='flex gap-2 items-center text-white/80'>
             <div
-              className='hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer'
+              className={classNames('hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer', {
+                'bg-[#00d1d1]/60': selectDrawType === 'line',
+              })}
               onClick={() => {
                 setParamsPanelCollapsed(true);
                 setSelectDrawType('line');
               }}
             >
-              {selectDrawType === 'line' ? '直线' : 'B样条'}
+              直线
             </div>
             <div
-              className='hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer'
+              className={classNames('hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer', {
+                'bg-[#00d1d1]/60': selectDrawType === 'bspline',
+              })}
               onClick={() => {
                 setParamsPanelCollapsed(true);
                 setSelectDrawType('bspline');

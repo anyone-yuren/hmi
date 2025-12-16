@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { usePickOnXYPlane } from '../../hooks/usePickOnXYPanel';
 import { useMapEditorStore } from '../../store';
+import { buildSelectLineData } from '../../utils/line';
 
 interface LineData {
   id: number;
@@ -13,20 +14,23 @@ interface LineData {
   points: THREE.Vector3[];
 }
 
+const ARROW_LENGTH = 0.2;
+const ARROW_WIDTH = 0.125;
+
 let nextLineId = 1;
 const NUM_POINTS = 5;
-const HOVER_DISTANCE_PIXELS = 10; // 鼠标接近线条的选中阈值
 
 function DrawLines() {
-  const { paramsPanelCollapsed, selectDrawType } = useMapEditorStore(
+  const { paramsPanelCollapsed, selectDrawType, selectLineData, setSelectLineData } = useMapEditorStore(
     useShallow((s) => ({
       paramsPanelCollapsed: s.paramsPanelCollapsed,
       selectDrawType: s.selectDrawType,
+      selectLineData: s.selectLineData,
+      setSelectLineData: s.setSelectLineData,
     })),
   );
-
   const pick = usePickOnXYPlane();
-  const { camera, controls, mouse } = useThree();
+  const { controls } = useThree();
 
   const [lines, setLines] = useState<LineData[]>([]);
   const [drawing, setDrawing] = useState<LineData | null>(null);
@@ -35,20 +39,22 @@ function DrawLines() {
   const pressedKey = useRef<'x' | 'y' | null>(null);
   const draggingPoint = useRef<{ lineId: number; pointIndex: number } | null>(null);
 
-  /* ------------------- 键盘监听（锁轴 + ESC退出编辑） ------------------- */
+  /* ------------------- 键盘监听 ------------------- */
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === 'x') pressedKey.current = 'x';
-      if (e.key.toLowerCase() === 'y') pressedKey.current = 'y';
+      if (e.key === 'x') pressedKey.current = 'x';
+      if (e.key === 'y') pressedKey.current = 'y';
       if (e.key === 'Escape') {
         setSelectedLineId(null);
         draggingPoint.current = null;
-        if (controls) controls.enabled = true; // 恢复相机
+        setSelectLineData(null);
+        if (controls) controls.enabled = true;
       }
     };
     const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === pressedKey.current) pressedKey.current = null;
+      if (e.key === pressedKey.current) pressedKey.current = null;
     };
+
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
     return () => {
@@ -57,12 +63,10 @@ function DrawLines() {
     };
   }, []);
 
-  /* ------------------- 绘制 & 拖动线条事件 ------------------- */
+  /* ------------------- 鼠标事件 ------------------- */
   const onMouseDown = (e: MouseEvent) => {
-    if (!paramsPanelCollapsed) return;
-
-    // 绘制模式：未选中线条
-    if (selectDrawType === 'line' && selectedLineId === null) {
+    if (!paramsPanelCollapsed && selectDrawType !== 'line') return;
+    if (selectDrawType === 'line' && !selectedLineId) {
       if (controls) controls.enabled = false;
       const p = pick(e);
       if (!p) return;
@@ -71,23 +75,22 @@ function DrawLines() {
   };
 
   const onMouseMove = (e: MouseEvent) => {
-    // 绘制线条
     if (drawing) {
       const p = pick(e);
       if (!p) return;
+
       const newEnd = p.clone();
       if (pressedKey.current === 'x') newEnd.y = drawing.start.y;
       if (pressedKey.current === 'y') newEnd.x = drawing.start.x;
+
       setDrawing((prev) => prev && { ...prev, end: newEnd });
     }
 
-    // 拖动线条端点
     if (draggingPoint.current) {
       const p = pick(e);
       if (!p) return;
-      const { lineId, pointIndex } = draggingPoint.current;
 
-      // 只允许拖动第0或最后一个点（端点）
+      const { lineId, pointIndex } = draggingPoint.current;
       if (pointIndex !== 0 && pointIndex !== NUM_POINTS - 1) return;
 
       setLines((prev) =>
@@ -101,21 +104,27 @@ function DrawLines() {
 
           newPoints[pointIndex] = newPos;
 
-          // 根据端点重新生成等分点
           const start = newPoints[0];
           const end = newPoints[NUM_POINTS - 1];
+
           const interpolated: THREE.Vector3[] = [];
           for (let i = 0; i < NUM_POINTS; i++) {
             const t = i / (NUM_POINTS - 1);
             interpolated.push(new THREE.Vector3(start.x + (end.x - start.x) * t, start.y + (end.y - start.y) * t, 0));
           }
 
-          return {
+          const updatedLine = {
             ...line,
-            start: interpolated[0],
-            end: interpolated[NUM_POINTS - 1],
+            start,
+            end,
             points: interpolated,
           };
+          // ✅ 如果正在编辑的是选中线，同步 Zustand
+          if (line.id === selectedLineId) {
+            setSelectLineData(buildSelectLineData(updatedLine));
+          }
+
+          return updatedLine;
         }),
       );
     }
@@ -123,9 +132,10 @@ function DrawLines() {
 
   const onMouseUp = () => {
     if (drawing) {
+      // 控制不可平移 但是可缩放
       if (controls) controls.enabled = true;
-      const distance = drawing.start.distanceTo(drawing.end);
-      if (distance < 0.01) {
+
+      if (drawing.start.distanceTo(drawing.end) < 0.01) {
         setDrawing(null);
         return;
       }
@@ -142,7 +152,16 @@ function DrawLines() {
         );
       }
 
-      setLines((prev) => [...prev, { ...drawing, points }]);
+      const newLine: LineData = { ...drawing, points };
+
+      setLines((prev) => [...prev, newLine]);
+
+      // ✅ 选中刚画的线
+      setSelectedLineId(newLine.id);
+
+      // ✅ 写入 Zustand
+      setSelectLineData(buildSelectLineData(newLine));
+
       setDrawing(null);
     }
 
@@ -158,14 +177,44 @@ function DrawLines() {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
     };
-  }, [drawing, paramsPanelCollapsed, selectDrawType, selectedLineId]);
+  }, [drawing, selectedLineId, selectDrawType]);
 
-  /* ------------------- 控制相机拖动 */
+  /* ------------------- 相机控制 ------------------- */
   useFrame(() => {
-    if (controls) controls.enabled = !drawing && selectedLineId === null;
+    if (controls) controls.enablePan = !drawing && selectedLineId === null;
   });
 
-  /* ------------------- 渲染线条 & 可拖动端点 */
+  /* ------------------- 箭头组件 ------------------- */
+  const Arrow = ({ start, end, selected }: { start: THREE.Vector3; end: THREE.Vector3; selected: boolean }) => {
+    // 2D 方向（XY 平面）
+    const dir = end.clone().sub(start);
+    const angle = Math.atan2(dir.y, dir.x); // Z 轴旋转角
+
+    // 三角形（局部坐标，指向 +X）
+    const vertices = new Float32Array([
+      ARROW_LENGTH / 2,
+      0,
+      0, // 尖端
+      -ARROW_LENGTH / 2,
+      ARROW_WIDTH / 2,
+      0, // 左
+      -ARROW_LENGTH / 2,
+      -ARROW_WIDTH / 2,
+      0, // 右
+    ]);
+
+    return (
+      <mesh position={end} rotation={[0, 0, angle]}>
+        <bufferGeometry>
+          <bufferAttribute attach='attributes-position' array={vertices} count={3} itemSize={3} />
+        </bufferGeometry>
+
+        <meshBasicMaterial color={selected ? '#ff0000' : '#00ff00'} side={THREE.DoubleSide} wireframe />
+      </mesh>
+    );
+  };
+
+  /* ------------------- 渲染 ------------------- */
   return (
     <>
       {lines.map((line) => (
@@ -174,9 +223,17 @@ function DrawLines() {
             points={line.points}
             color={line.id === selectedLineId ? '#ff0000' : '#00ff00'}
             lineWidth={2}
-            onClick={() => setSelectedLineId(line.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedLineId(line.id);
+              setSelectLineData(buildSelectLineData(line));
+            }}
           />
 
+          {/* 箭头 */}
+          <Arrow start={line.start} end={line.end} selected={line.id === selectedLineId} />
+
+          {/* 端点控制 */}
           {line.id === selectedLineId &&
             line.points.map((pt, index) => (
               <mesh
@@ -184,7 +241,6 @@ function DrawLines() {
                 position={pt}
                 onPointerDown={(e) => {
                   e.stopPropagation();
-                  // 只允许拖动端点
                   if (index === 0 || index === NUM_POINTS - 1) {
                     draggingPoint.current = { lineId: line.id, pointIndex: index };
                   }
