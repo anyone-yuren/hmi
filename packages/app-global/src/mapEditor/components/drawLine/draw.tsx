@@ -1,5 +1,5 @@
 import { Line } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
@@ -180,9 +180,13 @@ function DrawLines() {
   }, [drawing, selectedLineId, selectDrawType]);
 
   /* ------------------- 相机控制 ------------------- */
-  useFrame(() => {
-    if (controls) controls.enablePan = !drawing && selectedLineId === null;
-  });
+  // useFrame(() => {
+  //   if (controls) controls.enablePan = !drawing && selectedLineId === null;
+  // });
+  useEffect(() => {
+    if (!controls) return;
+    controls.enablePan = !drawing && selectedLineId === null;
+  }, [drawing, selectedLineId, controls]);
 
   /* ------------------- 箭头组件 ------------------- */
   const Arrow = ({ start, end, selected }: { start: THREE.Vector3; end: THREE.Vector3; selected: boolean }) => {

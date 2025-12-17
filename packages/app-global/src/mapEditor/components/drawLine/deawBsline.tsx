@@ -1,10 +1,11 @@
 import { Line } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
 import { debounce } from 'lodash-es';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { usePickOnXYPlane } from '../../hooks/usePickOnXYPanel';
+import { useSelectionStore } from '../../selection/selectionStore';
 import { useMapEditorStore } from '../../store';
 import { buildBezierSelectLineData } from '../../utils/line';
 
@@ -23,6 +24,11 @@ export default function DrawBSpline() {
     useShallow((s) => ({
       selectDrawType: s.selectDrawType,
       setSelectLineData: s.setSelectLineData,
+    })),
+  );
+  const { startSelection } = useSelectionStore(
+    useShallow((s) => ({
+      startSelection: s.startSelection,
     })),
   );
 
@@ -75,7 +81,7 @@ export default function DrawBSpline() {
 
   /* ------------------- 鼠标 ------------------- */
   const onMouseDown = (e: MouseEvent) => {
-    if (selectDrawType !== 'bspline') return;
+    if (selectDrawType !== 'bspline' || startSelection) return;
     if (selectedId !== null || dragging.current) return; // 编辑或拖拽中不绘制
 
     const p = pick(e);
@@ -153,15 +159,22 @@ export default function DrawBSpline() {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
     };
-  }, [selectDrawType, drawingPoints]);
+  }, [selectDrawType, drawingPoints, startSelection]);
 
   /* ------------------- 相机控制 ------------------- */
-  useFrame(() => {
+  // useFrame(() => {
+  //   if (!controls) return;
+  //   const editing = selectedId !== null || drawingPoints.length > 0;
+  //   controls.enablePan = !editing;
+  //   controls.enableZoom = true;
+  // });
+
+  useEffect(() => {
     if (!controls) return;
     const editing = selectedId !== null || drawingPoints.length > 0;
     controls.enablePan = !editing;
     controls.enableZoom = true;
-  });
+  }, [selectedId, controls]);
 
   /* ------------------- 渲染 ------------------- */
   return (

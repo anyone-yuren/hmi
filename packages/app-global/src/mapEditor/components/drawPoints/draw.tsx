@@ -3,12 +3,16 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { usePickOnXYPlane } from '../../hooks/usePickOnXYPanel';
+import { useSelectionStore } from '../../selection/selectionStore';
+import { rebuildSpatialIndex } from '../../selection/spatialIndex';
+import { PointSubType, SelectableItem } from '../../selection/type';
 import { useMapEditorStore } from '../../store';
 
 interface PointData {
   id: number;
   position: THREE.Vector3;
   createdAt: Date;
+  pointType?: PointSubType;
 }
 const MAX_LABEL_DISTANCE = 10; // 10 米
 
@@ -55,7 +59,11 @@ function DrawPoints() {
     })),
   );
 
-  console.log('selectDrawType', selectDrawType);
+  const { selectedIds } = useSelectionStore(
+    useShallow((s) => ({
+      selectedIds: s.selectedIds,
+    })),
+  );
 
   const { camera } = useThree();
 
@@ -122,7 +130,14 @@ function DrawPoints() {
 
       meshRef.current!.setMatrixAt(i, dummy.matrix);
 
-      const color = p.id === hoveredPointId ? '#ff4444' : '#ff9900';
+      // const color = p.id === hoveredPointId ? '#ff4444' : '#ff9900';
+      let color = '#ff9900';
+      if (selectedIds.has(p.id)) {
+        color = '#00d1d1';
+      }
+      if (p.id === hoveredPointId) {
+        color = '#ff4444';
+      }
       meshRef.current!.setColorAt(i, new THREE.Color(color));
     });
 
@@ -158,7 +173,7 @@ function DrawPoints() {
       const ctx = canvas.getContext('2d')!;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = id === hoveredPointId ? '#ff4444' : '#ffffff';
+      ctx.fillStyle = selectedIds.has(id) ? '#4ade80' : id === hoveredPointId ? '#ff4444' : '#ffffff';
       ctx.font = 'bold 64px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -211,9 +226,20 @@ function DrawPoints() {
     setHoveredPointId(null);
   };
 
-  /* ======================= */
-  /* 渲染 */
-  /* ======================= */
+  useEffect(() => {
+    const items: SelectableItem[] = points.map((p) => ({
+      id: p.id,
+      type: 'point',
+      pointType: p.pointType,
+      position: p.position,
+
+      minX: p.position.x,
+      maxX: p.position.x,
+      minY: p.position.y,
+      maxY: p.position.y,
+    }));
+    rebuildSpatialIndex(items);
+  }, [points]);
 
   return (
     <>

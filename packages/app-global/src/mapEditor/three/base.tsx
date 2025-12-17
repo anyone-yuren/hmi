@@ -1,6 +1,7 @@
 import { GizmoHelper, GizmoViewport, Grid, MapControls, PerspectiveCamera } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
+import { SelectionOverlay } from '../selection/selectionOverlay';
 
 function ResizeCamera({ size }) {
   const { camera } = useThree();
@@ -40,7 +41,7 @@ const BaseElement = ({ size }) => {
 
         <ResizeCamera size={size} />
 
-        <MapControls enableRotate={false} screenSpacePanning={false} makeDefault maxDistance={50} />
+        <MapControls enabled={true} enableRotate={false} screenSpacePanning={false} makeDefault maxDistance={50} />
 
         {/* ✅ Grid 在 XY 平面 */}
         <Grid
@@ -60,6 +61,7 @@ const BaseElement = ({ size }) => {
           <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='white' disabled={true} />
         </GizmoHelper>
       </group>
+      <SelectionOverlay />
     </>
   );
 };

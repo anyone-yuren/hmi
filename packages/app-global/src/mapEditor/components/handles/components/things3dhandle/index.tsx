@@ -1,12 +1,24 @@
 import { Dropdown, Tooltip } from 'antd';
 import { IconifyIcon } from 'ui';
-
+import { useShallow } from 'zustand/react/shallow';
+import { useSelectionStore } from '../../../../selection/selectionStore';
 // 3D 物体操作工具
 const Things3dHandle = () => {
+  const { startSelection, setStartSelection } = useSelectionStore(
+    useShallow((store) => ({
+      startSelection: store.startSelection,
+      setStartSelection: store.setStartSelection,
+    })),
+  );
   return (
     <div className='flex flex-col bg-[#1a1a1a] text-white gap-2 p-2 items-center cursor-pointer absolute right-0 top-14 z-10'>
       <Tooltip title='框选' placement='left'>
-        <IconifyIcon icon='mdi:select' size={16} />
+        <IconifyIcon
+          icon='mdi:select'
+          className={startSelection ? 'text-[#00d1d1]' : ''}
+          size={16}
+          onClick={() => setStartSelection(!startSelection)}
+        />
       </Tooltip>
       <Tooltip title='生成反向线段' placement='left'>
         <IconifyIcon icon='gravity-ui:arrows-opposite-to-dots' size={16} />
