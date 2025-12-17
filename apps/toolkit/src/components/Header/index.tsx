@@ -62,9 +62,17 @@ const GlobalHeader = () => {
                 onClick={() => navigate(`/dashboard`)}
               />
             </Tooltip>
-            <Tooltip title='远程FTP' placement='right'>
+            <Tooltip title='调度配置' placement='right'>
               <IconifyIcon
                 icon='fluent:transmission-20-regular'
+                size={24}
+                className='opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'
+                onClick={() => navigate(`/ftp`)}
+              />
+            </Tooltip>
+            <Tooltip title='远程FTP' placement='right'>
+              <IconifyIcon
+                icon='mingcute:transfer-3-line'
                 size={24}
                 className='opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'
                 onClick={() => navigate(`/ftp`)}

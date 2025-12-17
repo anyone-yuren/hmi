@@ -52,7 +52,7 @@ const ControlView = () => {
         body: '!bg-black text-white',
       }}
     >
-      <div className='flex gap-0.5 items-center'>
+      <div className='flex gap-0.5 items-center cursor-pointer'>
         <IconifyIcon icon='material-symbols:grid-view-rounded' size={16} />
         <span>视图显示</span>
       </div>
