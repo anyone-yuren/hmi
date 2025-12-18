@@ -96,7 +96,7 @@ const ObstacleHandles = () => {
         <Collapse items={items} defaultActiveKey={['1']} />
       </motion.div>
       <motion.div
-        className='absolute top-10 right-2 z-10  rounded-lg'
+        className='absolute top-20 right-2 z-10  rounded-lg'
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}

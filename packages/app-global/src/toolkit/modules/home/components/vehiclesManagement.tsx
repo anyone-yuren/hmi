@@ -345,7 +345,7 @@ const VehiclesManagement = () => {
                             <Button
                               size='small'
                               icon={<IconifyIcon icon='si:hammer-duotone' size={14} />}
-                              onClick={() => navigate('/toolDashboard')}
+                              onClick={() => navigate('/models')}
                             />
                           </Tooltip>
 

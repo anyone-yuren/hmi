@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useModelStore } from '../../store';
-import ObstacleHandles from './obsHandles';
 
 const TabsPanel = ({ setPanelOpen }) => {
   const { mode, setMode, threeControl } = useModelStore(
@@ -112,7 +111,7 @@ const TabsPanel = ({ setPanelOpen }) => {
                 return (
                   <li
                     className={classNames(
-                      'cursor-pointer hover:bg-cyan-500/30 px-2 py-0.5 flex items-center justify-between',
+                      'cursor-pointer hover:bg-cyan-500/30 px-2 py-1 py-0.5 flex items-center justify-between',
                       {
                         'bg-white/5': index % 2 === 0,
                         'text-gray-400': !item.isSelected,
@@ -184,7 +183,7 @@ const TabsPanel = ({ setPanelOpen }) => {
                 return (
                   <li
                     className={classNames(
-                      'cursor-pointer hover:bg-cyan-500/30 px-2 py-0.5 flex items-center justify-between',
+                      'cursor-pointer hover:bg-cyan-500/30 px-2 py-1 py-0.5 flex items-center justify-between',
                       {
                         'bg-white/5': index % 2 === 0,
                         'text-gray-400': !item.isSelected,
@@ -250,41 +249,41 @@ const TabsPanel = ({ setPanelOpen }) => {
               <IconifyIcon icon='mdi:hydraulic-oil-temperature' size={28} />
             </Tooltip>
           </div> */}
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40  min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40  min-w-28 bg-black/40 '>
             <IconifyIcon icon='fluent:hard-drive-28-regular' size={16} />
             <span>底盘</span>
           </div>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='mdi:hydraulic-oil-temperature' size={16} />
             <span>执行机构</span>
           </div>
         </div>
         <div className='flex flex-col items-center justify-center gap-y-px'>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='solar:camera-outline' size={16} />
             <span>视觉相机</span>
           </div>
         </div>
         <div className='flex flex-col items-center justify-center gap-y-px'>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='iconamoon:music-album-fill' size={16} />
             <span>音频播放器</span>
           </div>
         </div>
         <div className='flex flex-col items-center justify-center gap-y-px'>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='bx:rfid' size={16} />
             <span>RFID读取器</span>
           </div>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='streamline:wave-signal' size={16} />
             <span>超声波</span>
           </div>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='lucide:scale-3d' size={16} />
             <span>IMU</span>
           </div>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='ci:radio-fill' size={16} />
             <span>IO</span>
           </div>
@@ -312,7 +311,7 @@ const TabsPanel = ({ setPanelOpen }) => {
           </div>
         </div> */}
         <div className='flex flex-col items-center justify-center gap-y-px'>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='ant-design:qrcode-outlined' size={16} />
             <span>二维码</span>
           </div>
@@ -325,15 +324,15 @@ const TabsPanel = ({ setPanelOpen }) => {
           </div>
         </div> */}
         <div className='flex flex-col items-center justify-center gap-y-px'>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='simple-icons:relay' size={16} />
             <span>继电器</span>
           </div>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='ix:plc-device-tag' size={16} />
             <span>PLC</span>
           </div>
-          <div className='flex items-center justify-between px-2 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
+          <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='ph:circuitry' size={16} />
             <span>电路板</span>
           </div>
@@ -357,7 +356,7 @@ const TabsPanel = ({ setPanelOpen }) => {
         </div> */}
       </div>
       {/* 地图操作 */}
-      <div className='absolute top-2 right-2 left-2 flex items-center justify-between z-10 '>
+      <div className='absolute top-10 right-2 flex items-center justify-end z-10 gap-2'>
         <div>
           <Select
             className='min-w-32'
@@ -379,13 +378,10 @@ const TabsPanel = ({ setPanelOpen }) => {
                 ? 'flex items-center cursor-pointer bg-teal-500/60 active:bg-cyan-500/30 hover:bg-cyan-500/40 p-1'
                 : 'flex items-center cursor-pointer bg-black/40 active:bg-cyan-500/30 hover:bg-cyan-500/40 p-1'
             }
+            onClick={() => setActivePoints(!activePoints)}
           >
             <Tooltip title='点云查看' placement='top'>
-              <IconifyIcon
-                icon='icon-park-outline:nine-points-connected'
-                size={16}
-                onClick={() => setActivePoints(!activePoints)}
-              />
+              <IconifyIcon icon='icon-park-outline:nine-points-connected' size={16} />
             </Tooltip>
           </div>
           <div className='flex items-center cursor-pointer bg-black/40 active:bg-cyan-500/30 hover:bg-cyan-500/40 p-1'>
@@ -396,7 +392,7 @@ const TabsPanel = ({ setPanelOpen }) => {
         </div>
       </div>
       <motion.div
-        className='absolute top-10 right-10 z-10 bg-black min-w-40 rounded-lg'
+        className='absolute top-16 right-10 z-10 bg-black min-w-40 rounded-lg'
         initial={{ opacity: 0, y: 10 }}
         animate={activePoints ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
         transition={{ duration: 0.3 }}
@@ -406,7 +402,7 @@ const TabsPanel = ({ setPanelOpen }) => {
       </motion.div>
 
       {/* 避障相关 */}
-      {mode === 'obstacleAvoidance' && <ObstacleHandles />}
+      {/* {mode === 'obstacleAvoidance' && <ObstacleHandles />} */}
     </>
   );
 };

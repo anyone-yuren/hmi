@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { IconifyIcon } from 'ui';
+import DrawHandle from './components/modelHandle';
 import RModelFbx from './components/r20';
 import RightPanel from './components/rightPanel';
 import TabsPanel from './components/tabsPanel';
@@ -147,6 +148,7 @@ export default function R3FBasicScene() {
         transition={{ duration: 0.3 }}
         className='h-full shadow-inner overflow-auto relative'
       >
+        <DrawHandle />
         <TabsPanel setPanelOpen={setIsOpen} />
         <Canvas
           shadows
