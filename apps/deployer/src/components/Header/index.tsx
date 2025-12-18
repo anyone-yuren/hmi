@@ -88,7 +88,11 @@ const GlobalHeader = () => {
     })),
   );
 
-  const { data, run: getConfigAgvInfo } = useRequest(config_agv_info, {
+  const {
+    data,
+    run: getConfigAgvInfo,
+    loading,
+  } = useRequest(config_agv_info, {
     manual: true,
     onSuccess: (res: any) => {
       res?.agv_type && setAvgType(res?.agv_type);
@@ -184,7 +188,7 @@ const GlobalHeader = () => {
       </p>
       <div className='flex flex-col items-center gap-2'>
         <BarBattery level={40} height={24} />
-        <Signal canLinkWifi={data?.support_wireless_configuration} />
+        {isContentWss && <Signal canLinkWifi={data?.support_wireless_configuration} />}
       </div>
       <Selectlangulage />
       <ConfigProvider

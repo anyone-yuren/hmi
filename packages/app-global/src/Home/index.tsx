@@ -1,7 +1,7 @@
 import { useRequest } from 'ahooks';
 import { Skeleton, Spin } from 'antd';
 import { useResponsive } from 'antd-style';
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
@@ -19,11 +19,13 @@ const Home = () => {
   const { t } = useTranslation();
   const responsive = useResponsive();
   const navigate = useNavigate();
-  const { setRobotRadarStatus, isContentWss } = useHomeStore(
+  const [renderView, setRenderView] = useState(false);
+  const { setRobotRadarStatus, isContentWss, setIsContentWss } = useHomeStore(
     useShallow((store) => {
       return {
         isContentWss: store.isContentWss,
         setRobotRadarStatus: store.setRobotRadarStatus,
+        setIsContentWss: store.setIsContentWss,
       };
     }),
   );
@@ -37,8 +39,8 @@ const Home = () => {
   });
 
   useEffect(() => {
-    isContentWss && getDevice();
-  }, [isContentWss]);
+    renderView && getDevice();
+  }, [renderView]);
 
   return (
     <div
@@ -51,7 +53,7 @@ const Home = () => {
       }}
     >
       <div className='flex flex-1 flex-col overflow-y-auto gap-4 h-full p-4'>
-        {!isContentWss ? (
+        {!renderView ? (
           <div className='flex w-full h-full items-center justify-center'>
             <Spin></Spin>
           </div>
@@ -92,7 +94,7 @@ const Home = () => {
       </div>
 
       <div className='fixed bottom-0 left-0 right-0 z-10'>
-        <WsContainer />
+        <WsContainer setRenderView={setRenderView} />
       </div>
     </div>
   );
