@@ -1,97 +1,132 @@
-// SelectionOverlay.tsx
-import { Html } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
-import { useRef, useState } from 'react';
-import { useShallow } from 'zustand/react/shallow';
+// SelectionOverlayBox.tsx
+import { useThree } from '@react-three/fiber';
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { SelectionBox } from 'three/examples/jsm/interactive/SelectionBox.js';
+import { SelectionHelper } from 'three/examples/jsm/interactive/SelectionHelper.js';
 import { useSelectionStore } from '../selection/selectionStore';
-import { useBoxSelect } from './useBoxSelect';
+const LEFT_PANEL_WIDTH = 50;
+const TOP_PANEL_HEIGHT = 88;
+function getCanvasPoint(e: PointerEvent, dom: HTMLCanvasElement): THREE.Vector2 {
+  const rect = dom.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
 
-export function SelectionOverlay() {
-  const box = useBoxSelect();
-  const { gl, camera, controls } = useThree();
-  const { setCandidates, openFilter, startSelection } = useSelectionStore(
-    useShallow((store) => ({
-      setCandidates: store.setCandidates,
-      openFilter: store.openFilter,
-      startSelection: store.startSelection,
-    })),
-  );
+  return new THREE.Vector2((e.clientX - rect.left) * dpr, (e.clientY - rect.top - 50) * dpr);
+}
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const startRef = useRef<[number, number] | null>(null);
-  const endRef = useRef<[number, number] | null>(null);
-  const [dragging, setDragging] = useState(false);
-  const [, forceUpdate] = useState({});
+export function SelectionOverlayBox() {
+  const { camera, gl, scene, controls } = useThree();
+  const { setCandidates, openFilter, startSelection } = useSelectionStore((s) => ({
+    setCandidates: s.setCandidates,
+    openFilter: s.openFilter,
+    startSelection: s.startSelection,
+  }));
 
-  // 禁用相机平移时拖拽
-  if (controls) {
+  // 框选时禁用相机平移
+  useEffect(() => {
+    if (!controls) return;
     controls.enablePan = !startSelection;
-  }
+  }, [startSelection, controls]);
 
-  // RAF / useFrame 优化拖拽矩形渲染
-  useFrame(() => {
-    if (dragging) forceUpdate({});
-  });
+  const pointerDownRef = useRef(false);
+  const startCanvasPosRef = useRef<THREE.Vector2>(new THREE.Vector2());
 
-  const getMousePos = (e: React.PointerEvent) => {
-    const rect = containerRef.current!.getBoundingClientRect();
-    return [e.clientX - rect.left, e.clientY - rect.top] as [number, number];
-  };
+  const selectionBoxRef = useRef<SelectionBox>();
+  const helperRef = useRef<SelectionHelper>();
 
-  const handlePointerDown = (e: React.PointerEvent) => {
-    if (!startSelection) return;
-    const pos = getMousePos(e);
-    startRef.current = pos;
-    endRef.current = pos;
-    setDragging(true);
-  };
+  // 初始化
+  useEffect(() => {
+    if (!camera || !scene || !gl) return;
 
-  const handlePointerMove = (e: React.PointerEvent) => {
-    if (!dragging) return;
-    endRef.current = getMousePos(e);
-  };
+    selectionBoxRef.current = new SelectionBox(camera, scene);
+    helperRef.current = new SelectionHelper(gl, 'selectBox');
 
-  const handlePointerUp = (e: React.PointerEvent) => {
-    if (!startRef.current || !endRef.current) return;
-    // 使用最新相机投影计算选中的对象
-    const items = box.finish(startRef.current, endRef.current, e.shiftKey);
-    setCandidates(items);
-    openFilter();
-    setDragging(false);
-    startRef.current = null;
-    endRef.current = null;
-  };
+    // 样式
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .selectBox {
+        border: 1px dashed #ffffff;
+        background-color: rgba(0, 150, 255, 0.15);
+        position: absolute;
+        pointer-events: none;
+      }
+    `;
+    document.head.appendChild(style);
+  }, [camera, scene, gl]);
 
-  if (!startSelection) return null;
+  // 事件监听
+  useEffect(() => {
+    if (!gl?.domElement || !selectionBoxRef.current || !helperRef.current) return;
 
-  const startPoint = startRef.current;
-  const endPoint = endRef.current;
+    const dom = gl.domElement;
+    debugger;
 
-  // 渲染选框
-  return (
-    <Html fullscreen zIndexRange={[0, 100]}>
-      <div
-        ref={containerRef}
-        className='absolute inset-0 w-full h-full'
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-      >
-        {dragging && startPoint && endPoint && (
-          <div
-            className='pointer-events-none'
-            style={{
-              position: 'absolute',
-              left: Math.min(startPoint[0], endPoint[0]),
-              top: Math.min(startPoint[1], endPoint[1]),
-              width: Math.abs(endPoint[0] - startPoint[0]),
-              height: Math.abs(endPoint[1] - startPoint[1]),
-              border: '1px solid #3b82f6',
-              backgroundColor: 'rgba(59,130,246,0.2)',
-            }}
-          />
-        )}
-      </div>
-    </Html>
-  );
+    const onPointerDown = (e: PointerEvent) => {
+      if (!startSelection) return;
+
+      pointerDownRef.current = true;
+
+      // 记录 canvas 像素坐标
+      const p = getCanvasPoint(e, dom);
+      startCanvasPosRef.current.copy(p);
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!pointerDownRef.current) return;
+
+      const box = selectionBoxRef.current!;
+      const start = startCanvasPosRef.current;
+      const end = getCanvasPoint(e, dom);
+
+      box.startPoint.set(start.x, start.y, 0);
+      box.endPoint.set(end.x, end.y, 0);
+    };
+
+    const onPointerUp = (e: PointerEvent) => {
+      if (!pointerDownRef.current) return;
+      pointerDownRef.current = false;
+
+      const box = selectionBoxRef.current!;
+      const helper = helperRef.current!;
+
+      // ⚠️ SelectionHelper 维护的是 client 坐标
+      // 必须再转换一次
+      const start = getCanvasPoint(
+        {
+          clientX: helper.startPoint.x,
+          clientY: helper.startPoint.y,
+        } as PointerEvent,
+        dom,
+      );
+
+      const end = getCanvasPoint(
+        {
+          clientX: helper.pointBottomRight.x,
+          clientY: helper.pointBottomRight.y,
+        } as PointerEvent,
+        dom,
+      );
+
+      box.startPoint.set(start.x, start.y, 0);
+      box.endPoint.set(end.x, end.y, 0);
+
+      const selected = box.select();
+      setCandidates(selected);
+      openFilter();
+
+      helper.onSelectOver(e);
+    };
+
+    dom.addEventListener('pointerdown', onPointerDown);
+    dom.addEventListener('pointermove', onPointerMove);
+    dom.addEventListener('pointerup', onPointerUp);
+
+    return () => {
+      dom.removeEventListener('pointerdown', onPointerDown);
+      dom.removeEventListener('pointermove', onPointerMove);
+      dom.removeEventListener('pointerup', onPointerUp);
+    };
+  }, [gl, setCandidates, openFilter, startSelection]);
+
+  return null;
 }

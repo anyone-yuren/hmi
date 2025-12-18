@@ -1,7 +1,7 @@
 import { GizmoHelper, GizmoViewport, Grid, MapControls, PerspectiveCamera } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
-import { SelectionOverlay } from '../selection/selectionOverlay';
+import { SelectionOverlayBox } from '../selection/selectionOverlay';
 
 function ResizeCamera({ size }) {
   const { camera } = useThree();
@@ -61,7 +61,7 @@ const BaseElement = ({ size }) => {
           <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='white' disabled={true} />
         </GizmoHelper>
       </group>
-      <SelectionOverlay />
+      <SelectionOverlayBox />
     </>
   );
 };
