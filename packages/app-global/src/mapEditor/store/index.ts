@@ -14,6 +14,9 @@ interface State {
   setSelectDrawType: (selectDrawType: string) => void;
   selectLineData: SelectLineData | null;
   setSelectLineData: (data: SelectLineData | null) => void;
+  // 鼠标的坐标位置
+  mousePosition: { x: number; y: number };
+  setMousePosition: (position: { x: number; y: number }) => void;
 }
 
 export const useMapEditorStore = create<State>()(
@@ -35,6 +38,13 @@ export const useMapEditorStore = create<State>()(
       setSelectLineData: (data: SelectLineData | null) => {
         set(() => ({
           selectLineData: data,
+        }));
+      },
+      // 鼠标的坐标位置
+      mousePosition: { x: 0, y: 0 },
+      setMousePosition: (position: { x: number; y: number }) => {
+        set(() => ({
+          mousePosition: position,
         }));
       },
     }),

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { IconifyIcon } from 'ui';
+import Coordinates from '../coordinates';
 
 // 3D 物体操作工具
 const OperationMessage = () => {
@@ -8,10 +9,11 @@ const OperationMessage = () => {
 
   return (
     <div className='absolute bottom-0 w-full z-10 pointer-events-auto'>
+      <Coordinates />
       {/* 控制按钮 */}
-      <div className='absolute left-2 -top-4  cursor-pointer' onClick={() => setOpen((v) => !v)}>
+      <div className='absolute left-0 -top-4  cursor-pointer' onClick={() => setOpen((v) => !v)}>
         <motion.div animate={{ rotate: open ? 0 : 180 }} transition={{ duration: 0.25 }}>
-          <IconifyIcon icon='ep:arrow-up' size={18} />
+          <IconifyIcon icon='ep:arrow-up' size={16} />
         </motion.div>
       </div>
 

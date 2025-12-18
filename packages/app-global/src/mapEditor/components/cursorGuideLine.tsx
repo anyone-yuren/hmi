@@ -2,12 +2,19 @@ import { Line } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { useShallow } from 'zustand/react/shallow';
 import { usePickOnXYPlane } from '../hooks/usePickOnXYPanel';
+import { useMapEditorStore } from '../store';
 
 function CursorGuideLine() {
   const pick = usePickOnXYPlane();
   const [pos, setPos] = useState<THREE.Vector3 | null>(null);
   const { gl } = useThree();
+  const { setMousePosition } = useMapEditorStore(
+    useShallow((s) => ({
+      setMousePosition: s.setMousePosition,
+    })),
+  );
 
   // 使用ref存储最新的鼠标位置，避免state更新延迟
   const mousePosRef = useRef<THREE.Vector3 | null>(null);
@@ -38,6 +45,7 @@ function CursorGuideLine() {
       if (!p) return;
       // 直接更新ref，不触发渲染
       mousePosRef.current = p;
+      setMousePosition(p.clone());
     };
 
     const canvas = gl.domElement;

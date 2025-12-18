@@ -53,13 +53,16 @@ export function SelectionOverlayBox() {
     `;
     document.head.appendChild(style);
   }, [camera, scene, gl]);
-
+  // 控制 SelectionHelper 是否启用
+  useEffect(() => {
+    if (!helperRef.current) return;
+    helperRef.current.enabled = startSelection;
+  }, [startSelection]);
   // 事件监听
   useEffect(() => {
     if (!gl?.domElement || !selectionBoxRef.current || !helperRef.current) return;
 
     const dom = gl.domElement;
-    debugger;
 
     const onPointerDown = (e: PointerEvent) => {
       if (!startSelection) return;

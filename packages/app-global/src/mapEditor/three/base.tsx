@@ -1,4 +1,4 @@
-import { GizmoHelper, GizmoViewport, Grid, MapControls, PerspectiveCamera } from '@react-three/drei';
+import { GizmoHelper, GizmoViewport, Grid, MapControls, OrthographicCamera } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
 import { SelectionOverlayBox } from '../selection/selectionOverlay';
@@ -30,14 +30,16 @@ const BaseElement = ({ size }) => {
     <>
       <color attach='background' args={['#3A3A3A']} />
       <group>
-        <PerspectiveCamera
+        {/* <PerspectiveCamera
           makeDefault
           position={[0, 0, 6]}
           up={[0, 0, 1]} // ✅ Z 轴向上
           fov={75}
           near={0.01}
           far={200}
-        />
+        /> */}
+
+        <OrthographicCamera makeDefault position={[0, 0, 10]} up={[0, 0, 1]} zoom={100} near={-100} far={100} />
 
         <ResizeCamera size={size} />
 

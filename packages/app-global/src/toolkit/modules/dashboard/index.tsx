@@ -25,7 +25,7 @@ const Dashboard = () => {
             </div>
             <h4 className='text-xl'>最近打开</h4>
             <div className='handle-list w-full flex flex-col gap-4 text-teal-400'>
-              <div className='flex items-center gap-4 cursor-pointer' onClick={() => navigate('/dashboard')}>
+              <div className='flex items-center gap-4 cursor-pointer' onClick={() => navigate('/mapEditor')}>
                 <span>CA25046 KW（RFP）Project</span>
               </div>
               <div className='flex items-center gap-4'>
