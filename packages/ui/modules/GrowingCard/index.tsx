@@ -108,10 +108,11 @@ const GlowingCard: React.FC<{ children?: React.ReactNode }> = ({ children }) => 
   };
 
   return (
-    <div ref={cardRef} className={styles.card} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-      <div className={styles.glowingContainer}>
+    // <div ref={cardRef} className={styles.card} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+    <div ref={cardRef} className={styles.card}>
+      {/* <div className={styles.glowingContainer}>
         <div className={styles.glowingEffect}></div>
-      </div>
+      </div> */}
       {children}
     </div>
   );

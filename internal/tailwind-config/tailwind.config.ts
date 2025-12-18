@@ -31,6 +31,7 @@ const config = {
     ...tailwindPackages.map((item) =>
       path.join(item, "src/**/*.{vue,js,ts,jsx,tsx,svelte,astro,html}")
     ),
+    "modules/**/*.{vue,js,ts,jsx,tsx,svelte,astro,html}",
   ],
   prefix: "",
   theme: {
