@@ -1,10 +1,12 @@
 import { Checkbox, Collapse, Dropdown, Form, Select, Tooltip } from 'antd';
 import classNames from 'classnames';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useModelStore } from '../../store';
+import { useSafetyStore } from '../../store/safity';
+import ObstacleHandles from './obsHandles';
 
 const TabsPanel = ({ setPanelOpen }) => {
   const { mode, setMode, threeControl } = useModelStore(
@@ -15,6 +17,14 @@ const TabsPanel = ({ setPanelOpen }) => {
         threeControl: state.threeControl,
       };
     }),
+  );
+  const { showStrategies, setShowStrategies, selectMeshName, setSelectMeshName } = useSafetyStore(
+    useShallow((state) => ({
+      showStrategies: state.showStrategies,
+      setShowStrategies: state.setShowStrategies,
+      selectMeshName: state.selectMeshName,
+      setSelectMeshName: state.setSelectMeshName,
+    })),
   );
   useEffect(() => {
     if (mode === 'obstacleAvoidance' && threeControl) {
@@ -366,8 +376,25 @@ const TabsPanel = ({ setPanelOpen }) => {
             onChange={setMode}
             options={[
               { label: '编辑模式', value: 'editor' },
-              { label: '透视模式', value: 'perspective' },
+              { label: '视觉诊断', value: 'diagnosis' },
               { label: '避障模式', value: 'obstacleAvoidance' },
+            ]}
+          />
+        </div>
+        <div className={classNames('flex items-center justify-center gap-1', { hidden: mode !== 'obstacleAvoidance' })}>
+          <span>避障策略</span>
+          <Select
+            className='min-w-32'
+            size='small'
+            // value={mode}
+            // onChange={setMode}
+            value={selectMeshName}
+            onChange={setSelectMeshName}
+            options={[
+              { label: '叉臂下方保护', value: 'underForkProtection' },
+              { label: '取货牙尖防护策略', value: 'pickupTipProtection' },
+              { label: '放货空间检测', value: 'deliverySpaceDetection' },
+              { label: '顶部保护策略', value: 'topProtection' },
             ]}
           />
         </div>
@@ -384,25 +411,36 @@ const TabsPanel = ({ setPanelOpen }) => {
               <IconifyIcon icon='icon-park-outline:nine-points-connected' size={16} />
             </Tooltip>
           </div>
-          <div className='flex items-center cursor-pointer bg-black/40 active:bg-cyan-500/30 hover:bg-cyan-500/40 p-1'>
-            <Tooltip title='透视模式' placement='bottom'>
+          <div
+            className={classNames(
+              'flex items-center cursor-pointer bg-black/40 active:bg-cyan-500/30 hover:bg-cyan-500/40 p-1',
+              { hidden: mode !== 'obstacleAvoidance' },
+              { 'bg-cyan-500/80': !showStrategies },
+            )}
+            onClick={() => setShowStrategies(!showStrategies)}
+          >
+            <Tooltip title='显示/隐藏策略' placement='bottom'>
               <IconifyIcon icon='icon-park-outline:stereo-perspective' size={16} />
             </Tooltip>
           </div>
         </div>
+        {mode === 'obstacleAvoidance' && <ObstacleHandles />}
       </div>
-      <motion.div
-        className='absolute top-16 right-10 z-10 bg-black min-w-40 rounded-lg'
-        initial={{ opacity: 0, y: 10 }}
-        animate={activePoints ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-        transition={{ duration: 0.3 }}
-        // 结束后设置隐藏
-      >
-        <Collapse items={items} defaultActiveKey={['1']} />
-      </motion.div>
+      <AnimatePresence>
+        {activePoints && (
+          <motion.div
+            className='absolute top-16 right-10 z-10 bg-black min-w-40 rounded-lg'
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Collapse items={items} defaultActiveKey={['1']} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* 避障相关 */}
-      {/* {mode === 'obstacleAvoidance' && <ObstacleHandles />} */}
     </>
   );
 };

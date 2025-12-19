@@ -246,7 +246,7 @@ const Radar2dPanel = () => {
       <div className='bg-white/5 rounded-sm p-2'>
         <p className='text-xs font-medium flex items-center gap-2 justify-between'>
           <span>
-            <IconifyIcon icon='subway:folder-2' size={14} /> 相机集合
+            <IconifyIcon icon='subway:folder-2' size={14} /> 雷达列表
           </span>
           <IconifyIcon icon='material-symbols:check-box-rounded' size={14} />
         </p>
@@ -274,7 +274,7 @@ const Radar2dPanel = () => {
             {new Array(4)
               .fill(0)
               .map((_, index) => ({
-                label: `相机${index + 1}`,
+                label: `雷达${index + 1}`,
                 key: `camera${index + 1}`,
                 isSelected: index % 2 === 0,
               }))

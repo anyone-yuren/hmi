@@ -3,6 +3,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../store';
 import DrawLinesParamsPanel from '../drawLine/components/paramspanel';
 import DrawPointsParamsPanel from '../drawPoints/components/paramspanel';
+import DrawDeviceParamsPanel from '../handles/components/draw/components/device/paramspanel';
 
 const ParamsPanel = () => {
   const { paramsPanelCollapsed, selectDrawType } = useMapEditorStore(
@@ -29,6 +30,7 @@ const ParamsPanel = () => {
     >
       {selectDrawType === 'point' && <DrawPointsParamsPanel />}
       {(selectDrawType === 'line' || selectDrawType === 'bspline') && <DrawLinesParamsPanel />}
+      {selectDrawType === 'device' && <DrawDeviceParamsPanel />}
     </motion.div>
   );
 };

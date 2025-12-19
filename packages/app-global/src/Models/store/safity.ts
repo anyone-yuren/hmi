@@ -8,6 +8,8 @@ interface State {
   setDisplayStrategies: (displayStrategies: any[]) => void;
   selectMeshName: string;
   setSelectMeshName: (selectMeshName: string) => void;
+  showStrategies: boolean;
+  setShowStrategies: (showStrategies: boolean) => void;
 }
 
 export const useSafetyStore = create<State>()(
@@ -28,6 +30,12 @@ export const useSafetyStore = create<State>()(
       setSelectMeshName: (selectMeshName: string) => {
         set(() => ({
           selectMeshName,
+        }));
+      },
+      showStrategies: false,
+      setShowStrategies: (showStrategies: boolean) => {
+        set(() => ({
+          showStrategies,
         }));
       },
     }),

@@ -1,11 +1,11 @@
-import { Checkbox, Form, Select } from 'antd';
+import { Form, Radio } from 'antd';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
-import { useMapEditorStore } from '../../../../../store';
-const DrawDeviceSelect = () => {
+import { useMapEditorStore } from '../../../../../../store';
+const DrawNavigationSelect = () => {
   const [collapsed, setCollapsed] = useState(true);
   const { setParamsPanelCollapsed, selectDrawType, setSelectDrawType } = useMapEditorStore(
     useShallow((state) => {
@@ -29,7 +29,7 @@ const DrawDeviceSelect = () => {
     },
   ];
   useEffect(() => {
-    if (selectDrawType === 'device') {
+    if (selectDrawType === 'navigation') {
       setCollapsed(false);
     } else {
       setCollapsed(true);
@@ -42,16 +42,16 @@ const DrawDeviceSelect = () => {
         className={classNames(
           'flex gap-0.5 px-1 items-center cursor-pointer text-white hover:bg-[#00d1d1]/20 rounded-md',
           {
-            'bg-[#00d1d1]/60': selectDrawType === 'device',
+            'bg-[#00d1d1]/60': selectDrawType === 'navigation',
           },
         )}
         onClick={() => {
           setCollapsed(false);
-          setSelectDrawType('device');
+          setSelectDrawType('navigation');
         }}
       >
-        <IconifyIcon icon='material-symbols:doorbell-chime-outline' size={16} />
-        <span>设备</span>
+        <IconifyIcon icon='mingcute:navigation-line' size={16} />
+        <span>混导工具链</span>
       </div>
 
       <motion.div
@@ -72,14 +72,14 @@ const DrawDeviceSelect = () => {
           <div className='flex gap-2 items-center text-white/80'>
             <div
               className={classNames('hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer', {
-                'bg-[#00d1d1]/60': false,
+                'bg-[#00d1d1]/60': true,
               })}
               onClick={() => {
                 setParamsPanelCollapsed(true);
-                setSelectDrawType('device');
+                setSelectDrawType('navigation');
               }}
             >
-              电梯
+              反光板
             </div>
             <div
               className={classNames('hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer', {
@@ -87,19 +87,28 @@ const DrawDeviceSelect = () => {
               })}
               onClick={() => {
                 setParamsPanelCollapsed(true);
-                setSelectDrawType('device');
+                setSelectDrawType('navigation');
               }}
             >
-              自动门
+              SLAM
             </div>
             <div
               className='hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer'
               onClick={() => {
                 setParamsPanelCollapsed(true);
-                setSelectDrawType('bezier');
+                setSelectDrawType('navigation');
               }}
             >
-              输送线
+              二维码
+            </div>
+            <div
+              className='hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer'
+              onClick={() => {
+                setParamsPanelCollapsed(true);
+                setSelectDrawType('navigation');
+              }}
+            >
+              混导区域
             </div>
             <div className='flex items-center gap-1'>
               <IconifyIcon icon='mingcute:add-fill' size={14} />
@@ -115,27 +124,17 @@ const DrawDeviceSelect = () => {
                 vehicleId: '1',
               }}
             >
-              <Form.Item name='isSnap' label='自由添加'>
-                <Checkbox></Checkbox>
+              <Form.Item label='导入反光板'>
+                <Radio.Group>
+                  <Radio value='1'>本地</Radio>
+                  <Radio value='2'>车辆</Radio>
+                </Radio.Group>
               </Form.Item>
-              <Form.Item name='vehicleId' label='关联线段' tooltip='生成线段的点类型'>
-                <Select options={vehicleOptions} className='min-w-24' size='small' />
-              </Form.Item>
-              <Form.Item name='vehicleId' label='线类型'>
-                <Select
-                  options={[
-                    {
-                      label: '向前',
-                      value: '1',
-                    },
-                    {
-                      label: '向后',
-                      value: '2',
-                    },
-                  ]}
-                  className='min-w-24'
-                  size='small'
-                />
+              <Form.Item label='导出反光板'>
+                <Radio.Group>
+                  <Radio value='1'>本地</Radio>
+                  <Radio value='2'>车辆</Radio>
+                </Radio.Group>
               </Form.Item>
             </Form>
           </div>
@@ -154,4 +153,4 @@ const DrawDeviceSelect = () => {
   );
 };
 
-export default DrawDeviceSelect;
+export default DrawNavigationSelect;
