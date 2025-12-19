@@ -1,5 +1,6 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Dropdown, Select } from 'antd';
+import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { IconifyIcon } from 'ui';
@@ -33,7 +34,11 @@ const TopPanel = () => {
     };
   }, []);
   return (
-    <div className='w-full flex items-center justify-between text-white'>
+    <div
+      className={classNames('w-full flex items-center justify-between text-white', {
+        '!justify-end': location.pathname === '/',
+      })}
+    >
       <div className={location.pathname === '/' ? 'hidden' : 'flex items-center gap-2 text-xs font-bold'}>
         <Dropdown
           trigger={['click']}

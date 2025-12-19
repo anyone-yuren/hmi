@@ -24,11 +24,12 @@ function SceneHelpers() {
 }
 const BaseElement = () => {
   const { camera, controls } = useThree();
-  const { setCamera, setThreeControl } = useModelStore(
+  const { setCamera, setThreeControl, showPoints } = useModelStore(
     useShallow((state) => {
       return {
         setCamera: state.setCamera,
         setThreeControl: state.setThreeControl,
+        showPoints: state.showPoints,
       };
     }),
   );
@@ -95,7 +96,10 @@ const BaseElement = () => {
       />
 
       <Suspense fallback={null}>
-        <PCDModel url='/static/pcd/radar-cloud.pcd' />
+        {showPoints && (
+          <PCDModel url='/static/pcd/radar-cloud.pcd' rotation={[Math.PI / 2, Math.PI / 11, -Math.PI / 2]} />
+          //<PCDModel url='/static/pcd/radar-cloud1.pcd' />
+        )}
       </Suspense>
 
       {/* 添加坐标参考 */}

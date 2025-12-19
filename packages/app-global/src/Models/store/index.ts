@@ -10,6 +10,8 @@ interface State {
   setCamera: (camera: any) => void;
   threeControl: any;
   setThreeControl: (threeControl: any) => void;
+  showPoints: boolean;
+  setShowPoints: (showPoints: boolean) => void;
 }
 
 export const useModelStore = create<State>()(
@@ -35,6 +37,12 @@ export const useModelStore = create<State>()(
       setThreeControl: (threeControl: any) => {
         set(() => ({
           threeControl,
+        }));
+      },
+      showPoints: false,
+      setShowPoints: (showPoints: boolean) => {
+        set(() => ({
+          showPoints,
         }));
       },
     }),

@@ -9,12 +9,14 @@ import { useSafetyStore } from '../../store/safity';
 import ObstacleHandles from './obsHandles';
 
 const TabsPanel = ({ setPanelOpen }) => {
-  const { mode, setMode, threeControl } = useModelStore(
+  const { mode, setMode, threeControl, setShowPoints, showPoints } = useModelStore(
     useShallow((state) => {
       return {
         mode: state.mode,
         setMode: state.setMode,
         threeControl: state.threeControl,
+        setShowPoints: state.setShowPoints,
+        showPoints: state.showPoints,
       };
     }),
   );
@@ -373,11 +375,11 @@ const TabsPanel = ({ setPanelOpen }) => {
         <div className='flex items-center justify-center gap-2'>
           <div
             className={
-              activePoints
+              showPoints
                 ? 'flex items-center cursor-pointer bg-teal-500/60 active:bg-cyan-500/30 hover:bg-cyan-500/40 p-1'
                 : 'flex items-center cursor-pointer bg-black/40 active:bg-cyan-500/30 hover:bg-cyan-500/40 p-1'
             }
-            onClick={() => setActivePoints(!activePoints)}
+            onClick={() => setShowPoints(!showPoints)}
           >
             <Tooltip title='点云查看' placement='top'>
               <IconifyIcon icon='icon-park-outline:nine-points-connected' size={16} />
