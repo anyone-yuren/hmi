@@ -49,6 +49,17 @@ const TabsPanel = ({ setPanelOpen }) => {
         true, // 平滑动画
       );
     }
+    if (mode === 'diagnosis' && threeControl) {
+      threeControl?.setLookAt(
+        0,
+        1,
+        2,
+        0,
+        0.5,
+        0,
+        true, // 平滑动画
+      );
+    }
   }, [mode, threeControl]);
   const [activeTab, setActiveTab] = useState('radar');
   const [activePoints, setActivePoints] = useState(false);
@@ -298,28 +309,6 @@ const TabsPanel = ({ setPanelOpen }) => {
             <span>IO</span>
           </div>
         </div>
-        {/* <div className='flex flex-col items-center justify-center gap-y-px'>
-          <div className='flex items-center justify-center w-full aspect-square bg-black/40 cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40'>
-            <Tooltip title='RFID读取器' placement='right'>
-              <IconifyIcon icon='bx:rfid' size={28} />
-            </Tooltip>
-          </div>
-          <div className='flex items-center justify-center w-full aspect-square bg-black/40 cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40'>
-            <Tooltip title='超声波' placement='right'>
-              <IconifyIcon icon='streamline:wave-signal' size={28} />
-            </Tooltip>
-          </div>
-          <div className='flex items-center justify-center w-full aspect-square bg-black/40 cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40'>
-            <Tooltip title='IMU' placement='right'>
-              <IconifyIcon icon='lucide:scale-3d' size={28} />
-            </Tooltip>
-          </div>
-          <div className='flex items-center justify-center w-full aspect-square bg-black/40 cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40'>
-            <Tooltip title='IO' placement='right'>
-              <IconifyIcon icon='ci:radio-fill' size={28} />
-            </Tooltip>
-          </div>
-        </div> */}
         <div className='flex flex-col items-center justify-center gap-y-px'>
           <div className='flex items-center justify-between px-2 py-1 w-full cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40 min-w-28 bg-black/40 '>
             <IconifyIcon icon='ant-design:qrcode-outlined' size={16} />
@@ -347,23 +336,6 @@ const TabsPanel = ({ setPanelOpen }) => {
             <span>电路板</span>
           </div>
         </div>
-        {/* <div className='flex flex-col items-center justify-center gap-y-px'>
-          <div className='flex items-center justify-center w-full aspect-square bg-black/40 cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40'>
-            <Tooltip title='继电器' placement='right'>
-              <IconifyIcon icon='simple-icons:relay' size={28} />
-            </Tooltip>
-          </div>
-          <div className='flex items-center justify-center w-full aspect-square bg-black/40 cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40'>
-            <Tooltip title='PLC' placement='right'>
-              <IconifyIcon icon='ix:plc-device-tag' size={28} />
-            </Tooltip>
-          </div>
-          <div className='flex items-center justify-center w-full aspect-square bg-black/40 cursor-pointer active:bg-cyan-500/30 hover:bg-cyan-500/40'>
-            <Tooltip title='电路板' placement='right'>
-              <IconifyIcon icon='ph:circuitry' size={28} />
-            </Tooltip>
-          </div>
-        </div> */}
       </div>
       {/* 地图操作 */}
       <div className='absolute top-10 right-2 flex items-center justify-end z-10 gap-2'>

@@ -1,8 +1,9 @@
 import { CameraControls, GizmoHelper, GizmoViewport, Grid, PerspectiveCamera, SoftShadows } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useModelStore } from '../store';
+import PCDModel from './points/pcdCloud';
 const gridConfig = {
   cellSize: 0.5,
   cellThickness: 0.8,
@@ -92,6 +93,10 @@ const BaseElement = () => {
         far={1000}
         zoom={1}
       />
+
+      <Suspense fallback={null}>
+        <PCDModel url='/static/pcd/radar-cloud.pcd' />
+      </Suspense>
 
       {/* 添加坐标参考 */}
       <GizmoHelper

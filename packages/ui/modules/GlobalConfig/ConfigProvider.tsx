@@ -149,6 +149,11 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
             fontSize: 12,
             controlInteractiveSize: 14,
           },
+          Button: {
+            contentFontSizeSM: 10,
+            contentLineHeightSM: 1,
+            controlHeightSM: 20,
+          },
         },
       }}
       {...rest}
