@@ -8,6 +8,7 @@ import DrawPoints from './components/drawPoints/draw';
 import Handles from './components/handles';
 import ParamsPanel from './components/paramPanel';
 import BaseElement from './three/base';
+import RenderDevice from './three/components';
 
 const MapEditor = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -27,7 +28,7 @@ const MapEditor = () => {
                 className=' w-full h-full'
               >
                 <BaseElement size={size} />
-
+                <RenderDevice />
                 <DrawPoints />
                 <DrawLine />
                 <DrawBsline />

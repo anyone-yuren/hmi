@@ -7,15 +7,18 @@ import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../../../../../store';
 const DrawDeviceSelect = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const { setParamsPanelCollapsed, selectDrawType, setSelectDrawType } = useMapEditorStore(
-    useShallow((state) => {
-      return {
-        setParamsPanelCollapsed: state.setParamsPanelCollapsed,
-        selectDrawType: state.selectDrawType,
-        setSelectDrawType: state.setSelectDrawType,
-      };
-    }),
-  );
+  const { setParamsPanelCollapsed, selectDrawType, setSelectDrawType, setSelectSubDrawType, selectSubDrawType } =
+    useMapEditorStore(
+      useShallow((state) => {
+        return {
+          setParamsPanelCollapsed: state.setParamsPanelCollapsed,
+          selectDrawType: state.selectDrawType,
+          setSelectDrawType: state.setSelectDrawType,
+          setSelectSubDrawType: state.setSelectSubDrawType,
+          selectSubDrawType: state.selectSubDrawType,
+        };
+      }),
+    );
   console.log('selectDrawType', selectDrawType);
   const [form] = Form.useForm();
   const vehicleOptions = [
@@ -72,22 +75,22 @@ const DrawDeviceSelect = () => {
           <div className='flex gap-2 items-center text-white/80'>
             <div
               className={classNames('hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer', {
-                'bg-[#00d1d1]/60': true,
+                'bg-[#00d1d1]/60': selectSubDrawType === 'elevator',
               })}
               onClick={() => {
                 setParamsPanelCollapsed(true);
-                setSelectDrawType('device');
+                setSelectSubDrawType('elevator');
               }}
             >
               电梯
             </div>
             <div
               className={classNames('hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer', {
-                'bg-[#00d1d1]/60': false,
+                'bg-[#00d1d1]/60': selectSubDrawType === 'autoDoor',
               })}
               onClick={() => {
                 setParamsPanelCollapsed(true);
-                setSelectDrawType('device');
+                setSelectSubDrawType('autoDoor');
               }}
             >
               自动门

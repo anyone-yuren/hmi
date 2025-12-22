@@ -102,6 +102,9 @@ const DrawDeviceParamsPanel = () => {
               <Form.Item label='通讯方式' name='commType' rules={[{ required: true, message: '请选择通讯方式' }]}>
                 <Select size='small' options={[{ label: 'CAN', value: 'can' }]} />
               </Form.Item>
+              <Form.Item label='关联线路' name='lineId' rules={[{ required: true, message: '请选择关联线路' }]}>
+                <Select size='small' options={[{ label: '1', value: '1' }]} />
+              </Form.Item>
               <Form.Item name='isEnabled' valuePropName='checked' label={'是否启用'}>
                 <Checkbox></Checkbox>
               </Form.Item>

@@ -49,7 +49,7 @@ const BaseElement = ({ size }) => {
         <Grid
           args={[1000, 1000]}
           {...gridConfig}
-          position={[0, 0, 0.01]}
+          position={[0, 0, 0.05]}
           rotation={[Math.PI / 2, 0, 0]} // XZ → XY
         />
 

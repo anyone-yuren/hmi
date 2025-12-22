@@ -1,16 +1,16 @@
-// SelectionOverlayBox.tsx
 import { useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { SelectionBox } from 'three/examples/jsm/interactive/SelectionBox.js';
 import { SelectionHelper } from 'three/examples/jsm/interactive/SelectionHelper.js';
 import { useSelectionStore } from '../selection/selectionStore';
+
 const LEFT_PANEL_WIDTH = 50;
 const TOP_PANEL_HEIGHT = 88;
+
 function getCanvasPoint(e: PointerEvent, dom: HTMLCanvasElement): THREE.Vector2 {
   const rect = dom.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
-
   return new THREE.Vector2((e.clientX - rect.left) * dpr, (e.clientY - rect.top - 50) * dpr);
 }
 
@@ -53,11 +53,18 @@ export function SelectionOverlayBox() {
     `;
     document.head.appendChild(style);
   }, [camera, scene, gl]);
+
   // 控制 SelectionHelper 是否启用
   useEffect(() => {
     if (!helperRef.current) return;
     helperRef.current.enabled = startSelection;
+    if (!startSelection) {
+      // 重置选择框
+      pointerDownRef.current = false;
+      startCanvasPosRef.current.set(0, 0);
+    }
   }, [startSelection]);
+
   // 事件监听
   useEffect(() => {
     if (!gl?.domElement || !selectionBoxRef.current || !helperRef.current) return;
@@ -75,7 +82,7 @@ export function SelectionOverlayBox() {
     };
 
     const onPointerMove = (e: PointerEvent) => {
-      if (!pointerDownRef.current) return;
+      if (!pointerDownRef.current || !startSelection) return;
 
       const box = selectionBoxRef.current!;
       const start = startCanvasPosRef.current;
@@ -86,7 +93,7 @@ export function SelectionOverlayBox() {
     };
 
     const onPointerUp = (e: PointerEvent) => {
-      if (!pointerDownRef.current) return;
+      if (!pointerDownRef.current || !startSelection) return;
       pointerDownRef.current = false;
 
       const box = selectionBoxRef.current!;
