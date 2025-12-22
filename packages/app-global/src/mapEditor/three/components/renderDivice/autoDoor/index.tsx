@@ -1,11 +1,13 @@
-import { Html } from '@react-three/drei'; // 使用 Html 来渲染 SVG
-import { useEffect } from 'react';
-import { IconifyIcon } from 'ui';
+import { useLoader } from '@react-three/fiber';
+import { useEffect, useState } from 'react';
+import { TextureLoader } from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { usePickOnXYPlane } from '../../../../hooks/usePickOnXYPanel';
 import { useMapEditorStore } from '../../../../store';
 
 const AutoDoor = () => {
+  const texture = useLoader(TextureLoader, 'assets/three/autoDoor.png'); // 加载 PNG 图标
+  const [hoveredId, setHoveredId] = useState<number | null>(null); // 存储当前悬停的电梯 ID
   const { setAutoDoorList, autoDoorList, selectSubDrawType, selectDrawType } = useMapEditorStore(
     useShallow((s) => ({
       setAutoDoorList: s.setAutoDoorList,
@@ -38,18 +40,24 @@ const AutoDoor = () => {
   return (
     <group>
       {autoDoorList.map((item) => (
-        <group key={item.id} position={[item.position.x, item.position.y, 0]}>
-          <Html
-            center
-            style={{
-              pointerEvents: 'none', // 确保不干扰 Three.js 事件
-              display: 'inline-block',
-              cursor: 'pointer',
-            }}
-          >
-            <IconifyIcon icon='material-symbols:doorbell-chime-outline' size={24} />
-          </Html>
-        </group>
+        <sprite
+          key={item.id}
+          position={[item.position.x, item.position.y, 0]}
+          onPointerOver={() => setHoveredId(item.id)} // 悬停时设置当前悬停的电梯 ID
+          onPointerOut={() => setHoveredId(null)} // 鼠标移出时恢复
+          onClick={() => {
+            console.log('Elevator clicked:', item.id);
+            // 在此处你可以修改点击后的行为，比如修改颜色
+          }}
+        >
+          <spriteMaterial
+            map={texture}
+            attach='material'
+            color={hoveredId === item.id ? '#00d1d1' : 'white'} // 当悬停时变色
+            // 也可以使用 filter 调整颜色
+            // filter={hoveredId === item.id ? 'brightness(1.5)' : 'brightness(1)'}
+          />
+        </sprite>
       ))}
     </group>
   );

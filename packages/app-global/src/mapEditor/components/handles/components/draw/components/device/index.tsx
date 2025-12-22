@@ -1,12 +1,14 @@
-import { Checkbox, Form, Select } from 'antd';
+import { Checkbox, Form, Modal, Select } from 'antd';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../../../../../store';
+import { useMapEditorViewStore } from '../../../../../../store/view';
 const DrawDeviceSelect = () => {
   const [collapsed, setCollapsed] = useState(true);
+  const [modal, contextHolder] = Modal.useModal();
   const { setParamsPanelCollapsed, selectDrawType, setSelectDrawType, setSelectSubDrawType, selectSubDrawType } =
     useMapEditorStore(
       useShallow((state) => {
@@ -19,7 +21,12 @@ const DrawDeviceSelect = () => {
         };
       }),
     );
-  console.log('selectDrawType', selectDrawType);
+  const { devicesView, setDevicesView } = useMapEditorViewStore(
+    useShallow((s) => ({
+      devicesView: s.devicesView as Array<'elevator' | 'autoDoor'>,
+      setDevicesView: s.setDevicesView,
+    })),
+  );
   const [form] = Form.useForm();
   const vehicleOptions = [
     {
@@ -78,8 +85,31 @@ const DrawDeviceSelect = () => {
                 'bg-[#00d1d1]/60': selectSubDrawType === 'elevator',
               })}
               onClick={() => {
-                setParamsPanelCollapsed(true);
-                setSelectSubDrawType('elevator');
+                if (!devicesView.includes('elevator')) {
+                  modal.confirm({
+                    title: '提示',
+                    content: '当前地图未显示电梯，是否显示？',
+                    classNames: {
+                      content: '!p-2',
+                    },
+                    okText: '显示',
+                    okButtonProps: {
+                      type: 'primary',
+                      size: 'small',
+                    },
+                    cancelButtonProps: {
+                      size: 'small',
+                    },
+                    onOk: () => {
+                      setDevicesView([...devicesView, 'elevator']);
+                      setParamsPanelCollapsed(true);
+                      setSelectSubDrawType('elevator');
+                    },
+                  });
+                } else {
+                  setParamsPanelCollapsed(true);
+                  setSelectSubDrawType('elevator');
+                }
               }}
             >
               电梯
@@ -89,8 +119,31 @@ const DrawDeviceSelect = () => {
                 'bg-[#00d1d1]/60': selectSubDrawType === 'autoDoor',
               })}
               onClick={() => {
-                setParamsPanelCollapsed(true);
-                setSelectSubDrawType('autoDoor');
+                if (!devicesView.includes('autoDoor')) {
+                  modal.confirm({
+                    title: '提示',
+                    content: '当前地图未显示自动门，是否显示？',
+                    classNames: {
+                      content: '!p-2',
+                    },
+                    okText: '显示',
+                    okButtonProps: {
+                      type: 'primary',
+                      size: 'small',
+                    },
+                    cancelButtonProps: {
+                      size: 'small',
+                    },
+                    onOk: () => {
+                      setDevicesView([...devicesView, 'autoDoor']);
+                      setParamsPanelCollapsed(true);
+                      setSelectSubDrawType('autoDoor');
+                    },
+                  });
+                } else {
+                  setParamsPanelCollapsed(true);
+                  setSelectSubDrawType('autoDoor');
+                }
               }}
             >
               自动门
@@ -153,6 +206,7 @@ const DrawDeviceSelect = () => {
           </div>
         </div>
       </motion.div>
+      {contextHolder}
     </>
   );
 };
