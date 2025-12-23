@@ -218,7 +218,8 @@
     "Sider",
     "signalr",
     "tanstack",
-    "troubleprool"
+    "troubleprool",
+    "xyflow"
   ],
   "deepscan.enable": true,
 

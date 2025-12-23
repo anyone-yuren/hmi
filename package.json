@@ -83,6 +83,7 @@
     "@react-spring/web": "catalog:",
     "@react-three/fiber": "catalog:",
     "@use-gesture/react": "catalog:",
+    "@xyflow/react": "^12.10.0",
     "antd": "^5.12.1",
     "antd-style": "catalog:",
     "classnames": "catalog:",

@@ -242,7 +242,7 @@ const TabsPanel = ({ setPanelOpen }) => {
   return (
     <>
       <div
-        className={classNames(' absolute top-10 left-2 z-10 flex flex-col gap-2 h-full overflow-auto min-w-32', {
+        className={classNames(' absolute top-10 left-2 z-10 flex flex-col gap-2  overflow-auto min-w-32', {
           hidden: mode !== 'editor',
         })}
       >

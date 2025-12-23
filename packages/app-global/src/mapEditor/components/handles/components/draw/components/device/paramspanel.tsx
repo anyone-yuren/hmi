@@ -1,19 +1,42 @@
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Collapse, Dropdown, Form, Input, Select, Table, Tooltip } from 'antd';
-import classNames from 'classnames';
-import { useEffect } from 'react';
+import { Button, Checkbox, Collapse, Form, Input, Select, Table, Tooltip, Tree } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../../../../../store';
-
+const { Search } = Input;
 const DrawDeviceParamsPanel = () => {
   const [form] = Form.useForm();
 
-  const { selectLineData } = useMapEditorStore(
+  const { selectLineData, autoDoorList, elevatorList } = useMapEditorStore(
     useShallow((state) => ({
       selectLineData: state.selectLineData,
+      autoDoorList: state.autoDoorList,
+      elevatorList: state.elevatorList,
     })),
   );
+
+  // 将自动门和电梯合并成一个列表
+  const deviceTreeData = [
+    {
+      title: '自动门',
+      key: 'autoDoor',
+      children: autoDoorList.map((item) => ({
+        title: `自动门 ${item.id}`,
+        key: `autoDoor-${item.id}`,
+        isLeaf: true,
+      })),
+    },
+    {
+      title: '电梯',
+      key: 'elevator',
+      children: elevatorList.map((item) => ({
+        title: `电梯 ${item.id}`,
+        key: `elevator-${item.id}`,
+        isLeaf: true,
+      })),
+    },
+  ];
 
   /* ------------------- 同步选中线段数据 ------------------- */
   useEffect(() => {
@@ -32,15 +55,48 @@ const DrawDeviceParamsPanel = () => {
     });
   }, [selectLineData]);
 
+  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
+  const [autoExpandParent, setAutoExpandParent] = useState(true);
+  const [searchValue, setSearchValue] = useState('');
+
+  const onExpand = (newExpandedKeys: React.Key[]) => {
+    setExpandedKeys(newExpandedKeys);
+    setAutoExpandParent(false);
+  };
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const filteredData = deviceTreeData
+      .flatMap((item) => item.children || [])
+      .filter((item) => item.title.includes(value));
+    setExpandedKeys(filteredData.map((item) => item.key));
+    setAutoExpandParent(true);
+    setSearchValue(value);
+  };
+
+  const treeData = useMemo(() => {
+    if (searchValue) {
+      return deviceTreeData.flatMap((item) => item.children || []).filter((item) => item.title.includes(searchValue));
+    }
+    return deviceTreeData;
+  }, [searchValue]);
+
   return (
     <div className='flex flex-col gap-2 w-full'>
-      <div className='bg-white/5 rounded-sm p-2'>
+      <div className='bg-white/5 rounded-sm p-2 '>
         <p className='text-xs font-medium flex items-center gap-2 justify-between'>
-          <span>
-            <IconifyIcon icon='subway:folder-2' size={14} /> 电梯列表
+          <span className='flex items-center gap-1 text-xs font-medium text-nowrap'>
+            <IconifyIcon icon='subway:folder-2' size={16} /> 设备列表
           </span>
+          <Search
+            style={{ marginBottom: 0, width: 'auto', maxWidth: '50%' }}
+            size='small'
+            placeholder='Search'
+            className='!max-w-1/2 w-auto'
+            onChange={onChange}
+          />
         </p>
-        <Dropdown
+        {/* <Dropdown
           menu={{
             items: [
               {
@@ -86,7 +142,30 @@ const DrawDeviceParamsPanel = () => {
                 );
               })}
           </ul>
-        </Dropdown>
+        </Dropdown> */}
+        {/* 使用 Tree 组件渲染设备列表 */}
+        <Tree
+          className='max-h-[200px] overflow-auto py-2'
+          treeData={treeData}
+          height={200}
+          defaultExpandAll
+          checkable
+          onExpand={onExpand}
+          autoExpandParent={autoExpandParent}
+          onSelect={(selectedKeys, info) => {
+            console.log('Selected device:', info.node.title);
+          }}
+          onRightClick={(info) => {
+            // 右键菜单
+            const menuItems = [
+              { label: '复制', key: 'copy' },
+              { label: '删除', key: 'delete' },
+              { label: '选择', key: 'select' },
+            ];
+            // 你可以在这里执行具体操作
+            console.log('Right-clicked on device:', info.node.title);
+          }}
+        />
       </div>
       <div className='flex-1 bg-white/5 rounded-sm p-2 overflow-auto w-full'>
         <Form form={form} layout='horizontal' labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete='off'>

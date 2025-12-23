@@ -132,6 +132,7 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
             // 设置padding 4 2
             headerPadding: '2px 8px',
             contentPadding: '8px',
+            paddingSM: 8,
             contentBg: 'transparent',
           },
           Form: {
@@ -153,6 +154,11 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
             contentFontSizeSM: 10,
             contentLineHeightSM: 1,
             controlHeightSM: 20,
+          },
+          Tree: {
+            fontSize: 12,
+            titleHeight: 20,
+            indentSize: 12,
           },
         },
       }}
