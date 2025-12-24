@@ -124,7 +124,7 @@
       "eulerX": "Roll angle",
       "eulerY": "Pitch angle",
       "eulerZ": "Yaw angle",
-      "forkWidth": "Fork spacing",
+      "forkWidth": "Spacing",
       "monual": "Manual",
       "multi": "Multi",
       "plannedSpeed": "V_plan",

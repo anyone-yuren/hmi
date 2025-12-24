@@ -61,10 +61,10 @@ const VehicleFork = () => {
                     <p>{t('common.home.eulerZ')}</p>
                     <p>{robotForkarmStatus?.euler_z}</p>
                   </div>
-                  <div className='bg-white/5 rounded-md p-2 flex items-center justify-between transition-all hover:bg-white/10  hover:scale-105'>
+                  {/* <div className='bg-white/5 rounded-md p-2 flex items-center justify-between transition-all hover:bg-white/10  hover:scale-105'>
                     <p>{t('common.home.forkWidth')}</p>
                     <p>{robotForkarmStatus?.width}</p>
-                  </div>
+                  </div> */}
                 </div>
               }
               trigger='click'
@@ -87,27 +87,24 @@ const VehicleFork = () => {
             />
           </motion.div>
         </div>
-        <div className='flex-1 grid grid-cols-3'>
+        <div className='flex-1 grid grid-cols-2 pt-2'>
           <div className='flex-1 flex flex-col justify-center items-center'>
             <Typography.Title level={2}>{robotForkarmStatus.y > -1 ? robotForkarmStatus.y : '-'}</Typography.Title>
             <Typography.Text className='opacity-50'>{t('common.home.vehicleForkx')}</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
-            <Typography.Title
-              style={
-                {
-                  // color: theme.colorPrimary,
-                }
-              }
-              level={2}
-            >
-              {robotForkarmStatus.x > -1 ? robotForkarmStatus.x : '-'}
-            </Typography.Title>
+            <Typography.Title level={2}>{robotForkarmStatus.x > -1 ? robotForkarmStatus.x : '-'}</Typography.Title>
             <Typography.Text className='opacity-50'>{t('common.home.vehicleForky')}</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
             <Typography.Title level={2}>{robotForkarmStatus.z > -1 ? robotForkarmStatus.z : '-'}</Typography.Title>
             <Typography.Text className='opacity-50'>{t('common.home.vehicleForkz')}</Typography.Text>
+          </div>
+          <div className='flex-1 flex flex-col justify-center items-center'>
+            <Typography.Title level={2}>
+              {robotForkarmStatus?.width > 0 ? robotForkarmStatus?.width : '-'}
+            </Typography.Title>
+            <Typography.Text className='opacity-50'>{t('common.home.forkWidth')}</Typography.Text>
           </div>
         </div>
       </div>

@@ -124,7 +124,7 @@
       "eulerX": "ロール角",
       "eulerY": "ピッチ角",
       "eulerZ": "ヨー角",
-      "forkWidth": "フォークの間隔",
+      "forkWidth": "間隔",
       "monual": "マニュアル",
       "multi": "複数のマシン",
       "plannedSpeed": "計画速度",
