@@ -68,7 +68,9 @@
     "unbuild": "^3.5.0",
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-static-copy": "^3.0.0",
-    "@types/three": "catalog:"
+    "@types/three": "catalog:",
+    "json2xls": "^0.1.2",
+    "convert-excel-to-json": "^1.7.0"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",

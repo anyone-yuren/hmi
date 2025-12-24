@@ -242,6 +242,7 @@
     "safety": {
       "3dpoints": "3D 포인트 클라우드",
       "back": "후진",
+      "error": "오류",
       "forward": "전진",
       "has_goods": "재고 있음",
       "init": "초기화됨, 이동되지 않음",
@@ -709,7 +710,7 @@
       "firstVisualPoint": "첫 번째 비전 포인트",
       "forkDistancePallet": "주행 중 차체가 정렬되었을 때 톱니 끝과 팔레트 표면 사이의 거리",
       "forkExtendDistCompensation": "포크 도달 범위 보상",
-      "forkExtendParams": "",
+      "forkExtendParams": "추가 포크 높이 보상",
       "forkFinalWidth": "포크 팔 벌리기 영역",
       "forkUpPointCloud": "포크 암 상단 포인트 클라우드",
       "forkWidth": "포크 폭",

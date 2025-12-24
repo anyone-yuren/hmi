@@ -195,7 +195,7 @@ const RcsTaskPanel = (props: IProps) => {
       return (
         response?.data?.map((item) => {
           return {
-            id: item.pallet_id,
+            id: item.pallet_name,
             name: item.pallet_name,
           };
         }) || []
