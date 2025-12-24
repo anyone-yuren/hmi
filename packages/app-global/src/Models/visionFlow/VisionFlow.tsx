@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import VisionConfigNode from './nodes/VisionConfigNode';
 import VisionParamGroupNode from './nodes/VisionParamGroupNode';
 import VisionSceneNode from './nodes/VisionSceneNode';
+import VisionScenePickupMoveNode from './nodes/VisionScenePickupMove';
 import VisionSceneSelectNode from './nodes/VisionSceneSelectNode';
 import { useVisionFlowStore } from './store/visionFlowStore';
 
@@ -19,6 +20,7 @@ const nodeTypes = {
   visionSceneSelect: VisionSceneSelectNode,
   visionScene: VisionSceneNode,
   visionParamGroup: VisionParamGroupNode,
+  visionScenePickupMove: VisionScenePickupMoveNode,
 };
 
 // 内部组件，使用 useReactFlow hook

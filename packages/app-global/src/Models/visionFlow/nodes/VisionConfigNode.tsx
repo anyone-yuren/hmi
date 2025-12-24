@@ -5,6 +5,8 @@ import { useVisionFlowStore } from '../store/visionFlowStore';
 export default function VisionConfigNode() {
   const enabled = useVisionFlowStore((s) => s.enabled);
   const setEnabled = useVisionFlowStore((s) => s.setEnabled);
+  const setShowPickupMove = useVisionFlowStore((s) => s.setShowPickupMove);
+  const showPickupMove = useVisionFlowStore((s) => s.showPickupMove);
   const [form] = Form.useForm();
   return (
     <div className='w-64 p-2 bg-white/20 border rounded'>
@@ -42,7 +44,7 @@ export default function VisionConfigNode() {
           <Collapse.Panel header='通用场景' key='2'>
             <div className='flex items-center justify-between p-2 bg-white/10 rounded mb-2'>
               <span>取货挪车</span>
-              <Checkbox />
+              <Checkbox checked={showPickupMove} onChange={(e) => setShowPickupMove(e.target.checked)} />
             </div>
             <Collapse defaultActiveKey={['task', 'tray']}>
               <Collapse.Panel header='任务' key='task'>

@@ -11,6 +11,7 @@ import { SkeletonUtils } from 'three-stdlib';
 import { useShallow } from 'zustand/react/shallow';
 import { useModelStore } from '../store';
 import { useSafetyStore } from '../store/safity';
+import { useVisionFlowStore } from '../visionFlow/store/visionFlowStore';
 
 const SCALE = 0.1;
 // 升降阶段阈值（单位：毫米）
@@ -448,6 +449,15 @@ const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
       };
     }),
   );
+
+  const { openVisionPanel, setOpenVisionPanel } = useVisionFlowStore(
+    useShallow((store) => {
+      return {
+        openVisionPanel: store.openVisionPanel,
+        setOpenVisionPanel: store.setOpenVisionPanel,
+      };
+    }),
+  );
   // 创建材质副本
   const [clonedMaterial, setClonedMaterial] = useState(null);
   const [glowMaterial, setGlowMaterial] = useState(null);
@@ -497,7 +507,10 @@ const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
         material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
         scale={bodyMesh.scale}
         castShadow
-        onClick={onClick}
+        onClick={(e) => {
+          setOpenVisionPanel(!openVisionPanel);
+          onClick && onClick(e);
+        }}
       >
         {isSelected && (
           <mesh geometry={bodyMesh.geometry} scale={1.02}>
@@ -565,7 +578,6 @@ export default function RModelFbx(props) {
   const [baseDoorMesh, setBaseDoorMesh] = useState(null);
   // 选中状态管理
   const [selectedPart, setSelectedPart] = useState(null);
-
   // 区分生产环境和开发环境
   const isProd = process.env.NODE_ENV === 'production';
   const fbxPath = isProd ? '/analysis/static/fbx/r15-14.fbx' : '/static/fbx/r15-14.fbx';

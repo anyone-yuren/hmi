@@ -4,6 +4,7 @@ import { create } from 'zustand';
 
 const ROOT_ID = 'vision-root';
 const SELECT_ID = 'scene-select';
+const PICKUP_MOVE_ID = 'pickup-move';
 
 type SceneType = 'single' | 'pallet';
 
@@ -32,10 +33,17 @@ interface VisionFlowState {
   setScenes: (s: SceneType[]) => void;
   onNodesChange: (changes: NodeChange[]) => void;
   triggerFitView: () => void; // 新增：手动触发 fitView
+  showPickupMove: boolean;
+  setShowPickupMove: (v: boolean) => void;
+
+  // 打开面板
+  openVisionPanel: boolean;
+  setOpenVisionPanel: (v: boolean) => void;
 }
 
 export const useVisionFlowStore = create<VisionFlowState>((set, get) => ({
   enabled: false,
+  showPickupMove: false,
   scenes: [],
   fitViewOnChange: 0, // 初始化为 0
 
@@ -77,8 +85,8 @@ export const useVisionFlowStore = create<VisionFlowState>((set, get) => ({
     if (!enabled) {
       set({
         scenes: [],
-        nodes: get().nodes.filter((n) => n.id === ROOT_ID),
-        edges: [],
+        nodes: get().nodes.filter((n) => n.id !== SELECT_ID && !n.id.includes('param-')),
+        edges: get().edges.filter((e) => e.source !== SELECT_ID && e.target !== SELECT_ID),
         fitViewOnChange: get().fitViewOnChange + 1,
       });
       return;
@@ -86,7 +94,7 @@ export const useVisionFlowStore = create<VisionFlowState>((set, get) => ({
 
     set({
       nodes: [
-        get().nodes.find((n) => n.id === ROOT_ID)!,
+        ...get().nodes!,
         {
           id: SELECT_ID,
           type: 'visionSceneSelect',
@@ -96,10 +104,45 @@ export const useVisionFlowStore = create<VisionFlowState>((set, get) => ({
         },
       ],
       edges: [
+        ...get().edges!,
         {
           id: `e-${ROOT_ID}-${SELECT_ID}`,
           source: ROOT_ID,
           target: SELECT_ID,
+        },
+      ],
+      fitViewOnChange: get().fitViewOnChange + 1,
+    });
+  },
+
+  setShowPickupMove: (show) => {
+    set({ showPickupMove: show });
+    if (!show) {
+      set({
+        scenes: [],
+        nodes: get().nodes.filter((n) => n.id !== PICKUP_MOVE_ID),
+        edges: get().edges.filter((e) => e.source !== PICKUP_MOVE_ID && e.target !== PICKUP_MOVE_ID),
+        fitViewOnChange: get().fitViewOnChange + 1,
+      });
+      return;
+    }
+    set({
+      nodes: [
+        ...get().nodes!,
+        {
+          id: PICKUP_MOVE_ID,
+          type: 'visionScenePickupMove',
+          position: { x: 360, y: 600 },
+          draggable: true,
+          data: {},
+        },
+      ],
+      edges: [
+        ...get().edges!,
+        {
+          id: `e-${ROOT_ID}-${PICKUP_MOVE_ID}`,
+          source: ROOT_ID,
+          target: PICKUP_MOVE_ID,
         },
       ],
       fitViewOnChange: get().fitViewOnChange + 1,
@@ -116,6 +159,11 @@ export const useVisionFlowStore = create<VisionFlowState>((set, get) => ({
         id: `e-${ROOT_ID}-${SELECT_ID}`,
         source: ROOT_ID,
         target: SELECT_ID,
+      },
+      {
+        id: `e-${ROOT_ID}-${PICKUP_MOVE_ID}`,
+        source: ROOT_ID,
+        target: PICKUP_MOVE_ID,
       },
     ];
 
@@ -141,6 +189,11 @@ export const useVisionFlowStore = create<VisionFlowState>((set, get) => ({
         source: SELECT_ID,
         target: paramId,
       });
+      edges.push({
+        id: `e-${PICKUP_MOVE_ID}-${paramId}`,
+        source: PICKUP_MOVE_ID,
+        target: paramId,
+      });
 
       cursorX += gapX;
     });
@@ -149,7 +202,7 @@ export const useVisionFlowStore = create<VisionFlowState>((set, get) => ({
     const existingNodes = get().nodes;
     const rootNode = existingNodes.find((n) => n.id === ROOT_ID);
     const selectNode = existingNodes.find((n) => n.id === SELECT_ID);
-
+    const pickupMoveNode = existingNodes.find((n) => n.id === PICKUP_MOVE_ID);
     set({
       scenes,
       nodes: [
@@ -161,10 +214,20 @@ export const useVisionFlowStore = create<VisionFlowState>((set, get) => ({
           draggable: true,
           data: {},
         },
+        pickupMoveNode || {
+          id: PICKUP_MOVE_ID,
+          type: 'visionScenePickupMove',
+          position: { x: 260, y: 600 },
+          draggable: true,
+          data: {},
+        },
         ...paramNodes,
       ],
       edges,
       fitViewOnChange: get().fitViewOnChange + 1,
     });
   },
+  // 打开面板
+  openVisionPanel: false,
+  setOpenVisionPanel: (v) => set({ openVisionPanel: v }),
 }));

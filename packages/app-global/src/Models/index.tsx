@@ -4,12 +4,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { IconifyIcon } from 'ui';
+import { useShallow } from 'zustand/react/shallow';
 import DrawHandle from './components/modelHandle';
 import RModelFbx from './components/r20';
 import RightPanel from './components/rightPanel';
 import TabsPanel from './components/tabsPanel';
 import BaseElement from './threeComponent/base';
 import VisionFlow from './visionFlow';
+import { useVisionFlowStore } from './visionFlow/store/visionFlowStore';
 
 interface RightTriangularPrismProps extends MeshProps {
   width?: number; // 直角三角形一条直角边长度 (X 方向)
@@ -140,6 +142,13 @@ export default function R3FBasicScene() {
   const [panelWidth, setPanelWidth] = useState(300);
   const [isOpen, setIsOpen] = useState(true); // true 表示面板打开
   const [bottomPanelOpen, setBottomPanelOpen] = useState(true); // 控制底部面板是否展开
+  const { openVisionPanel } = useVisionFlowStore(
+    useShallow((store) => {
+      return {
+        openVisionPanel: store.openVisionPanel,
+      };
+    }),
+  );
   return (
     <div className='w-full h-full relative flex gap-2 '>
       <motion.div
@@ -153,7 +162,7 @@ export default function R3FBasicScene() {
         <TabsPanel setPanelOpen={setIsOpen} />
         <motion.div
           animate={{
-            height: bottomPanelOpen ? `calc(100% - 300px)` : '100%', // 80px 是底部面板的高度
+            height: openVisionPanel ? `calc(100% - 300px)` : '100%', // 80px 是底部面板的高度
           }}
           transition={{ duration: 0.3 }}
         >
@@ -177,7 +186,7 @@ export default function R3FBasicScene() {
           </Canvas>
         </motion.div>
         <AnimatePresence>
-          {bottomPanelOpen && (
+          {openVisionPanel && (
             <motion.div
               initial={{ y: '100%' }} // 初始位置在屏幕底部
               animate={{ y: 0 }} // 展开时动画到顶部
@@ -219,12 +228,12 @@ export default function R3FBasicScene() {
       {/* 底部面板动画 */}
 
       {/* 控制底部面板显示隐藏的按钮 */}
-      <span
+      {/* <span
         onClick={() => setBottomPanelOpen(!bottomPanelOpen)}
         className='absolute bottom-2 right-2 z-20 cursor-pointer text-white'
       >
         {bottomPanelOpen ? '收起面板' : '展开面板'}
-      </span>
+      </span> */}
     </div>
   );
 }
