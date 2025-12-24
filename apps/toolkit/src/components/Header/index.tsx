@@ -68,6 +68,12 @@ const GlobalHeader = () => {
                 <span>FTP</span>
               </div>
             </Tooltip>
+            <Tooltip title='参数管理' placement='right'>
+              <div className='flex items-center text-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
+                <IconifyIcon icon='tabler:file-text' size={24} onClick={() => navigate(`/parameters`)} />
+                <span>参数管理</span>
+              </div>
+            </Tooltip>
           </>
         )}
       </div>

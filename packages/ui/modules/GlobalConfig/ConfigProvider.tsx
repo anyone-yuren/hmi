@@ -122,6 +122,8 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
           Menu: {
             itemHeight: 24,
             fontSize: 12,
+            darkSubMenuItemBg: 'rgba(255, 255, 255, 0.03)',
+            darkItemHoverBg: 'rgba(255, 255, 255, 0.1)',
           },
           Segmented: {
             itemActiveBg: '#00D1D1',

@@ -3,14 +3,22 @@ import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
 import { SelectionOverlayBox } from '../selection/selectionOverlay';
 
-function ResizeCamera({ size }) {
-  const { camera } = useThree();
+function ResizeCamera() {
+  const { camera, size } = useThree();
 
   useEffect(() => {
-    if (!size) return;
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-  }, [size, camera]);
+    const cam = camera as THREE.OrthographicCamera;
+
+    const frustumHeight = 10; // 世界坐标下可视高度（核心参数）
+    const aspect = size.width / size.height;
+
+    cam.top = frustumHeight / 2;
+    cam.bottom = -frustumHeight / 2;
+    cam.right = (frustumHeight * aspect) / 2;
+    cam.left = (-frustumHeight * aspect) / 2;
+
+    cam.updateProjectionMatrix();
+  }, [camera, size]);
 
   return null;
 }
@@ -41,7 +49,8 @@ const BaseElement = ({ size }) => {
 
         <OrthographicCamera makeDefault position={[0, 0, 10]} up={[0, 0, 1]} zoom={100} near={-100} far={100} />
 
-        <ResizeCamera size={size} />
+        {/* <ResizeCamera size={size} /> */}
+        {/* <ResizeCamera /> */}
 
         <MapControls enabled={true} enableRotate={false} screenSpacePanning={false} makeDefault maxDistance={50} />
 

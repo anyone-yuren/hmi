@@ -9,6 +9,7 @@ import MapEditor from './src/mapEditor';
 import Models from './src/Models';
 import GlobalNotification from './src/notification';
 import useObsError from './src/notification/hooks/useObsError';
+import Parameters from './src/Parameters';
 import SingleTask from './src/SingleTask';
 import { InitStage } from './src/SingleTask/stage/index';
 import Toolkit from './src/toolkit';
@@ -26,6 +27,7 @@ export {
   Maintenance,
   MapEditor,
   Models,
+  Parameters,
   post,
   SingleTask,
   SubAbout,

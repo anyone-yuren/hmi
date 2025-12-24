@@ -7,7 +7,7 @@ export default function VisionSceneSelectNode() {
   const setScenes = useVisionFlowStore((s) => s.setScenes);
 
   return (
-    <div className='w-64 p-2 bg-blue-500 border rounded'>
+    <div className='w-64 p-2 bg-[#00d1d1]/80 border rounded'>
       <div className='font-semibold mb-2'>选择场景（可多选）</div>
 
       <div className='nodrag'>
