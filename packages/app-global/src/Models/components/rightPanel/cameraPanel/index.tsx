@@ -1,9 +1,12 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Affix, Checkbox, Collapse, Form, Input, Select } from 'antd';
+import { Affix, Button, Checkbox, Collapse, Form, Input, Select, Table } from 'antd';
 import { useState } from 'react';
+import { SvgIcon } from 'ui';
+import PanelLoading from '../../../../components/PanelLoading';
 
-const Radar2dPanel = () => {
+const CameraPanel = () => {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const items = [
     {
       key: '1',
@@ -83,6 +86,51 @@ const Radar2dPanel = () => {
             rules={[{ required: true, message: 'Please input your deviceType!' }]}
           >
             <Input size='small' />
+          </Form.Item>
+        </Form>
+      ),
+    },
+    {
+      key: '4',
+      label: '关联',
+      children: (
+        <Form
+          name='basic'
+          labelCol={{ span: 12 }}
+          wrapperCol={{ span: 24 }}
+          style={{ maxWidth: 600 }}
+          initialValues={{ remember: true }}
+          autoComplete='off'
+        >
+          <Form.Item
+            label={'作用于'}
+            name='deviceId'
+            rules={[{ required: true, message: 'Please input your deviceId!' }]}
+          >
+            <Checkbox.Group
+              className='flex-col gap-2'
+              options={[
+                { label: '定位', value: 'camera1' },
+                { label: '安全', value: 'camera2' },
+                { label: '感知', value: 'camera3' },
+                { label: '活动', value: 'camera4' },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item
+            label={'任务场景'}
+            name='deviceId'
+            rules={[{ required: true, message: 'Please input your deviceId!' }]}
+          >
+            <Checkbox.Group
+              className='flex-col gap-2'
+              options={[
+                { label: '堆叠取货挪车', value: 'pickupMove' },
+                { label: '堆叠放货挪车', value: 'putdownMove' },
+                { label: '平板飞翼卡车取货挪车', value: 'truckPickupMove' },
+                { label: '平板飞翼卡车放货挪车', value: 'truckPutdownMove' },
+              ]}
+            />
           </Form.Item>
         </Form>
       ),
@@ -175,36 +223,7 @@ const Radar2dPanel = () => {
         </Form>
       ),
     },
-    {
-      key: '4',
-      label: '关联',
-      children: (
-        <Form
-          name='basic'
-          labelCol={{ span: 12 }}
-          wrapperCol={{ span: 24 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          autoComplete='off'
-        >
-          <Form.Item
-            label={'作用于'}
-            name='deviceId'
-            rules={[{ required: true, message: 'Please input your deviceId!' }]}
-          >
-            <Checkbox.Group
-              className='flex-col gap-2'
-              options={[
-                { label: '定位', value: 'camera1' },
-                { label: '安全', value: 'camera2' },
-                { label: '感知', value: 'camera3' },
-                { label: '活动', value: 'camera4' },
-              ]}
-            />
-          </Form.Item>
-        </Form>
-      ),
-    },
+
     {
       key: '5',
       label: '位置位姿',
@@ -238,79 +257,87 @@ const Radar2dPanel = () => {
         </Form>
       ),
     },
+    {
+      key: '6',
+      label: '标定',
+      children: (
+        <div className='flex flex-col gap-2'>
+          <Form
+            name='basic'
+            labelCol={{ span: 12 }}
+            wrapperCol={{ span: 24 }}
+            style={{ maxWidth: 600 }}
+            initialValues={{ remember: true }}
+            autoComplete='off'
+          >
+            <Form.Item
+              label='标定板位置'
+              name='calibrationBoardPosition'
+              rules={[{ required: true, message: 'Please input your x!' }]}
+            >
+              <Select
+                size='small'
+                options={[
+                  { label: '车辆前方', value: 'front' },
+                  { label: '车辆后方', value: 'back' },
+                  { label: '车辆左侧', value: 'left' },
+                  { label: '车辆右侧', value: 'right' },
+                  { label: '车辆顶部', value: 'top' },
+                  { label: '车辆底部', value: 'bottom' },
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name='remember' valuePropName='checked' label={null}>
+              <Checkbox>开启实时点云</Checkbox>
+            </Form.Item>
+          </Form>
+          <Table
+            loading={loading}
+            size='small'
+            columns={[
+              { title: '名称', dataIndex: 'name', key: 'name' },
+              { title: '位姿', dataIndex: 'pose', key: 'pose' },
+              { title: '参数值', dataIndex: 'value', key: 'value' },
+              { title: '误差', dataIndex: 'error', key: 'error' },
+            ]}
+            dataSource={[
+              { name: 'X坐标(mm)', pose: '0.0', value: '0.0', error: '0.0' },
+              { name: 'Y坐标(mm)', pose: '0.0', value: '0.0', error: '0.0' },
+              { name: 'Z坐标(mm)', pose: '0.0', value: '0.0', error: '0.0' },
+              { name: '横滚角', pose: '0.0', value: '0.0', error: '0.0' },
+              { name: '俯仰角', pose: '0.0', value: '0.0', error: '0.0' },
+              { name: '偏航角', pose: '0.0', value: '0.0', error: '0.0' },
+            ]}
+            pagination={false}
+          />
+          <div className='relative bg-neutral-800 text-white p-2 rounded-sm'>
+            <p>日志打印：</p>
+            <div className='flex flex-col items-center justify-center'>
+              <SvgIcon size={120} name={'noLog'} />
+              <p>暂无日志打印</p>
+            </div>
+            {loading && <PanelLoading isDark={true} />}
+          </div>
+          <div className='flex gap-2 justify-end'>
+            <Button type='primary' size='small' onClick={() => setLoading(true)}>
+              标定
+            </Button>
+            <Button variant='solid' color='danger' size='small' onClick={() => setLoading(false)}>
+              停止
+            </Button>
+            <Button variant='solid' color='default' size='small'>
+              保存
+            </Button>
+            <Button variant='solid' color='gold' size='small'>
+              刷新
+            </Button>
+          </div>
+        </div>
+      ),
+    },
   ];
   return (
     <>
-      {/* <div className='bg-white/5 rounded-sm p-2'>
-        <p className='text-xs font-medium flex items-center gap-2 justify-between'>
-          <span>
-            <IconifyIcon icon='subway:folder-2' size={14} /> 雷达列表
-          </span>
-          <IconifyIcon icon='material-symbols:check-box-rounded' size={14} />
-        </p>
-        <Dropdown
-          menu={{
-            items: [
-              {
-                label: (
-                  <div className='flex items-center justify-between'>
-                    复制
-                    <span className='text-xs font-medium text-gray-400 flex items-center gap-1'>
-                      <IconifyIcon icon='mingcute:command-line' size={12} />c
-                    </span>
-                  </div>
-                ),
-                key: 'copy',
-              },
-              { label: <span>删除</span>, key: 'delete' },
-              { label: <span>选择</span>, key: 'add' },
-            ],
-          }}
-          trigger={['contextMenu']}
-        >
-          <ul className='flex flex-col gap-2 text-xs py-2'>
-            {new Array(4)
-              .fill(0)
-              .map((_, index) => ({
-                label: `雷达${index + 1}`,
-                key: `camera${index + 1}`,
-                isSelected: index % 2 === 0,
-              }))
-              .map((item, index) => {
-                return (
-                  <li
-                    className={classNames(
-                      'cursor-pointer hover:bg-cyan-500/30 px-2 py-0.5 flex items-center justify-between',
-                      {
-                        'bg-white/5': index % 2 === 0,
-                        'text-gray-400': !item.isSelected,
-                        'bg-[#00d1d1]/80 !text-black': index === 1,
-                      },
-                    )}
-                    key={item.key}
-                  >
-                    {item.label}
-                    <span className='flex items-center gap-1'>
-                      <Tooltip title='显示/隐藏'>
-                        <IconifyIcon icon='charm:eye' size={14} />
-                      </Tooltip>
-                      <Tooltip title='选中/取消选中'>
-                        <IconifyIcon
-                          icon={
-                            item.isSelected
-                              ? 'material-symbols:check-box-rounded'
-                              : 'material-symbols:check-box-outline-sharp'
-                          }
-                          size={14}
-                        />
-                      </Tooltip>
-                    </span>
-                  </li>
-                );
-              })}
-          </ul>
-        </Dropdown>
-      </div> */}
       <div className='flex-1 bg-white/5 rounded-sm flex flex-col gap-2 p-2 overflow-auto' ref={setContainer}>
         {/* 属性搜索框 */}
         <Affix target={() => container} offsetTop={0}>
@@ -325,4 +352,4 @@ const Radar2dPanel = () => {
     </>
   );
 };
-export default Radar2dPanel;
+export default CameraPanel;

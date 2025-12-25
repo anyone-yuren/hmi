@@ -5,6 +5,8 @@ import { persist } from 'zustand/middleware';
 interface State {
   mode: any;
   setMode: (mode: any) => void;
+  modelSelect: any;
+  setModelSelect: (modelSelect: any) => void;
   // 定位状态
   camera: any;
   setCamera: (camera: any) => void;
@@ -43,6 +45,12 @@ export const useModelStore = create<State>()(
       setShowPoints: (showPoints: boolean) => {
         set(() => ({
           showPoints,
+        }));
+      },
+      modelSelect: 'radar1',
+      setModelSelect: (modelSelect: any) => {
+        set(() => ({
+          modelSelect,
         }));
       },
     }),
