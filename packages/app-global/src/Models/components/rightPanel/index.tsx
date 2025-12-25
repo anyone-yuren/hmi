@@ -16,8 +16,8 @@ const RightPanel = () => {
   );
   return (
     <div className='w-full h-full flex flex-col gap-2'>
-      {modelSelect === 'radar1' && <Radar2dPanel />}
-      {modelSelect === 'topCamera' && <CameraPanel />}
+      {modelSelect === 'radar1' && mode === 'editor' && <Radar2dPanel />}
+      {modelSelect === 'topCamera' && mode === 'editor' && <CameraPanel />}
       {mode === 'obstacleAvoidance' && <ObsPanel />}
       {mode === 'diagnosis' && <DiagnosisPanel />}
     </div>

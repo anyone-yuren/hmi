@@ -1,25 +1,72 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Affix, Button, Checkbox, Collapse, Form, Input, Select, Table } from 'antd';
-import { useState } from 'react';
+import { Affix, Button, Checkbox, Collapse, Form, Input, InputNumber, Select, Table } from 'antd';
+import { useEffect, useState } from 'react';
 import { SvgIcon } from 'ui';
+import { useShallow } from 'zustand/react/shallow';
 import PanelLoading from '../../../../components/PanelLoading';
-
+import { useDebouncedStoreSetter } from '../../../hooks/useDebouncedStoreSetter';
+import { useModelStore } from '../../../store';
 const CameraPanel = () => {
+  // 防抖函数
+  const {
+    cameraPosition,
+    cameraClip,
+    cameraPitch,
+    cameraYaw,
+    cameraRoll,
+    setCameraPosition,
+    setCameraClip,
+    setCameraPitch,
+    setCameraYaw,
+    setCameraRoll,
+    enableClip,
+    setEnableClip,
+  } = useModelStore(
+    useShallow((state) => {
+      return {
+        cameraPosition: state.cameraPosition || { x: 0, y: 0, z: 0 },
+        cameraClip: state.cameraClip || { near: 0.1, far: 1000 },
+        cameraPitch: state.cameraPitch || 0,
+        cameraYaw: state.cameraYaw || 0,
+        cameraRoll: state.cameraRoll || 0,
+        setCameraPosition: state.setCameraPosition,
+        setCameraClip: state.setCameraClip,
+        setCameraPitch: state.setCameraPitch,
+        setCameraYaw: state.setCameraYaw,
+        setCameraRoll: state.setCameraRoll,
+        enableClip: state.enableClip,
+        setEnableClip: state.setEnableClip,
+      };
+    }),
+  );
+  const setPitchDebounced = useDebouncedStoreSetter(setCameraPitch, 300);
+  const setYawDebounced = useDebouncedStoreSetter(setCameraYaw, 300);
+  const setRollDebounced = useDebouncedStoreSetter(setCameraRoll, 300);
+  const setPositionDebounced = useDebouncedStoreSetter(setCameraPosition, 300);
+  const setClipDebounced = useDebouncedStoreSetter(setCameraClip, 300);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [form] = Form.useForm();
+  useEffect(() => {
+    form.setFieldsValue({
+      x: cameraPosition?.x,
+      y: cameraPosition?.y,
+      z: cameraPosition?.z,
+      pitch: cameraPitch,
+      yaw: cameraYaw,
+      roll: cameraRoll,
+      near: cameraClip?.near,
+      far: cameraClip?.far,
+      enableClip: enableClip,
+    });
+  }, [cameraPosition, cameraPitch, cameraYaw, cameraRoll, cameraClip, enableClip]);
   const items = [
     {
       key: '1',
       label: '通用属性',
       children: (
-        <Form
-          name='basic'
-          labelCol={{ span: 12 }}
-          wrapperCol={{ span: 24 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          autoComplete='off'
-        >
+        <>
           <Form.Item
             label='设备ID'
             name='deviceId'
@@ -58,21 +105,14 @@ const CameraPanel = () => {
           <Form.Item name='remember' valuePropName='checked' label={null}>
             <Checkbox>是否启用</Checkbox>
           </Form.Item>
-        </Form>
+        </>
       ),
     },
     {
       key: '2',
       label: '网络',
       children: (
-        <Form
-          name='basic'
-          labelCol={{ span: 12 }}
-          wrapperCol={{ span: 24 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          autoComplete='off'
-        >
+        <>
           <Form.Item
             label='IP地址'
             name='deviceId'
@@ -87,21 +127,14 @@ const CameraPanel = () => {
           >
             <Input size='small' />
           </Form.Item>
-        </Form>
+        </>
       ),
     },
     {
       key: '4',
       label: '关联',
       children: (
-        <Form
-          name='basic'
-          labelCol={{ span: 12 }}
-          wrapperCol={{ span: 24 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          autoComplete='off'
-        >
+        <>
           <Form.Item
             label={'作用于'}
             name='deviceId'
@@ -132,32 +165,21 @@ const CameraPanel = () => {
               ]}
             />
           </Form.Item>
-        </Form>
+        </>
       ),
     },
     {
       key: '3',
       label: '裁剪',
       children: (
-        <Form
-          name='basic'
-          labelCol={{ span: 12 }}
-          wrapperCol={{ span: 24 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          autoComplete='off'
-        >
-          <Form.Item
-            label='前探测距离'
-            name='deviceId'
-            rules={[{ required: true, message: 'Please input your deviceId!' }]}
-          >
+        <>
+          <Form.Item label='前探测距离' name='near' rules={[{ required: true, message: 'Please input your near!' }]}>
             <Input size='small' />
           </Form.Item>
           <Form.Item
             label='后探测距离'
-            name='deviceType'
-            rules={[{ required: true, message: 'Please input your deviceType!' }]}
+            name='far'
+            rules={[{ required: true, message: 'Please input your backDistance!' }]}
           >
             <Input size='small' />
           </Form.Item>
@@ -217,10 +239,10 @@ const CameraPanel = () => {
           >
             <Input size='small' />
           </Form.Item>
-          <Form.Item name='remember' valuePropName='checked' label={null}>
+          <Form.Item name='enableClip' valuePropName='checked' label={null}>
             <Checkbox>是否裁剪</Checkbox>
           </Form.Item>
-        </Form>
+        </>
       ),
     },
 
@@ -228,33 +250,26 @@ const CameraPanel = () => {
       key: '5',
       label: '位置位姿',
       children: (
-        <Form
-          name='basic'
-          labelCol={{ span: 12 }}
-          wrapperCol={{ span: 24 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          autoComplete='off'
-        >
+        <>
           <Form.Item label='X' name='x' rules={[{ required: true, message: 'Please input your x!' }]}>
-            <Input size='small' />
+            <InputNumber size='small' />
           </Form.Item>
           <Form.Item label='Y' name='y' rules={[{ required: true, message: 'Please input your y!' }]}>
-            <Input size='small' />
+            <InputNumber size='small' />
           </Form.Item>
           <Form.Item label='Z' name='z' rules={[{ required: true, message: 'Please input your z!' }]}>
-            <Input size='small' />
+            <InputNumber size='small' />
           </Form.Item>
           <Form.Item label='横滚角' name='roll' rules={[{ required: true, message: 'Please input your roll!' }]}>
-            <Input size='small' />
+            <InputNumber size='small' />
           </Form.Item>
           <Form.Item label='俯仰角' name='pitch' rules={[{ required: true, message: 'Please input your pitch!' }]}>
-            <Input size='small' />
+            <InputNumber size='small' />
           </Form.Item>
           <Form.Item label='偏航角' name='yaw' rules={[{ required: true, message: 'Please input your yaw!' }]}>
-            <Input size='small' />
+            <InputNumber size='small' />
           </Form.Item>
-        </Form>
+        </>
       ),
     },
     {
@@ -262,35 +277,26 @@ const CameraPanel = () => {
       label: '标定',
       children: (
         <div className='flex flex-col gap-2'>
-          <Form
-            name='basic'
-            labelCol={{ span: 12 }}
-            wrapperCol={{ span: 24 }}
-            style={{ maxWidth: 600 }}
-            initialValues={{ remember: true }}
-            autoComplete='off'
+          <Form.Item
+            label='标定板位置'
+            name='calibrationBoardPosition'
+            rules={[{ required: true, message: 'Please input your x!' }]}
           >
-            <Form.Item
-              label='标定板位置'
-              name='calibrationBoardPosition'
-              rules={[{ required: true, message: 'Please input your x!' }]}
-            >
-              <Select
-                size='small'
-                options={[
-                  { label: '车辆前方', value: 'front' },
-                  { label: '车辆后方', value: 'back' },
-                  { label: '车辆左侧', value: 'left' },
-                  { label: '车辆右侧', value: 'right' },
-                  { label: '车辆顶部', value: 'top' },
-                  { label: '车辆底部', value: 'bottom' },
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name='remember' valuePropName='checked' label={null}>
-              <Checkbox>开启实时点云</Checkbox>
-            </Form.Item>
-          </Form>
+            <Select
+              size='small'
+              options={[
+                { label: '车辆前方', value: 'front' },
+                { label: '车辆后方', value: 'back' },
+                { label: '车辆左侧', value: 'left' },
+                { label: '车辆右侧', value: 'right' },
+                { label: '车辆顶部', value: 'top' },
+                { label: '车辆底部', value: 'bottom' },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item name='remember' valuePropName='checked' label={null}>
+            <Checkbox>开启实时点云</Checkbox>
+          </Form.Item>
           <Table
             loading={loading}
             size='small'
@@ -346,7 +352,32 @@ const CameraPanel = () => {
           </div>
         </Affix>
         <div>
-          <Collapse items={items} defaultActiveKey={['1', '2', '3', '4', '5']} />
+          <Form
+            form={form}
+            labelCol={{ span: 12 }}
+            wrapperCol={{ span: 24 }}
+            style={{ maxWidth: 600 }}
+            initialValues={{ remember: true }}
+            autoComplete='off'
+            onValuesChange={(changed, all) => {
+              if ('x' in changed || 'y' in changed || 'z' in changed) {
+                setPositionDebounced({
+                  x: Number(all.x),
+                  y: Number(all.y),
+                  z: Number(all.z),
+                });
+              }
+
+              if ('pitch' in changed) setPitchDebounced(Number(all.pitch));
+              if ('yaw' in changed) setYawDebounced(Number(all.yaw));
+              if ('roll' in changed) setRollDebounced(Number(all.roll));
+              if ('near' in changed) setClipDebounced({ near: Number(all.near), far: Number(all.far) });
+              if ('far' in changed) setClipDebounced({ far: Number(all.far), near: Number(all.near) });
+              if ('enableClip' in changed) setEnableClip(Boolean(all.enableClip));
+            }}
+          >
+            <Collapse items={items} defaultActiveKey={['1', '2', '5', '6']} />
+          </Form>
         </div>
       </div>
     </>

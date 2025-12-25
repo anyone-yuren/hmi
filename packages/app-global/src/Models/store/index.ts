@@ -14,6 +14,26 @@ interface State {
   setThreeControl: (threeControl: any) => void;
   showPoints: boolean;
   setShowPoints: (showPoints: boolean) => void;
+
+  // 相机的位置
+  cameraPosition: any;
+  setCameraPosition: (cameraPosition: any) => void;
+  //相机的裁剪范围
+  cameraClip: any;
+  setCameraClip: (cameraClip: any) => void;
+  // 相机的俯仰角
+  cameraPitch: any;
+  setCameraPitch: (cameraPitch: any) => void;
+  // 相机的偏航角
+  cameraYaw: any;
+  setCameraYaw: (cameraYaw: any) => void;
+  // 相机的横滚角
+  cameraRoll: any;
+  setCameraRoll: (cameraRoll: any) => void;
+
+  // 是否开启裁剪
+  enableClip: boolean;
+  setEnableClip: (enableClip: boolean) => void;
 }
 
 export const useModelStore = create<State>()(
@@ -51,6 +71,42 @@ export const useModelStore = create<State>()(
       setModelSelect: (modelSelect: any) => {
         set(() => ({
           modelSelect,
+        }));
+      },
+      cameraPosition: null,
+      setCameraPosition: (cameraPosition: any) => {
+        set(() => ({
+          cameraPosition,
+        }));
+      },
+      cameraClip: null,
+      setCameraClip: (cameraClip: any) => {
+        set(() => ({
+          cameraClip,
+        }));
+      },
+      cameraPitch: null,
+      setCameraPitch: (cameraPitch: any) => {
+        set(() => ({
+          cameraPitch,
+        }));
+      },
+      cameraYaw: null,
+      setCameraYaw: (cameraYaw: any) => {
+        set(() => ({
+          cameraYaw,
+        }));
+      },
+      cameraRoll: null,
+      setCameraRoll: (cameraRoll: any) => {
+        set(() => ({
+          cameraRoll,
+        }));
+      },
+      enableClip: false,
+      setEnableClip: (enableClip: boolean) => {
+        set(() => ({
+          enableClip,
         }));
       },
     }),
