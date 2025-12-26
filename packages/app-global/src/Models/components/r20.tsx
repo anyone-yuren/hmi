@@ -122,15 +122,12 @@ const ForkLeft = forwardRef(({ forkMesh, forkHeight, children, isSelected, onCli
 
   // 创建材质副本
   const [clonedMaterial, setClonedMaterial] = useState(null);
-  const [glowMaterial, setGlowMaterial] = useState(null);
   const meshRef = useRef();
 
   useEffect(() => {
     if (forkMesh && forkMesh.material) {
       const material = createMaterialClone(forkMesh.material);
-      const glowMat = createGlowMaterial(forkMesh.material);
       setClonedMaterial(material);
-      setGlowMaterial(glowMat);
     }
   }, [forkMesh]);
 
@@ -138,10 +135,7 @@ const ForkLeft = forwardRef(({ forkMesh, forkHeight, children, isSelected, onCli
     if (clonedMaterial) {
       updateMaterialOpacity(clonedMaterial, opacity);
     }
-    if (glowMaterial) {
-      updateMaterialOpacity(glowMaterial, opacity);
-    }
-  }, [clonedMaterial, glowMaterial, opacity]);
+  }, [clonedMaterial, opacity]);
 
   const { scaleY, positionY, y } = useSpring({
     from: {
@@ -210,7 +204,7 @@ const ForkLeft = forwardRef(({ forkMesh, forkHeight, children, isSelected, onCli
         <mesh
           ref={ref || meshRef}
           geometry={forkMesh.geometry}
-          material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+          material={clonedMaterial}
           scale={forkMesh.scale}
           castShadow
           receiveShadow
@@ -267,15 +261,12 @@ const FirstDoor = forwardRef<any, FirstDoorProps>(
 
     // 创建材质副本
     const [clonedMaterial, setClonedMaterial] = useState(null);
-    const [glowMaterial, setGlowMaterial] = useState(null);
     const meshRef = useRef();
 
     useEffect(() => {
       if (doorMesh && doorMesh.material) {
         const material = createMaterialClone(doorMesh.material);
-        const glowMat = createGlowMaterial(doorMesh.material);
         setClonedMaterial(material);
-        setGlowMaterial(glowMat);
       }
     }, [doorMesh]);
 
@@ -283,10 +274,7 @@ const FirstDoor = forwardRef<any, FirstDoorProps>(
       if (clonedMaterial) {
         updateMaterialOpacity(clonedMaterial, opacity);
       }
-      if (glowMaterial) {
-        updateMaterialOpacity(glowMaterial, opacity);
-      }
-    }, [clonedMaterial, glowMaterial, opacity]);
+    }, [clonedMaterial, opacity]);
 
     if (!doorMesh || !clonedMaterial) return null;
 
@@ -295,7 +283,7 @@ const FirstDoor = forwardRef<any, FirstDoorProps>(
         <mesh
           ref={ref || meshRef}
           geometry={doorMesh.geometry}
-          material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+          material={clonedMaterial}
           scale={doorMesh.scale}
           castShadow
           receiveShadow
@@ -330,15 +318,12 @@ const SecondDoor = forwardRef<any, SecondDoorProps>(
 
     // 创建材质副本
     const [clonedMaterial, setClonedMaterial] = useState(null);
-    const [glowMaterial, setGlowMaterial] = useState(null);
     const meshRef = useRef();
 
     useEffect(() => {
       if (doorMesh && doorMesh.material) {
         const material = createMaterialClone(doorMesh.material);
-        const glowMat = createGlowMaterial(doorMesh.material);
         setClonedMaterial(material);
-        setGlowMaterial(glowMat);
       }
     }, [doorMesh]);
 
@@ -346,10 +331,7 @@ const SecondDoor = forwardRef<any, SecondDoorProps>(
       if (clonedMaterial) {
         updateMaterialOpacity(clonedMaterial, opacity);
       }
-      if (glowMaterial) {
-        updateMaterialOpacity(glowMaterial, opacity);
-      }
-    }, [clonedMaterial, glowMaterial, opacity]);
+    }, [clonedMaterial, opacity]);
 
     if (!doorMesh || !clonedMaterial) return null;
 
@@ -358,7 +340,7 @@ const SecondDoor = forwardRef<any, SecondDoorProps>(
         <mesh
           ref={ref || meshRef}
           geometry={doorMesh.geometry}
-          material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+          material={clonedMaterial}
           scale={doorMesh.scale}
           castShadow
           receiveShadow
@@ -380,13 +362,11 @@ const SecondDoor = forwardRef<any, SecondDoorProps>(
 const BaseDoor = forwardRef(({ columnMesh, isSelected, onClick, opacity }, ref) => {
   // 创建材质副本
   const [clonedMaterial, setClonedMaterial] = useState(null);
-  const [glowMaterial, setGlowMaterial] = useState(null);
   const meshRef = useRef();
 
   useEffect(() => {
     if (columnMesh && columnMesh.material) {
       const material = createMaterialClone(columnMesh.material);
-      const glowMat = createGlowMaterial(columnMesh.material);
 
       // 设置立柱的特殊颜色
       const updateMaterialColor = (mat) => {
@@ -401,7 +381,6 @@ const BaseDoor = forwardRef(({ columnMesh, isSelected, onClick, opacity }, ref) 
       }
 
       setClonedMaterial(material);
-      setGlowMaterial(glowMat);
     }
   }, [columnMesh]);
 
@@ -409,10 +388,7 @@ const BaseDoor = forwardRef(({ columnMesh, isSelected, onClick, opacity }, ref) 
     if (clonedMaterial) {
       updateMaterialOpacity(clonedMaterial, opacity);
     }
-    if (glowMaterial) {
-      updateMaterialOpacity(glowMaterial, opacity);
-    }
-  }, [clonedMaterial, glowMaterial, opacity]);
+  }, [clonedMaterial, opacity]);
 
   if (!columnMesh || !clonedMaterial) return null;
 
@@ -420,7 +396,7 @@ const BaseDoor = forwardRef(({ columnMesh, isSelected, onClick, opacity }, ref) 
     <mesh
       ref={ref || meshRef}
       geometry={columnMesh.geometry}
-      material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+      material={clonedMaterial}
       scale={columnMesh.scale}
       castShadow
       onClick={onClick}
@@ -461,15 +437,14 @@ const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
   );
   // 创建材质副本
   const [clonedMaterial, setClonedMaterial] = useState(null);
-  const [glowMaterial, setGlowMaterial] = useState(null);
   const meshRef = useRef();
 
   useEffect(() => {
     if (bodyMesh && bodyMesh.material) {
       const material = createMaterialClone(bodyMesh.material);
-      const glowMat = createGlowMaterial(bodyMesh.material);
+      // const glowMat = createGlowMaterial(bodyMesh.material);
       setClonedMaterial(material);
-      setGlowMaterial(glowMat);
+      // setGlowMaterial(glowMat);
     }
   }, [bodyMesh]);
 
@@ -477,10 +452,7 @@ const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
     if (clonedMaterial) {
       updateMaterialOpacity(clonedMaterial, opacity);
     }
-    if (glowMaterial) {
-      updateMaterialOpacity(glowMaterial, opacity);
-    }
-  }, [clonedMaterial, glowMaterial, opacity]);
+  }, [clonedMaterial, opacity]);
 
   if (!bodyMesh || !clonedMaterial) return null;
   return (
@@ -506,11 +478,11 @@ const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
         ref={ref || meshRef}
         name='body'
         geometry={bodyMesh.geometry}
-        material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+        material={clonedMaterial}
         scale={bodyMesh.scale}
         castShadow
         onClick={(e) => {
-          setOpenVisionPanel(!openVisionPanel);
+          // setOpenVisionPanel(!openVisionPanel);
           onClick && onClick(e);
         }}
       >
@@ -528,7 +500,6 @@ const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
 const ColorMesh = forwardRef(({ colorMesh, isSelected, onClick, opacity }, ref) => {
   // 创建材质副本
   const [clonedMaterial, setClonedMaterial] = useState(null);
-  const [glowMaterial, setGlowMaterial] = useState(null);
   const meshRef = useRef();
 
   useEffect(() => {
@@ -536,7 +507,6 @@ const ColorMesh = forwardRef(({ colorMesh, isSelected, onClick, opacity }, ref) 
       const material = createMaterialClone(colorMesh.material);
       const glowMat = createGlowMaterial(colorMesh.material);
       setClonedMaterial(material);
-      setGlowMaterial(glowMat);
     }
   }, [colorMesh]);
 
@@ -544,10 +514,7 @@ const ColorMesh = forwardRef(({ colorMesh, isSelected, onClick, opacity }, ref) 
     if (clonedMaterial) {
       updateMaterialOpacity(clonedMaterial, opacity);
     }
-    if (glowMaterial) {
-      updateMaterialOpacity(glowMaterial, opacity);
-    }
-  }, [clonedMaterial, glowMaterial, opacity]);
+  }, [clonedMaterial, opacity]);
 
   if (!colorMesh || !clonedMaterial) return null;
 
@@ -555,7 +522,7 @@ const ColorMesh = forwardRef(({ colorMesh, isSelected, onClick, opacity }, ref) 
     <mesh
       ref={ref || meshRef}
       geometry={colorMesh.geometry}
-      material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+      material={clonedMaterial}
       scale={colorMesh.scale}
       castShadow
       receiveShadow
@@ -573,15 +540,12 @@ const ColorMesh = forwardRef(({ colorMesh, isSelected, onClick, opacity }, ref) 
 const RadarMesh = forwardRef(({ radarMesh, isSelected, onClick, opacity }, ref) => {
   // 创建材质副本
   const [clonedMaterial, setClonedMaterial] = useState(null);
-  const [glowMaterial, setGlowMaterial] = useState(null);
   const meshRef = useRef();
 
   useEffect(() => {
     if (radarMesh && radarMesh.material) {
       const material = createMaterialClone(radarMesh.material);
-      const glowMat = createGlowMaterial(radarMesh.material);
       setClonedMaterial(material);
-      setGlowMaterial(glowMat);
     }
   }, [radarMesh]);
 
@@ -589,10 +553,7 @@ const RadarMesh = forwardRef(({ radarMesh, isSelected, onClick, opacity }, ref) 
     if (clonedMaterial) {
       updateMaterialOpacity(clonedMaterial, opacity);
     }
-    if (glowMaterial) {
-      updateMaterialOpacity(glowMaterial, opacity);
-    }
-  }, [clonedMaterial, glowMaterial, opacity]);
+  }, [clonedMaterial, opacity]);
 
   if (!radarMesh || !clonedMaterial) return null;
 
@@ -600,7 +561,7 @@ const RadarMesh = forwardRef(({ radarMesh, isSelected, onClick, opacity }, ref) 
     <mesh
       ref={ref || meshRef}
       geometry={radarMesh.geometry}
-      material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+      material={clonedMaterial}
       scale={radarMesh.scale}
       castShadow
       receiveShadow
@@ -619,15 +580,12 @@ const RadarMesh = forwardRef(({ radarMesh, isSelected, onClick, opacity }, ref) 
 const CameraMesh = forwardRef(({ cameraMesh, isSelected, onClick, opacity }, ref) => {
   // 创建材质副本
   const [clonedMaterial, setClonedMaterial] = useState(null);
-  const [glowMaterial, setGlowMaterial] = useState(null);
   const meshRef = useRef();
 
   useEffect(() => {
     if (cameraMesh && cameraMesh.material) {
       const material = createMaterialClone(cameraMesh.material);
-      const glowMat = createGlowMaterial(cameraMesh.material);
       setClonedMaterial(material);
-      setGlowMaterial(glowMat);
     }
   }, [cameraMesh]);
 
@@ -635,10 +593,7 @@ const CameraMesh = forwardRef(({ cameraMesh, isSelected, onClick, opacity }, ref
     if (clonedMaterial) {
       updateMaterialOpacity(clonedMaterial, opacity);
     }
-    if (glowMaterial) {
-      updateMaterialOpacity(glowMaterial, opacity);
-    }
-  }, [clonedMaterial, glowMaterial, opacity]);
+  }, [clonedMaterial, opacity]);
 
   if (!cameraMesh || !clonedMaterial) return null;
 
@@ -646,7 +601,7 @@ const CameraMesh = forwardRef(({ cameraMesh, isSelected, onClick, opacity }, ref
     <mesh
       ref={ref || meshRef}
       geometry={cameraMesh.geometry}
-      material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+      material={clonedMaterial}
       scale={cameraMesh.scale}
       castShadow
       receiveShadow
@@ -678,7 +633,7 @@ export default function RModelFbx(props) {
   const [selectedPart, setSelectedPart] = useState(null);
   // 区分生产环境和开发环境
   const isProd = process.env.NODE_ENV === 'production';
-  const fbxPath = isProd ? '/analysis/static/fbx/r15-15.fbx' : '/static/fbx/r15-15.fbx';
+  const fbxPath = isProd ? '/toolkit/static/fbx/r15-15.fbx' : '/static/fbx/r15-15.fbx';
   const fbx = useFBX(fbxPath);
   const clonedFbx = useMemo(() => SkeletonUtils.clone(fbx), [fbx]);
 
@@ -727,8 +682,6 @@ export default function RModelFbx(props) {
 
   // 处理部件点击事件
   const handlePartClick = (partName, position, target) => (event) => {
-    console.log(camera.position);
-
     event.stopPropagation(); // 阻止事件冒泡
     setSelectedPart(selectedPart === partName ? null : partName);
     if (position) {

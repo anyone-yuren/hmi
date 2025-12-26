@@ -8,11 +8,12 @@ export function SceneRaycaster() {
   const { camera, scene, gl } = useThree();
   const raycaster = useRef(new THREE.Raycaster());
   const mouse = useRef(new THREE.Vector2());
-  const { selectObject, showContextMenu, hideContextMenu } = useEditorStore(
+  const { selectObject, showContextMenu, hideContextMenu, selected } = useEditorStore(
     useShallow((s) => ({
       selectObject: s.selectObject,
       showContextMenu: s.showContextMenu,
       hideContextMenu: s.hideContextMenu,
+      selected: s.selected,
     })),
   );
 
@@ -25,7 +26,6 @@ export function SceneRaycaster() {
       mouse.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
       raycaster.current.setFromCamera(mouse.current, camera);
-      debugger;
       const hits = raycaster.current.intersectObjects(scene.children, true);
       if (hits.length === 0) {
         // ❌ 没命中：不弹

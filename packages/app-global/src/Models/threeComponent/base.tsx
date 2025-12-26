@@ -33,6 +33,7 @@ function SceneHelpers() {
 }
 
 const BaseElement = () => {
+  const isProd = process.env.NODE_ENV === 'production';
   const { camera, controls } = useThree();
   const { setCamera, setThreeControl, showPoints } = useModelStore(
     useShallow((state) => {
@@ -106,7 +107,10 @@ const BaseElement = () => {
 
       <Suspense fallback={null}>
         {showPoints && (
-          <PCDModel url='/static/pcd/radar-cloud.pcd' rotation={[Math.PI / 2, Math.PI / 11, -Math.PI / 2]} />
+          <PCDModel
+            url={isProd ? '/toolkit/static/pcd/radar-cloud.pcd' : '/static/pcd/radar-cloud.pcd'}
+            rotation={[Math.PI / 2, Math.PI / 11, -Math.PI / 2]}
+          />
           // <PCDModel url='/static/pcd/radar-cloud1.pcd' />
         )}
       </Suspense>

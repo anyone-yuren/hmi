@@ -12,18 +12,18 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@gbeata/app-global": "workspace:*",
     "@gbeata/layout-ui": "workspace:^",
     "@gbeata/locales": "workspace:*",
     "@gbeata/store": "workspace:*",
     "@gbeata/tailwind-config": "workspace:^",
-    "@gbeata/app-global": "workspace:*",
     "@jiaminghi/data-view-react": "^1.2.5",
     "@loadable/component": "^5.16.3",
     "@microsoft/signalr": "^8.0.7",
     "@react-spring/three": "^9.7.3",
     "@react-three/drei": "^9.121.3",
     "@react-three/fiber": "^8.15.14",
-    "@react-three/postprocessing": "^2.19.1",
+    "@react-three/postprocessing": "^2.4.6",
     "@types/loadable__component": "^5.13.8",
     "@types/react-router-dom": "^5.3.3",
     "ahooks": "catalog:",
@@ -38,6 +38,7 @@
     "gbeata": "workspace:*",
     "js-yaml": "^4.1.0",
     "lodash-es": "^4.17.21",
+    "rc-virtual-list": "catalog:",
     "react": "catalog:",
     "react-countup": "^6.5.0",
     "react-dom": "catalog:",
@@ -47,8 +48,7 @@
     "ui": "workspace:^",
     "umi-request": "^1.4.0",
     "vite-plugin-mock": "2.9.6",
-    "zustand": "catalog:",
-    "rc-virtual-list": "catalog:"
+    "zustand": "catalog:"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",

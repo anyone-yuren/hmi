@@ -50,62 +50,10 @@ const router = createHashRouter([
         path: 'mapEditor',
         element: LazyLoad(lazy(() => import('@/views/MapEditor'))),
       },
-      {
-        path: 'maintenance',
-        element: LazyLoad(lazy(() => import('@/views/maintenance'))),
-      },
+
       {
         path: 'parameters',
         element: LazyLoad(lazy(() => import('@/views/Parameters'))),
-      },
-      {
-        path: 'setting',
-        element: LazyLoad(lazy(() => import('@/views/Setting'))),
-      },
-      {
-        path: 'slider',
-        element: LazyLoad(lazy(() => import('@/views/SliderPage'))),
-      },
-      {
-        path: 'diagnosis',
-        element: LazyLoad(lazy(() => import('@/views/Diagnosis'))),
-      },
-      {
-        path: 'hybrid',
-        element: LazyLoad(lazy(() => import('@/views/Hybrid'))),
-      },
-      {
-        path: 'io',
-        element: LazyLoad(lazy(() => import('@/views/Io'))),
-      },
-      {
-        path: 'safety',
-        element: LazyLoad(lazy(() => import('@/views/Safety'))),
-      },
-
-      {
-        path: 'singleTask',
-        element: LazyLoad(lazy(() => import('@/views/SingleTask'))),
-      },
-      {
-        path: 'vision',
-        element: LazyLoad(lazy(() => import('@/views/Vision'))),
-      },
-      {
-        path: 'setting',
-        element: LazyLoad(lazy(() => import('@/views/Setting'))),
-      },
-      {
-        path: 'about',
-        element: LazyLoad(lazy(() => import('@/views/About'))),
-      },
-      {
-        path: 'charging',
-        element: LazyLoad(lazy(() => import('@/views/Charging'))),
-      },
-      {
-        path: 'maintenance',
-        element: LazyLoad(lazy(() => import('@/views/maintenance'))),
       },
       {
         path: 'network',
