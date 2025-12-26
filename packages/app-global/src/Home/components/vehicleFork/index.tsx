@@ -89,7 +89,7 @@ const VehicleFork = () => {
         </div>
         <div className='flex-1 grid grid-cols-2 pt-2'>
           <div className='flex-1 flex flex-col justify-center items-center'>
-            <Typography.Title level={2}>{robotForkarmStatus.y > -1 ? robotForkarmStatus.y : '-'}</Typography.Title>
+            <Typography.Title level={2}>{robotForkarmStatus.y}</Typography.Title>
             <Typography.Text className='opacity-50'>{t('common.home.vehicleForkx')}</Typography.Text>
           </div>
           <div className='flex-1 flex flex-col justify-center items-center'>
