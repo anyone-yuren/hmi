@@ -10,6 +10,8 @@ import RModelFbx from './components/r20';
 import RightPanel from './components/rightPanel';
 import TabsPanel from './components/tabsPanel';
 import BaseElement from './threeComponent/base';
+import ContextMenu from './threeComponent/ContextMenu';
+import { SceneRaycaster } from './threeComponent/SceneRaycaster';
 import VisionFlow from './visionFlow';
 import { useVisionFlowStore } from './visionFlow/store/visionFlowStore';
 
@@ -182,8 +184,10 @@ export default function R3FBasicScene() {
               <CarModel />
               <CameraLimit />
               <BaseElement />
+              <SceneRaycaster />
             </Suspense>
           </Canvas>
+          <ContextMenu /> {/* 完全独立 */}
         </motion.div>
         <AnimatePresence>
           {openVisionPanel && (

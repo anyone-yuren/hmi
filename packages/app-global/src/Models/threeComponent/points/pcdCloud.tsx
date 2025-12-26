@@ -81,27 +81,24 @@ function PCDModel({
   const deg2rad = (deg?: number) => ((deg ?? 0) * Math.PI) / 180;
 
   /* ---------- ShaderMaterial ---------- */
-  const material = useMemo(
-    () => {
-      const mat = new THREE.ShaderMaterial({
-        vertexShader,
-        fragmentShader,
-        uniforms: {
-          uTime: { value: 0 },
-          uNear: { value: 0 },
-          uFar: { value: 100 },
-          uEnableClip: { value: true }, // ⭐ 新增
-        },
-        vertexColors: true,
-        depthTest: true,
-        depthWrite: true,
-        transparent: false,
-      });
-      materialRef.current = mat;
-      return mat;
-    },
-    [],
-  );
+  const material = useMemo(() => {
+    const mat = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uNear: { value: 0 },
+        uFar: { value: 100 },
+        uEnableClip: { value: true }, // ⭐ 新增
+      },
+      vertexColors: true,
+      depthTest: true,
+      depthWrite: true,
+      transparent: false,
+    });
+    materialRef.current = mat;
+    return mat;
+  }, []);
 
   /* ---------- spring：位姿动画 ---------- */
   const spring = useSpring({
@@ -125,6 +122,8 @@ function PCDModel({
 
     points.frustumCulled = true;
     points.material = material;
+    // ⭐⭐⭐ 核心：点云不参与拾取
+    points.raycast = () => {};
 
     const posAttr = geometry.attributes.position as THREE.BufferAttribute;
     const colors = new Float32Array(posAttr.count * 3);
@@ -172,13 +171,7 @@ function PCDModel({
     }
   });
 
-  return (
-    <animated.primitive
-      object={points}
-      position={spring.position}
-      rotation={spring.rotation}
-    />
-  );
+  return <animated.primitive object={points} position={spring.position} rotation={spring.rotation} />;
 }
 
 export default PCDModel;

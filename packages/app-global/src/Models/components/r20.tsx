@@ -5,6 +5,7 @@ R车模型组件
 */
 import { animated, useSpring } from '@react-spring/three';
 import { useFBX } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import { BoxGeometry, MeshBasicMaterial } from 'three';
 import { SkeletonUtils } from 'three-stdlib';
@@ -503,6 +504,7 @@ const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
 
       <mesh
         ref={ref || meshRef}
+        name='body'
         geometry={bodyMesh.geometry}
         material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
         scale={bodyMesh.scale}
@@ -568,6 +570,98 @@ const ColorMesh = forwardRef(({ colorMesh, isSelected, onClick, opacity }, ref) 
   );
 });
 
+const RadarMesh = forwardRef(({ radarMesh, isSelected, onClick, opacity }, ref) => {
+  // 创建材质副本
+  const [clonedMaterial, setClonedMaterial] = useState(null);
+  const [glowMaterial, setGlowMaterial] = useState(null);
+  const meshRef = useRef();
+
+  useEffect(() => {
+    if (radarMesh && radarMesh.material) {
+      const material = createMaterialClone(radarMesh.material);
+      const glowMat = createGlowMaterial(radarMesh.material);
+      setClonedMaterial(material);
+      setGlowMaterial(glowMat);
+    }
+  }, [radarMesh]);
+
+  useEffect(() => {
+    if (clonedMaterial) {
+      updateMaterialOpacity(clonedMaterial, opacity);
+    }
+    if (glowMaterial) {
+      updateMaterialOpacity(glowMaterial, opacity);
+    }
+  }, [clonedMaterial, glowMaterial, opacity]);
+
+  if (!radarMesh || !clonedMaterial) return null;
+
+  return (
+    <mesh
+      ref={ref || meshRef}
+      geometry={radarMesh.geometry}
+      material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+      scale={radarMesh.scale}
+      castShadow
+      receiveShadow
+      onClick={onClick}
+      name='radar'
+    >
+      {isSelected && (
+        <mesh geometry={radarMesh.geometry} scale={1}>
+          <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+        </mesh>
+      )}
+    </mesh>
+  );
+});
+
+const CameraMesh = forwardRef(({ cameraMesh, isSelected, onClick, opacity }, ref) => {
+  // 创建材质副本
+  const [clonedMaterial, setClonedMaterial] = useState(null);
+  const [glowMaterial, setGlowMaterial] = useState(null);
+  const meshRef = useRef();
+
+  useEffect(() => {
+    if (cameraMesh && cameraMesh.material) {
+      const material = createMaterialClone(cameraMesh.material);
+      const glowMat = createGlowMaterial(cameraMesh.material);
+      setClonedMaterial(material);
+      setGlowMaterial(glowMat);
+    }
+  }, [cameraMesh]);
+
+  useEffect(() => {
+    if (clonedMaterial) {
+      updateMaterialOpacity(clonedMaterial, opacity);
+    }
+    if (glowMaterial) {
+      updateMaterialOpacity(glowMaterial, opacity);
+    }
+  }, [clonedMaterial, glowMaterial, opacity]);
+
+  if (!cameraMesh || !clonedMaterial) return null;
+
+  return (
+    <mesh
+      ref={ref || meshRef}
+      geometry={cameraMesh.geometry}
+      material={isSelected && glowMaterial ? glowMaterial : clonedMaterial}
+      scale={cameraMesh.scale}
+      castShadow
+      receiveShadow
+      onClick={onClick}
+      name={cameraMesh.name ?? 'camera'}
+    >
+      {isSelected && (
+        <mesh geometry={cameraMesh.geometry} scale={1}>
+          <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+        </mesh>
+      )}
+    </mesh>
+  );
+});
+
 export default function RModelFbx(props) {
   const { isHasGoods, forkHeight = 500 } = props;
   const [bodyMesh, setBodyMesh] = useState(null);
@@ -576,11 +670,15 @@ export default function RModelFbx(props) {
   const [secondDoorMesh, setSecondDoorMesh] = useState(null);
   const [colorMesh, setColorMesh] = useState(null);
   const [baseDoorMesh, setBaseDoorMesh] = useState(null);
+  const [radarMesh, setRadarMesh] = useState(null);
+  const [camera1Mesh, setCamera1Mesh] = useState(null);
+  const [camera2Mesh, setCamera2Mesh] = useState(null);
+  const { camera, controls } = useThree();
   // 选中状态管理
   const [selectedPart, setSelectedPart] = useState(null);
   // 区分生产环境和开发环境
   const isProd = process.env.NODE_ENV === 'production';
-  const fbxPath = isProd ? '/analysis/static/fbx/r15-14.fbx' : '/static/fbx/r15-14.fbx';
+  const fbxPath = isProd ? '/analysis/static/fbx/r15-15.fbx' : '/static/fbx/r15-15.fbx';
   const fbx = useFBX(fbxPath);
   const clonedFbx = useMemo(() => SkeletonUtils.clone(fbx), [fbx]);
 
@@ -608,6 +706,15 @@ export default function RModelFbx(props) {
             case 'color-mesh':
               setColorMesh(child);
               break;
+            case 'radar':
+              setRadarMesh(child);
+              break;
+            case 'camera1':
+              setCamera1Mesh(child);
+              break;
+            case 'camera2':
+              setCamera2Mesh(child);
+              break;
             default:
               // 其他未命名的mesh归为车身
               if (!bodyMesh) setBodyMesh(child);
@@ -619,10 +726,14 @@ export default function RModelFbx(props) {
   }, [clonedFbx, bodyMesh]);
 
   // 处理部件点击事件
-  const handlePartClick = (partName) => (event) => {
+  const handlePartClick = (partName, position, target) => (event) => {
+    console.log(camera.position);
+
     event.stopPropagation(); // 阻止事件冒泡
     setSelectedPart(selectedPart === partName ? null : partName);
-    console.log('Selected part:', partName);
+    if (position) {
+      controls?.setLookAt(...position, ...target, true);
+    }
   };
 
   // 计算透明度：选中的部件不透明，其他部件半透明
@@ -639,6 +750,24 @@ export default function RModelFbx(props) {
         isSelected={selectedPart === 'body'}
         onClick={handlePartClick('body')}
         opacity={getOpacity('body')}
+      />
+      <RadarMesh
+        radarMesh={radarMesh}
+        isSelected={selectedPart === 'radar'}
+        onClick={handlePartClick('radar', [-0.6, 1.1, 0.5], [-0.6, 1.1, 0])}
+        opacity={getOpacity('radar')}
+      />
+      <CameraMesh
+        cameraMesh={camera1Mesh}
+        isSelected={selectedPart === 'camera-1'}
+        onClick={handlePartClick('camera-1', [-1, 0.15, 0.4], [0, 0.15, 0.4])}
+        opacity={getOpacity('camera-1')}
+      />
+      <CameraMesh
+        cameraMesh={camera2Mesh}
+        isSelected={selectedPart === 'camera-2'}
+        onClick={handlePartClick('camera-2', [-1, 0.15, -0.4], [0, 0.15, 0.4])}
+        opacity={getOpacity('camera-2')}
       />
       <ColorMesh
         colorMesh={colorMesh}

@@ -1,6 +1,6 @@
 import { CameraControls, GizmoHelper, GizmoViewport, Grid, PerspectiveCamera, SoftShadows } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useModelStore } from '../store';
 import PCDModel from './points/pcdCloud';
@@ -16,12 +16,22 @@ const gridConfig = {
 };
 
 function SceneHelpers() {
+  const axesRef = useRef<THREE.AxesHelper>(null);
+  const gridRef = useRef<THREE.LineSegments>(null);
+
+  useEffect(() => {
+    axesRef.current && (axesRef.current.raycast = () => {});
+    gridRef.current && (gridRef.current.raycast = () => {});
+  }, []);
+
   return (
     <>
-      <axesHelper args={[5]} />
+      <axesHelper ref={axesRef} args={[5]} />
+      <Grid ref={gridRef} args={[100, 100]} {...gridConfig} />
     </>
   );
 }
+
 const BaseElement = () => {
   const { camera, controls } = useThree();
   const { setCamera, setThreeControl, showPoints } = useModelStore(
@@ -63,7 +73,6 @@ const BaseElement = () => {
       <SoftShadows size={25} samples={16} />
 
       <SceneHelpers />
-      <Grid args={[100, 100]} {...gridConfig} />
       {/* <OrbitControls enablePan enableRotate enableZoom makeDefault /> */}
       <CameraControls
         makeDefault
