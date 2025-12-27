@@ -630,12 +630,20 @@ export default function RModelFbx(props) {
   const [camera2Mesh, setCamera2Mesh] = useState(null);
   const { camera, controls } = useThree();
   // 选中状态管理
-  const [selectedPart, setSelectedPart] = useState(null);
+  // const [selectedPart, setSelectedPart] = useState(null);
   // 区分生产环境和开发环境
   const isProd = process.env.NODE_ENV === 'production';
   const fbxPath = isProd ? '/toolkit/static/fbx/r15-15.fbx' : '/static/fbx/r15-15.fbx';
   const fbx = useFBX(fbxPath);
   const clonedFbx = useMemo(() => SkeletonUtils.clone(fbx), [fbx]);
+  const { selectedPart, setSelectedPart } = useModelStore(
+    useShallow((state) => {
+      return {
+        selectedPart: state.selectedPart,
+        setSelectedPart: state.setSelectedPart,
+      };
+    }),
+  );
 
   // 分离各个网格组件
   useEffect(() => {

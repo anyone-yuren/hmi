@@ -1,9 +1,20 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { useShallow } from 'zustand/react/shallow';
 import { useEditorStore } from '../../store/editorStore';
 
 export default function ContextMenu() {
-  const { contextMenuVisible, contextMenuPosition, selected, hideContextMenu } = useEditorStore();
+  const { contextMenuVisible, contextMenuPosition, selected, hideContextMenu, showPanel } = useEditorStore(
+    useShallow((store) => {
+      return {
+        showPanel: store.showPanel,
+        contextMenuVisible: store.contextMenuVisible,
+        contextMenuPosition: store.contextMenuPosition,
+        selected: store.selected,
+        hideContextMenu: store.hideContextMenu,
+      };
+    }),
+  );
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -78,6 +89,7 @@ export default function ContextMenu() {
             key={item.key}
             onClick={() => {
               console.log('menu:', item.key, selected);
+              showPanel(item.key as any); // ⭐ 打开面板
               hideContextMenu();
             }}
             className='px-2 py-1 cursor-pointer'

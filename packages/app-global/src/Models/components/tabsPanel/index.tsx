@@ -9,19 +9,21 @@ import { useSafetyStore } from '../../store/safity';
 import ObstacleHandles from './obsHandles';
 
 const TabsPanel = ({ setPanelOpen }) => {
-  const { mode, setMode, threeControl, setShowPoints, showPoints, modelSelect, setModelSelect } = useModelStore(
-    useShallow((state) => {
-      return {
-        mode: state.mode,
-        setMode: state.setMode,
-        threeControl: state.threeControl,
-        setShowPoints: state.setShowPoints,
-        showPoints: state.showPoints,
-        modelSelect: state.modelSelect,
-        setModelSelect: state.setModelSelect,
-      };
-    }),
-  );
+  const { mode, setMode, threeControl, setShowPoints, showPoints, modelSelect, setModelSelect, setSelectedPart } =
+    useModelStore(
+      useShallow((state) => {
+        return {
+          mode: state.mode,
+          setMode: state.setMode,
+          threeControl: state.threeControl,
+          setShowPoints: state.setShowPoints,
+          showPoints: state.showPoints,
+          modelSelect: state.modelSelect,
+          setModelSelect: state.setModelSelect,
+          setSelectedPart: state.setSelectedPart,
+        };
+      }),
+    );
   const { showStrategies, setShowStrategies, selectMeshName, setSelectMeshName } = useSafetyStore(
     useShallow((state) => ({
       showStrategies: state.showStrategies,
@@ -102,8 +104,38 @@ const TabsPanel = ({ setPanelOpen }) => {
       icon: <IconifyIcon icon='ion:game-controller-outline' size={16} />,
       label: '2d激光雷达',
       children: [
-        { key: 'radar1', label: '2d激光雷达-1' },
-        { key: 'radar2', label: '2d激光雷达-2' },
+        {
+          key: 'radar1',
+          label: '2d激光雷达-1',
+          onClick: () => {
+            threeControl?.setLookAt(
+              -1,
+              0.15,
+              -0.4,
+              0,
+              0.15,
+              0.4,
+              true, // 平滑动画
+            );
+            setSelectedPart('camera-2');
+          },
+        },
+        {
+          key: 'radar2',
+          label: '2d激光雷达-2',
+          onClick: () => {
+            threeControl?.setLookAt(
+              -1,
+              0.15,
+              0.4,
+              0,
+              0.15,
+              0.4,
+              true, // 平滑动画
+            );
+            setSelectedPart('camera-1');
+          },
+        },
       ],
     },
     {
@@ -129,7 +161,24 @@ const TabsPanel = ({ setPanelOpen }) => {
       key: '5',
       icon: <IconifyIcon icon='solar:camera-outline' size={16} />,
       label: 'Tof视觉相机',
-      children: [{ key: 'topCamera', label: 'Tof牙尖相机-1' }],
+      children: [
+        {
+          key: 'topCamera',
+          label: 'Tof牙尖相机-1',
+          onClick: () => {
+            threeControl?.setLookAt(
+              -0.6,
+              1.1,
+              0.5,
+              -0.6,
+              1.1,
+              0,
+              true, // 平滑动画
+            );
+            setSelectedPart('radar');
+          },
+        },
+      ],
     },
     {
       key: '6',
@@ -181,7 +230,7 @@ const TabsPanel = ({ setPanelOpen }) => {
   return (
     <>
       <div
-        className={classNames(' absolute top-10 left-2 z-10 flex flex-col gap-2  overflow-auto min-w-32 bg-black/80', {
+        className={classNames(' absolute top-10 left-2 z-10 flex flex-col gap-2  overflow-auto min-w-32 bg-[#1e1e1e]', {
           hidden: mode !== 'editor',
         })}
       >

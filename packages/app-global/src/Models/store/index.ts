@@ -15,6 +15,10 @@ interface State {
   showPoints: boolean;
   setShowPoints: (showPoints: boolean) => void;
 
+  // selectedPart 选中的部分
+  selectedPart: any;
+  setSelectedPart: (selectedPart: any) => void;
+
   // 相机的位置
   cameraPosition: any;
   setCameraPosition: (cameraPosition: any) => void;
@@ -107,6 +111,13 @@ export const useModelStore = create<State>()(
       setEnableClip: (enableClip: boolean) => {
         set(() => ({
           enableClip,
+        }));
+      },
+      // selectedPart 选中的部分
+      selectedPart: null,
+      setSelectedPart: (selectedPart: any) => {
+        set(() => ({
+          selectedPart,
         }));
       },
     }),

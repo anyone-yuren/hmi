@@ -8,6 +8,13 @@ interface EditorState {
   contextMenuVisible: boolean;
   contextMenuPosition: { x: number; y: number } | null;
 
+  // ⭐ 面板
+  panelType: null | 'clip' | 'density' | 'focus' | 'calibration';
+  panelVisible: boolean;
+
+  showPanel: (type: EditorState['panelType']) => void;
+  hidePanel: () => void;
+
   selectObject: (obj: THREE.Object3D | null) => void;
   showContextMenu: (x: number, y: number) => void;
   hideContextMenu: () => void;
@@ -21,6 +28,21 @@ export const useEditorStore = create<EditorState>()(
 
       contextMenuVisible: false,
       contextMenuPosition: null,
+
+      panelType: null,
+      panelVisible: false,
+
+      showPanel: (type) =>
+        set({
+          panelType: type,
+          panelVisible: true,
+        }),
+
+      hidePanel: () =>
+        set({
+          panelVisible: false,
+          panelType: null,
+        }),
 
       selectObject: (obj) => set({ selected: obj }),
 

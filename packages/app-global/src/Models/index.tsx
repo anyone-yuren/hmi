@@ -11,6 +11,7 @@ import RightPanel from './components/rightPanel';
 import TabsPanel from './components/tabsPanel';
 import BaseElement from './threeComponent/base';
 import ContextMenu from './threeComponent/ContextMenu';
+import PanelRoot from './threeComponent/PanelRoot';
 import { SceneRaycaster } from './threeComponent/SceneRaycaster';
 import VisionFlow from './visionFlow';
 import { useVisionFlowStore } from './visionFlow/store/visionFlowStore';
@@ -151,6 +152,8 @@ export default function R3FBasicScene() {
       };
     }),
   );
+  const panelBoundsRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className='w-full h-full relative flex gap-2 '>
       <motion.div
@@ -167,6 +170,7 @@ export default function R3FBasicScene() {
             height: openVisionPanel ? `calc(100% - 300px)` : '100%', // 80px 是底部面板的高度
           }}
           transition={{ duration: 0.3 }}
+          ref={panelBoundsRef}
         >
           <Canvas
             shadows
@@ -188,6 +192,7 @@ export default function R3FBasicScene() {
             </Suspense>
           </Canvas>
           <ContextMenu /> {/* 完全独立 */}
+          <PanelRoot boundsRef={panelBoundsRef} /> {/* ⭐ 只渲染一次 */}
         </motion.div>
         <AnimatePresence>
           {openVisionPanel && (
