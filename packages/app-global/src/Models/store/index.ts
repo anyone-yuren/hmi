@@ -71,7 +71,7 @@ export const useModelStore = create<State>()(
           showPoints,
         }));
       },
-      modelSelect: 'radar1',
+      modelSelect: '',
       setModelSelect: (modelSelect: any) => {
         set(() => ({
           modelSelect,

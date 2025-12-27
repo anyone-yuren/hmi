@@ -11,6 +11,7 @@ import { BoxGeometry, MeshBasicMaterial } from 'three';
 import { SkeletonUtils } from 'three-stdlib';
 import { useShallow } from 'zustand/react/shallow';
 import { useModelStore } from '../store';
+import { useEditorStore } from '../store/editorStore';
 import { useSafetyStore } from '../store/safity';
 import { useVisionFlowStore } from '../visionFlow/store/visionFlowStore';
 
@@ -629,6 +630,14 @@ export default function RModelFbx(props) {
   const [camera1Mesh, setCamera1Mesh] = useState(null);
   const [camera2Mesh, setCamera2Mesh] = useState(null);
   const { camera, controls } = useThree();
+
+  const { selectObject } = useEditorStore(
+    useShallow((store) => {
+      return {
+        selectObject: store.selectObject,
+      };
+    }),
+  );
   // 选中状态管理
   // const [selectedPart, setSelectedPart] = useState(null);
   // 区分生产环境和开发环境
@@ -687,6 +696,21 @@ export default function RModelFbx(props) {
       });
     }
   }, [clonedFbx, bodyMesh]);
+
+  useEffect(() => {
+    if (!selectedPart) return;
+    switch (selectedPart) {
+      case 'radar':
+        selectObject(radarMesh);
+        break;
+      case 'camera-1':
+        selectObject(camera1Mesh);
+        break;
+      case 'camera-2':
+        selectObject(camera2Mesh);
+        break;
+    }
+  }, [selectedPart, selectObject]);
 
   // 处理部件点击事件
   const handlePartClick = (partName, position, target) => (event) => {
