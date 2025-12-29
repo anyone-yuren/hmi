@@ -4,6 +4,7 @@ import { useMapEditorStore } from '../../store';
 import DrawLinesParamsPanel from '../drawLine/components/paramspanel';
 import DrawPointsParamsPanel from '../drawPoints/components/paramspanel';
 import DrawDeviceParamsPanel from '../handles/components/draw/components/device/paramspanel';
+import DrawNavigationParamsPanel from '../handles/components/draw/components/navigation/paramspanel';
 
 const ParamsPanel = () => {
   const { paramsPanelCollapsed, selectDrawType } = useMapEditorStore(
@@ -31,6 +32,7 @@ const ParamsPanel = () => {
       {selectDrawType === 'point' && <DrawPointsParamsPanel />}
       {(selectDrawType === 'line' || selectDrawType === 'bspline') && <DrawLinesParamsPanel />}
       {selectDrawType === 'device' && <DrawDeviceParamsPanel />}
+      {selectDrawType === 'navigation' && <DrawNavigationParamsPanel />}
     </motion.div>
   );
 };

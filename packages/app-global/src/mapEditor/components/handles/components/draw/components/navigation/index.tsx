@@ -1,4 +1,4 @@
-import { Form, Radio } from 'antd';
+import { Form } from 'antd';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
@@ -51,7 +51,7 @@ const DrawNavigationSelect = () => {
         }}
       >
         <IconifyIcon icon='mingcute:navigation-line' size={16} />
-        <span>混导工具链</span>
+        <span>导航区域管理</span>
       </div>
 
       <motion.div
@@ -69,7 +69,7 @@ const DrawNavigationSelect = () => {
         }}
       >
         <div className='flex items-center justify-between px-2 py-1'>
-          <div className='flex gap-2 items-center text-white/80'>
+          {/* <div className='flex gap-2 items-center text-white/80'>
             <div
               className={classNames('hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer', {
                 'bg-[#00d1d1]/60': true,
@@ -137,7 +137,8 @@ const DrawNavigationSelect = () => {
                 </Radio.Group>
               </Form.Item>
             </Form>
-          </div>
+          </div> */}
+          <div>功能预设</div>
           <div
             className='hover:bg-[#00d1d1]/20 aspect-square rounded-md cursor-pointer'
             onClick={() => {

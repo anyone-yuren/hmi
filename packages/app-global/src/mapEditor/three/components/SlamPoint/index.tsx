@@ -1,8 +1,11 @@
+import { animated, useSpring } from '@react-spring/three';
 import { Detailed } from '@react-three/drei';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
+import { useShallow } from 'zustand/react/shallow';
+import { useMapEditorViewStore } from '../../../store/view';
 
 export function SlamPointCloud({
   url,
@@ -16,6 +19,13 @@ export function SlamPointCloud({
   const geometry = useLoader(PLYLoader, url);
   const pointsRef = useRef<THREE.Points>(null);
   const { camera } = useThree();
+  const { floorOffset } = useMapEditorViewStore(
+    useShallow((state) => {
+      return {
+        floorOffset: state.floorOffset,
+      };
+    }),
+  );
 
   // Shader 材质
   const materials = useMemo(() => {
@@ -38,7 +48,7 @@ export function SlamPointCloud({
           }
 
           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = size * (200.0 / -mvPosition.z);
+          gl_PointSize = size * (150.0 / -mvPosition.z);
           gl_Position = projectionMatrix * mvPosition;
         }
       `,
@@ -74,7 +84,7 @@ export function SlamPointCloud({
     lastZoomRef.current = zoom; // 更新记录
 
     let step = 1;
-    if (zoom < 20) step = 5;
+    if (zoom < 20) step = 10;
     else if (zoom < 40) step = 3;
     else step = 1;
     materials.forEach((mat) => {
@@ -82,13 +92,29 @@ export function SlamPointCloud({
     });
   });
 
+  /* ---------- spring：位姿动画 ---------- */
+  const spring = useSpring({
+    position: floorOffset ? [floorOffset[0] / 1000, floorOffset[1] / 1000, 0] : [0, 0, 0],
+    // rotation: [
+    //   roll != null ? deg2rad(roll) : rotation[0],
+    //   pitch != null ? deg2rad(pitch) : rotation[1],
+    //   yaw != null ? deg2rad(yaw) : rotation[2],
+    // ],
+    config: {
+      mass: 1,
+      tension: 170,
+      friction: 26,
+    },
+  });
+
+  console.log(floorOffset);
   return (
-    <group rotation={[0, 0, 0]} position={[1, 0, 0]}>
+    <animated.group rotation={[0, 0, 0]} position={spring.position ?? [0, 0, 0]}>
       <Detailed distances={[30, 15, 0]}>
         <points ref={pointsRef} geometry={geometry} material={materials[0]} />
         <points geometry={geometry} material={materials[1]} />
         <points geometry={geometry} material={materials[2]} />
       </Detailed>
-    </group>
+    </animated.group>
   );
 }

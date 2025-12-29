@@ -14,6 +14,9 @@ interface State {
   // 显示地图编辑器
   showMapEditor: boolean;
   setShowMapEditor: (showMapEditor: boolean) => void;
+  //设置楼层的偏移量
+  floorOffset: [number, number];
+  setFloorOffset: (floorOffset: [number, number]) => void;
 }
 
 export const useMapEditorViewStore = create<State>()(
@@ -41,6 +44,12 @@ export const useMapEditorViewStore = create<State>()(
       setShowMapEditor: (showMapEditor: boolean) => {
         set(() => ({
           showMapEditor,
+        }));
+      },
+      floorOffset: [0, 0],
+      setFloorOffset: (floorOffset: [number, number]) => {
+        set(() => ({
+          floorOffset,
         }));
       },
     }),
