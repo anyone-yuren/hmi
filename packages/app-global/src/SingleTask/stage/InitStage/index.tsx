@@ -67,6 +67,7 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
     min: !infiniteView ? maxScale * 0.9 : 0,
     max: !infiniteView ? 0.25 : 10000,
   });
+
   const {
     points: boundaryPoints,
     setPoints: setBoundaryPoints,
@@ -112,6 +113,9 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
   });
 
   useImperativeHandle(ref, () => ({
+    refresh: () => {
+      setCurrentScale((origin) => (origin += 0.1));
+    },
     setStageScale: (scale) => {
       const stage: any = stageRef.current?.getStage();
       stage.scale({ x: scale, y: scale });

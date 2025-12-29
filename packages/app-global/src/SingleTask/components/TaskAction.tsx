@@ -286,6 +286,7 @@ const TaskAction = forwardRef((props: any, ref) => {
                   <Grid item xs>
                     <PointOrLineBox
                       key='left'
+                      name='left_action_panel'
                       title={task.task_type}
                       subTitle={t('deployer.singleTask.plsSelectTaskType')}
                       list={[
@@ -303,6 +304,7 @@ const TaskAction = forwardRef((props: any, ref) => {
                   <Grid item xs>
                     <PointOrLineBox
                       key='right'
+                      name='right_action_panel'
                       title={task.task_point_id}
                       subTitle={t('deployer.singleTask.plsSelectPoint')}
                       list={pointsHash?.[task.task_type] || []}

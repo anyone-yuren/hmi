@@ -342,6 +342,7 @@ const SingleTask = () => {
           modeHashMap={modeHashMap}
           getMapTaskMode={getMapTaskMode}
           setOffsetVisible={setOffsetVisible}
+          pointHashMap={pointsDict?.hashMap}
         ></MapActionBar>
 
         {
@@ -512,7 +513,11 @@ const SingleTask = () => {
           open={offsetModalVisible}
           setOpen={setOffsetModalVisible}
           fullScreen={false}
-          sx={{ zIndex: 1213, width: '600px!important', top: isMobile ? '230px!important' : null }}
+          sx={{
+            zIndex: 1213,
+            width: '600px!important',
+            top: isMobile && offsetModalConfig?.type != 'Info' ? '230px!important' : null,
+          }}
         >
           <OffsetModal
             {...offsetModalConfig}
