@@ -1,18 +1,32 @@
 import { Canvas } from '@react-three/fiber';
 import { useSize } from 'ahooks';
 import { useRef } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import CursorGuideLine from './components/cursorGuideLine';
 import DrawBsline from './components/drawLine/deawBsline';
 import DrawLine from './components/drawLine/draw';
 import DrawPoints from './components/drawPoints/draw';
 import Handles from './components/handles';
 import ParamsPanel from './components/paramPanel';
+import HybridManagement from './hybridmanagement';
+import { useMapEditorViewStore } from './store/view';
 import BaseElement from './three/base';
 import RenderDevice from './three/components';
+import { SlamPointCloud } from './three/components/SlamPoint';
 
 const MapEditor = () => {
+  const { showMapEditor } = useMapEditorViewStore(
+    useShallow((state) => {
+      return {
+        showMapEditor: state.showMapEditor,
+      };
+    }),
+  );
   const wrapperRef = useRef<HTMLDivElement>(null);
   const size = useSize(wrapperRef);
+  if (!showMapEditor) {
+    return <HybridManagement />;
+  }
   return (
     <div className='w-full h-full flex flex-col gap-2'>
       <div className='w-full h-full flex gap-2 overflow-hidden'>
@@ -26,6 +40,13 @@ const MapEditor = () => {
               <Canvas
                 resize={{ scroll: false, offsetSize: true }} // R3F 官方推荐的 resize 配置
                 className=' w-full h-full'
+                dpr={[1, 1.5]}
+                gl={{
+                  antialias: false,
+                  stencil: false,
+                  depth: true,
+                  powerPreference: 'high-performance',
+                }}
               >
                 <BaseElement size={size} />
                 <RenderDevice />
@@ -33,6 +54,7 @@ const MapEditor = () => {
                 <DrawLine />
                 <DrawBsline />
                 <CursorGuideLine />
+                <SlamPointCloud url='/static/ply/warehouse_slam.ply' />
               </Canvas>
             )}
           </div>

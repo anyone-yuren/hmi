@@ -52,7 +52,14 @@ const BaseElement = ({ size }) => {
         {/* <ResizeCamera size={size} /> */}
         {/* <ResizeCamera /> */}
 
-        <MapControls enabled={true} enableRotate={false} screenSpacePanning={false} makeDefault maxDistance={50} />
+        <MapControls
+          enabled={true}
+          enableRotate={false}
+          screenSpacePanning={false}
+          makeDefault
+          maxDistance={50}
+          minZoom={10}
+        />
 
         {/* ✅ Grid 在 XY 平面 */}
         <Grid

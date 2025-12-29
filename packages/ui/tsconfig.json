@@ -9,6 +9,6 @@
       "#/*": ["types/*"]
     }
   },
-  "include": ["modules/**/*.ts", "modules/**/*.d.ts", "modules/**/*.tsx", "index.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "index.ts"],
   "exclude": ["node_modules", "dist", "**/*.js"]
 }

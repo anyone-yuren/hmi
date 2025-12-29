@@ -11,6 +11,9 @@ interface State {
   // 筛选显示设备
   devicesView: [];
   setDevicesView: (devicesView: []) => void;
+  // 显示地图编辑器
+  showMapEditor: boolean;
+  setShowMapEditor: (showMapEditor: boolean) => void;
 }
 
 export const useMapEditorViewStore = create<State>()(
@@ -32,6 +35,12 @@ export const useMapEditorViewStore = create<State>()(
       setDevicesView: (devicesView: []) => {
         set(() => ({
           devicesView,
+        }));
+      },
+      showMapEditor: false,
+      setShowMapEditor: (showMapEditor: boolean) => {
+        set(() => ({
+          showMapEditor,
         }));
       },
     }),
