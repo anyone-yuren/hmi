@@ -223,16 +223,18 @@ function DrawLines() {
     <>
       {lines.map((line) => (
         <group key={line.id}>
-          <Line
-            points={line.points}
-            color={line.id === selectedLineId ? '#ff0000' : '#00ff00'}
-            lineWidth={2}
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedLineId(line.id);
-              setSelectLineData(buildSelectLineData(line));
-            }}
-          />
+          {line.points.length >= 2 && (
+            <Line
+              points={line.points}
+              color={line.id === selectedLineId ? '#ff0000' : '#00ff00'}
+              lineWidth={2}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedLineId(line.id);
+                setSelectLineData(buildSelectLineData(line));
+              }}
+            />
+          )}
 
           {/* 箭头 */}
           <Arrow start={line.start} end={line.end} selected={line.id === selectedLineId} />
@@ -257,7 +259,9 @@ function DrawLines() {
         </group>
       ))}
 
-      {drawing && <Line points={[drawing.start, drawing.end]} color='#ff0000' lineWidth={2} />}
+      {drawing && drawing.start && drawing.end && (
+        <Line points={[drawing.start, drawing.end]} color='#ff0000' lineWidth={2} />
+      )}
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { Checkbox, Collapse, ColorPicker, Dropdown, Form, Input, InputNumber, Select } from 'antd';
+import { Checkbox, Collapse, ColorPicker, Dropdown, Form, Input, InputNumber, Tree } from 'antd';
 import classNames from 'classnames';
 import { useEffect, useMemo, useState } from 'react';
 import { IconifyIcon } from 'ui';
@@ -7,6 +7,22 @@ import { useDebouncedStoreSetter } from '../../../../../../hooks/useDebouncedSto
 import { useMapEditorStore } from '../../../../../../store';
 import { useMapEditorViewStore } from '../../../../../../store/view';
 const { Search } = Input;
+const mapData = [
+  {
+    img: '/static/floor/map-1.png',
+    width: 2571,
+    height: 2431,
+    name: 'map-1',
+    key: 'map-1',
+  },
+  {
+    img: '/static/floor/map-2.png',
+    width: 7956,
+    height: 5287,
+    name: 'map-2',
+    key: 'map-2',
+  },
+];
 const DrawNavigationParamsPanel = () => {
   const [form] = Form.useForm();
 
@@ -36,11 +52,11 @@ const DrawNavigationParamsPanel = () => {
   // 将自动门和电梯合并成一个列表
   const deviceTreeData = [
     {
-      title: '自动门',
-      key: 'autoDoor',
-      children: autoDoorList.map((item) => ({
-        title: `自动门 ${item.id}`,
-        key: `autoDoor-${item.id}`,
+      title: '库位点',
+      key: 'libraryPoint',
+      children: new Array(10).fill(0).map((_, index) => ({
+        title: `库位点 ${index + 1}`,
+        key: `libraryPoint-${index + 1}`,
         isLeaf: true,
       })),
     },
@@ -131,30 +147,23 @@ const DrawNavigationParamsPanel = () => {
           trigger={['contextMenu']}
         >
           <ul className='flex flex-col gap-2 text-xs py-2'>
-            {new Array(4)
-              .fill(0)
-              .map((_, index) => ({
-                label: `楼层${index + 1}`,
-                key: `camera${index + 1}`,
-                isSelected: index % 2 === 0,
-              }))
-              .map((item, index) => {
-                return (
-                  <li
-                    className={classNames(
-                      'cursor-pointer hover:bg-cyan-500/30 px-2 py-0.5 flex items-center justify-between',
-                      {
-                        'bg-white/5': index % 2 === 0,
-                        'text-gray-400': !item.isSelected,
-                        'bg-[#00d1d1]/80 !text-black': index === 1,
-                      },
-                    )}
-                    key={item.key}
-                  >
-                    {item.label}
-                  </li>
-                );
-              })}
+            {mapData.map((item, index) => {
+              return (
+                <li
+                  className={classNames(
+                    'cursor-pointer hover:bg-cyan-500/30 px-2 py-0.5 flex items-center justify-between',
+                    {
+                      'bg-white/5': index % 2 === 0,
+                      'text-gray-400': !item.isSelected,
+                      'bg-[#00d1d1]/80 !text-black': index === 1,
+                    },
+                  )}
+                  key={item.key}
+                >
+                  {item.name}
+                </li>
+              );
+            })}
           </ul>
         </Dropdown>
         {/* 使用 Tree 组件渲染设备列表 */}
@@ -197,7 +206,7 @@ const DrawNavigationParamsPanel = () => {
         >
           <Collapse defaultActiveKey={['1', '2', '3', '4', '5']}>
             {/* ---------------- 通用属性 ---------------- */}
-            <Collapse.Panel header='位置' key='1'>
+            <Collapse.Panel header='楼层属性' key='1'>
               <Form.Item label='x' name='x' rules={[{ required: true, message: '请输入x坐标' }]}>
                 <InputNumber className='w-full' size='small' />
               </Form.Item>
@@ -221,42 +230,29 @@ const DrawNavigationParamsPanel = () => {
               </Form.Item>
             </Collapse.Panel>
             {/* ---------------- 高级属性 ---------------- */}
-            <Collapse.Panel header='高级属性' key='3'>
-              <Form.Item
-                label='连接超时时间'
-                name='connectTimeout'
-                rules={[{ required: true, message: '请输入连接超时时间' }]}
-              >
-                <Input size='small' />
-              </Form.Item>
-              <Form.Item
-                label='接收超时时间'
-                name='receiveTimeout'
-                rules={[{ required: true, message: '请输入接收超时时间' }]}
-              >
-                <Input size='small' />
-              </Form.Item>
-              <Form.Item label='模式' name='mode' rules={[{ required: true, message: '请选择模式' }]}>
-                <Select
-                  size='small'
-                  options={[
-                    { label: '自动', value: 'auto' },
-                    { label: '手动', value: 'manual' },
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item label='站点编号' name='stationId' rules={[{ required: true, message: '请输入站点编号' }]}>
-                <Input size='small' />
-              </Form.Item>
-              <Form.Item label='编码类型' name='encodingType' rules={[{ required: true, message: '请选择编码类型' }]}>
-                <Select
-                  size='small'
-                  options={[
-                    { label: 'ASCII', value: 'ascii' },
-                    { label: 'HEX', value: 'hex' },
-                  ]}
-                />
-              </Form.Item>
+            <Collapse.Panel header='楼层数据' key='3'>
+              <Tree
+                className='max-h-[200px] overflow-auto py-2'
+                treeData={treeData}
+                height={200}
+                defaultExpandAll
+                checkable
+                onExpand={onExpand}
+                autoExpandParent={autoExpandParent}
+                onSelect={(selectedKeys, info) => {
+                  console.log('Selected device:', info.node.title);
+                }}
+                onRightClick={(info) => {
+                  // 右键菜单
+                  const menuItems = [
+                    { label: '复制', key: 'copy' },
+                    { label: '删除', key: 'delete' },
+                    { label: '选择', key: 'select' },
+                  ];
+                  // 你可以在这里执行具体操作
+                  console.log('Right-clicked on device:', info.node.title);
+                }}
+              />
             </Collapse.Panel>
           </Collapse>
         </Form>

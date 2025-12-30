@@ -73,7 +73,7 @@ export default function DrawBSpline() {
 
   /* ------------------- 曲线采样 ------------------- */
   const sampleCurve = (points: THREE.Vector3[]) => {
-    if (points.length < 2) return points;
+    if (points.length < 2) return [new THREE.Vector3(), new THREE.Vector3()];
     const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal');
     // 参数：points, closed=false, curveType='centripetal'
     return curve.getPoints(CURVE_SEGMENTS);
@@ -83,7 +83,6 @@ export default function DrawBSpline() {
   const onMouseDown = (e: MouseEvent) => {
     if (selectDrawType !== 'bspline' || startSelection) return;
     if (selectedId !== null || dragging.current) return; // 编辑或拖拽中不绘制
-
     const p = pick(e);
     if (!p) return;
     const point = p.clone();
@@ -175,6 +174,8 @@ export default function DrawBSpline() {
     controls.enablePan = !editing;
     controls.enableZoom = true;
   }, [selectedId, controls]);
+
+  console.log(curves);
 
   /* ------------------- 渲染 ------------------- */
   return (

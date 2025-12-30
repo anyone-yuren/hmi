@@ -10,11 +10,15 @@ const mapData = [
     img: '/static/floor/map-1.png',
     width: 2571,
     height: 2431,
+    name: 'map-1',
+    key: 'map-1',
   },
   {
     img: '/static/floor/map-2.png',
     width: 7956,
     height: 5287,
+    name: 'map-2',
+    key: 'map-2',
   },
 ];
 
