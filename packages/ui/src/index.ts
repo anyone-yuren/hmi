@@ -1,7 +1,6 @@
 import AnimatePanel from './AnimatePanel/index';
 import Translatex from './AnimatePanel/Translatex';
 import BaseCard from './Card';
-import DotGrid from './DotGrid';
 import DrawBoard from './DrawBoard';
 import GlobalConfig from './GlobalConfig/ConfigProvider';
 import GlowingCard from './GrowingCard';
@@ -17,7 +16,7 @@ export {
   AnimatePanel,
   BaseCard,
   BaseSlick,
-  DotGrid,
+  // DotGrid,
   DrawBoard,
   GlobalConfig,
   GlowingCard,

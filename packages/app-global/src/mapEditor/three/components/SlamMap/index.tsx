@@ -5,24 +5,20 @@ import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorViewStore } from '../../../store/view';
 const deg2rad = (deg?: number) => ((deg ?? 0) * Math.PI) / 180;
 
-const mapData = [
-  {
-    img: '/static/floor/map-1.png',
-    width: 2571,
-    height: 2431,
-    name: 'map-1',
-    key: 'map-1',
-  },
-  {
-    img: '/static/floor/map-2.png',
-    width: 7956,
-    height: 5287,
-    name: 'map-2',
-    key: 'map-2',
-  },
-];
-
 export function SlamMapFloor({ mapIndex = 0 }: { mapIndex?: number }) {
+  const BASE_URL = import.meta.env.BASE_URL;
+  const mapData = [
+    {
+      img: `${BASE_URL}static/floor/map-1.png`,
+      width: 2571,
+      height: 2431,
+    },
+    {
+      img: `${BASE_URL}static/floor/map-2.png`,
+      width: 7956,
+      height: 5287,
+    },
+  ];
   const map = mapData[mapIndex];
 
   const { floorOffset, floorRotation, floorColor } = useMapEditorViewStore(
