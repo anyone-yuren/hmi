@@ -97,7 +97,7 @@ button {
   height: auto;
 }
 .ant-row {
-  align-items: baseline;
+  align-items: center;
 }
 .ant-form-item-label {
   display: flex !important;

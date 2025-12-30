@@ -12,7 +12,7 @@ import HybridManagement from './hybridmanagement';
 import { useMapEditorViewStore } from './store/view';
 import BaseElement from './three/base';
 import RenderDevice from './three/components';
-import { SlamPointCloud } from './three/components/SlamPoint';
+import { SlamMapFloor } from './three/components/SlamMap';
 
 const MapEditor = () => {
   const { showMapEditor } = useMapEditorViewStore(
@@ -54,7 +54,8 @@ const MapEditor = () => {
                 <DrawLine />
                 <DrawBsline />
                 <CursorGuideLine />
-                <SlamPointCloud url='/static/ply/warehouse_slam.ply' />
+                {/* <SlamPointCloud url='/static/ply/warehouse_slam.ply' /> */}
+                <SlamMapFloor mapIndex={0} />
               </Canvas>
             )}
           </div>

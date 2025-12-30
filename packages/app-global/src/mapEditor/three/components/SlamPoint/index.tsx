@@ -1,12 +1,23 @@
 import { animated, useSpring } from '@react-spring/three';
-import { Detailed } from '@react-three/drei';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorViewStore } from '../../../store/view';
-
+const deg2rad = (deg?: number) => ((deg ?? 0) * Math.PI) / 180;
+const mapData = [
+  {
+    img: '/static/floor/map-1.png',
+    width: 2571,
+    height: 2431,
+  },
+  {
+    img: '/static/floor/map-2.png',
+    width: 7956,
+    height: 5287,
+  },
+];
 export function SlamPointCloud({
   url,
   color = '#ffffff',
@@ -19,10 +30,11 @@ export function SlamPointCloud({
   const geometry = useLoader(PLYLoader, url);
   const pointsRef = useRef<THREE.Points>(null);
   const { camera } = useThree();
-  const { floorOffset } = useMapEditorViewStore(
+  const { floorOffset, floorRotation } = useMapEditorViewStore(
     useShallow((state) => {
       return {
         floorOffset: state.floorOffset,
+        floorRotation: state.floorRotation,
       };
     }),
   );
@@ -94,7 +106,8 @@ export function SlamPointCloud({
 
   /* ---------- spring：位姿动画 ---------- */
   const spring = useSpring({
-    position: floorOffset ? [floorOffset[0] / 1000, floorOffset[1] / 1000, 0] : [0, 0, 0],
+    position: floorOffset ? [floorOffset?.[0] / 1000, floorOffset?.[1] / 1000, 0] : [0, 0, 0],
+    rotationZ: deg2rad(floorRotation),
     // rotation: [
     //   roll != null ? deg2rad(roll) : rotation[0],
     //   pitch != null ? deg2rad(pitch) : rotation[1],
@@ -106,15 +119,24 @@ export function SlamPointCloud({
       friction: 26,
     },
   });
+  console.log(pointsRef);
 
-  console.log(floorOffset);
   return (
-    <animated.group rotation={[0, 0, 0]} position={spring.position ?? [0, 0, 0]}>
-      <Detailed distances={[30, 15, 0]}>
-        <points ref={pointsRef} geometry={geometry} material={materials[0]} />
+    <animated.group rotation={spring.rotationZ.to((z) => [0, 0, z])} position={spring.position ?? [0, 0, 0]}>
+      <points ref={pointsRef} geometry={geometry} material={materials[0]} frustumCulled={false} />
+      {/* <Detailed distances={[30, 15, 0]}>
         <points geometry={geometry} material={materials[1]} />
         <points geometry={geometry} material={materials[2]} />
-      </Detailed>
+      </Detailed> */}
+      <>
+        {/* 显示坐标轴 */}
+        <axesHelper args={[5]} />
+        {/* 显示包围盒 */}
+        <mesh>
+          <boxGeometry args={[100, 100, 0.1]} />
+          <meshBasicMaterial color='red' wireframe opacity={0.3} transparent />
+        </mesh>
+      </>
     </animated.group>
   );
 }

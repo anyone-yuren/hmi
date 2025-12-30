@@ -17,6 +17,10 @@ interface State {
   //设置楼层的偏移量
   floorOffset: [number, number];
   setFloorOffset: (floorOffset: [number, number]) => void;
+  floorRotation: number;
+  setFloorRotation: (floorRotation: number) => void;
+  floorColor: string;
+  setFloorColor: (floorColor: string) => void;
 }
 
 export const useMapEditorViewStore = create<State>()(
@@ -50,6 +54,18 @@ export const useMapEditorViewStore = create<State>()(
       setFloorOffset: (floorOffset: [number, number]) => {
         set(() => ({
           floorOffset,
+        }));
+      },
+      floorRotation: 0,
+      setFloorRotation: (floorRotation: number) => {
+        set(() => ({
+          floorRotation,
+        }));
+      },
+      floorColor: '#1677ff',
+      setFloorColor: (floorColor: string) => {
+        set(() => ({
+          floorColor,
         }));
       },
     }),

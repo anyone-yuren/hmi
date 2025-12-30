@@ -1,4 +1,4 @@
-import { Checkbox, Collapse, Dropdown, Form, Input, Select } from 'antd';
+import { Checkbox, Collapse, ColorPicker, Dropdown, Form, Input, InputNumber, Select } from 'antd';
 import classNames from 'classnames';
 import { useEffect, useMemo, useState } from 'react';
 import { IconifyIcon } from 'ui';
@@ -18,13 +18,20 @@ const DrawNavigationParamsPanel = () => {
     })),
   );
 
-  const { setFloorOffset, floorOffset } = useMapEditorViewStore(
-    useShallow((state) => ({
-      floorOffset: state.floorOffset,
-      setFloorOffset: state.setFloorOffset,
-    })),
-  );
+  const { setFloorOffset, floorOffset, floorRotation, setFloorRotation, floorColor, setFloorColor } =
+    useMapEditorViewStore(
+      useShallow((state) => ({
+        floorOffset: state.floorOffset,
+        setFloorOffset: state.setFloorOffset,
+        floorRotation: state.floorRotation,
+        setFloorRotation: state.setFloorRotation,
+        floorColor: state.floorColor,
+        setFloorColor: state.setFloorColor,
+      })),
+    );
   const setDebouncedFloorOffset = useDebouncedStoreSetter(setFloorOffset, 300);
+  const setDebouncedFloorRotation = useDebouncedStoreSetter(setFloorRotation, 300);
+  const setDebouncedFloorColor = useDebouncedStoreSetter(setFloorColor, 300);
 
   // 将自动门和电梯合并成一个列表
   const deviceTreeData = [
@@ -54,12 +61,13 @@ const DrawNavigationParamsPanel = () => {
       form.resetFields();
       return;
     }
-
     form.setFieldsValue({
       xOffset: floorOffset[0],
       yOffset: floorOffset[1],
+      rotation: floorRotation,
+      floorColor: floorColor,
     });
-  }, [floorOffset]);
+  }, [floorOffset, floorRotation, floorColor]);
 
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
@@ -181,27 +189,32 @@ const DrawNavigationParamsPanel = () => {
           wrapperCol={{ span: 14 }}
           autoComplete='off'
           onValuesChange={(changed, all) => {
-            debugger;
-            setDebouncedFloorOffset([all.x, all.y]);
+            const color = all.floorColor?.toHexString?.() || '#ffffff';
+            setDebouncedFloorOffset([all.xOffset, all.yOffset]);
+            setDebouncedFloorRotation(all.rotation);
+            setDebouncedFloorColor(color);
           }}
         >
           <Collapse defaultActiveKey={['1', '2', '3', '4', '5']}>
             {/* ---------------- 通用属性 ---------------- */}
             <Collapse.Panel header='位置' key='1'>
               <Form.Item label='x' name='x' rules={[{ required: true, message: '请输入x坐标' }]}>
-                <Input size='small' />
+                <InputNumber className='w-full' size='small' />
               </Form.Item>
               <Form.Item label='y' name='y' rules={[{ required: true, message: '请输入y坐标' }]}>
-                <Input size='small' />
+                <InputNumber className='w-full' size='small' />
               </Form.Item>
               <Form.Item label='x偏移量' name='xOffset' rules={[{ required: true, message: '请输入x偏移量' }]}>
-                <Input size='small' />
+                <InputNumber className='w-full' size='small' />
               </Form.Item>
               <Form.Item label='y偏移量' name='yOffset' rules={[{ required: true, message: '请输入y偏移量' }]}>
-                <Input size='small' />
+                <InputNumber className='w-full' size='small' />
               </Form.Item>
               <Form.Item label='旋转角度' name='rotation' rules={[{ required: true, message: '请输入旋转角度' }]}>
-                <Input size='small' />
+                <InputNumber className='w-full' size='small' />
+              </Form.Item>
+              <Form.Item label='楼层颜色' name='floorColor'>
+                <ColorPicker defaultValue='#1677ff' size='small' />
               </Form.Item>
               <Form.Item name='isEnabled' valuePropName='checked' label={'是否启用'}>
                 <Checkbox></Checkbox>

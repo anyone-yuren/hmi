@@ -26,10 +26,10 @@ const BaseElement = ({ size }) => {
   const gridConfig = {
     cellSize: 0.5,
     cellThickness: 0.8,
-    cellColor: '#80808040',
+    cellColor: '#80808020',
     sectionSize: 2,
     sectionThickness: 1,
-    sectionColor: '#80808080',
+    sectionColor: '#80808040',
     fadeDistance: 100,
     fadeStrength: 1,
   };
@@ -60,12 +60,32 @@ const BaseElement = ({ size }) => {
           maxDistance={50}
           minZoom={10}
         />
+        {/* <CameraControls
+          makeDefault
+          enabled={true}
+          verticalDragToForward={false}
+          dollyToCursor={false}
+          infinityDolly={false}
+          minDistance={1}
+          maxDistance={100}
+          minPolarAngle={0}
+          maxPolarAngle={Math.PI / 2}
+          //限制旋转
+          // azimuthRotateSpeed={0}
+          // polarRotateSpeed={0}
+          // mouseButtons={{
+          //   left: 2,
+          //   right: 0,
+          //   middle: 0,
+          //   wheel: 16,
+          // }}
+        /> */}
 
         {/* ✅ Grid 在 XY 平面 */}
         <Grid
           args={[1000, 1000]}
           {...gridConfig}
-          position={[0, 0, 0.05]}
+          position={[0, 0, 0.01]}
           rotation={[Math.PI / 2, 0, 0]} // XZ → XY
         />
 

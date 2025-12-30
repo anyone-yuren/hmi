@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../../../../../store';
+import { useMapEditorViewStore } from '../../../../../../store/view';
 const DrawNavigationSelect = () => {
   const [collapsed, setCollapsed] = useState(true);
   const { setParamsPanelCollapsed, selectDrawType, setSelectDrawType } = useMapEditorStore(
@@ -16,7 +17,13 @@ const DrawNavigationSelect = () => {
       };
     }),
   );
-  console.log('selectDrawType', selectDrawType);
+  const { setShowMapEditor } = useMapEditorViewStore(
+    useShallow((state) => {
+      return {
+        setShowMapEditor: state.setShowMapEditor,
+      };
+    }),
+  );
   const [form] = Form.useForm();
   const vehicleOptions = [
     {
@@ -138,7 +145,14 @@ const DrawNavigationSelect = () => {
               </Form.Item>
             </Form>
           </div> */}
-          <div>功能预设</div>
+          <div
+            className='hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer'
+            onClick={() => {
+              setShowMapEditor(false);
+            }}
+          >
+            清除地图
+          </div>
           <div
             className='hover:bg-[#00d1d1]/20 aspect-square rounded-md cursor-pointer'
             onClick={() => {
