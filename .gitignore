@@ -15,7 +15,6 @@ gbeata-*
 *.eslintcache
 @gbeata/*
 docs-dist
-pnpm-lock.yaml
 apps/deployer/.env.production
 apps/customer/stats.html
 apps/deployer/stats.html
