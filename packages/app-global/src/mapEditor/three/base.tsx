@@ -2,7 +2,6 @@ import { GizmoHelper, GizmoViewport, Grid, MapControls, OrthographicCamera } fro
 import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { SelectionOverlayBox } from '../selection/selectionOverlay';
 import { useMapEditorViewStore } from '../store/view';
 
 function ResizeCamera() {
@@ -110,7 +109,6 @@ const BaseElement = ({ size }) => {
           <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='white' disabled={true} />
         </GizmoHelper>
       </group>
-      <SelectionOverlayBox />
     </>
   );
 };

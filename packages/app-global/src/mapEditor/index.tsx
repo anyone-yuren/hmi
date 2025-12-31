@@ -9,6 +9,7 @@ import DrawPoints from './components/drawPoints/draw';
 import Handles from './components/handles';
 import ParamsPanel from './components/paramPanel';
 import HybridManagement from './hybridmanagement';
+import { SelectionOverlayBox } from './selection/selectionOverlay';
 import { useMapEditorViewStore } from './store/view';
 import BaseElement from './three/base';
 import RenderDevice from './three/components';
@@ -56,6 +57,7 @@ const MapEditor = () => {
                 <CursorGuideLine />
                 {/* <SlamPointCloud url='/static/ply/warehouse_slam.ply' /> */}
                 <SlamMapFloor mapIndex={0} />
+                <SelectionOverlayBox />
               </Canvas>
             )}
           </div>
