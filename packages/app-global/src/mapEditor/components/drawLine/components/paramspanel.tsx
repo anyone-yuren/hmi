@@ -30,7 +30,7 @@ const DrawLinesParamsPanel = () => {
   }, [selectLineData]);
 
   return (
-    <div className='flex-1 bg-white/5 rounded-sm p-2 overflow-auto'>
+    <div className='flex-1  rounded-sm p-2 overflow-auto'>
       <Form form={form} layout='horizontal' labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete='off'>
         <Collapse defaultActiveKey={['1', '2', '3']}>
           {/* ---------------- 通用属性 ---------------- */}

@@ -287,7 +287,7 @@ export default function DrawPoints() {
         {
           id: prev.length + 1,
           position: p.clone(),
-          createdAt: new Date(),
+          // createdAt: new Date(),
         },
       ]);
     };
@@ -314,7 +314,7 @@ export default function DrawPoints() {
     // ⭐ 所有点都在 drawLayer
     meshRef.current.layers.set(THREE_LAYERS.DRAW);
   }, []);
-
+  console.log('points', points);
   return (
     <instancedMesh
       ref={meshRef}

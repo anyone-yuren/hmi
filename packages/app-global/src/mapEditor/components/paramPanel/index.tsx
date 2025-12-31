@@ -1,4 +1,5 @@
-import { Dropdown, Input } from 'antd';
+import { MoreOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Input } from 'antd';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { IconifyIcon } from 'ui';
@@ -6,10 +7,10 @@ import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../store';
 import { useMapEditorViewStore } from '../../store/view';
 import DrawLinesParamsPanel from '../drawLine/components/paramspanel';
-import DrawPointsParamsPanel from '../drawPoints/components/paramspanel';
 import DrawDeviceParamsPanel from '../handles/components/draw/components/device/paramspanel';
 import DrawNavigationParamsPanel from '../handles/components/draw/components/navigation/paramspanel';
 import PanelTab from './components/panelTab';
+import PointList from './components/pointList';
 const { Search } = Input;
 const ParamsPanel = () => {
   const { paramsPanelCollapsed, selectDrawType } = useMapEditorStore(
@@ -61,12 +62,52 @@ const ParamsPanel = () => {
             <span className='flex items-center gap-1 text-xs font-medium text-nowrap'>
               <IconifyIcon icon='subway:folder-2' size={16} /> 楼层列表
             </span>
-            <Search
-              style={{ marginBottom: 0, width: 'auto', maxWidth: '50%' }}
-              size='small'
-              placeholder='Search'
-              className='!max-w-1/2 w-auto'
-            />
+            <div className='flex items-center gap-2 justify-end'>
+              <Search
+                style={{ marginBottom: 0, width: 'auto', maxWidth: '50%' }}
+                size='small'
+                placeholder='Search'
+                className='!max-w-1/2 w-auto'
+              />
+              <Dropdown
+                trigger={['click']}
+                menu={{
+                  items: [
+                    {
+                      label: '导入',
+                      key: 'import',
+                      children: [
+                        {
+                          label: '车辆',
+                          key: 'importMap',
+                        },
+                        {
+                          label: '本地',
+                          key: 'importNavigation',
+                        },
+                      ],
+                    },
+                    {
+                      label: '导出',
+                      key: 'export',
+                    },
+                  ],
+                }}
+              >
+                <Button
+                  shape='circle'
+                  size='small'
+                  type='text'
+                  icon={
+                    <MoreOutlined
+                      style={{
+                        fontSize: '16px',
+                      }}
+                    />
+                  }
+                ></Button>
+              </Dropdown>
+            </div>
           </p>
           <Dropdown
             menu={{
@@ -115,7 +156,8 @@ const ParamsPanel = () => {
           <PanelTab />
         </div>
         <div className='flex-1 h-full overflow-auto bg-white/5'>
-          {selectDrawType === 'point' && <DrawPointsParamsPanel />}
+          {/* {selectDrawType === 'point' && <DrawPointsParamsPanel />} */}
+          {selectDrawType === 'point' && <PointList />}
           {(selectDrawType === 'line' || selectDrawType === 'bspline') && <DrawLinesParamsPanel />}
           {selectDrawType === 'device' && <DrawDeviceParamsPanel />}
           {selectDrawType === 'navigation' && <DrawNavigationParamsPanel />}

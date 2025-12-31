@@ -94,7 +94,7 @@ const DrawNavigationParamsPanel = () => {
 
   return (
     <div className='flex flex-col gap-2 w-full'>
-      <div className='flex-1 bg-white/5 rounded-sm p-2 overflow-auto w-full'>
+      <div className='flex-1 rounded-sm p-2 overflow-auto w-full'>
         <Form
           form={form}
           layout='horizontal'

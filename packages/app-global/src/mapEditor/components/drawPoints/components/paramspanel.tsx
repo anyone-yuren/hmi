@@ -132,7 +132,7 @@ const DrawPointsParamsPanel = () => {
   ];
   return (
     <>
-      <div className='flex-1 bg-white/5 rounded-sm flex flex-col gap-2 p-2 overflow-auto' ref={setContainer}>
+      <div className='flex-1 rounded-sm flex flex-col gap-2 p-2 overflow-auto' ref={setContainer}>
         <div>
           <Collapse items={items} defaultActiveKey={['1', '2', '3']} />
         </div>

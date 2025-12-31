@@ -136,6 +136,7 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
             contentPadding: '8px',
             paddingSM: 8,
             contentBg: 'transparent',
+            borderRadiusLG: 0,
           },
           Form: {
             itemMarginBottom: 4,
@@ -161,6 +162,9 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
             fontSize: 12,
             titleHeight: 20,
             indentSize: 12,
+          },
+          List: {
+            itemPaddingSM: '2px 8px',
           },
         },
       }}
