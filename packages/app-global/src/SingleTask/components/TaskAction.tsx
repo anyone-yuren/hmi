@@ -482,6 +482,28 @@ const TaskAction = forwardRef((props: any, ref) => {
                         }}
                       >
                         <InputGroup sx={{ flex: 1 }}>
+                          <div className='title'>{t('deployer.singleTask.pallet')}</div>
+                          <MapTaskSelect
+                            variant={'outlined'}
+                            displayEmpty
+                            value={task?.palletNo}
+                            onChange={(event: any) => {
+                              const name = event.target.value;
+                              onValueChange('palletNo', index, name);
+                            }}
+                          >
+                            {palletList?.length ? (
+                              palletList?.map((item: any) => {
+                                return <MenuItem value={item.id}>{item.name}</MenuItem>;
+                              })
+                            ) : (
+                              <MenuItem value={'no-data'} disabled>
+                                {t('common.noData')}
+                              </MenuItem>
+                            )}
+                          </MapTaskSelect>
+                        </InputGroup>
+                        <InputGroup sx={{ flex: 1 }}>
                           <div className='title'>{t('deployer.singleTask.chargeType')}</div>
                           <MapTaskSelect
                             variant={'outlined'}
@@ -504,6 +526,39 @@ const TaskAction = forwardRef((props: any, ref) => {
                         ></InputGroupText>
                       </div>
                     </>
+                  )}
+
+                  {task.task_type === 'Null' && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        gap: '5px',
+                        paddingBottom: '5px',
+                      }}
+                    >
+                      <InputGroup sx={{ flex: 1 }}>
+                        <div className='title'>{t('deployer.singleTask.pallet')}</div>
+                        <MapTaskSelect
+                          variant={'outlined'}
+                          displayEmpty
+                          value={task?.palletNo}
+                          onChange={(event: any) => {
+                            const name = event.target.value;
+                            onValueChange('palletNo', index, name);
+                          }}
+                        >
+                          {palletList?.length ? (
+                            palletList?.map((item: any) => {
+                              return <MenuItem value={item.id}>{item.name}</MenuItem>;
+                            })
+                          ) : (
+                            <MenuItem value={'no-data'} disabled>
+                              {t('common.noData')}
+                            </MenuItem>
+                          )}
+                        </MapTaskSelect>
+                      </InputGroup>
+                    </div>
                   )}
                 </div>
               </div>

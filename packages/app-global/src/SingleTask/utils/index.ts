@@ -64,11 +64,13 @@ export const transformTaskListToParams = (params: any, isKVehicle) => {
       return obj;
     },
     Null: (obj: any) => {
+      obj['pallet_id'] = Number(obj.palletNo);
       return obj;
     },
     Charge: (obj: any) => {
       obj['param'][0] = Number(obj?.task_charge_type) || 0;
       obj['param'][1] = Number(obj?.threshold) || 0;
+      obj['pallet_id'] = Number(obj.palletNo);
       return obj;
     },
   };
