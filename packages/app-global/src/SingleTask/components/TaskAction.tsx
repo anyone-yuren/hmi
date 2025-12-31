@@ -703,7 +703,19 @@ const InputGroupText = (props: any) => {
     });
   };
   return (
-    <InputGroup onClick={handleInput}>
+    <InputGroup
+      onClick={handleInput}
+      onTouchStart={(e) => {
+        e.preventDefault(); // 防止默认的触摸行为
+        handleInput();
+      }}
+      style={{
+        cursor: 'pointer',
+        touchAction: 'manipulation',
+        WebkitTapHighlightColor: 'transparent', // 移除点击高亮
+        userSelect: 'none', // 防止文本选择
+      }}
+    >
       <div className='title' style={{ whiteSpace: 'nowrap', overflow: 'scroll' }}>
         {title}
       </div>
