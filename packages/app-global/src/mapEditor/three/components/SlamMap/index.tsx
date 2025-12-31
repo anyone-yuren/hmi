@@ -4,6 +4,7 @@ import { Suspense, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorViewStore } from '../../../store/view';
 const deg2rad = (deg?: number) => ((deg ?? 0) * Math.PI) / 180;
+const MAP_RESOLUTION = 0.05;
 
 export function SlamMapFloor({ mapIndex = 0 }: { mapIndex?: number }) {
   const BASE_URL = import.meta.env.BASE_URL;
@@ -12,28 +13,37 @@ export function SlamMapFloor({ mapIndex = 0 }: { mapIndex?: number }) {
       img: `${BASE_URL}static/floor/map-1.png`,
       width: 2571,
       height: 2431,
+      name: 'map-1',
+      key: 'map-1',
     },
     {
       img: `${BASE_URL}static/floor/map-2.png`,
       width: 7956,
       height: 5287,
+      name: 'map-2',
+      key: 'map-2',
     },
   ];
-  const map = mapData[mapIndex];
 
-  const { floorOffset, floorRotation, floorColor } = useMapEditorViewStore(
+  const { floorOffset, floorRotation, floorColor, selectFloor } = useMapEditorViewStore(
     useShallow((s) => ({
       floorOffset: s.floorOffset,
       floorRotation: s.floorRotation,
       floorColor: s.floorColor,
+      selectFloor: s.selectFloor,
     })),
   );
+
+  const map = useMemo(() => mapData.find((item) => item.key === selectFloor), [selectFloor]);
+  if (!map) {
+    return null;
+  }
   const size = useMemo<[number, number]>(() => {
-    return [map.width / 100, map.height / 100];
+    return [map.width * MAP_RESOLUTION, map.height * MAP_RESOLUTION];
   }, [map]);
   /** 位姿动画（完全复用你原来的） */
   const spring = useSpring({
-    position: floorOffset ? [floorOffset[0] / 1000, floorOffset[1] / 1000, 0.02] : [0, 0, 0],
+    position: floorOffset ? [floorOffset[0] / MAP_RESOLUTION, floorOffset[1] / MAP_RESOLUTION, 0.02] : [0, 0, 0],
     rotationZ: deg2rad(floorRotation),
     config: {
       mass: 1,

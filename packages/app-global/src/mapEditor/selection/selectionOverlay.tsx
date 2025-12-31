@@ -2,16 +2,16 @@ import { useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { SelectionBox } from 'three/examples/jsm/interactive/SelectionBox.js';
-import { SelectionHelper } from 'three/examples/jsm/interactive/SelectionHelper.js';
 import { useSelectionStore } from '../selection/selectionStore';
 
-const LEFT_PANEL_WIDTH = 50;
-const TOP_PANEL_HEIGHT = 88;
-
-function getCanvasPoint(e: PointerEvent, dom: HTMLCanvasElement): THREE.Vector2 {
+/**
+ * client 坐标 → canvas 像素坐标
+ * 自动处理 Canvas 容器偏移 + DPR
+ */
+function clientToCanvas(e: { clientX: number; clientY: number }, dom: HTMLCanvasElement) {
   const rect = dom.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
-  return new THREE.Vector2((e.clientX - rect.left) * dpr, (e.clientY - rect.top - 50) * dpr);
+  return new THREE.Vector2((e.clientX - rect.left) * dpr, (e.clientY - rect.top) * dpr);
 }
 
 export function SelectionOverlayBox() {
@@ -22,109 +22,96 @@ export function SelectionOverlayBox() {
     startSelection: s.startSelection,
   }));
 
-  // 框选时禁用相机平移
+  const pointerDownRef = useRef(false);
+  const startCanvasPosRef = useRef(new THREE.Vector2());
+  const selectionBoxRef = useRef<SelectionBox | null>(null);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+
+  /** 框选时禁用相机平移 */
   useEffect(() => {
     if (!controls) return;
     controls.enablePan = !startSelection;
   }, [startSelection, controls]);
 
-  const pointerDownRef = useRef(false);
-  const startCanvasPosRef = useRef<THREE.Vector2>(new THREE.Vector2());
-
-  const selectionBoxRef = useRef<SelectionBox>();
-  const helperRef = useRef<SelectionHelper>();
-
-  // 初始化
+  /** 初始化 SelectionBox + overlay div */
   useEffect(() => {
     if (!camera || !scene || !gl) return;
 
     selectionBoxRef.current = new SelectionBox(camera, scene);
-    helperRef.current = new SelectionHelper(gl, 'selectBox');
 
-    // 样式
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .selectBox {
-        border: 1px dashed #ffffff;
-        background-color: rgba(0, 150, 255, 0.15);
-        position: absolute;
-        pointer-events: none;
-      }
-    `;
-    document.head.appendChild(style);
+    const container = gl.domElement.parentElement!;
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.border = '1px dashed #ffffff';
+    overlay.style.background = 'rgba(0,150,255,0.15)';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.display = 'none';
+    container.appendChild(overlay);
+    overlayRef.current = overlay;
+
+    return () => {
+      container.removeChild(overlay);
+      overlayRef.current = null;
+    };
   }, [camera, scene, gl]);
 
-  // 控制 SelectionHelper 是否启用
+  /** pointer 事件 */
   useEffect(() => {
-    if (!helperRef.current) return;
-    helperRef.current.enabled = startSelection;
-    if (!startSelection) {
-      // 重置选择框
-      pointerDownRef.current = false;
-      startCanvasPosRef.current.set(0, 0);
-    }
-  }, [startSelection]);
-
-  // 事件监听
-  useEffect(() => {
-    if (!gl?.domElement || !selectionBoxRef.current || !helperRef.current) return;
+    if (!gl?.domElement || !selectionBoxRef.current || !overlayRef.current) return;
 
     const dom = gl.domElement;
+    const box = selectionBoxRef.current;
+    const overlay = overlayRef.current;
+    const dpr = window.devicePixelRatio || 1;
 
     const onPointerDown = (e: PointerEvent) => {
       if (!startSelection) return;
 
       pointerDownRef.current = true;
 
-      // 记录 canvas 像素坐标
-      const p = getCanvasPoint(e, dom);
-      startCanvasPosRef.current.copy(p);
+      const start = clientToCanvas(e, dom);
+      startCanvasPosRef.current.copy(start);
+
+      box.startPoint.set(start.x, start.y, 0);
+      box.endPoint.set(start.x, start.y, 0);
+
+      overlay.style.display = 'block';
+      overlay.style.left = `${start.x / dpr}px`;
+      overlay.style.top = `${start.y / dpr}px`;
+      overlay.style.width = '0px';
+      overlay.style.height = '0px';
     };
 
     const onPointerMove = (e: PointerEvent) => {
       if (!pointerDownRef.current || !startSelection) return;
 
-      const box = selectionBoxRef.current!;
-      const start = startCanvasPosRef.current;
-      const end = getCanvasPoint(e, dom);
+      const end = clientToCanvas(e, dom);
 
-      box.startPoint.set(start.x, start.y, 0);
       box.endPoint.set(end.x, end.y, 0);
+
+      const x = Math.min(startCanvasPosRef.current.x, end.x);
+      const y = Math.min(startCanvasPosRef.current.y, end.y);
+      const w = Math.abs(end.x - startCanvasPosRef.current.x);
+      const h = Math.abs(end.y - startCanvasPosRef.current.y);
+
+      overlay.style.left = `${x / dpr}px`;
+      overlay.style.top = `${y / dpr}px`;
+      overlay.style.width = `${w / dpr}px`;
+      overlay.style.height = `${h / dpr}px`;
     };
 
     const onPointerUp = (e: PointerEvent) => {
       if (!pointerDownRef.current || !startSelection) return;
+
       pointerDownRef.current = false;
+      overlay.style.display = 'none';
 
-      const box = selectionBoxRef.current!;
-      const helper = helperRef.current!;
-
-      // ⚠️ SelectionHelper 维护的是 client 坐标
-      // 必须再转换一次
-      const start = getCanvasPoint(
-        {
-          clientX: helper.startPoint.x,
-          clientY: helper.startPoint.y,
-        } as PointerEvent,
-        dom,
-      );
-
-      const end = getCanvasPoint(
-        {
-          clientX: helper.pointBottomRight.x,
-          clientY: helper.pointBottomRight.y,
-        } as PointerEvent,
-        dom,
-      );
-
-      box.startPoint.set(start.x, start.y, 0);
+      const end = clientToCanvas(e, dom);
       box.endPoint.set(end.x, end.y, 0);
 
-      const selected = box.select();
-      setCandidates(selected);
+      const selectedObjects = box.select();
+      setCandidates(selectedObjects);
       openFilter();
-
-      helper.onSelectOver(e);
     };
 
     dom.addEventListener('pointerdown', onPointerDown);
@@ -136,7 +123,7 @@ export function SelectionOverlayBox() {
       dom.removeEventListener('pointermove', onPointerMove);
       dom.removeEventListener('pointerup', onPointerUp);
     };
-  }, [gl, setCandidates, openFilter, startSelection]);
+  }, [gl, startSelection, setCandidates, openFilter]);
 
   return null;
 }

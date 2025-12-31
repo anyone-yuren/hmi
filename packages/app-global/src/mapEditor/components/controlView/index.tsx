@@ -6,7 +6,16 @@ import { useMapEditorViewStore } from '../../store/view';
 
 const ControlView = () => {
   const [form] = Form.useForm();
-  const { setPointsView, setLinesView, setDevicesView, pointsView, linesView, devicesView } = useMapEditorViewStore(
+  const {
+    setPointsView,
+    setLinesView,
+    setDevicesView,
+    pointsView,
+    linesView,
+    devicesView,
+    gridVisible,
+    setGridVisible,
+  } = useMapEditorViewStore(
     useShallow((state) => ({
       setPointsView: state.setPointsView,
       setLinesView: state.setLinesView,
@@ -14,41 +23,39 @@ const ControlView = () => {
       pointsView: state.pointsView,
       linesView: state.linesView,
       devicesView: state.devicesView,
+      gridVisible: state.gridVisible,
+      setGridVisible: state.setGridVisible,
     })),
   );
-  // 监听form变化
-  Form.useWatch((values) => {
-    setPointsView(values.pointsVisible);
-    setLinesView(values.linesVisible);
-    setDevicesView(values.devicesVisible);
-  }, form);
   // 使用 useEffect 来同步 form 的值到全局状态
   useEffect(() => {
-    // 仅当值发生变化时，才设置 form 的值，避免死循环
-    if (pointsView !== form.getFieldValue('pointsVisible')) {
-      form.setFieldsValue({ pointsVisible: pointsView });
-    }
-    if (linesView !== form.getFieldValue('linesVisible')) {
-      form.setFieldsValue({ linesVisible: linesView });
-    }
-    if (devicesView !== form.getFieldValue('devicesVisible')) {
-      form.setFieldsValue({ devicesVisible: devicesView });
-    }
-  }, [pointsView, linesView, devicesView, form]);
+    form.setFieldsValue({
+      linesVisible: linesView,
+      pointsVisible: pointsView,
+      devicesVisible: devicesView,
+      gridVisible: gridVisible,
+    });
+  }, [pointsView, linesView, devicesView, gridVisible, form]);
 
   const content = (
     <div className='flex flex-col gap-2'>
-      <div className='flex gap-1 flex-col'>
-        <span>全局</span>
-        <Form>
-          <Form.Item label='网格显示' name='gridVisible'>
+      <Form
+        form={form}
+        onValuesChange={(values, allValues) => {
+          allValues.pointsVisible && setPointsView(allValues.pointsVisible);
+          allValues.linesVisible && setLinesView(allValues.linesVisible);
+          allValues.devicesVisible && setDevicesView(allValues.devicesVisible);
+          setGridVisible(allValues.gridVisible);
+        }}
+      >
+        <div className='flex gap-1 flex-col'>
+          <span>全局</span>
+          <Form.Item label='网格显示' name='gridVisible' valuePropName='checked'>
             <Checkbox />
           </Form.Item>
-        </Form>
-      </div>
-      <div className='flex gap-1 flex-col'>
-        <span>元素</span>
-        <Form form={form}>
+        </div>
+        <div className='flex gap-1 flex-col'>
+          <span>元素</span>
           <Form.Item label='点显示' name='pointsVisible'>
             <Checkbox.Group
               options={[
@@ -81,8 +88,8 @@ const ControlView = () => {
               ]}
             />
           </Form.Item>
-        </Form>
-      </div>
+        </div>
+      </Form>
     </div>
   );
   return (

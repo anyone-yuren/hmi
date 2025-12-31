@@ -7,25 +7,24 @@ import { useDebouncedStoreSetter } from '../../../../../../hooks/useDebouncedSto
 import { useMapEditorStore } from '../../../../../../store';
 import { useMapEditorViewStore } from '../../../../../../store/view';
 const { Search } = Input;
-const mapData = [
-  {
-    img: '/static/floor/map-1.png',
-    width: 2571,
-    height: 2431,
-    name: 'map-1',
-    key: 'map-1',
-  },
-  {
-    img: '/static/floor/map-2.png',
-    width: 7956,
-    height: 5287,
-    name: 'map-2',
-    key: 'map-2',
-  },
-];
 const DrawNavigationParamsPanel = () => {
   const [form] = Form.useForm();
-
+  const mapData = [
+    {
+      img: '/static/floor/map-1.png',
+      width: 2571,
+      height: 2431,
+      name: 'map-1',
+      key: 'map-1',
+    },
+    {
+      img: '/static/floor/map-2.png',
+      width: 7956,
+      height: 5287,
+      name: 'map-2',
+      key: 'map-2',
+    },
+  ];
   const { selectLineData, autoDoorList, elevatorList } = useMapEditorStore(
     useShallow((state) => ({
       selectLineData: state.selectLineData,
@@ -34,17 +33,27 @@ const DrawNavigationParamsPanel = () => {
     })),
   );
 
-  const { setFloorOffset, floorOffset, floorRotation, setFloorRotation, floorColor, setFloorColor } =
-    useMapEditorViewStore(
-      useShallow((state) => ({
-        floorOffset: state.floorOffset,
-        setFloorOffset: state.setFloorOffset,
-        floorRotation: state.floorRotation,
-        setFloorRotation: state.setFloorRotation,
-        floorColor: state.floorColor,
-        setFloorColor: state.setFloorColor,
-      })),
-    );
+  const {
+    setFloorOffset,
+    floorOffset,
+    floorRotation,
+    setFloorRotation,
+    floorColor,
+    setFloorColor,
+    selectFloor,
+    setSelectFloor,
+  } = useMapEditorViewStore(
+    useShallow((state) => ({
+      floorOffset: state.floorOffset,
+      setFloorOffset: state.setFloorOffset,
+      floorRotation: state.floorRotation,
+      setFloorRotation: state.setFloorRotation,
+      floorColor: state.floorColor,
+      setFloorColor: state.setFloorColor,
+      selectFloor: state.selectFloor,
+      setSelectFloor: state.setSelectFloor,
+    })),
+  );
   const setDebouncedFloorOffset = useDebouncedStoreSetter(setFloorOffset, 300);
   const setDebouncedFloorRotation = useDebouncedStoreSetter(setFloorRotation, 300);
   const setDebouncedFloorColor = useDebouncedStoreSetter(setFloorColor, 300);
@@ -73,10 +82,10 @@ const DrawNavigationParamsPanel = () => {
 
   /* ------------------- 同步选中线段数据 ------------------- */
   useEffect(() => {
-    if (!floorOffset) {
-      form.resetFields();
-      return;
-    }
+    // if (!floorOffset) {
+    //   form.resetFields();
+    //   return;
+    // }
     form.setFieldsValue({
       xOffset: floorOffset[0],
       yOffset: floorOffset[1],
@@ -154,11 +163,11 @@ const DrawNavigationParamsPanel = () => {
                     'cursor-pointer hover:bg-cyan-500/30 px-2 py-0.5 flex items-center justify-between',
                     {
                       'bg-white/5': index % 2 === 0,
-                      'text-gray-400': !item.isSelected,
-                      'bg-[#00d1d1]/80 !text-black': index === 1,
+                      '!bg-[#00d1d1]/80 !text-black': selectFloor === item.key,
                     },
                   )}
                   key={item.key}
+                  onClick={() => setSelectFloor(item.key)}
                 >
                   {item.name}
                 </li>

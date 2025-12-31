@@ -1,7 +1,9 @@
 import { GizmoHelper, GizmoViewport, Grid, MapControls, OrthographicCamera } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { SelectionOverlayBox } from '../selection/selectionOverlay';
+import { useMapEditorViewStore } from '../store/view';
 
 function ResizeCamera() {
   const { camera, size } = useThree();
@@ -23,15 +25,23 @@ function ResizeCamera() {
   return null;
 }
 const BaseElement = ({ size }) => {
+  const { gridVisible } = useMapEditorViewStore(
+    useShallow((state) => {
+      return {
+        gridVisible: state.gridVisible,
+      };
+    }),
+  );
   const gridConfig = {
     cellSize: 0.5,
-    cellThickness: 0.8,
-    cellColor: '#80808020',
+    cellThickness: 1,
+    cellColor: '#6f6f6f',
     sectionSize: 2,
     sectionThickness: 1,
     sectionColor: '#80808040',
     fadeDistance: 100,
     fadeStrength: 1,
+    // infiniteGrid: true,
   };
 
   return (
@@ -58,7 +68,7 @@ const BaseElement = ({ size }) => {
           screenSpacePanning={false}
           makeDefault
           maxDistance={50}
-          minZoom={10}
+          minZoom={1}
         />
         {/* <CameraControls
           makeDefault
@@ -83,6 +93,7 @@ const BaseElement = ({ size }) => {
 
         {/* ✅ Grid 在 XY 平面 */}
         <Grid
+          visible={gridVisible}
           args={[1000, 1000]}
           {...gridConfig}
           position={[0, 0, 0.01]}
