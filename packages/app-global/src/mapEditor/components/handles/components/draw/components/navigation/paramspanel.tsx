@@ -1,7 +1,5 @@
-import { Checkbox, Collapse, ColorPicker, Dropdown, Form, Input, InputNumber, Tree } from 'antd';
-import classNames from 'classnames';
+import { Checkbox, Collapse, ColorPicker, Form, Input, InputNumber, Tree } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
-import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useDebouncedStoreSetter } from '../../../../../../hooks/useDebouncedStoreSetter';
 import { useMapEditorStore } from '../../../../../../store';
@@ -9,22 +7,6 @@ import { useMapEditorViewStore } from '../../../../../../store/view';
 const { Search } = Input;
 const DrawNavigationParamsPanel = () => {
   const [form] = Form.useForm();
-  const mapData = [
-    {
-      img: '/static/floor/map-1.png',
-      width: 2571,
-      height: 2431,
-      name: 'map-1',
-      key: 'map-1',
-    },
-    {
-      img: '/static/floor/map-2.png',
-      width: 7956,
-      height: 5287,
-      name: 'map-2',
-      key: 'map-2',
-    },
-  ];
   const { selectLineData, autoDoorList, elevatorList } = useMapEditorStore(
     useShallow((state) => ({
       selectLineData: state.selectLineData,
@@ -33,27 +15,17 @@ const DrawNavigationParamsPanel = () => {
     })),
   );
 
-  const {
-    setFloorOffset,
-    floorOffset,
-    floorRotation,
-    setFloorRotation,
-    floorColor,
-    setFloorColor,
-    selectFloor,
-    setSelectFloor,
-  } = useMapEditorViewStore(
-    useShallow((state) => ({
-      floorOffset: state.floorOffset,
-      setFloorOffset: state.setFloorOffset,
-      floorRotation: state.floorRotation,
-      setFloorRotation: state.setFloorRotation,
-      floorColor: state.floorColor,
-      setFloorColor: state.setFloorColor,
-      selectFloor: state.selectFloor,
-      setSelectFloor: state.setSelectFloor,
-    })),
-  );
+  const { setFloorOffset, floorOffset, floorRotation, setFloorRotation, floorColor, setFloorColor } =
+    useMapEditorViewStore(
+      useShallow((state) => ({
+        floorOffset: state.floorOffset,
+        setFloorOffset: state.setFloorOffset,
+        floorRotation: state.floorRotation,
+        setFloorRotation: state.setFloorRotation,
+        floorColor: state.floorColor,
+        setFloorColor: state.setFloorColor,
+      })),
+    );
   const setDebouncedFloorOffset = useDebouncedStoreSetter(setFloorOffset, 300);
   const setDebouncedFloorRotation = useDebouncedStoreSetter(setFloorRotation, 300);
   const setDebouncedFloorColor = useDebouncedStoreSetter(setFloorColor, 300);
@@ -122,83 +94,6 @@ const DrawNavigationParamsPanel = () => {
 
   return (
     <div className='flex flex-col gap-2 w-full'>
-      <div className='bg-white/5 rounded-sm p-2 '>
-        <p className='text-xs font-medium flex items-center gap-2 justify-between'>
-          <span className='flex items-center gap-1 text-xs font-medium text-nowrap'>
-            <IconifyIcon icon='subway:folder-2' size={16} /> 楼层列表
-          </span>
-          <Search
-            style={{ marginBottom: 0, width: 'auto', maxWidth: '50%' }}
-            size='small'
-            placeholder='Search'
-            className='!max-w-1/2 w-auto'
-            onChange={onChange}
-          />
-        </p>
-        <Dropdown
-          menu={{
-            items: [
-              {
-                label: (
-                  <div className='flex items-center justify-between'>
-                    复制
-                    <span className='text-xs font-medium text-gray-400 flex items-center gap-1'>
-                      <IconifyIcon icon='mingcute:command-line' size={12} />c
-                    </span>
-                  </div>
-                ),
-                key: 'copy',
-              },
-              { label: <span>删除</span>, key: 'delete' },
-              { label: <span>选择</span>, key: 'add' },
-            ],
-          }}
-          trigger={['contextMenu']}
-        >
-          <ul className='flex flex-col gap-2 text-xs py-2'>
-            {mapData.map((item, index) => {
-              return (
-                <li
-                  className={classNames(
-                    'cursor-pointer hover:bg-cyan-500/30 px-2 py-0.5 flex items-center justify-between',
-                    {
-                      'bg-white/5': index % 2 === 0,
-                      '!bg-[#00d1d1]/80 !text-black': selectFloor === item.key,
-                    },
-                  )}
-                  key={item.key}
-                  onClick={() => setSelectFloor(item.key)}
-                >
-                  {item.name}
-                </li>
-              );
-            })}
-          </ul>
-        </Dropdown>
-        {/* 使用 Tree 组件渲染设备列表 */}
-        {/* <Tree
-          className='max-h-[200px] overflow-auto py-2'
-          treeData={treeData}
-          height={200}
-          defaultExpandAll
-          checkable
-          onExpand={onExpand}
-          autoExpandParent={autoExpandParent}
-          onSelect={(selectedKeys, info) => {
-            console.log('Selected device:', info.node.title);
-          }}
-          onRightClick={(info) => {
-            // 右键菜单
-            const menuItems = [
-              { label: '复制', key: 'copy' },
-              { label: '删除', key: 'delete' },
-              { label: '选择', key: 'select' },
-            ];
-            // 你可以在这里执行具体操作
-            console.log('Right-clicked on device:', info.node.title);
-          }}
-        /> */}
-      </div>
       <div className='flex-1 bg-white/5 rounded-sm p-2 overflow-auto w-full'>
         <Form
           form={form}
