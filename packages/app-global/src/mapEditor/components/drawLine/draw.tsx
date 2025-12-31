@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { usePickOnXYPlane } from '../../hooks/usePickOnXYPanel';
 import { useMapEditorStore } from '../../store';
+import { THREE_LAYERS } from '../../three/constants/threeLayers';
 import { buildSelectLineData } from '../../utils/line';
 
 interface LineData {
@@ -30,7 +31,10 @@ function DrawLines() {
     })),
   );
   const pick = usePickOnXYPlane();
-  const { controls } = useThree();
+  const { controls, camera } = useThree();
+  useEffect(() => {
+    camera.layers.enable(THREE_LAYERS.DRAW);
+  }, []);
 
   const [lines, setLines] = useState<LineData[]>([]);
   const [drawing, setDrawing] = useState<LineData | null>(null);
@@ -62,6 +66,13 @@ function DrawLines() {
       window.removeEventListener('keyup', onKeyUp);
     };
   }, []);
+
+  useEffect(() => {
+    if (!controls) return;
+
+    // ❗禁止 controls 吃掉右键
+    controls.mouseButtons.RIGHT = null;
+  }, [controls]);
 
   /* ------------------- 鼠标事件 ------------------- */
   const onMouseDown = (e: MouseEvent) => {
@@ -217,17 +228,16 @@ function DrawLines() {
       </mesh>
     );
   };
-
   /* ------------------- 渲染 ------------------- */
   return (
-    <>
+    <group>
       {lines.map((line) => (
         <group key={line.id}>
           {line.points.length >= 2 && (
             <Line
               points={line.points}
               color={line.id === selectedLineId ? '#ff0000' : '#00ff00'}
-              lineWidth={2}
+              lineWidth={4}
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedLineId(line.id);
@@ -235,6 +245,27 @@ function DrawLines() {
               }}
             />
           )}
+          <mesh
+            ref={(obj) => {
+              if (obj) obj.layers.set(THREE_LAYERS.DRAW);
+            }}
+            position={[0, 0, -0.01]}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+
+              if (e.button === 0 || e.button === 2) {
+                setSelectedLineId(line.id);
+                setSelectLineData(buildSelectLineData(line));
+              }
+            }}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <tubeGeometry args={[new THREE.CatmullRomCurve3(line.points), 8, 0.05, 6, false]} />
+            <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+          </mesh>
 
           {/* 箭头 */}
           <Arrow start={line.start} end={line.end} selected={line.id === selectedLineId} />
@@ -262,7 +293,7 @@ function DrawLines() {
       {drawing && drawing.start && drawing.end && (
         <Line points={[drawing.start, drawing.end]} color='#ff0000' lineWidth={2} />
       )}
-    </>
+    </group>
   );
 }
 

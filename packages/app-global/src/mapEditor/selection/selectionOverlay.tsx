@@ -1,22 +1,16 @@
+// SelectionOverlayBox.tsx
 import { useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { SelectionBox } from 'three/examples/jsm/interactive/SelectionBox.js';
 import { useSelectionStore } from '../selection/selectionStore';
 
-/**
- * client 坐标 → canvas 像素坐标（包含 DPR + 偏移）
- */
 function clientToCanvasPx(e: { clientX: number; clientY: number }, canvas: HTMLCanvasElement) {
   const rect = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
-
   return new THREE.Vector2((e.clientX - rect.left) * dpr, (e.clientY - rect.top) * dpr);
 }
 
-/**
- * canvas 像素 → NDC（SelectionBox 必须用这个）
- */
 function canvasPxToNDC(px: number, py: number, canvas: HTMLCanvasElement) {
   return new THREE.Vector3((px / canvas.width) * 2 - 1, -(py / canvas.height) * 2 + 1, 0.5);
 }
@@ -35,13 +29,13 @@ export function SelectionOverlayBox() {
   const selectionBoxRef = useRef<SelectionBox | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
 
-  /** 框选时禁用相机平移 */
+  // 框选时禁用相机平移
   useEffect(() => {
     if (!controls) return;
     controls.enablePan = !startSelection;
   }, [startSelection, controls]);
 
-  /** 初始化 SelectionBox + overlay */
+  // 初始化 SelectionBox + overlay
   useEffect(() => {
     if (!camera || !scene || !gl) return;
 
@@ -68,7 +62,6 @@ export function SelectionOverlayBox() {
     };
   }, [camera, scene, gl]);
 
-  /** pointer 事件 */
   useEffect(() => {
     if (!gl?.domElement || !selectionBoxRef.current || !overlayRef.current) return;
 
@@ -78,7 +71,7 @@ export function SelectionOverlayBox() {
     const dpr = window.devicePixelRatio || 1;
 
     const onPointerDown = (e: PointerEvent) => {
-      if (!startSelection) return;
+      if (!startSelection || e.button !== 0) return;
 
       pointerDownRef.current = true;
 
@@ -127,11 +120,10 @@ export function SelectionOverlayBox() {
 
       box.endPoint.copy(endNDC);
 
-      /** 🔥 核心：执行框选 */
       const selected = box.select();
-
       console.log('框选结果:', selected);
 
+      // 🔥 设置选中的对象，供 DrawPoints 使用
       setCandidates(selected);
       openFilter();
     };

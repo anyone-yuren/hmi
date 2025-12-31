@@ -13,6 +13,8 @@ import { SelectionOverlayBox } from './selection/selectionOverlay';
 import { useMapEditorViewStore } from './store/view';
 import BaseElement from './three/base';
 import RenderDevice from './three/components';
+import ContextMenu from './three/components/ContextMenu';
+import { SceneRaycaster } from './three/components/SceneRaycaster';
 import { SlamMapFloor } from './three/components/SlamMap';
 
 const MapEditor = () => {
@@ -58,8 +60,10 @@ const MapEditor = () => {
                 {/* <SlamPointCloud url='/static/ply/warehouse_slam.ply' /> */}
                 <SlamMapFloor mapIndex={0} />
                 <SelectionOverlayBox />
+                <SceneRaycaster />
               </Canvas>
             )}
+            <ContextMenu />
           </div>
         </div>
         {/* 右侧 panel */}

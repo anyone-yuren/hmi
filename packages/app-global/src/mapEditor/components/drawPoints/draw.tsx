@@ -7,6 +7,7 @@ import { useSelectionStore } from '../../selection/selectionStore';
 import { querySpatialIndex, rebuildSpatialIndex } from '../../selection/spatialIndex';
 import { SelectableItem } from '../../selection/type';
 import { useMapEditorStore } from '../../store';
+import { THREE_LAYERS } from '../../three/constants/threeLayers';
 
 /* ======================= */
 /* 配置参数 */
@@ -306,6 +307,13 @@ export default function DrawPoints() {
   };
 
   const onPointerOut = () => setHoveredId(null);
+
+  useEffect(() => {
+    if (!meshRef.current) return;
+
+    // ⭐ 所有点都在 drawLayer
+    meshRef.current.layers.set(THREE_LAYERS.DRAW);
+  }, []);
 
   return (
     <instancedMesh

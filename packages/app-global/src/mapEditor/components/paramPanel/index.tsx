@@ -15,7 +15,6 @@ const ParamsPanel = () => {
       };
     }),
   );
-  console.log(selectDrawType);
   return (
     <motion.div
       animate={{
