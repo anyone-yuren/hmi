@@ -1,29 +1,25 @@
 import { Form, Radio, Select } from 'antd';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../store';
 
 const DrawPointsSelect = () => {
-  const [collapsed, setCollapsed] = useState(true);
-  const { setParamsPanelCollapsed, selectDrawType, setSelectDrawType } = useMapEditorStore(
-    useShallow((state) => {
-      return {
-        setParamsPanelCollapsed: state.setParamsPanelCollapsed,
-        selectDrawType: state.selectDrawType,
-        setSelectDrawType: state.setSelectDrawType,
-      };
-    }),
-  );
-  useEffect(() => {
-    if (selectDrawType === 'point') {
-      setCollapsed(false);
-    } else {
-      setCollapsed(true);
-    }
-  }, [selectDrawType]);
+  const [collapsed, setCollapsed] = useState(false);
+  const { setParamsPanelCollapsed, selectDrawType, setSelectDrawType, selectSubDrawType, setSelectSubDrawType } =
+    useMapEditorStore(
+      useShallow((state) => {
+        return {
+          setParamsPanelCollapsed: state.setParamsPanelCollapsed,
+          selectDrawType: state.selectDrawType,
+          setSelectDrawType: state.setSelectDrawType,
+          selectSubDrawType: state.selectSubDrawType,
+          setSelectSubDrawType: state.setSelectSubDrawType,
+        };
+      }),
+    );
   const [form] = Form.useForm();
   const vehicleOptions = [
     {
@@ -42,7 +38,7 @@ const DrawPointsSelect = () => {
         className={classNames(
           'flex gap-0.5 px-1 items-center cursor-pointer text-white hover:bg-[#00d1d1]/20 rounded-md',
           {
-            'bg-[#00d1d1]/20': selectDrawType === 'point',
+            'bg-[#00d1d1]/50': selectDrawType === 'point',
           },
         )}
         onClick={() => {
@@ -69,8 +65,13 @@ const DrawPointsSelect = () => {
         <div className='flex items-center justify-between px-2 py-1'>
           <div className='flex gap-2 items-center text-white/80'>
             <div
-              className='hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer'
-              onClick={() => setParamsPanelCollapsed(true)}
+              className={classNames('hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer', {
+                'bg-[#00d1d1]/50': selectSubDrawType === 'locationPoint',
+              })}
+              onClick={() => {
+                setParamsPanelCollapsed(true);
+                setSelectSubDrawType('locationPoint');
+              }}
             >
               库位点
             </div>

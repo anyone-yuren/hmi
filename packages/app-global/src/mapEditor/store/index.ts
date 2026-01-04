@@ -156,6 +156,11 @@ export const useMapEditorStore = create<State>()(
         },
       ],
       setStaticPoints: (staticPoints: Record<any, any>[]) => {
+        if (staticPoints.length === 0) {
+          set(() => ({
+            staticPoints: [],
+          }));
+        }
         set(() => ({
           staticPoints,
         }));
