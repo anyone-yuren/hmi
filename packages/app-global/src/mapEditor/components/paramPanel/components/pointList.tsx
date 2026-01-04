@@ -165,7 +165,14 @@ const App: React.FC = () => {
                   onClick={() => pointClick(item)}
                   actions={[
                     <div className='flex items-center gap-1'>
-                      <IconifyIcon icon='mingcute:delete-2-fill' size={16} />
+                      <IconifyIcon
+                        icon='mingcute:delete-2-fill'
+                        size={16}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setStaticPoints(staticPoints.filter((p) => p.id !== item.id));
+                        }}
+                      />
                       <IconifyIcon
                         icon='line-md:edit'
                         size={16}

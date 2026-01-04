@@ -1,7 +1,7 @@
 import { Form, Radio, Select } from 'antd';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../store';
@@ -32,6 +32,9 @@ const DrawPointsSelect = () => {
     },
   ];
   const drawPointsType = Form.useWatch('drawPointsType', form);
+  useEffect(() => {
+    setCollapsed(selectDrawType !== 'point');
+  }, [selectDrawType]);
   return (
     <>
       <div

@@ -52,6 +52,7 @@ export const useMapEditorStore = create<State>()(
       setSelectDrawType: (selectDrawType: string) => {
         set(() => ({
           selectDrawType,
+          selectSubDrawType: '',
         }));
       },
       selectSubDrawType: 'elevator',

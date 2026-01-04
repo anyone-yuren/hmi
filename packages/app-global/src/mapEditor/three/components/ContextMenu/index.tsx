@@ -64,14 +64,18 @@ export default function ContextMenu() {
         { key: 'delete', label: '删除' },
       ];
     }
+    if (selected?.name?.includes('point_label')) {
+      return [
+        { key: 'modify', label: '修改' },
+        { key: 'delete', label: '删除' },
+      ];
+    }
     return [
       { key: 'clip', label: '裁剪设置' },
       { key: 'density', label: '点云密度' },
       { key: 'delete', label: '删除点云' },
     ]; // 预留默认弹窗
   }, [selected]);
-
-  console.log('contextMenuVisible:', contextMenuVisible, contextMenuPosition);
 
   if (!contextMenuVisible || !contextMenuPosition) return null;
 

@@ -14,6 +14,7 @@ import { useMapEditorViewStore } from './store/view';
 import BaseElement from './three/base';
 import RenderDevice from './three/components';
 import ContextMenu from './three/components/ContextMenu';
+import PanelRoot from './three/components/PanelRoot';
 import { SceneRaycaster } from './three/components/SceneRaycaster';
 import { SlamMapFloor } from './three/components/SlamMap';
 
@@ -26,6 +27,7 @@ const MapEditor = () => {
     }),
   );
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const panelBoundsRef = useRef<HTMLDivElement>(null);
   const size = useSize(wrapperRef);
   if (!showMapEditor) {
     return <HybridManagement />;
@@ -38,7 +40,7 @@ const MapEditor = () => {
           <Handles />
           {/* 按钮能正常点击 */}
           {/* Canvas 必须套一层 div 才能正确 resize */}
-          <div className='absolute inset-0 '>
+          <div className='absolute inset-0 ' ref={panelBoundsRef}>
             {size?.width && size?.height && (
               <Canvas
                 resize={{ scroll: false, offsetSize: true }} // R3F 官方推荐的 resize 配置
@@ -64,6 +66,7 @@ const MapEditor = () => {
               </Canvas>
             )}
             <ContextMenu />
+            <PanelRoot boundsRef={panelBoundsRef} /> {/* ⭐ 只渲染一次 */}
           </div>
         </div>
         {/* 右侧 panel */}
