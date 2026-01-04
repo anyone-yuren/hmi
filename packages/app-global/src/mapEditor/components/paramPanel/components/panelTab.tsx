@@ -16,7 +16,7 @@ const useStyles = createStyles(({ css }) => ({
       padding: 4px !important;
       justify-content: center;
       &.ant-tabs-tab-active {
-        background-color: rgb(255, 255, 255, 0.05) !important;
+        background-color: rgb(255, 255, 255, 0.15) !important;
       }
     }
     .ant-tabs-ink-bar {
@@ -41,6 +41,7 @@ const PanelTab = () => {
       className={styles['panel-tabs']}
       tabPosition='left'
       // defaultActiveKey={selectDrawType}
+      activeKey={selectDrawType}
       accessKey={selectDrawType}
       onChange={setSelectDrawType}
       renderTabBar={(props, DefaultTabBar) => <DefaultTabBar {...props} />}

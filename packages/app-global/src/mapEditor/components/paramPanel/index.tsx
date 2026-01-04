@@ -155,7 +155,7 @@ const ParamsPanel = () => {
         <div>
           <PanelTab />
         </div>
-        <div className='flex-1 h-full overflow-auto bg-white/5'>
+        <div className='flex-1 h-full overflow-auto bg-white/15'>
           {/* {selectDrawType === 'point' && <DrawPointsParamsPanel />} */}
           {selectDrawType === 'point' && <PointList />}
           {(selectDrawType === 'line' || selectDrawType === 'bspline') && <DrawLinesParamsPanel />}

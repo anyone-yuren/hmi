@@ -15,16 +15,21 @@ interface UserItem {
 const CONTAINER_HEIGHT = 400;
 
 const App: React.FC = () => {
-  const { staticPoints } = useMapEditorStore(
+  const { staticPoints, flyToPoint, setFlyToPoint } = useMapEditorStore(
     useShallow((state) => ({
       staticPoints: state.staticPoints,
+      flyToPoint: state.flyToPoint,
+      setFlyToPoint: state.setFlyToPoint,
     })),
   );
+  const pointClick = (item: UserItem) => {
+    setFlyToPoint(item.position);
+  };
   const [data, setData] = useState<UserItem[]>(staticPoints as UserItem[]);
   return (
-    <div className='h-full px-2'>
+    <div className='h-full'>
       <div className='bg-white/5 rounded-sm'>
-        <p className='text-xs font-medium flex items-center gap-2 justify-between'>
+        <p className='text-xs font-medium flex items-center px-2 gap-2 justify-between'>
           <span className='flex items-center gap-1 text-xs font-medium text-nowrap'>
             <IconifyIcon icon='gis:copy-point' size={16} /> 点列表
           </span>
@@ -66,13 +71,14 @@ const App: React.FC = () => {
           </div>
         </p>
       </div>
-      <List size='small'>
+      <List size='small' className='p-2'>
         <VirtualList data={data} height={CONTAINER_HEIGHT} itemHeight={47} itemKey='id'>
           {(item: UserItem) => (
             <List.Item
               key={item.id}
               className='hover:bg-white/5 cursor-pointer active:bg-white/10'
               title={JSON.stringify(item.position)}
+              onClick={() => pointClick(item)}
             >
               <div>{item.id}</div>
             </List.Item>

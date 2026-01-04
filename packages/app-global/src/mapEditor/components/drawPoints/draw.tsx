@@ -91,10 +91,13 @@ interface PointData {
 /* ======================= */
 
 export default function DrawPoints() {
-  const { paramsPanelCollapsed, selectDrawType } = useMapEditorStore(
+  const { paramsPanelCollapsed, selectDrawType, setStaticPoints, staticPoints, flyToPoint } = useMapEditorStore(
     useShallow((s) => ({
       paramsPanelCollapsed: s.paramsPanelCollapsed,
       selectDrawType: s.selectDrawType,
+      setStaticPoints: s.setStaticPoints,
+      staticPoints: s.staticPoints,
+      flyToPoint: s.flyToPoint,
     })),
   );
 
@@ -107,7 +110,30 @@ export default function DrawPoints() {
   const { camera, scene } = useThree();
   const pick = usePickOnXYPlane();
 
-  const [points, setPoints] = useState<PointData[]>([]);
+  const flyHighlightId = useMemo(() => {
+    if (!flyToPoint) return null;
+
+    // 如果 flyToPoint 自带 id（最推荐）
+    if ('id' in flyToPoint) return flyToPoint.id;
+
+    // ⚠️ 兜底：用坐标找最近的点
+    let minDist = Infinity;
+    let targetId: number | null = null;
+
+    staticPoints.forEach((p) => {
+      const dx = p.position.x - flyToPoint.x;
+      const dy = p.position.y - flyToPoint.y;
+      const d = dx * dx + dy * dy;
+      if (d < minDist) {
+        minDist = d;
+        targetId = p.id;
+      }
+    });
+
+    return targetId;
+  }, [flyToPoint, staticPoints]);
+
+  // const [points, setPoints] = useState<PointData[]>([]);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   /* ======================= */
@@ -187,9 +213,9 @@ export default function DrawPoints() {
 
     const bounds = getOrthoViewBounds(cam);
     const visiblePoints = querySpatialIndex(bounds) as PointData[];
-
+    debugger;
     visiblePoints.forEach((p) => {
-      const index = points.findIndex((pt) => pt.id === p.id);
+      const index = staticPoints.findIndex((pt) => pt.id === p.id);
       if (index !== -1) {
         showSprite(p, index);
       }
@@ -210,17 +236,24 @@ export default function DrawPoints() {
 
       safeUpdateSprite(sprite, (ctx) => {
         ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-        ctx.fillStyle = selectedIds.has(id) ? '#4ade80' : id === hoveredId ? '#ff4444' : '#ffffff';
+        ctx.fillStyle =
+          id === flyHighlightId
+            ? '#facc15'
+            : id === hoveredId
+              ? '#ff4444'
+              : selectedIds.has(id)
+                ? '#4ade80'
+                : '#ffffff';
 
         ctx.font = 'bold 96px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        const index = points.findIndex((p) => p.id === id);
+        const index = staticPoints.findIndex((p) => p.id === id);
         ctx.fillText(String(index + 1), CANVAS_SIZE / 2, CANVAS_SIZE / 2);
       });
     });
-  }, [hoveredId, selectedIds, points, camera]);
+  }, [hoveredId, selectedIds, staticPoints, camera, flyHighlightId]);
 
   /* ======================= */
   /* InstancedMesh 更新 */
@@ -231,7 +264,7 @@ export default function DrawPoints() {
 
     const mesh = meshRef.current;
 
-    points.forEach((p, i) => {
+    staticPoints.forEach((p, i) => {
       dummy.position.set(p.position.x, p.position.y, 0.001);
       dummy.rotation.set(Math.PI / 2, 0, 0);
       dummy.updateMatrix();
@@ -239,26 +272,32 @@ export default function DrawPoints() {
       mesh.setMatrixAt(i, dummy.matrix);
 
       let color = '#ff9900';
-      if (selectedIds.has(p.id)) color = '#00d1d1';
-      if (p.id === hoveredId) color = '#ff4444';
+      // ⭐ flyToPoint 高亮（优先级最高）
+      if (p.id === flyHighlightId) {
+        color = '#facc15'; // 黄色
+      } else if (p.id === hoveredId) {
+        color = '#ff4444';
+      } else if (selectedIds.has(p.id)) {
+        color = '#00d1d1';
+      }
 
       mesh.setColorAt(i, new THREE.Color(color));
     });
 
-    mesh.count = points.length;
+    mesh.count = staticPoints.length;
     mesh.instanceMatrix.needsUpdate = true;
 
     if (mesh.instanceColor) {
       mesh.instanceColor.needsUpdate = true;
     }
-  }, [points, hoveredId, selectedIds, dummy]);
+  }, [staticPoints, hoveredId, selectedIds, dummy]);
 
   /* ======================= */
   /* 空间索引 */
   /* ======================= */
 
   useEffect(() => {
-    const items: SelectableItem[] = points.map((p) => ({
+    const items: SelectableItem[] = staticPoints.map((p) => ({
       id: p.id,
       type: 'point',
       position: p.position,
@@ -269,7 +308,7 @@ export default function DrawPoints() {
     }));
 
     rebuildSpatialIndex(items);
-  }, [points]);
+  }, [staticPoints]);
 
   /* ======================= */
   /* 点击添加点 */
@@ -282,10 +321,10 @@ export default function DrawPoints() {
       const p = pick(e);
       if (!p) return;
 
-      setPoints((prev) => [
-        ...prev,
+      setStaticPoints([
+        ...staticPoints,
         {
-          id: prev.length + 1,
+          id: staticPoints.length + 1,
           position: p.clone(),
           // createdAt: new Date(),
         },
@@ -302,7 +341,7 @@ export default function DrawPoints() {
 
   const onPointerMove = (e: any) => {
     if (e.instanceId === undefined) return;
-    const p = points[e.instanceId];
+    const p = staticPoints[e.instanceId];
     if (p) setHoveredId(p.id);
   };
 
@@ -314,11 +353,10 @@ export default function DrawPoints() {
     // ⭐ 所有点都在 drawLayer
     meshRef.current.layers.set(THREE_LAYERS.DRAW);
   }, []);
-  console.log('points', points);
   return (
     <instancedMesh
       ref={meshRef}
-      args={[geometry, material, points.length]}
+      args={[geometry, material, staticPoints.length]}
       onPointerMove={onPointerMove}
       onPointerOut={onPointerOut}
     />

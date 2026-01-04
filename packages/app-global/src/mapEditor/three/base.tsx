@@ -1,8 +1,11 @@
 import { GizmoHelper, GizmoViewport, Grid, MapControls, OrthographicCamera } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
+import { useMapEditorStore } from '../store';
 import { useMapEditorViewStore } from '../store/view';
+import { useFlyToPointSpring } from './hooks/useFlyToPointSpring';
 
 function ResizeCamera() {
   const { camera, size } = useThree();
@@ -24,12 +27,18 @@ function ResizeCamera() {
   return null;
 }
 const BaseElement = ({ size }) => {
+  const controlsRef = useRef<any>(null);
   const { gridVisible } = useMapEditorViewStore(
     useShallow((state) => {
       return {
         gridVisible: state.gridVisible,
       };
     }),
+  );
+  const { flyToPoint } = useMapEditorStore(
+    useShallow((state) => ({
+      flyToPoint: state.flyToPoint,
+    })),
   );
   const gridConfig = {
     cellSize: 0.5,
@@ -42,6 +51,8 @@ const BaseElement = ({ size }) => {
     fadeStrength: 1,
     // infiniteGrid: true,
   };
+
+  useFlyToPointSpring(controlsRef, flyToPoint);
 
   return (
     <>
@@ -68,6 +79,7 @@ const BaseElement = ({ size }) => {
           makeDefault
           maxDistance={50}
           minZoom={1}
+          ref={controlsRef}
         />
         {/* <CameraControls
           makeDefault

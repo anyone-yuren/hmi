@@ -114,6 +114,8 @@ export default function DrawBSpline() {
 
     setCurves((prev) =>
       prev.map((c) => {
+        if (!dragging.current) return c;
+
         if (c.id !== dragging.current!.id) return c;
 
         const pts = [...c.controlPoints];
