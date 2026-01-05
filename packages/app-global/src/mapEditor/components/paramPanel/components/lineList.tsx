@@ -3,7 +3,7 @@ import { useSize } from 'ahooks';
 import { Button, Checkbox, Dropdown, Empty, Form, Input, List } from 'antd';
 import VirtualList from 'rc-virtual-list';
 import React, { useEffect, useRef, useState } from 'react';
-import { IconifyIcon } from 'ui';
+import { IconifyIcon, SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../../store';
 import DrawLinesParamsPanel from '../../drawLine/components/paramspanel';
@@ -124,7 +124,7 @@ const LineList: React.FC = () => {
             ...panelSpring,
             pointerEvents: panelVisible ? 'auto' : 'none',
           }}
-          className='absolute top-0 left-0 w-full h-full bg-[#555555] z-10 flex flex-col '
+          className='absolute top-0 left-0 w-full h-full bg-[#313131] z-10 flex flex-col '
         >
           <p className='flex items-center justify-between text-xs font-medium px-2 pt-2'>
             <span>线属性</span>
@@ -186,7 +186,14 @@ const LineList: React.FC = () => {
           </List>
         ) : (
           <div className='w-full h-full flex items-center justify-center'>
-            <Empty />
+            <Empty
+              image={<SvgIcon name='ic_content' size={180} />}
+              styles={{
+                image: {
+                  height: 'auto',
+                },
+              }}
+            />
           </div>
         )}
       </div>
