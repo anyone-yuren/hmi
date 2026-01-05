@@ -34,7 +34,7 @@ function DrawLines() {
       })),
     );
   const pick = usePickOnXYPlane();
-  const { controls, camera } = useThree();
+  const { controls, camera, gl } = useThree();
   useEffect(() => {
     camera.layers.enable(THREE_LAYERS.DRAW);
   }, []);
@@ -185,15 +185,23 @@ function DrawLines() {
   };
 
   useEffect(() => {
-    window.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
+    if (!gl) return;
+    const canvas = gl.domElement;
+
+    const handleDown = (e: MouseEvent) => onMouseDown(e);
+    const handleMove = (e: MouseEvent) => onMouseMove(e);
+    const handleUp = (e: MouseEvent) => onMouseUp();
+
+    canvas.addEventListener('mousedown', handleDown);
+    canvas.addEventListener('mousemove', handleMove);
+    canvas.addEventListener('mouseup', handleUp);
+
     return () => {
-      window.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      canvas.removeEventListener('mousedown', handleDown);
+      canvas.removeEventListener('mousemove', handleMove);
+      canvas.removeEventListener('mouseup', handleUp);
     };
-  }, [drawing, selectedLineId, selectDrawType]);
+  }, [gl, drawing, selectedLineId]);
 
   /* ------------------- 相机控制 ------------------- */
   // useFrame(() => {

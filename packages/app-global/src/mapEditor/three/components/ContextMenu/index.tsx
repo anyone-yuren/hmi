@@ -70,6 +70,13 @@ export default function ContextMenu() {
         { key: 'delete', label: '删除' },
       ];
     }
+    if (selected?.name?.includes('elevator')) {
+      return [
+        { key: 'clip', label: '事件绑定' },
+        { key: 'density', label: '关联线段' },
+        { key: 'delete', label: '删除' },
+      ]; // 预留默认弹窗
+    }
     return [
       { key: 'clip', label: '裁剪设置' },
       { key: 'density', label: '点云密度' },
@@ -88,7 +95,6 @@ export default function ContextMenu() {
           position: 'fixed',
           left: contextMenuPosition.x,
           top: contextMenuPosition.y,
-          minWidth: 160,
           zIndex: 9999,
           color: '#fff',
         }}

@@ -8,7 +8,7 @@ export function markUnpickable(obj: THREE.Object3D) {
   // 如果本身就是 Mesh / Line
   if (obj.isObject3D) {
     obj.traverse((o: any) => {
-      if (o.isMesh || o.isLine || o.isPoints) {
+      if (o.isMesh || o.isLine || o.isLine2 || o.isPoints) {
         o.raycast = () => null;
       }
     });

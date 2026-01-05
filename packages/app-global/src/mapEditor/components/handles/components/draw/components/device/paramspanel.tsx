@@ -83,8 +83,8 @@ const DrawDeviceParamsPanel = () => {
 
   return (
     <div className='flex flex-col gap-2 w-full'>
-      <div className='bg-white/5 rounded-sm p-2 '>
-        <p className='text-xs font-medium flex items-center gap-2 justify-between'>
+      <div className='rounded-sm'>
+        <p className='text-xs font-medium flex items-center gap-2 px-2 justify-between bg-white/5'>
           <span className='flex items-center gap-1 text-xs font-medium text-nowrap'>
             <IconifyIcon icon='subway:folder-2' size={16} /> 设备列表
           </span>
@@ -144,8 +144,11 @@ const DrawDeviceParamsPanel = () => {
           </ul>
         </Dropdown> */}
         {/* 使用 Tree 组件渲染设备列表 */}
+      </div>
+      <div className='px-2'>
+        {' '}
         <Tree
-          className='max-h-[200px] overflow-auto py-2'
+          className='max-h-[200px] overflow-auto p-2'
           treeData={treeData}
           height={200}
           defaultExpandAll
@@ -167,7 +170,7 @@ const DrawDeviceParamsPanel = () => {
           }}
         />
       </div>
-      <div className='flex-1 bg-white/5 rounded-sm p-2 overflow-auto w-full'>
+      <div className='flex-1 rounded-sm px-2 overflow-auto w-full'>
         <Form form={form} layout='horizontal' labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} autoComplete='off'>
           <Collapse defaultActiveKey={['1', '2', '3', '4', '5']}>
             {/* ---------------- 通用属性 ---------------- */}

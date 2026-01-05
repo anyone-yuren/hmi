@@ -1,11 +1,13 @@
-import { useLoader } from '@react-three/fiber';
+import { useLoader, useThree } from '@react-three/fiber';
 import { useEffect, useState } from 'react';
 import { TextureLoader } from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { usePickOnXYPlane } from '../../../../hooks/usePickOnXYPanel';
 import { useMapEditorStore } from '../../../../store';
+import { THREE_LAYERS } from '../../../../three/constants/threeLayers';
 
 const Elevator = () => {
+  const { gl } = useThree();
   const texture = useLoader(TextureLoader, 'assets/three/elevator.png'); // 加载 PNG 图标
   const [hoveredId, setHoveredId] = useState<number | null>(null); // 存储当前悬停的电梯 ID
   const { setElevatorList, elevatorList, selectSubDrawType } = useMapEditorStore(
@@ -30,10 +32,12 @@ const Elevator = () => {
         },
       ]);
     };
+    if (!gl) return;
+    const canvas = gl.domElement;
 
     if (selectSubDrawType !== 'elevator') return;
-    window.addEventListener('click', onClick);
-    return () => window.removeEventListener('click', onClick);
+    canvas.addEventListener('click', onClick);
+    return () => canvas.removeEventListener('click', onClick);
   }, [setElevatorList, elevatorList, selectSubDrawType]);
 
   return (
@@ -41,6 +45,8 @@ const Elevator = () => {
       {elevatorList.map((item) => (
         <sprite
           key={item.id}
+          name={`elevator-${item.id}`}
+          layers={THREE_LAYERS.DRAW}
           position={[item.position.x, item.position.y, 0]}
           onPointerOver={() => setHoveredId(item.id)} // 悬停时设置当前悬停的电梯 ID
           onPointerOut={() => setHoveredId(null)} // 鼠标移出时恢复
