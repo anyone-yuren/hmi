@@ -22,14 +22,17 @@ let nextLineId = 1;
 const NUM_POINTS = 5;
 
 function DrawLines() {
-  const { paramsPanelCollapsed, selectDrawType, selectLineData, setSelectLineData } = useMapEditorStore(
-    useShallow((s) => ({
-      paramsPanelCollapsed: s.paramsPanelCollapsed,
-      selectDrawType: s.selectDrawType,
-      selectLineData: s.selectLineData,
-      setSelectLineData: s.setSelectLineData,
-    })),
-  );
+  const { paramsPanelCollapsed, selectDrawType, selectLineData, setSelectLineData, lineList, setLineList } =
+    useMapEditorStore(
+      useShallow((s) => ({
+        paramsPanelCollapsed: s.paramsPanelCollapsed,
+        selectDrawType: s.selectDrawType,
+        selectLineData: s.selectLineData,
+        setSelectLineData: s.setSelectLineData,
+        lineList: s.lineList,
+        setLineList: s.setLineList,
+      })),
+    );
   const pick = usePickOnXYPlane();
   const { controls, camera } = useThree();
   useEffect(() => {
@@ -166,6 +169,8 @@ function DrawLines() {
       const newLine: LineData = { ...drawing, points };
 
       setLines((prev) => [...prev, newLine]);
+      // ✅ 更新 Zustand 中的线列表
+      setLineList((prev) => [...prev, newLine]);
 
       // ✅ 选中刚画的线
       setSelectedLineId(newLine.id);

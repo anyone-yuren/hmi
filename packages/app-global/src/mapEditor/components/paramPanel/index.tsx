@@ -6,9 +6,9 @@ import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../store';
 import { useMapEditorViewStore } from '../../store/view';
-import DrawLinesParamsPanel from '../drawLine/components/paramspanel';
 import DrawDeviceParamsPanel from '../handles/components/draw/components/device/paramspanel';
 import DrawNavigationParamsPanel from '../handles/components/draw/components/navigation/paramspanel';
+import LineList from './components/lineList';
 import PanelTab from './components/panelTab';
 import PointList from './components/pointList';
 const { Search } = Input;
@@ -158,7 +158,8 @@ const ParamsPanel = () => {
         <div className='flex-1 h-full overflow-auto bg-white/15'>
           {/* {selectDrawType === 'point' && <DrawPointsParamsPanel />} */}
           {selectDrawType === 'point' && <PointList />}
-          {(selectDrawType === 'line' || selectDrawType === 'bspline') && <DrawLinesParamsPanel />}
+          {/* {(selectDrawType === 'line' || selectDrawType === 'bspline') && <DrawLinesParamsPanel />} */}
+          {(selectDrawType === 'line' || selectDrawType === 'bspline') && <LineList />}
           {selectDrawType === 'device' && <DrawDeviceParamsPanel />}
           {selectDrawType === 'navigation' && <DrawNavigationParamsPanel />}
         </div>

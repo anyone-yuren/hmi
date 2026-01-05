@@ -37,6 +37,10 @@ interface State {
   setStaticPoints: (staticPoints: Record<any, any>[]) => void;
   flyToPoint: { x: number; y: number; z: number };
   setFlyToPoint: (flyToPoint: { x: number; y: number; z: number }) => void;
+  lineList: any[];
+  setLineList: (lineList: any[]) => void;
+  setSelectedLineId: (id: number) => void;
+  selectedLineId: number;
 }
 
 export const useMapEditorStore = create<State>()(
@@ -170,6 +174,18 @@ export const useMapEditorStore = create<State>()(
       setFlyToPoint: (flyToPoint: { x: number; y: number; z: number }) => {
         set(() => ({
           flyToPoint,
+        }));
+      },
+      lineList: [],
+      setLineList: (lineList: any[]) => {
+        set(() => ({
+          lineList,
+        }));
+      },
+      selectedLineId: 0,
+      setSelectedLineId: (id: number) => {
+        set(() => ({
+          selectedLineId: id,
         }));
       },
     }),

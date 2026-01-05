@@ -33,7 +33,14 @@ const HybridManagement = () => {
             <div className='flex flex-col gap-4 min-w-40'>
               <h4 className='text-xl'>添加方式</h4>
               <div className='handle-list w-full flex flex-col gap-4 text-teal-400'>
-                <div className='flex items-center gap-4'>
+                <div
+                  className='flex items-center gap-4 cursor-pointer'
+                  onClick={() => {
+                    setLoading(false);
+                    setVisible(false);
+                    setShowMapEditor(true);
+                  }}
+                >
                   <IconifyIcon icon='material-symbols-light:folder-open-outline-sharp' size={20} />
                   <span>打开...</span>
                 </div>
