@@ -7,7 +7,6 @@ import DrawPlaneSelect from '../../../drawPlane';
 import DrawPointsSelect from '../../../drawPoints';
 import DrawStationSelect from '../../../drawStation';
 import DrawDeviceSelect from './components/device';
-import DrawNavigationSelect from './components/navigation';
 
 const DrawHandle = () => {
   const theme = useTheme();
@@ -20,7 +19,7 @@ const DrawHandle = () => {
           <DrawLinesSelect />
           <DrawPlaneSelect />
           <DrawDeviceSelect />
-          <DrawNavigationSelect />
+          {/* <DrawNavigationSelect /> */}
         </div>
       </div>
       <div className='flex gap-2 items-center'>

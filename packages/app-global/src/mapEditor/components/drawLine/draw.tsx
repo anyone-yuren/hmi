@@ -170,7 +170,7 @@ function DrawLines() {
 
       setLines((prev) => [...prev, newLine]);
       // ✅ 更新 Zustand 中的线列表
-      setLineList((prev) => [...prev, newLine]);
+      setLineList([...lines, newLine]);
 
       // ✅ 选中刚画的线
       setSelectedLineId(newLine.id);

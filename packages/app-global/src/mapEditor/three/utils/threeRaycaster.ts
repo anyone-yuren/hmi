@@ -3,7 +3,6 @@ import { THREE_LAYERS } from '../constants/threeLayers';
 
 // 一键禁止命中
 export function markUnpickable(obj: THREE.Object3D) {
-  debugger;
   if (!obj) return;
 
   // 如果本身就是 Mesh / Line

@@ -21,10 +21,11 @@ const ParamsPanel = () => {
       };
     }),
   );
-  const { selectFloor, setSelectFloor } = useMapEditorViewStore(
+  const { selectFloor, setSelectFloor, setShowMapEditor } = useMapEditorViewStore(
     useShallow((state) => ({
       selectFloor: state.selectFloor,
       setSelectFloor: state.setSelectFloor,
+      setShowMapEditor: state.setShowMapEditor,
     })),
   );
   const mapData = [
@@ -90,6 +91,13 @@ const ParamsPanel = () => {
                     {
                       label: '导出',
                       key: 'export',
+                    },
+                    {
+                      label: '清空',
+                      key: 'clear',
+                      onClick: () => {
+                        setShowMapEditor(false);
+                      },
                     },
                   ],
                 }}
