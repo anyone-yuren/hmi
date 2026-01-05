@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { usePickOnXYPlane } from '../hooks/usePickOnXYPanel';
 import { useMapEditorStore } from '../store';
+import { markUnpickable } from '../three/utils/threeRaycaster';
 
 function CursorGuideLine() {
   const pick = usePickOnXYPlane();
@@ -21,6 +22,17 @@ function CursorGuideLine() {
 
   // 使用requestAnimationFrame来同步更新
   const rafRef = useRef<number>();
+  const hLineRef = useRef<THREE.Object3D>(null);
+  const vLineRef = useRef<THREE.Object3D>(null);
+
+  useEffect(() => {
+    if (hLineRef.current) {
+      markUnpickable(hLineRef.current);
+    }
+    if (vLineRef.current) {
+      markUnpickable(vLineRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     const updatePosition = () => {
@@ -70,9 +82,14 @@ function CursorGuideLine() {
         lineWidth={1}
         transparent
         opacity={0.4}
+        ref={hLineRef}
+        onUpdate={(line) => {
+          markUnpickable(line);
+        }}
       />
       {/* 纵线 */}
       <Line
+        ref={vLineRef}
         points={[
           [pos.x, -500, 0.01],
           [pos.x, 500, 0.01],

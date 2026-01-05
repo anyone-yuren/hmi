@@ -9,17 +9,18 @@ export function SceneRaycaster() {
   const { camera, scene, gl } = useThree();
   const raycaster = useRef(new THREE.Raycaster());
   const mouse = useRef(new THREE.Vector2());
-  const { selectObject, showContextMenu, hideContextMenu, selected } = useMapEditorMenuStore(
+  const { selectObject, showContextMenu, hideContextMenu } = useMapEditorMenuStore(
     useShallow((s) => ({
       selectObject: s.selectObject,
       showContextMenu: s.showContextMenu,
       hideContextMenu: s.hideContextMenu,
-      selected: s.selected,
     })),
   );
 
   useEffect(() => {
-    raycaster.current.layers.set(THREE_LAYERS.DRAW);
+    // 只命中 DRAW / UI
+    raycaster.current.layers.enable(THREE_LAYERS.DRAW);
+    raycaster.current.layers.enable(THREE_LAYERS.UI);
   }, []);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export function SceneRaycaster() {
         hideContextMenu();
         return;
       }
+      debugger;
       // ✅ 命中
       selectObject(hits[0].object);
       showContextMenu(e.clientX, e.clientY);

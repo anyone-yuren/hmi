@@ -5,7 +5,9 @@ import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../store';
 import { useMapEditorViewStore } from '../store/view';
+import { THREE_LAYERS } from './constants/threeLayers';
 import { useFlyToPointSpring } from './hooks/useFlyToPointSpring';
+import { markUnpickable } from './utils/threeRaycaster';
 
 function ResizeCamera() {
   const { camera, size } = useThree();
@@ -28,6 +30,14 @@ function ResizeCamera() {
 }
 const BaseElement = ({ size }) => {
   const controlsRef = useRef<any>(null);
+  const { camera } = useThree();
+  // 开启 draw / label / ui 层 可以被命中
+  useEffect(() => {
+    if (!camera) return;
+    camera.layers.enable(THREE_LAYERS.DRAW);
+    camera.layers.enable(THREE_LAYERS.LABEL);
+    camera.layers.enable(THREE_LAYERS.UI);
+  }, [camera]);
   const { gridVisible } = useMapEditorViewStore(
     useShallow((state) => {
       return {
@@ -109,15 +119,24 @@ const BaseElement = ({ size }) => {
           {...gridConfig}
           position={[0, 0, 0.01]}
           rotation={[Math.PI / 2, 0, 0]} // XZ → XY
+          onUpdate={(grid) => {
+            markUnpickable(grid);
+          }}
         />
 
-        <mesh position={[0, 0, 0.1]}>
+        <mesh position={[0, 0, 0.1]} layers={THREE_LAYERS.DRAW}>
           <boxGeometry args={[1, 1, 0.2]} />
           <meshStandardMaterial color='red' />
         </mesh>
         <ambientLight intensity={1} />
         {/* <MouseTracker /> */}
-        <GizmoHelper alignment='bottom-right' margin={[80, 80]}>
+        <GizmoHelper
+          alignment='bottom-right'
+          margin={[80, 80]}
+          onUpdate={(self?) => {
+            markUnpickable(self);
+          }}
+        >
           <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='white' disabled={true} />
         </GizmoHelper>
       </group>
