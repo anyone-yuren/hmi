@@ -166,6 +166,7 @@ const GlobalConfig: FC<GlobalConfigProps> = ({ children, ...rest }) => {
           List: {
             itemPaddingSM: '2px 8px',
           },
+          Tooltip: {},
         },
       }}
       {...rest}

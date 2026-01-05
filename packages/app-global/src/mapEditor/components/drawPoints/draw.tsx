@@ -263,7 +263,7 @@ export default function DrawPoints() {
       let color = '#ff9900';
       if (p.id === flyHighlightId) color = '#facc15';
       else if (p.id === hoveredId) color = '#ff4444';
-      else if (selectedIds.has(p.id)) color = '#00d1d1';
+      else if (selectedIds?.has(p.id)) color = '#00d1d1';
 
       mesh.setColorAt(i, new THREE.Color(color));
     });

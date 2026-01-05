@@ -160,7 +160,7 @@ const ParamsPanel = () => {
         </div>
       </div>
       <div className='flex-1 flex overflow-hidden'>
-        <div>
+        <div className='bg-white/5'>
           <PanelTab />
         </div>
         <div className='flex-1 h-full overflow-auto bg-white/15'>

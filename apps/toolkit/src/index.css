@@ -113,3 +113,11 @@ button {
 .react-flow__panel.right {
   z-index: -100000 !important;
 }
+
+.ant-tooltip {
+  pointer-events: none;
+}
+.ant-tooltip .ant-tooltip-inner {
+  min-height: 20px;
+  padding: 4px 6px;
+}

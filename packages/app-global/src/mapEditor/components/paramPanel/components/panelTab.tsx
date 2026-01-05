@@ -16,7 +16,7 @@ const useStyles = createStyles(({ css }) => ({
       padding: 4px !important;
       justify-content: center;
       &.ant-tabs-tab-active {
-        background-color: rgb(255, 255, 255, 0.15) !important;
+        background-color: rgb(255, 255, 255, 0.1) !important;
       }
     }
     .ant-tabs-ink-bar {
@@ -50,7 +50,7 @@ const PanelTab = () => {
           key: '1',
           label: (
             <div>
-              <Tooltip title='楼层数据'>
+              <Tooltip title='楼层数据' styles={{ root: { pointerEvents: 'none' } }} placement='left'>
                 <IconifyIcon icon='system-uicons:flip-view' size={18} className='text-teal-400 hover:text-teal-300' />
               </Tooltip>
             </div>
@@ -60,7 +60,7 @@ const PanelTab = () => {
           key: 'navigation',
           label: (
             <div>
-              <Tooltip title='楼层属性' styles={{ root: { pointerEvents: 'none' } }}>
+              <Tooltip title='楼层属性' styles={{ root: { pointerEvents: 'none' } }} placement='left'>
                 <IconifyIcon icon='bx:world' size={18} className='text-red-400 hover:text-red-300' />
               </Tooltip>
             </div>
@@ -70,7 +70,7 @@ const PanelTab = () => {
           key: 'point',
           label: (
             <div>
-              <Tooltip title='包含点' styles={{ root: { pointerEvents: 'none' } }}>
+              <Tooltip title='包含点' styles={{ root: { pointerEvents: 'none' } }} placement='left'>
                 <IconifyIcon icon='gis:copy-point' size={18} className='text-green-400 hover:text-green-300' />
               </Tooltip>
             </div>
@@ -80,7 +80,7 @@ const PanelTab = () => {
           key: 'line',
           label: (
             <div>
-              <Tooltip title='包含线' styles={{ root: { pointerEvents: 'none' } }}>
+              <Tooltip title='包含线' styles={{ root: { pointerEvents: 'none' } }} placement='left'>
                 <IconifyIcon icon='gis:copy-line' size={18} className='text-yellow-400 hover:text-yellow-300' />
               </Tooltip>
             </div>
@@ -90,7 +90,7 @@ const PanelTab = () => {
           key: 'polygon',
           label: (
             <div>
-              <Tooltip title='包含面' styles={{ root: { pointerEvents: 'none' } }}>
+              <Tooltip title='包含面' styles={{ root: { pointerEvents: 'none' } }} placement='left'>
                 <IconifyIcon icon='gis:polygon-hole-pt' size={18} className='text-blue-400 hover:text-blue-300' />
               </Tooltip>
             </div>
@@ -100,7 +100,7 @@ const PanelTab = () => {
           key: 'device',
           label: (
             <div>
-              <Tooltip title='包含设备' styles={{ root: { pointerEvents: 'none' } }}>
+              <Tooltip title='包含设备' styles={{ root: { pointerEvents: 'none' } }} placement='left'>
                 <IconifyIcon
                   icon='material-symbols:doorbell-chime-outline'
                   size={18}

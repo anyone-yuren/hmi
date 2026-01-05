@@ -16,8 +16,10 @@ interface SelectionStore {
   closeFilter: () => void;
   startSelection: boolean;
   setStartSelection: (start) => void;
+  selectTool: string;
+  setSelectTool: (tool) => void;
 }
-export const useSelectionStore = create<SelectionStore>((set) => ({
+export const useSelectionStore = create<SelectionStore>()((set) => ({
   selectedIds: new Set(),
   candidates: [],
   filterOpen: false,
@@ -28,4 +30,6 @@ export const useSelectionStore = create<SelectionStore>((set) => ({
   closeFilter: () => set({ filterOpen: false }),
   startSelection: false,
   setStartSelection: (start) => set({ startSelection: start }),
+  selectTool: '',
+  setSelectTool: (tool) => set({ selectTool: tool }),
 }));

@@ -10,7 +10,20 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
   const items = [
     {
       key: '1',
-      label: '路径点',
+      label: (
+        <div className='flex items-center justify-between'>
+          路径点
+          <span
+            className='text-xs text-gray-400 transition-all duration-300 hover:text-white'
+            title='导出路径点'
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <IconifyIcon icon='clarity:export-solid' size={14} />
+          </span>
+        </div>
+      ),
       children: (
         <>
           <ul className='flex flex-col gap-2 text-xs py-2'>
@@ -36,6 +49,9 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
                   >
                     {item.label}
                     <span className='flex items-center gap-1'>
+                      <Tooltip title='复制'>
+                        <IconifyIcon icon='icon-park-outline:copy' size={14} />
+                      </Tooltip>
                       <Tooltip title='关闭/激活'>
                         <IconifyIcon icon={'ic:round-close'} size={14} />
                       </Tooltip>
@@ -49,7 +65,20 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
     },
     {
       key: '2',
-      label: '路径线',
+      label: (
+        <div className='flex items-center justify-between'>
+          路径线
+          <span
+            className='text-xs text-gray-400 transition-all duration-300 hover:text-white'
+            title='导出路径线'
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <IconifyIcon icon='clarity:export-solid' size={14} />
+          </span>
+        </div>
+      ),
       children: (
         <>
           <ul className='flex flex-col gap-2 text-xs py-2'>
@@ -243,12 +272,6 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
             <Collapse items={items} defaultActiveKey={['1', '2']} />
           </div>
           <div className='w-2/3 bg-white/5 p-2 cursor-pointer overflow-auto flex flex-col gap-2'>
-            <p className='flex items-center justify-end gap-2'>
-              {/* 复制 */}
-              <IconifyIcon icon='icon-park-outline:copy' size={14} />
-              {/* 删除 */}
-              <IconifyIcon icon='ic:round-close' size={16} />
-            </p>
             <Collapse items={items1} defaultActiveKey={['1', '2', '3']} />
           </div>
         </div>
