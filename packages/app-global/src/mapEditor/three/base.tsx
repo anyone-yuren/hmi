@@ -90,6 +90,7 @@ const BaseElement = ({ size }) => {
           maxDistance={50}
           minZoom={1}
           ref={controlsRef}
+          dampingFactor={0.15} // 阻尼系数，可调，0.05-0.3 较舒服
         />
         {/* <CameraControls
           makeDefault

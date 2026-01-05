@@ -174,10 +174,45 @@ function usePointLabels(
 /* 主组件 */
 /* ======================= */
 export default function DrawPoints() {
-  const { gl, camera, scene } = useThree();
+  const { gl, camera, scene, controls } = useThree();
   const pick = usePickOnXYPlane();
-  const isDraggingRef = useRef(false);
   const downPos = useRef({ x: 0, y: 0 });
+
+  const isDragging = useRef(false);
+  const hasCameraMoved = useRef(false);
+
+  useEffect(() => {
+    if (!controls) return;
+
+    const onStart = () => {
+      hasCameraMoved.current = false;
+    };
+
+    const onChange = () => {
+      // 只有真正发生相机变化，才算拖动
+      hasCameraMoved.current = true;
+    };
+
+    const onEnd = () => {
+      isDragging.current = hasCameraMoved.current;
+
+      // ⚠️ click 会在 end 之后触发，所以要延后一帧再清
+      requestAnimationFrame(() => {
+        isDragging.current = false;
+        hasCameraMoved.current = false;
+      });
+    };
+
+    controls.addEventListener('start', onStart);
+    controls.addEventListener('change', onChange);
+    controls.addEventListener('end', onEnd);
+
+    return () => {
+      controls.removeEventListener('start', onStart);
+      controls.removeEventListener('change', onChange);
+      controls.removeEventListener('end', onEnd);
+    };
+  }, [controls]);
 
   const { paramsPanelCollapsed, selectSubDrawType, staticPoints, setStaticPoints, flyToPoint } = useMapEditorStore(
     useShallow((s) => ({
@@ -301,7 +336,7 @@ export default function DrawPoints() {
     if (!paramsPanelCollapsed || selectSubDrawType !== 'locationPoint') return;
 
     const onClick = (e: MouseEvent) => {
-      if (isDraggingRef.current) return;
+      if (isDragging.current) return;
       const p = pick(e);
       if (!p) return;
 
