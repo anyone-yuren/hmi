@@ -96,6 +96,7 @@
     "konva": "catalog:",
     "lodash": "^4",
     "lodash-es": "^4.17.21",
+    "nanoid": "^5.1.6",
     "numeral": "^2.0.6",
     "plop": "^4.0.1",
     "ramda": "^0.29.1",

@@ -8,6 +8,7 @@ import { useMapEditorStore } from '../../store';
 import { useMapEditorViewStore } from '../../store/view';
 import DrawDeviceParamsPanel from '../handles/components/draw/components/device/paramspanel';
 import DrawNavigationParamsPanel from '../handles/components/draw/components/navigation/paramspanel';
+import AreaList from './components/areaList';
 import LineList from './components/lineList';
 import PanelTab from './components/panelTab';
 import PointList from './components/pointList';
@@ -170,6 +171,7 @@ const ParamsPanel = () => {
           {(selectDrawType === 'line' || selectDrawType === 'bspline') && <LineList />}
           {selectDrawType === 'device' && <DrawDeviceParamsPanel />}
           {selectDrawType === 'navigation' && <DrawNavigationParamsPanel />}
+          {selectDrawType === 'polygon' && <AreaList />}
         </div>
       </div>
     </motion.div>

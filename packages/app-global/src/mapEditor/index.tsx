@@ -17,6 +17,7 @@ import ContextMenu from './three/components/ContextMenu';
 import PanelRoot from './three/components/PanelRoot';
 import { SceneRaycaster } from './three/components/SceneRaycaster';
 import { SlamMapFloor } from './three/components/SlamMap';
+import RenderMesh from './three/components/drawArea';
 
 const MapEditor = () => {
   const { showMapEditor } = useMapEditorViewStore(
@@ -59,6 +60,7 @@ const MapEditor = () => {
                 <DrawLine />
                 <DrawBsline />
                 <CursorGuideLine />
+                <RenderMesh />
                 {/* <SlamPointCloud url='/static/ply/warehouse_slam.ply' /> */}
                 <SlamMapFloor mapIndex={0} />
                 <SelectionOverlayBox />
