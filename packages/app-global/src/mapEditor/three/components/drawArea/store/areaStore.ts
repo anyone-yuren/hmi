@@ -23,6 +23,10 @@ type MapEditorState = {
   select: (ids: string[]) => void;
   clearSelection: () => void;
   clearAreas: () => void;
+  contextMenuPosition: { x: 0; y: 0 };
+  setContextMenuPosition: (position) => void;
+  showAreaParamsDialog: boolean;
+  setShowAreaParamsDialog: (show) => void;
 };
 
 export const useAreaStore = create<MapEditorState>((set) => ({
@@ -42,4 +46,12 @@ export const useAreaStore = create<MapEditorState>((set) => ({
   select: (ids) => set({ selectedIds: ids }),
   clearSelection: () => set({ selectedIds: [] }),
   clearAreas: () => set({ areas: [] }),
+
+  // 上下文菜单位置
+  contextMenuPosition: { x: 0, y: 0 },
+  setContextMenuPosition: (position) => set({ contextMenuPosition: position }),
+
+  // 区域参数弹窗是否显示
+  showAreaParamsDialog: false,
+  setShowAreaParamsDialog: (show) => set({ showAreaParamsDialog: show }),
 }));

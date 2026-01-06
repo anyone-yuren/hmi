@@ -32,14 +32,23 @@ export function SceneRaycaster() {
       mouse.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
       raycaster.current.setFromCamera(mouse.current, camera);
-      const hits = raycaster.current.intersectObjects(scene.children, true);
+      // const hits = raycaster.current.intersectObjects(scene.children, true);
+      const hits = raycaster.current.intersectObjects(scene.children, true).filter((hit) => {
+        let o: THREE.Object3D | null = hit.object;
+        while (o) {
+          console.log(o.userData.__gizmo);
+
+          if (o.userData.__gizmo) return false; // ❌ 忽略 gizmo
+          o = o.parent;
+        }
+        return true;
+      });
       if (hits.length === 0) {
         // ❌ 没命中：不弹
         selectObject(null);
         hideContextMenu();
         return;
       }
-      debugger;
       // ✅ 命中
       selectObject(hits[0].object);
       showContextMenu(e.clientX, e.clientY);

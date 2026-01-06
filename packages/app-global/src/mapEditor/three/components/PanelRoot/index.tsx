@@ -15,7 +15,6 @@ export default function PanelRoot({ boundsRef }: PanelRootProps) {
     })),
   );
   if (!panelVisible || !panelType) return null;
-  debugger;
   return (
     <Rnd
       default={{

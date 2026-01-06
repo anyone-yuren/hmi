@@ -1,6 +1,6 @@
 import { PivotControls } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { MapControls as MapControlsImpl } from 'three-stdlib';
 import { useShallow } from 'zustand/react/shallow';
@@ -12,12 +12,13 @@ export function AreaMesh({ area }: { area: AreaData }) {
   const meshRef = useRef<THREE.Mesh>(null!);
   const dragging = useRef(false);
 
-  const { selectedIds, select, updateArea, setMode } = useAreaStore(
+  const { selectedIds, select, updateArea, setMode, setContextMenuPosition } = useAreaStore(
     useShallow((s) => ({
       selectedIds: s.selectedIds,
       select: s.select,
       updateArea: s.updateArea,
       setMode: s.setMode,
+      setContextMenuPosition: s.setContextMenuPosition,
     })),
   );
 
@@ -57,11 +58,20 @@ export function AreaMesh({ area }: { area: AreaData }) {
     // 启用 controls
     controls && (mapControls.enablePan = true);
   };
+  const pivotRef = useRef<THREE.Group>(null!);
 
+  useEffect(() => {
+    if (!pivotRef.current) return;
+
+    pivotRef.current.traverse((obj) => {
+      obj.userData.__gizmo = true;
+    });
+  }, []);
   return (
     <group>
       <PivotControls
         visible={selected}
+        ref={pivotRef}
         anchor={[0, 0, 0]}
         depthTest={false}
         fixed
@@ -81,12 +91,28 @@ export function AreaMesh({ area }: { area: AreaData }) {
         onDragEnd={() => {
           mapControls.enabled = true;
 
-          updateArea(area.id, {
-            center: meshRef.current.position.clone(),
-            rotation: meshRef.current.rotation.z,
-            width: meshRef.current.scale.x,
-            height: meshRef.current.scale.y,
-          });
+          const mesh = meshRef.current;
+
+          /** 世界坐标 */
+          const worldPos = new THREE.Vector3();
+          mesh.getWorldPosition(worldPos);
+
+          /** 世界旋转 */
+          const worldQuat = new THREE.Quaternion();
+          mesh.getWorldQuaternion(worldQuat);
+
+          const euler = new THREE.Euler().setFromQuaternion(worldQuat, 'XYZ');
+
+          /** 世界缩放（如果你允许 scale） */
+          const worldScale = new THREE.Vector3();
+          mesh.getWorldScale(worldScale);
+
+          // updateArea(area.id, {
+          //   center: worldPos.clone(),
+          //   rotation: euler.z, // 只关心 Z
+          //   width: worldScale.x,
+          //   height: worldScale.y,
+          // });
         }}
       >
         <mesh
@@ -97,6 +123,11 @@ export function AreaMesh({ area }: { area: AreaData }) {
           onPointerDown={(e) => {
             e.stopPropagation();
             select([area.id]);
+          }}
+          onContextMenu={(e) => {
+            e.stopPropagation();
+            const position = { x: e.layerX, y: e.layerY };
+            setContextMenuPosition(position);
           }}
         >
           <planeGeometry args={[1, 1]} />

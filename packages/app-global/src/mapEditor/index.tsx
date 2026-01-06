@@ -13,6 +13,7 @@ import { SelectionOverlayBox } from './selection/selectionOverlay';
 import { useMapEditorViewStore } from './store/view';
 import BaseElement from './three/base';
 import RenderDevice from './three/components';
+import ContextMenuGroup from './three/components/ComtextMenuGroup';
 import ContextMenu from './three/components/ContextMenu';
 import PanelRoot from './three/components/PanelRoot';
 import { SceneRaycaster } from './three/components/SceneRaycaster';
@@ -68,6 +69,7 @@ const MapEditor = () => {
               </Canvas>
             )}
             <ContextMenu />
+            <ContextMenuGroup boundsRef={panelBoundsRef} />
             <PanelRoot boundsRef={panelBoundsRef} /> {/* ⭐ 只渲染一次 */}
           </div>
         </div>

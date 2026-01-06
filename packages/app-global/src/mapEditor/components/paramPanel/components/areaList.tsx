@@ -40,6 +40,7 @@ const AreaList: React.FC = () => {
   );
   console.log(areas);
   const pointClick = (item: AreaData) => {
+    debugger;
     setFlyToPoint(item.center);
   };
   const listRef = useRef<HTMLDivElement>(null);
