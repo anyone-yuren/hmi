@@ -77,6 +77,7 @@ export function DragDrawArea() {
         center: meshRef.current.position.clone(),
         width: x,
         height: y,
+        name: `区域${id}`,
       });
 
       reset();

@@ -6,6 +6,7 @@ export type AreaData = {
   center: THREE.Vector3;
   width: number;
   height: number;
+  name: string;
 };
 
 type EditorMode = 'idle' | 'draw-area' | 'select';

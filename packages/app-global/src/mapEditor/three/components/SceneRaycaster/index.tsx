@@ -36,8 +36,6 @@ export function SceneRaycaster() {
       const hits = raycaster.current.intersectObjects(scene.children, true).filter((hit) => {
         let o: THREE.Object3D | null = hit.object;
         while (o) {
-          console.log(o.userData.__gizmo);
-
           if (o.userData.__gizmo) return false; // ❌ 忽略 gizmo
           o = o.parent;
         }
@@ -49,7 +47,7 @@ export function SceneRaycaster() {
         hideContextMenu();
         return;
       }
-      // ✅ 命中
+      // ✅ 命中：弹
       selectObject(hits[0].object);
       showContextMenu(e.clientX, e.clientY);
     };

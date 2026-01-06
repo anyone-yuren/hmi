@@ -191,7 +191,7 @@ const AreaList: React.FC = () => {
                     </div>,
                   ]}
                 >
-                  <div>{item.id}</div>
+                  <div>{item.name}</div>
                 </List.Item>
               )}
             </VirtualList>
