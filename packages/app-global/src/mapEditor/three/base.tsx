@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../store';
 import { useMapEditorViewStore } from '../store/view';
+import { PivotControls } from './components/pivotControls';
 import { THREE_LAYERS } from './constants/threeLayers';
 import { useFlyToPointSpring } from './hooks/useFlyToPointSpring';
 import { markUnpickable } from './utils/threeRaycaster';
@@ -124,11 +125,12 @@ const BaseElement = ({ size }) => {
             markUnpickable(grid);
           }}
         />
-
-        <mesh position={[0, 0, 0.1]} layers={THREE_LAYERS.DRAW}>
-          <boxGeometry args={[1, 1, 0.2]} />
-          <meshStandardMaterial color='red' />
-        </mesh>
+        <PivotControls activeAxes={[true, true, false]} depthTest={false} anchor={[0, 0, 0]} scale={0.75}>
+          <mesh position={[0, 0, 0.1]} layers={THREE_LAYERS.DRAW}>
+            <boxGeometry args={[1, 1, 0.2]} />
+            <meshStandardMaterial color='red' />
+          </mesh>
+        </PivotControls>
         <ambientLight intensity={1} />
         {/* <MouseTracker /> */}
         <GizmoHelper
