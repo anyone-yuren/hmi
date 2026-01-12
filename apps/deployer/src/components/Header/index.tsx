@@ -190,7 +190,7 @@ const GlobalHeader = () => {
         <BarBattery level={40} height={24} />
         {isContentWss && <Signal canLinkWifi={data?.support_wireless_configuration} />}
       </div>
-      <Selectlangulage />
+      {isContentWss && <Selectlangulage />}
       <ConfigProvider
         theme={{
           components: {

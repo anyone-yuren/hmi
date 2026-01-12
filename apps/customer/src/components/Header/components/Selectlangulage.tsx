@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 
 const Selectlangulage = () => {
   const { i18n, t } = useTranslation();
+
   useEffect(() => {
     setLanguage(i18n.language);
   }, [i18n.language]);
