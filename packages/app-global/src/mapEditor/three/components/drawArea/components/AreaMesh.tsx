@@ -1,133 +1,162 @@
-import { PivotControls } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { MapControls as MapControlsImpl } from 'three-stdlib';
 import { useShallow } from 'zustand/react/shallow';
 import { AreaData, useAreaStore } from '../store/areaStore';
 
+/** ---------- 计算多边形中心 ---------- */
+function calcPolygonCenter(points: { x: number; y: number }[]) {
+  let area = 0;
+  let cx = 0;
+  let cy = 0;
+
+  for (let i = 0; i < points.length; i++) {
+    const p1 = points[i];
+    const p2 = points[(i + 1) % points.length];
+    const cross = p1.x * p2.y - p2.x * p1.y;
+    area += cross;
+    cx += (p1.x + p2.x) * cross;
+    cy += (p1.y + p2.y) * cross;
+  }
+
+  area *= 0.5;
+
+  if (Math.abs(area) < 1e-6) {
+    const avg = points.reduce((a, p) => ({ x: a.x + p.x, y: a.y + p.y }), { x: 0, y: 0 });
+    return { x: avg.x / points.length, y: avg.y / points.length, z: 0 };
+  }
+
+  return {
+    x: cx / (6 * area),
+    y: cy / (6 * area),
+    z: 0,
+  };
+}
+
 export function AreaMesh({ area }: { area: AreaData }) {
-  const { controls } = useThree();
+  const { camera, gl, controls } = useThree();
   const mapControls = controls as MapControlsImpl;
 
-  const { selectedIds, select, updateArea, setMode, setContextMenuPosition } = useAreaStore(
+  const { selectedIds, select, updateArea, setContextMenuPosition } = useAreaStore(
     useShallow((s) => ({
       selectedIds: s.selectedIds,
       select: s.select,
       updateArea: s.updateArea,
-      setMode: s.setMode,
       setContextMenuPosition: s.setContextMenuPosition,
     })),
   );
 
   const selected = selectedIds.includes(area.id);
 
-  const pivotRef = useRef<THREE.Group>(null!);
+  /** ---------- Raycast ---------- */
+  const raycaster = useRef(new THREE.Raycaster());
+  const mouse = useRef(new THREE.Vector2());
+  const plane = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0));
 
+  const getPoint = (e: PointerEvent) => {
+    const rect = gl.domElement.getBoundingClientRect();
+    mouse.current.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+    raycaster.current.setFromCamera(mouse.current, camera);
+    const p = new THREE.Vector3();
+    raycaster.current.ray.intersectPlane(plane.current, p);
+    return p;
+  };
+
+  /** ---------- 草稿态 ---------- */
+  const draggingIndex = useRef<number | null>(null);
+  const draftPointsRef = useRef<{ x: number; y: number }[] | null>(null);
+  const draftCenterRef = useRef<{ x: number; y: number; z: number } | null>(null);
+  const [, forceRender] = useState(0);
+
+  const renderPoints = draftPointsRef.current ?? area.points;
+  const renderCenter = draftCenterRef.current ?? area.center;
+
+  /** ---------- Geometry ---------- */
+  const shapeGeometry = useMemo(() => {
+    if (renderPoints.length < 3) return null;
+
+    const shape = new THREE.Shape(
+      renderPoints.map((p) => new THREE.Vector2(p.x - renderCenter.x, p.y - renderCenter.y)),
+    );
+
+    return new THREE.ShapeGeometry(shape);
+  }, [renderPoints, renderCenter]);
+
+  /** ---------- 拖拽监听 ---------- */
   useEffect(() => {
-    if (!pivotRef.current) return;
-    pivotRef.current.traverse((obj) => {
-      obj.userData.__gizmo = true;
-    });
-  }, []);
+    const dom = gl.domElement;
 
-  const startCenterRef = useRef<{ x: number; y: number; z: number } | null>(null);
-  const lastDeltaRef = useRef<THREE.Vector3>(new THREE.Vector3());
-  const [pivotKey, setPivotKey] = useState(0);
+    const onMove = (e: PointerEvent) => {
+      if (draggingIndex.current === null) return;
+      if (!draftPointsRef.current) return;
 
-  return selected ? (
-    <PivotControls
-      visible={selected}
-      ref={pivotRef}
-      key={pivotKey}
-      anchor={[0, 0, 0]}
-      depthTest={false}
-      fixed
-      scale={80}
-      /** 平移：只允许 XY */
-      activeAxes={[true, true, false]}
-      /** 旋转：只允许绕 Z */
-      disableRotations={false}
-      rotationAxes={[false, false, true]}
-      /** 缩放：只允许 XY */
-      disableScaling={false}
-      annotations={true}
-      scaleAxes={[true, true, false]}
-      /** 拖拽开始 / 结束 */
-      onDrag={(localMatrix, deltaLocalMatrix, worldMatrix, deltaWorldMatrix) => {
-        lastDeltaRef.current.setFromMatrixPosition(deltaWorldMatrix);
-        // 直接从 deltaWorldMatrix 提取位置增量
-        const deltaPosition = new THREE.Vector3();
-        deltaPosition.setFromMatrixPosition(deltaWorldMatrix);
+      const p = getPoint(e);
+      draftPointsRef.current[draggingIndex.current] = { x: p.x, y: p.y };
 
-        console.log(`增量移动: X=${deltaPosition.x}, Y=${deltaPosition.y}`);
-      }}
-      onDragStart={() => {
-        mapControls.enabled = false;
-        startCenterRef.current = { ...area.center };
-      }}
-      onDragEnd={() => {
-        mapControls.enabled = true;
+      draftCenterRef.current = calcPolygonCenter(draftPointsRef.current);
+      forceRender((n) => n + 1);
+    };
 
-        if (!startCenterRef.current) return;
+    const onUp = () => {
+      if (!draftPointsRef.current || draggingIndex.current === null) return;
 
-        const start = startCenterRef.current;
-        const delta = lastDeltaRef.current;
+      updateArea(area.id, {
+        points: draftPointsRef.current,
+        center: draftCenterRef.current!,
+      });
 
-        updateArea(area.id, {
-          center: {
-            x: start.x + delta.x,
-            y: start.y + delta.y,
-            z: start.z,
-          },
-        });
+      draggingIndex.current = null;
+      draftPointsRef.current = null;
+      draftCenterRef.current = null;
+      mapControls && (mapControls.enabled = true);
+    };
 
-        // 清理
-        lastDeltaRef.current.set(0, 0, 0);
-        startCenterRef.current = null;
-        // ⭐关键：强制 PivotControls 重新挂载
-        setPivotKey((k) => k + 1);
-      }}
-    >
-      <mesh
-        position={[area.center.x, area.center.y, area.center.z]}
-        name={area.name}
-        rotation={[0, 0, area.rotation ?? 0]}
-        scale={[area.width, area.height, 1]}
-        onPointerDown={(e) => {
-          e.stopPropagation();
-          select([area.id]);
-        }}
-        onContextMenu={(e) => {
-          e.stopPropagation();
-          const position = { x: e.layerX, y: e.layerY };
-          setContextMenuPosition(position);
-        }}
-      >
-        <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial color={selected ? '#fab005' : '#51cf66'} transparent opacity={0.4} />
-      </mesh>
-    </PivotControls>
-  ) : (
+    dom.addEventListener('pointermove', onMove);
+    dom.addEventListener('pointerup', onUp);
+
+    return () => {
+      dom.removeEventListener('pointermove', onMove);
+      dom.removeEventListener('pointerup', onUp);
+    };
+  }, [area.id]);
+
+  return (
     <>
+      {/* ---------- 多边形 ---------- */}
       <mesh
-        position={[area.center.x, area.center.y, area.center.z]}
-        name={area.name}
-        rotation={[0, 0, area.rotation ?? 0]}
-        scale={[area.width, area.height, 1]}
+        position={[renderCenter.x, renderCenter.y, renderCenter.z]}
         onPointerDown={(e) => {
           e.stopPropagation();
-          select([area.id]);
+          select(selected ? [] : [area.id]);
         }}
         onContextMenu={(e) => {
           e.stopPropagation();
-          const position = { x: e.layerX, y: e.layerY };
-          setContextMenuPosition(position);
+          setContextMenuPosition({ x: e.layerX, y: e.layerY });
         }}
       >
-        <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial color={selected ? '#fab005' : '#51cf66'} transparent opacity={0.4} />
+        {shapeGeometry && <primitive object={shapeGeometry} attach='geometry' />}
+        <meshBasicMaterial color={selected ? '#fab005' : '#a855f7'} transparent opacity={selected ? 0.4 : 0.25} />
       </mesh>
+
+      {/* ---------- 顶点 ---------- */}
+      {selected &&
+        renderPoints.map((p, i) => (
+          <mesh
+            key={i}
+            position={[p.x, p.y, 0.01]}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              draggingIndex.current = i;
+              draftPointsRef.current = area.points.map((pt) => ({ ...pt }));
+              draftCenterRef.current = { ...area.center };
+              mapControls && (mapControls.enabled = false);
+            }}
+          >
+            <circleGeometry args={[0.6, 16]} />
+            <meshBasicMaterial color='#ff922b' />
+          </mesh>
+        ))}
     </>
   );
 }

@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { IconifyIcon, SvgIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../../store';
-import { AreaData, useAreaStore } from '../../../three/components/drawArea/store/areaStore';
+import { PolygonData, usePolygonStore } from '../../../three/components/drawPolygon/store/polygonStore';
 import DrawPointsParamsPanel from '../../drawPoints/components/paramspanel';
 const { Search } = Input;
 
@@ -27,8 +27,8 @@ const AreaList: React.FC = () => {
       friction: 26,
     },
   });
-  const { setMode, areas, clearAreas } = useAreaStore(
-    useShallow((store) => ({ setMode: store.setMode, areas: store.areas, clearAreas: store.clearAreas })),
+  const { setMode, polygons, clearPolygons } = usePolygonStore(
+    useShallow((store) => ({ setMode: store.setMode, polygons: store.polygons, clearPolygons: store.clearPolygons })),
   );
   const { staticPoints, flyToPoint, setFlyToPoint, setStaticPoints } = useMapEditorStore(
     useShallow((state) => ({
@@ -38,7 +38,7 @@ const AreaList: React.FC = () => {
       setStaticPoints: state.setStaticPoints,
     })),
   );
-  const pointClick = (item: AreaData) => {
+  const pointClick = (item: PolygonData) => {
     setFlyToPoint({
       x: item.center.x,
       y: item.center.y,
@@ -47,16 +47,16 @@ const AreaList: React.FC = () => {
   };
   const listRef = useRef<HTMLDivElement>(null);
   const listSize = useSize(listRef);
-  const [data, setData] = useState<AreaData[]>(areas as AreaData[]);
+  const [data, setData] = useState<PolygonData[]>(polygons as PolygonData[]);
   useEffect(() => {
-    setData(areas as AreaData[]);
-  }, [areas]);
+    setData(polygons as PolygonData[]);
+  }, [polygons]);
   return (
     <div className='h-full flex flex-col gap-2'>
       <div className='bg-white/5 rounded-sm'>
         <p className='text-xs font-medium flex items-center px-2 gap-2 justify-between'>
           <span className='flex items-center gap-1 text-xs font-medium text-nowrap'>
-            <IconifyIcon icon='carbon:area' size={16} /> 区域列表
+            <IconifyIcon icon='gis:polygon-hole-pt' size={16} /> 区域列表
           </span>
           <div className='flex items-center gap-1 justify-end'>
             <Search
@@ -65,13 +65,6 @@ const AreaList: React.FC = () => {
               placeholder='Search'
               className='!max-w-1/2 w-auto'
             />
-            <Button
-              shape='circle'
-              size='small'
-              type='text'
-              onClick={() => setMode('draw-area')}
-              icon={<IconifyIcon icon='mingcute:add-line' size={16} />}
-            ></Button>
             <Dropdown
               trigger={['click']}
               menu={{
@@ -88,7 +81,7 @@ const AreaList: React.FC = () => {
                     label: '删除全部',
                     key: 'delete',
                     onClick: (e) => {
-                      clearAreas();
+                      clearPolygons();
                     },
                   },
                 ],
@@ -106,22 +99,22 @@ const AreaList: React.FC = () => {
               menu={{
                 items: [
                   {
-                    label: '暂定',
+                    label: '普通点',
                     key: 'normal',
                     icon: <Checkbox />,
                   },
                   {
-                    label: '暂定',
+                    label: '库位点',
                     key: 'library',
                     icon: <Checkbox />,
                   },
                   {
-                    label: '暂定',
+                    label: '待命点',
                     key: 'standby',
                     icon: <Checkbox />,
                   },
                   {
-                    label: '暂定',
+                    label: '充电点',
                     key: 'charge',
                     icon: <Checkbox />,
                   },
@@ -132,12 +125,13 @@ const AreaList: React.FC = () => {
                 // shape='circle'
                 size='small'
                 type='text'
-                icon={<IconifyIcon icon='stash:filter' size={18} />}
+                icon={<IconifyIcon icon='stash:filter' size={16} />}
               ></Button>
             </Dropdown>
           </div>
         </p>
       </div>
+      <Button onClick={() => setMode('draw-polygon')}>添加区域</Button>
       <div className='flex-1 overflow-hidden relative' ref={listRef}>
         <animated.div
           style={{
@@ -172,7 +166,7 @@ const AreaList: React.FC = () => {
         {data.length ? (
           <List size='small' className='px-2'>
             <VirtualList data={data} height={listSize?.height || CONTAINER_HEIGHT} itemHeight={47} itemKey='id'>
-              {(item: AreaData) => (
+              {(item: PolygonData) => (
                 <List.Item
                   key={item.id}
                   className='hover:bg-white/5 cursor-pointer active:bg-white/10'

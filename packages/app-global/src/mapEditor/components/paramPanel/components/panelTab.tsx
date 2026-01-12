@@ -87,6 +87,16 @@ const PanelTab = () => {
           ),
         },
         {
+          key: 'area',
+          label: (
+            <div>
+              <Tooltip title='包含区域' styles={{ root: { pointerEvents: 'none' } }} placement='left'>
+                <IconifyIcon icon='carbon:area' size={18} className='text-purple-500 hover:text-purple-300' />
+              </Tooltip>
+            </div>
+          ),
+        },
+        {
           key: 'polygon',
           label: (
             <div>

@@ -1,12 +1,53 @@
-// components/DragDrawArea.tsx
+// components/DragDrawPolygon.tsx
+import { Line } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { nanoid } from 'nanoid';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { useAreaStore } from '../store/areaStore';
 
-const MIN_SIZE = 5;
+function calcPolygonCenter(points: { x: number; y: number }[]) {
+  let area = 0;
+  let cx = 0;
+  let cy = 0;
+
+  const n = points.length;
+  for (let i = 0; i < n; i++) {
+    const p1 = points[i];
+    const p2 = points[(i + 1) % n];
+    const cross = p1.x * p2.y - p2.x * p1.y;
+
+    area += cross;
+    cx += (p1.x + p2.x) * cross;
+    cy += (p1.y + p2.y) * cross;
+  }
+
+  area *= 0.5;
+
+  // 防止异常（极小多边形）
+  if (Math.abs(area) < 1e-6) {
+    const avg = points.reduce(
+      (acc, p) => {
+        acc.x += p.x;
+        acc.y += p.y;
+        return acc;
+      },
+      { x: 0, y: 0 },
+    );
+    return {
+      x: avg.x / points.length,
+      y: avg.y / points.length,
+      z: 0,
+    };
+  }
+
+  return {
+    x: cx / (6 * area),
+    y: cy / (6 * area),
+    z: 0,
+  };
+}
 
 export function DragDrawArea() {
   const { camera, gl, controls } = useThree();
@@ -21,11 +62,10 @@ export function DragDrawArea() {
 
   const raycaster = useRef(new THREE.Raycaster());
   const mouse = useRef(new THREE.Vector2());
-  const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  const plane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), []);
 
-  const start = useRef<THREE.Vector3 | null>(null);
-  const meshRef = useRef<THREE.Mesh>(null!);
-  const [visible, setVisible] = useState(false);
+  const pointsRef = useRef<THREE.Vector3[]>([]);
+  const [previewPoint, setPreviewPoint] = useState<THREE.Vector3 | null>(null);
 
   const getPoint = (e: MouseEvent) => {
     const rect = gl.domElement.getBoundingClientRect();
@@ -37,78 +77,110 @@ export function DragDrawArea() {
   };
 
   const reset = () => {
-    start.current = null;
-    setVisible(false);
-    meshRef.current.scale.set(0, 0, 1);
+    pointsRef.current = [];
+    setPreviewPoint(null);
+  };
+
+  const finish = () => {
+    if (pointsRef.current.length < 3) {
+      reset();
+      return;
+    }
+
+    const id = nanoid();
+
+    const points = pointsRef.current.map((p) => ({
+      x: p.x,
+      y: p.y,
+    }));
+
+    const center = calcPolygonCenter(points);
+
+    addArea({
+      id,
+      type: 'area',
+      points: pointsRef.current.map((p) => ({ x: p.x, y: p.y })),
+      name: `区域${id}`,
+      center,
+    });
+
+    reset();
+    setMode('select');
+    select([id]);
   };
 
   useEffect(() => {
     if (mode !== 'draw-area') return;
 
     const dom = gl.domElement;
+    controls && (controls.enablePan = false);
 
-    const onDown = (e: MouseEvent) => {
+    const onClick = (e: MouseEvent) => {
       if (e.button !== 0) return;
-      controls && (controls.enablePan = false);
-
-      start.current = getPoint(e);
-      meshRef.current.position.copy(start.current);
-      meshRef.current.scale.set(0, 0, 1);
-      setVisible(true);
+      const p = getPoint(e);
+      pointsRef.current.push(p.clone());
     };
 
     const onMove = (e: MouseEvent) => {
-      if (!start.current) return;
-      const p = getPoint(e);
-      const c = start.current;
-
-      meshRef.current.position.set((p.x + c.x) / 2, (p.y + c.y) / 2, 0);
-      meshRef.current.scale.set(Math.abs(p.x - c.x), Math.abs(p.y - c.y), 1);
+      if (pointsRef.current.length === 0) return;
+      setPreviewPoint(getPoint(e));
     };
 
-    const onUp = () => {
-      if (!start.current) return;
+    // const onDblClick = () => finish();
+    // ⭐ 右键完成
+    const onContextMenu = (e: MouseEvent) => {
+      e.preventDefault(); // 非常重要：禁止系统右键菜单
+      e.stopPropagation();
 
-      const { x, y } = meshRef.current.scale;
-
-      const id = nanoid();
-      const position = meshRef.current.position.clone();
-      addArea({
-        id,
-        center: {
-          x: position.x,
-          y: position.y,
-          z: position.z,
-        },
-        width: x,
-        height: y,
-        name: `区域${id}`,
-      });
-
-      reset();
-      // controls && (controls.enablePan = true);
-
-      // ⭐ 自动进入 select
-      setMode('select');
-      select([id]);
+      finish();
     };
 
-    dom.addEventListener('mousedown', onDown);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') finish();
+      if (e.key === 'Escape') reset();
+    };
+
+    dom.addEventListener('click', onClick);
     dom.addEventListener('mousemove', onMove);
-    dom.addEventListener('mouseup', onUp);
+    // dom.addEventListener('dblclick', onDblClick);
+    dom.addEventListener('contextmenu', onContextMenu);
+    window.addEventListener('keydown', onKeyDown);
 
     return () => {
-      dom.removeEventListener('mousedown', onDown);
+      dom.removeEventListener('click', onClick);
       dom.removeEventListener('mousemove', onMove);
-      dom.removeEventListener('mouseup', onUp);
+      // dom.removeEventListener('dblclick', onDblClick);
+      dom.removeEventListener('contextmenu', onContextMenu);
+      window.removeEventListener('keydown', onKeyDown);
       controls && (controls.enablePan = true);
     };
   }, [mode]);
 
+  /** 轮廓点（包含预览点） */
+  const linePoints = useMemo(() => {
+    const pts = [...pointsRef.current];
+    if (previewPoint) pts.push(previewPoint);
+    return pts;
+  }, [previewPoint, pointsRef.current.length]);
+
+  /** 面几何 */
+  const shapeGeometry = useMemo(() => {
+    if (pointsRef.current.length < 3) return null;
+    const shape = new THREE.Shape(pointsRef.current.map((p) => new THREE.Vector2(p.x, p.y)));
+    return new THREE.ShapeGeometry(shape);
+  }, [pointsRef.current.length]);
+
   return (
-    <mesh ref={meshRef} visible={visible}>
-      <planeGeometry args={[1, 1]} />
-      <meshBasicMaterial color='#339af0' transparent opacity={0.3} />
-    </mesh>
+    <>
+      {/* 面 */}
+      {shapeGeometry && (
+        <mesh geometry={shapeGeometry}>
+          <meshBasicMaterial color='#a855f7' transparent opacity={0.3} />
+        </mesh>
+      )}
+
+      {/* 边 */}
+      {linePoints.length > 1 && <Line points={linePoints} color='#a855f7' lineWidth={1} />}
+    </>
   );
 }

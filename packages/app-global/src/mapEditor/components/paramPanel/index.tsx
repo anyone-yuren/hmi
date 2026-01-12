@@ -12,6 +12,7 @@ import AreaList from './components/areaList';
 import LineList from './components/lineList';
 import PanelTab from './components/panelTab';
 import PointList from './components/pointList';
+import PolygonList from './components/polygonList';
 const { Search } = Input;
 const ParamsPanel = () => {
   const { paramsPanelCollapsed, selectDrawType } = useMapEditorStore(
@@ -171,7 +172,8 @@ const ParamsPanel = () => {
           {(selectDrawType === 'line' || selectDrawType === 'bspline') && <LineList />}
           {selectDrawType === 'device' && <DrawDeviceParamsPanel />}
           {selectDrawType === 'navigation' && <DrawNavigationParamsPanel />}
-          {selectDrawType === 'polygon' && <AreaList />}
+          {selectDrawType === 'area' && <AreaList />}
+          {selectDrawType === 'polygon' && <PolygonList />}
         </div>
       </div>
     </motion.div>

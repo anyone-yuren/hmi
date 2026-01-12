@@ -2,67 +2,65 @@ import * as THREE from 'three';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-export type AreaData = {
+export type PolygonData = {
   id: string;
   center: THREE.Vector3;
   width: number;
   height: number;
   name: string;
-  points: { x: number; y: number }[];
-  type: 'area' | 'polygon';
 };
 
-type EditorMode = 'idle' | 'draw-area' | 'select' | 'draw-polygon';
+type EditorMode = 'idle' | 'draw-polygon' | 'select';
 
 type MapEditorState = {
   mode: EditorMode;
-  areas: AreaData[];
+  polygons: PolygonData[];
   selectedIds: string[];
 
   setMode: (mode: EditorMode) => void;
 
-  addArea: (area: AreaData) => void;
-  updateArea: (id: string, patch: Partial<AreaData>) => void;
+  addPolygon: (polygon: PolygonData) => void;
+  updatePolygon: (id: string, patch: Partial<PolygonData>) => void;
 
   select: (ids: string[]) => void;
   clearSelection: () => void;
-  clearAreas: () => void;
+  clearPolygons: () => void;
   contextMenuPosition: { x: 0; y: 0 };
   setContextMenuPosition: (position) => void;
-  showAreaParamsDialog: boolean;
-  setShowAreaParamsDialog: (show) => void;
+  showPolygonParamsDialog: boolean;
+  setShowPolygonParamsDialog: (show) => void;
 };
 
-export const useAreaStore = create<MapEditorState>()(
+export const usePolygonStore = create<MapEditorState>()(
   persist(
     (set, get) => ({
       mode: 'idle',
-      areas: [],
+      polygons: [],
       selectedIds: [],
 
       setMode: (mode) => set({ mode }),
 
-      addArea: (area) => set((s) => ({ areas: [...s.areas, area] })),
+      addPolygon: (polygon) => set((s) => ({ polygons: [...s.polygons, polygon] })),
 
-      updateArea: (id, patch) =>
+      updatePolygon: (id, patch) =>
         set((s) => ({
-          areas: s.areas.map((a) => (a.id === id ? { ...a, ...patch } : a)),
+          polygons: s.polygons.map((a) => (a.id === id ? { ...a, ...patch } : a)),
         })),
 
       select: (ids) => set({ selectedIds: ids }),
       clearSelection: () => set({ selectedIds: [] }),
-      clearAreas: () => set({ areas: [] }),
+      clearPolygons: () => set({ polygons: [] }),
 
       // 上下文菜单位置
       contextMenuPosition: { x: 0, y: 0 },
       setContextMenuPosition: (position) => set({ contextMenuPosition: position }),
 
       // 区域参数弹窗是否显示
-      showAreaParamsDialog: false,
-      setShowAreaParamsDialog: (show) => set({ showAreaParamsDialog: show }),
+      showPolygonParamsDialog: false,
+      setShowPolygonParamsDialog: (show) => set({ showPolygonParamsDialog: show }),
     }),
     {
-      name: 'map-editor-area-store',
+      name: 'map-editor-Polygon-store',
       storage: createJSONStorage(() => localStorage),
     },
   ),
