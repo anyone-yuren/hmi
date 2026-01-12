@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type AreaData = {
   id: string;
@@ -30,29 +31,37 @@ type MapEditorState = {
   setShowAreaParamsDialog: (show) => void;
 };
 
-export const useAreaStore = create<MapEditorState>((set) => ({
-  mode: 'idle',
-  areas: [],
-  selectedIds: [],
+export const useAreaStore = create<MapEditorState>()(
+  persist(
+    (set, get) => ({
+      mode: 'idle',
+      areas: [],
+      selectedIds: [],
 
-  setMode: (mode) => set({ mode }),
+      setMode: (mode) => set({ mode }),
 
-  addArea: (area) => set((s) => ({ areas: [...s.areas, area] })),
+      addArea: (area) => set((s) => ({ areas: [...s.areas, area] })),
 
-  updateArea: (id, patch) =>
-    set((s) => ({
-      areas: s.areas.map((a) => (a.id === id ? { ...a, ...patch } : a)),
-    })),
+      updateArea: (id, patch) =>
+        set((s) => ({
+          areas: s.areas.map((a) => (a.id === id ? { ...a, ...patch } : a)),
+        })),
 
-  select: (ids) => set({ selectedIds: ids }),
-  clearSelection: () => set({ selectedIds: [] }),
-  clearAreas: () => set({ areas: [] }),
+      select: (ids) => set({ selectedIds: ids }),
+      clearSelection: () => set({ selectedIds: [] }),
+      clearAreas: () => set({ areas: [] }),
 
-  // 上下文菜单位置
-  contextMenuPosition: { x: 0, y: 0 },
-  setContextMenuPosition: (position) => set({ contextMenuPosition: position }),
+      // 上下文菜单位置
+      contextMenuPosition: { x: 0, y: 0 },
+      setContextMenuPosition: (position) => set({ contextMenuPosition: position }),
 
-  // 区域参数弹窗是否显示
-  showAreaParamsDialog: false,
-  setShowAreaParamsDialog: (show) => set({ showAreaParamsDialog: show }),
-}));
+      // 区域参数弹窗是否显示
+      showAreaParamsDialog: false,
+      setShowAreaParamsDialog: (show) => set({ showAreaParamsDialog: show }),
+    }),
+    {
+      name: 'map-editor-area-store',
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);

@@ -76,6 +76,7 @@ const DrawLinesSelect = () => {
               })}
               onClick={() => {
                 setParamsPanelCollapsed(true);
+                debugger;
                 setSelectDrawType('line');
               }}
             >

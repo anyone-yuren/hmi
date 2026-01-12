@@ -38,10 +38,12 @@ const AreaList: React.FC = () => {
       setStaticPoints: state.setStaticPoints,
     })),
   );
-  console.log(areas);
   const pointClick = (item: AreaData) => {
-    debugger;
-    setFlyToPoint(item.center);
+    setFlyToPoint({
+      x: item.center.x,
+      y: item.center.y,
+      z: item.center.z,
+    });
   };
   const listRef = useRef<HTMLDivElement>(null);
   const listSize = useSize(listRef);
@@ -168,7 +170,7 @@ const AreaList: React.FC = () => {
                 <List.Item
                   key={item.id}
                   className='hover:bg-white/5 cursor-pointer active:bg-white/10'
-                  title={JSON.stringify(item.center)}
+                  title={JSON.stringify(item.center) + ' ' + item.width + ' ' + item.height}
                   onClick={() => pointClick(item)}
                   actions={[
                     <div className='flex items-center gap-1'>

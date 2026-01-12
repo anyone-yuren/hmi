@@ -55,7 +55,7 @@ function DrawLines() {
         setSelectedLineId(null);
         draggingPoint.current = null;
         setSelectLineData(null);
-        if (controls) controls.enabled = true;
+        if (controls) controls.enablePan = true;
       }
     };
     const onKeyUp = (e: KeyboardEvent) => {
@@ -81,7 +81,7 @@ function DrawLines() {
   const onMouseDown = (e: MouseEvent) => {
     if (!paramsPanelCollapsed && selectDrawType !== 'line') return;
     if (selectDrawType === 'line' && !selectedLineId) {
-      if (controls) controls.enabled = false;
+      if (controls) controls.enablePan = false;
       const p = pick(e);
       if (!p) return;
       setDrawing({ id: nextLineId++, start: p.clone(), end: p.clone(), points: [] });
@@ -147,7 +147,7 @@ function DrawLines() {
   const onMouseUp = () => {
     if (drawing) {
       // 控制不可平移 但是可缩放
-      if (controls) controls.enabled = true;
+      if (controls) controls.enablePan = true;
 
       if (drawing.start.distanceTo(drawing.end) < 0.01) {
         setDrawing(null);
@@ -201,7 +201,7 @@ function DrawLines() {
       canvas.removeEventListener('mousemove', handleMove);
       canvas.removeEventListener('mouseup', handleUp);
     };
-  }, [gl, drawing, selectedLineId]);
+  }, [gl, drawing, selectedLineId, paramsPanelCollapsed, selectDrawType, controls, lines]);
 
   /* ------------------- 相机控制 ------------------- */
   // useFrame(() => {

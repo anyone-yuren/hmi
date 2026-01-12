@@ -72,9 +72,14 @@ export function DragDrawArea() {
       const { x, y } = meshRef.current.scale;
 
       const id = nanoid();
+      const position = meshRef.current.position.clone();
       addArea({
         id,
-        center: meshRef.current.position.clone(),
+        center: {
+          x: position.x,
+          y: position.y,
+          z: position.z,
+        },
         width: x,
         height: y,
         name: `区域${id}`,
