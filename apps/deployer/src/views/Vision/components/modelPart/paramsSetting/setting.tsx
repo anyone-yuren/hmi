@@ -93,12 +93,12 @@ const ParamsSetting = (props: any) => {
           <TextChangeRow
             className={'w-[260px]'}
             title={t('deployer.vision.forkExtendParams')}
-            value={propsState?.['forkarm_final_width']}
+            value={propsState?.['forkarm_height_based_pallet_type']}
             onChange={(value: string) => {
-              changeUpdateHashMap('forkarm_final_width', value);
+              changeUpdateHashMap('forkarm_height_based_pallet_type', value);
             }}
           >
-            <div>{propsState?.['forkarm_final_width'] || 0}</div>
+            <div>{propsState?.['forkarm_height_based_pallet_type'] || 0}</div>
           </TextChangeRow>
         )}
         {propsState.type != 'tail_truck' && propsState.type != 'warehouse_shelves' && (

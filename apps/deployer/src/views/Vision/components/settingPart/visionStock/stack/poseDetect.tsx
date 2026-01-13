@@ -118,8 +118,9 @@ const PoseDetect = (props: IProps) => {
                 validateRange={[initState?.['compensation'].min, initState?.['compensation'].max]}
                 onChange={(value) => {
                   const val = updateHashMap?.['compensation'];
+                  console.log(!Number.isInteger(Number(value)));
                   if (item.index === 3 && !Number.isInteger(Number(value))) {
-                    val[item.index] = Number(value).toFixed(1);
+                    val[item.index] = parseFloat(Number(value).toFixed(1));
                   } else {
                     val[item.index] = Number(value);
                   }
@@ -220,7 +221,7 @@ const PoseDetect = (props: IProps) => {
                   return obj;
                 },
               };
-              const numberAry = ['uint', 'int'];
+              const numberAry = ['uint', 'int', 'float_doublearray'];
               Object.keys(initState).forEach((key) => {
                 sendState[key] = translateHashMap[key]
                   ? translateHashMap[key](initState, updateHashMap)
@@ -229,6 +230,8 @@ const PoseDetect = (props: IProps) => {
                       value: numberAry.includes(initState[key]?.type) ? Number(updateHashMap[key]) : updateHashMap[key],
                     };
               });
+              console.log('sendState', sendState);
+              // return;
               await save(sendState);
               toast.success(t('common.actionSuccess'));
               getResponse();

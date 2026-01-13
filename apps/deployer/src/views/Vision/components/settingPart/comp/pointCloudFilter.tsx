@@ -99,7 +99,7 @@ const PointCloudFilter = (props: IProps) => {
     const ary = [
       // 'stack_pallet_position_detect',
       'shelf_place_move_vehicle',
-      // 'stack_place_move_vehicle',
+      'stack_place_move_vehicle',
       // 'tail_place_pallet_position_detect',
       'shelf_pallet_position_detect',
     ];
@@ -439,6 +439,7 @@ const PointCloudFilter = (props: IProps) => {
                             value={mode}
                             onChange={(event) => {
                               setMode(event.target.value);
+                              getPointCloudResponse({ task_id: type, is_select: { value: 2 } });
                             }}
                           >
                             <MenuItem value={0}>
@@ -447,7 +448,7 @@ const PointCloudFilter = (props: IProps) => {
                             <MenuItem value={1}>
                               <ListItemText primary={t('deployer.vision.targetSelect')} />
                             </MenuItem>
-                            {showStorageCalibrationAssistant && (
+                            {(showStorageCalibrationAssistant || true) && (
                               <MenuItem value={2}>
                                 <ListItemText primary={t('deployer.vision.forkUpPointCloud')} />
                               </MenuItem>
