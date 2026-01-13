@@ -164,7 +164,7 @@ const PoseDetect = (props: IProps) => {
           <TextChangeRow
             title={t('deployer.vision.extraForkLift')}
             value={updateHashMap?.['extra_height']}
-            validateRange={[initState?.['extra_height'].min, initState?.['extra_height'].max]}
+            validateRange={[initState?.['extra_height']?.min, initState?.['extra_height']?.max]}
             onChange={(value: string) => {
               changeUpdateHashMap('extra_height', value);
             }}

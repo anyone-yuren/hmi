@@ -439,7 +439,7 @@ const PointCloudFilter = (props: IProps) => {
                             value={mode}
                             onChange={(event) => {
                               setMode(event.target.value);
-                              getPointCloudResponse({ task_id: type, is_select: { value: 2 } });
+                              getPointCloudResponse({ task_id: type, is_select: { value: event.target.value } });
                             }}
                           >
                             <MenuItem value={0}>
