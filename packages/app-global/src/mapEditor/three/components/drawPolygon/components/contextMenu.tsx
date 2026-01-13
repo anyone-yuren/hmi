@@ -38,7 +38,6 @@ const PolygonContextMenu = () => {
       style={{ position: 'absolute', left: contextMenuPosition.x + 'px', top: contextMenuPosition.y + 'px' }}
     >
       <div className='px-2 py-1 cursor-pointer hover:bg-[#333]'>删除</div>
-      <div className='px-2 py-1 cursor-pointer hover:bg-[#333]'>复制</div>
       <div
         className='px-2 py-1 cursor-pointer hover:bg-[#333]'
         onClick={() => {

@@ -95,6 +95,8 @@ export function PolygonMesh({ polygon }: { polygon: PolygonData }) {
         rotation={[0, 0, polygon.rotation ?? 0]}
         scale={[polygon.width, polygon.height, 1]}
         onPointerDown={(e) => {
+          // 🚫 右键不处理
+          if (e.button !== 0) return;
           e.stopPropagation();
           // 取消选择
           if (selected) {
@@ -104,6 +106,7 @@ export function PolygonMesh({ polygon }: { polygon: PolygonData }) {
           select([polygon.id]);
         }}
         onContextMenu={(e) => {
+          debugger;
           e.stopPropagation();
           const position = { x: e.layerX, y: e.layerY };
           setContextMenuPosition(position);

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { MapControls as MapControlsImpl } from 'three-stdlib';
 import { useShallow } from 'zustand/react/shallow';
+import { useAreaQuery } from '../../../../selection/spatialIndex';
 import { AreaData, useAreaStore } from '../store/areaStore';
 
 /** ---------- 计算多边形中心 ---------- */
@@ -37,7 +38,6 @@ function calcPolygonCenter(points: { x: number; y: number }[]) {
 export function AreaMesh({ area }: { area: AreaData }) {
   const { camera, gl, controls } = useThree();
   const mapControls = controls as MapControlsImpl;
-
   const { selectedIds, select, updateArea, setContextMenuPosition } = useAreaStore(
     useShallow((s) => ({
       selectedIds: s.selectedIds,
@@ -68,6 +68,13 @@ export function AreaMesh({ area }: { area: AreaData }) {
   const draftPointsRef = useRef<{ x: number; y: number }[] | null>(null);
   const draftCenterRef = useRef<{ x: number; y: number; z: number } | null>(null);
   const [, forceRender] = useState(0);
+
+  const polygon = draftPointsRef.current ?? area.points;
+
+  // ⭐ 就在这里
+  const pointsInArea = useAreaQuery(polygon);
+
+  console.log('pointsInArea:', pointsInArea);
 
   const renderPoints = draftPointsRef.current ?? area.points;
   const renderCenter = draftCenterRef.current ?? area.center;

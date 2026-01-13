@@ -2,6 +2,8 @@ import { Rnd } from 'react-rnd';
 import { useShallow } from 'zustand/react/shallow';
 import AreaContextMenu from '../drawArea/components/contextMenu';
 import { useAreaStore } from '../drawArea/store/areaStore';
+import PolygonContextMenu from '../drawPolygon/components/contextMenu';
+import { usePolygonStore } from '../drawPolygon/store/polygonStore';
 import AreaParams from './modules/areaParams';
 interface PanelRootProps {
   boundsRef: React.RefObject<Element>;
@@ -16,9 +18,24 @@ const ContextMenuGroup = ({ boundsRef }: PanelRootProps) => {
     })),
   );
 
+  const {
+    selectedIds: selectedPolygonIds,
+    showPolygonParamsDialog,
+    contextMenuPosition: polygonContextMenuPosition,
+    setShowPolygonParamsDialog,
+  } = usePolygonStore(
+    useShallow((store) => ({
+      selectedIds: store.selectedIds,
+      showPolygonParamsDialog: store.showPolygonParamsDialog,
+      contextMenuPosition: store.contextMenuPosition,
+      setShowPolygonParamsDialog: store.setShowPolygonParamsDialog,
+    })),
+  );
+
   return (
     <>
       <AreaContextMenu />
+      <PolygonContextMenu />
       {showAreaParamsDialog && (
         <Rnd
           default={{
