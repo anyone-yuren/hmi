@@ -3,14 +3,19 @@ import pkg from "lodash";
 import fs from "node:fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import { hmiFilename, hmiLocalePaths, hmiMap, hmiRegex } from "./common.mjs";
+import {
+  baseLanguageMap,
+  hmiFilename,
+  hmiLocalePaths,
+  hmiMap,
+  hmiRegex,
+} from "./common.mjs";
 import { getCurrentPath, getFlatDataMap } from "./utils.mjs";
 const { merge } = pkg;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const wmsSourcePath = getCurrentPath(hmiFilename);
-const dashboardSourcePath = getCurrentPath(dashboardFilename);
 
 const convertKey2Json = (keyStr, value) => {
   const keys = keyStr.split(".");
