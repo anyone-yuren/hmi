@@ -20,10 +20,9 @@ const Home = () => {
   const responsive = useResponsive();
   const navigate = useNavigate();
   const [renderView, setRenderView] = useState(false);
-  const { setRobotRadarStatus, isContentWss, setIsContentWss } = useHomeStore(
+  const { setRobotRadarStatus, setIsContentWss } = useHomeStore(
     useShallow((store) => {
       return {
-        isContentWss: store.isContentWss,
         setRobotRadarStatus: store.setRobotRadarStatus,
         setIsContentWss: store.setIsContentWss,
       };
@@ -39,6 +38,7 @@ const Home = () => {
   });
 
   useEffect(() => {
+    console.log('renderView', renderView);
     renderView && getDevice();
   }, [renderView]);
 

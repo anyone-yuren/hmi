@@ -48,7 +48,7 @@ export const useNotification = () => {
   // 分别弹出每条错误信息
   useEffect(() => {
     const currentToasts = activeErrorToasts.current;
-
+    console.log('errorMessage', errorMessage);
     // 如果没有错误信息，清除所有旧的弹窗
     if (!errorMessage || errorMessage.length === 0) {
       Object.values(currentToasts).forEach((id) => sonnerToast.dismiss(id));
