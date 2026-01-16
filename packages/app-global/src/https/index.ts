@@ -47,6 +47,7 @@ instance.interceptors.request.use(
     if (config.url?.includes('/login')) {
       return config;
     }
+    console.log('config', config);
     // if (!token) {
     //   triggerLoginModal();
     // }

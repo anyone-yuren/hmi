@@ -831,6 +831,7 @@
       "right": "오른쪽",
       "rightCompensation": "오른쪽의 보상 파라미터",
       "rightDetectDist": "오른쪽 탐지 거리",
+      "savePointCloud": "포인트 클라우드 저장",
       "sceneStorage": "장면 창고 위치",
       "secondVision": "두 번째 비전",
       "secondVisualPoint": "두 번째 비전 포인트",

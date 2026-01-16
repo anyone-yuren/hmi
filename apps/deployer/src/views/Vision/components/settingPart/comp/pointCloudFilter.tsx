@@ -12,6 +12,7 @@ import {
   getPointCloudMonitoringRead,
   postPointCloudMonitoringSave,
   postPointCloudMonitoringWrite,
+  saveAllPointCloud,
 } from '../../../services/index';
 import { useVisionStore } from '../../../store/vision.store';
 import MwConfirm from '../../MwConfirm';
@@ -44,6 +45,10 @@ const PointCloudFilter = (props: IProps) => {
     runAsync: getPointCloudResponse,
     error,
   } = useRequest(getPointCloudMonitoringRead, {
+    manual: true,
+  });
+
+  const { runAsync: saveCloudPoint, loading: saveCloudPointLoading } = useRequest(saveAllPointCloud, {
     manual: true,
   });
   const _initState = {
@@ -467,10 +472,20 @@ const PointCloudFilter = (props: IProps) => {
                       <Button
                         fullWidth
                         variant='contained'
-                        sx={{ color: 'white', marginBottom: '20px' }}
+                        sx={{ color: 'white', marginBottom: '10px' }}
                         onClick={handleParamsSave}
                       >
                         {t('deployer.vision.paramsSave')}
+                      </Button>
+                      <Button
+                        fullWidth
+                        variant='contained'
+                        sx={{ color: 'white', marginBottom: '20px' }}
+                        onClick={async () => {
+                          await saveCloudPoint();
+                        }}
+                      >
+                        {t('deployer.vision.savePointCloud')}
                       </Button>
                     </>
                   ) : (

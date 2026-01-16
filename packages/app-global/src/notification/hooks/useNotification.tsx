@@ -74,7 +74,10 @@ export const useNotification = () => {
           ),
           description: (
             <div>
-              <p>{item?.description || '-'}</p>
+              <p>
+                {item.module ? <span>[${item?.errorMessage}]</span> : null}
+                {item?.description || '-'}
+              </p>
               <div className='opacity-50'>
                 <p>{item?.solution}</p>
                 <p>{dayjs.unix(item?.time).format('YYYY-MM-DD HH:mm:ss')}</p>

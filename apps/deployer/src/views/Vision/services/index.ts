@@ -151,3 +151,6 @@ export const getMultiCageModelRead = () => get('/cv_mwrobot/multi_cage_model/rea
 
 // 2d点云退出
 export const exitPointCloud2d = () => get('/cv_mwrobot/point_cloud_monitoring_2D/back', {}, '10010');
+
+// /cv_mwrobot/point_cloud_monitoring/save_all
+export const saveAllPointCloud = (data: any = {}) => post('/cv_mwrobot/point_cloud_monitoring/save_all', data, '10010');

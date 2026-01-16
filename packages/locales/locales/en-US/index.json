@@ -831,6 +831,7 @@
       "right": "right",
       "rightCompensation": "Right compensation parameters",
       "rightDetectDist": "Right detection distance",
+      "savePointCloud": "Point cloud saving",
       "sceneStorage": "Scene storage location",
       "secondVision": "Second visual inspection",
       "secondVisualPoint": "Second visual point",
