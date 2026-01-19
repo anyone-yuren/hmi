@@ -29,6 +29,10 @@ const PlaceMove = (props: IProps) => {
     extra_height: 0,
     pallet_model_list: [],
     compensation: {
+      front: {
+        offset_x: [],
+        offset_y: [],
+      },
       left: {
         offset_x: [],
         offset_y: [],
@@ -62,6 +66,10 @@ const PlaceMove = (props: IProps) => {
     const translateHashMap: any = {
       compensation: (originState: any) => {
         const obj: any = {
+          front: {
+            offset_x: originState?.['compensation']?.['front']?.['offset_x']?.value,
+            offset_y: originState?.['compensation']?.['front']?.['offset_y']?.value,
+          },
           left: {
             offset_x: originState?.['compensation']?.['left']?.['offset_x']?.value,
             offset_y: originState?.['compensation']?.['left']?.['offset_y']?.value,
@@ -278,6 +286,17 @@ const PlaceMove = (props: IProps) => {
                 compensation: (originState: any, hashMap: any) => {
                   const obj = {
                     ...originState['compensation'],
+                    font: {
+                      ...originState['compensation']['front'],
+                      offset_x: {
+                        ...originState['compensation']['front']['offset_x'],
+                        value: hashMap['compensation']['front']['offset_x'],
+                      },
+                      offset_y: {
+                        ...originState['compensation']['front']['offset_y'],
+                        value: hashMap['compensation']['front']['offset_y'],
+                      },
+                    },
                     left: {
                       ...originState['compensation']['left'],
                       offset_x: {
