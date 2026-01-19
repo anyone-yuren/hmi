@@ -1,10 +1,15 @@
-import { useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import * as THREE from 'three';
-import { MapControls as MapControlsImpl } from 'three-stdlib';
-import { useShallow } from 'zustand/react/shallow';
-import { useAreaQuery } from '../../../../selection/spatialIndex';
-import { AreaData, useAreaStore } from '../store/areaStore';
+import { useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import * as THREE from "three";
+import { MapControls as MapControlsImpl } from "three-stdlib";
+import { useShallow } from "zustand/react/shallow";
+import {
+  queryPointsInPolygon,
+  useAreaQuery,
+} from "../../../../selection/spatialIndex";
+import { AreaData, useAreaStore } from "../store/areaStore";
+
+import { useDebounceFn } from "ahooks";
 
 /** ---------- 计算多边形中心 ---------- */
 function calcPolygonCenter(points: { x: number; y: number }[]) {
@@ -24,7 +29,10 @@ function calcPolygonCenter(points: { x: number; y: number }[]) {
   area *= 0.5;
 
   if (Math.abs(area) < 1e-6) {
-    const avg = points.reduce((a, p) => ({ x: a.x + p.x, y: a.y + p.y }), { x: 0, y: 0 });
+    const avg = points.reduce((a, p) => ({ x: a.x + p.x, y: a.y + p.y }), {
+      x: 0,
+      y: 0,
+    });
     return { x: avg.x / points.length, y: avg.y / points.length, z: 0 };
   }
 
@@ -38,12 +46,19 @@ function calcPolygonCenter(points: { x: number; y: number }[]) {
 export function AreaMesh({ area }: { area: AreaData }) {
   const { camera, gl, controls } = useThree();
   const mapControls = controls as MapControlsImpl;
-  const { selectedIds, select, updateArea, setContextMenuPosition } = useAreaStore(
+  const {
+    selectedIds,
+    select,
+    updateArea,
+    setContextMenuPosition,
+    setPointsInArea,
+  } = useAreaStore(
     useShallow((s) => ({
       selectedIds: s.selectedIds,
       select: s.select,
       updateArea: s.updateArea,
       setContextMenuPosition: s.setContextMenuPosition,
+      setPointsInArea: s.setPointsInArea,
     })),
   );
 
@@ -56,7 +71,10 @@ export function AreaMesh({ area }: { area: AreaData }) {
 
   const getPoint = (e: PointerEvent) => {
     const rect = gl.domElement.getBoundingClientRect();
-    mouse.current.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+    mouse.current.set(
+      ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      -((e.clientY - rect.top) / rect.height) * 2 + 1,
+    );
     raycaster.current.setFromCamera(mouse.current, camera);
     const p = new THREE.Vector3();
     raycaster.current.ray.intersectPlane(plane.current, p);
@@ -66,15 +84,26 @@ export function AreaMesh({ area }: { area: AreaData }) {
   /** ---------- 草稿态 ---------- */
   const draggingIndex = useRef<number | null>(null);
   const draftPointsRef = useRef<{ x: number; y: number }[] | null>(null);
-  const draftCenterRef = useRef<{ x: number; y: number; z: number } | null>(null);
+  const draftCenterRef = useRef<{ x: number; y: number; z: number } | null>(
+    null,
+  );
   const [, forceRender] = useState(0);
 
   const polygon = draftPointsRef.current ?? area.points;
 
-  // ⭐ 就在这里
-  const pointsInArea = useAreaQuery(polygon);
+  const pointsInArea = useAreaQuery(area.points);
 
-  console.log('pointsInArea:', pointsInArea);
+  useEffect(() => {
+    if (!selected) return;
+    setPointsInArea(area.id, pointsInArea);
+  }, [selected]);
+  const { run: runComputeAfterDrag } = useDebounceFn(
+    (points: { x: number; y: number }[]) => {
+      const result = queryPointsInPolygon(points);
+      setPointsInArea(area.id, result);
+    },
+    { wait: 200 },
+  );
 
   const renderPoints = draftPointsRef.current ?? area.points;
   const renderCenter = draftCenterRef.current ?? area.center;
@@ -84,7 +113,9 @@ export function AreaMesh({ area }: { area: AreaData }) {
     if (renderPoints.length < 3) return null;
 
     const shape = new THREE.Shape(
-      renderPoints.map((p) => new THREE.Vector2(p.x - renderCenter.x, p.y - renderCenter.y)),
+      renderPoints.map(
+        (p) => new THREE.Vector2(p.x - renderCenter.x, p.y - renderCenter.y),
+      ),
     );
 
     return new THREE.ShapeGeometry(shape);
@@ -112,19 +143,20 @@ export function AreaMesh({ area }: { area: AreaData }) {
         points: draftPointsRef.current,
         center: draftCenterRef.current!,
       });
-
+      // 计算当前区域内的点
+      runComputeAfterDrag(draftPointsRef.current);
       draggingIndex.current = null;
       draftPointsRef.current = null;
       draftCenterRef.current = null;
       mapControls && (mapControls.enabled = true);
     };
 
-    dom.addEventListener('pointermove', onMove);
-    dom.addEventListener('pointerup', onUp);
+    dom.addEventListener("pointermove", onMove);
+    dom.addEventListener("pointerup", onUp);
 
     return () => {
-      dom.removeEventListener('pointermove', onMove);
-      dom.removeEventListener('pointerup', onUp);
+      dom.removeEventListener("pointermove", onMove);
+      dom.removeEventListener("pointerup", onUp);
     };
   }, [area.id]);
 
@@ -142,8 +174,14 @@ export function AreaMesh({ area }: { area: AreaData }) {
           setContextMenuPosition({ x: e.layerX, y: e.layerY });
         }}
       >
-        {shapeGeometry && <primitive object={shapeGeometry} attach='geometry' />}
-        <meshBasicMaterial color={selected ? '#fab005' : '#a855f7'} transparent opacity={selected ? 0.4 : 0.25} />
+        {shapeGeometry && (
+          <primitive object={shapeGeometry} attach="geometry" />
+        )}
+        <meshBasicMaterial
+          color={selected ? "#fab005" : "#a855f7"}
+          transparent
+          opacity={selected ? 0.4 : 0.25}
+        />
       </mesh>
 
       {/* ---------- 顶点 ---------- */}
@@ -161,7 +199,7 @@ export function AreaMesh({ area }: { area: AreaData }) {
             }}
           >
             <circleGeometry args={[0.6, 16]} />
-            <meshBasicMaterial color='#ff922b' />
+            <meshBasicMaterial color="#ff922b" />
           </mesh>
         ))}
     </>

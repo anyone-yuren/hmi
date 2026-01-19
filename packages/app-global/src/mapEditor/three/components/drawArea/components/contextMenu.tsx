@@ -4,10 +4,11 @@ import { useAreaStore } from '../store/areaStore';
 
 const AreaContextMenu = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const { contextMenuPosition, setShowAreaParamsDialog } = useAreaStore(
+  const { contextMenuPosition, setShowAreaParamsDialog, setShowBatchGenerateDialog } = useAreaStore(
     useShallow((store) => ({
       contextMenuPosition: store.contextMenuPosition,
       setShowAreaParamsDialog: store.setShowAreaParamsDialog,
+      setShowBatchGenerateDialog: store.setShowBatchGenerateDialog,
     })),
   );
   // 点击其他位置销毁
@@ -38,7 +39,17 @@ const AreaContextMenu = () => {
       style={{ position: 'absolute', left: contextMenuPosition.x + 'px', top: contextMenuPosition.y + 'px' }}
     >
       <div className='px-2 py-1 cursor-pointer hover:bg-[#333]'>删除</div>
-      <div className='px-2 py-1 cursor-pointer hover:bg-[#333]'>复制</div>
+      <div className='px-2 py-1 cursor-pointer hover:bg-[#333]'>批量修改点</div>
+      <div
+        className='px-2 py-1 cursor-pointer hover:bg-[#333]'
+        onClick={() => {
+          setShowBatchGenerateDialog(true);
+          // 关闭当前弹窗
+          if (ref.current) ref.current.style.display = 'none';
+        }}
+      >
+        批量生成库位
+      </div>
       <div
         className='px-2 py-1 cursor-pointer hover:bg-[#333]'
         onClick={() => {

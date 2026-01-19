@@ -31,6 +31,14 @@ type MapEditorState = {
   setContextMenuPosition: (position) => void;
   showAreaParamsDialog: boolean;
   setShowAreaParamsDialog: (show) => void;
+
+  // 显示批量生成库位弹窗
+  showBatchGenerateDialog: boolean;
+  setShowBatchGenerateDialog: (show) => void;
+
+  // 当前区域内的点
+  pointsInArea: { areaId: string; points: THREE.Vector3[] };
+  setPointsInArea: (areaId: string, points: THREE.Vector3[]) => void;
 };
 
 export const useAreaStore = create<MapEditorState>()(
@@ -60,6 +68,12 @@ export const useAreaStore = create<MapEditorState>()(
       // 区域参数弹窗是否显示
       showAreaParamsDialog: false,
       setShowAreaParamsDialog: (show) => set({ showAreaParamsDialog: show }),
+      // 批量生成库位弹窗是否显示
+      showBatchGenerateDialog: false,
+      setShowBatchGenerateDialog: (show) => set({ showBatchGenerateDialog: show }),
+      // 当前区域内的点
+      pointsInArea: { areaId: '', points: [] },
+      setPointsInArea: (areaId, points) => set({ pointsInArea: { areaId, points } }),
     }),
     {
       name: 'map-editor-area-store',

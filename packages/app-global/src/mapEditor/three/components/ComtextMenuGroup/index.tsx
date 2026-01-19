@@ -5,6 +5,7 @@ import { useAreaStore } from '../drawArea/store/areaStore';
 import PolygonContextMenu from '../drawPolygon/components/contextMenu';
 import { usePolygonStore } from '../drawPolygon/store/polygonStore';
 import AreaParams from './modules/areaParams';
+import BatchGenerateDialog from './modules/batchGenerateDialog';
 interface PanelRootProps {
   boundsRef: React.RefObject<Element>;
 }
@@ -36,6 +37,11 @@ const ContextMenuGroup = ({ boundsRef }: PanelRootProps) => {
     <>
       <AreaContextMenu />
       <PolygonContextMenu />
+      <BatchGenerateDialog
+        boundsRef={boundsRef}
+        contextMenuPosition={contextMenuPosition}
+        setShowAreaParamsDialog={setShowAreaParamsDialog}
+      />
       {showAreaParamsDialog && (
         <Rnd
           default={{

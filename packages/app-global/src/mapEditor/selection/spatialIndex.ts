@@ -43,32 +43,40 @@ function pointInPolygon(point: { x: number; y: number }, polygon: { x: number; y
   return inside;
 }
 
+/**
+ * ⭐ 纯函数：任意地方可用
+ */
+export function queryPointsInPolygon(polygon: { x: number; y: number }[]): SelectableItem[] {
+  if (!polygon || polygon.length < 3) return [];
+
+  // 1️⃣ polygon → bbox
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+
+  for (const p of polygon) {
+    minX = Math.min(minX, p.x);
+    minY = Math.min(minY, p.y);
+    maxX = Math.max(maxX, p.x);
+    maxY = Math.max(maxY, p.y);
+  }
+
+  // 2️⃣ RBush 初筛
+  const candidates = querySpatialIndex({
+    minX,
+    minY,
+    maxX,
+    maxY,
+  });
+
+  // 3️⃣ 精筛
+  return candidates.filter((item) => pointInPolygon({ x: item.position?.x ?? 0, y: item.position?.y ?? 0 }, polygon));
+}
+
 export function useAreaQuery(polygon: { x: number; y: number }[] | null) {
   return useMemo(() => {
-    if (!polygon || polygon.length < 3) return [];
-
-    // 1️⃣ polygon → bbox
-    let minX = Infinity,
-      minY = Infinity,
-      maxX = -Infinity,
-      maxY = -Infinity;
-
-    for (const p of polygon) {
-      minX = Math.min(minX, p.x);
-      minY = Math.min(minY, p.y);
-      maxX = Math.max(maxX, p.x);
-      maxY = Math.max(maxY, p.y);
-    }
-
-    // 2️⃣ RBush 初筛
-    const candidates = querySpatialIndex({
-      minX,
-      minY,
-      maxX,
-      maxY,
-    }) as any[];
-
-    // 3️⃣ 精筛
-    return candidates.filter((item) => pointInPolygon({ x: item.position.x, y: item.position.y }, polygon));
+    if (!polygon) return [];
+    return queryPointsInPolygon(polygon);
   }, [polygon]);
 }
