@@ -7,8 +7,7 @@ import { useShallow } from 'zustand/react/shallow';
 import PageLoading from '../PageLoading';
 import { LineGrid } from './components/LineGrid';
 import { MAX_SCALE, MIN_SCALE } from './constants/config';
-import useStage from './hooks/useStage'; // 假设自定义 hook
-
+import useStage from './hooks/useStage'; // 假设自定义 hook.
 interface IProps {
   size?: {
     width: number;
@@ -21,7 +20,8 @@ interface IProps {
 }
 
 const InitStage = (props: IProps) => {
-  const { handleTouchMove, handleTouchStart, handleTouchEnd, handleDragMove } = useStageEvents();
+  const { handleTouchMove, handleTouchStart, handleTouchEnd, handleDragMove } =
+    useStageEvents();
   const {
     mapLoading,
     setHybirdStage,
@@ -46,7 +46,14 @@ const InitStage = (props: IProps) => {
     })),
   );
 
-  const { size = null, children, onWheelCallback, minScale, draggable = true, ...rest } = props;
+  const {
+    size = null,
+    children,
+    onWheelCallback,
+    minScale,
+    draggable = true,
+    ...rest
+  } = props;
   const { stageRef, onWheel } = useStage({
     onWheelCallback,
     minScale: minScale,

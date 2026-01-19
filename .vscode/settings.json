@@ -233,5 +233,7 @@
   },
   "prettier.prettierPath": "./node_modules/prettier",
   "prettier.requireConfig": false,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "prettier.singleQuote": true,
+  "prettier.jsxSingleQuote": true
 }

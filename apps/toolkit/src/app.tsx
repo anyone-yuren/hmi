@@ -5,7 +5,8 @@ import { RouterProvider } from 'react-router-dom';
 import router from '@/router';
 
 import '@/gbeata';
-import '@/gbeata/config.tsx';
+import '@/gbeata/config';
+
 import { useTranslation } from 'react-i18next';
 function App() {
   const [loading, setLoading] = useState(false);
@@ -19,5 +20,4 @@ function App() {
     </>
   );
 }
-
 export default App;
