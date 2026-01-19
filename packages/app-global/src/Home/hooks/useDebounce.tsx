@@ -1,5 +1,4 @@
-import { debounce } from 'lodash';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useHomeStore } from '../store';
 
@@ -26,26 +25,20 @@ const useDebouncedHomeStore = () => {
     })),
   );
 
-  // 用 useRef 保证函数在整个生命周期保持一致
-  const debouncedRefs = useRef({
-    setTaskInfo: debounce(setTaskInfo, 1000),
-    setControlStatus: debounce(setControlStatus, 1000),
-    setRobotCurrentStatus: debounce(setRobotCurrentStatus, 1000),
-    setRobotIsensorStatus: debounce(setRobotIsensorStatus, 1000),
-    setRobotGoodsStatus: debounce(setRobotGoodsStatus, 1000),
-    setRobotForkarmStatus: debounce(setRobotForkarmStatus, 1000),
-    setSegmentsInfo: debounce(setSegmentsInfo, 1000),
-    setIsContentWss: debounce(setIsContentWss, 1000),
-  });
+  // 使用 useRef 确保函数引用在整个生命周期内保持一致
+  // 只在第一次渲染时创建对象，之后始终返回相同的引用
+  const stableActions = useRef({
+    setTaskInfo,
+    setControlStatus,
+    setRobotCurrentStatus,
+    setRobotIsensorStatus,
+    setRobotGoodsStatus,
+    setRobotForkarmStatus,
+    setSegmentsInfo,
+    setIsContentWss,
+  }).current;
 
-  // 清理防抖函数
-  useEffect(() => {
-    return () => {
-      Object.values(debouncedRefs.current).forEach((fn) => fn.cancel && fn.cancel());
-    };
-  }, []);
-
-  return debouncedRefs.current;
+  return stableActions;
 };
 
 export default useDebouncedHomeStore;
