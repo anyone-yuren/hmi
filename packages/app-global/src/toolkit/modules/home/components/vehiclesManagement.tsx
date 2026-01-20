@@ -1,5 +1,13 @@
 import { AppstoreOutlined, PlusOutlined } from '@ant-design/icons';
-import { Badge, Button, Divider, Dropdown, Segmented, Space, Tooltip } from 'antd';
+import {
+  Badge,
+  Button,
+  Divider,
+  Dropdown,
+  Segmented,
+  Space,
+  Tooltip,
+} from 'antd';
 import { createStyles, useAntdToken } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
@@ -42,17 +50,73 @@ const VehiclesManagement = () => {
   const { styles } = useStyles();
   const navigate = useNavigate();
   const [asyncSettingsVisible, setAsyncSettingsVisible] = useState(false); // 👈 新增：异步设置抽屉开关
-  const [showGroup, setShowGroup] = useState(false); // 👈 新增：分组抽屉开关
+  const [showGroup, setShowGroup] = useState(true); // 👈 新增：分组抽屉开关
 
   const vehicles = [
-    { id: 'V001', name: '车辆1', status: '在线', type: 'MW_K16.png', no: 'KW-25046', group: '成品区' },
-    { id: 'V002', name: '车辆2', status: '离线', type: 'MW_L14.png', no: 'KW-25047', group: '补品区' },
-    { id: 'V003', name: '车辆3', status: '在线', type: 'MW_L14.png', no: 'KW-25048', group: '补品区' },
-    { id: 'V004', name: '车辆4', status: '维护中', type: 'MW_SE20.png', no: 'KW-25049', group: '补品区' },
-    { id: 'V005', name: '车辆5', status: '在线', type: 'MW_SL14.png', no: 'KW-25050', group: '补品区' },
-    { id: 'V006', name: '车辆6', status: '离线', type: 'MW_SE15.png', no: 'KW-25051', group: '成品区' },
-    { id: 'V007', name: '车辆7', status: '在线', type: 'MW_X20.png', no: 'KW-25052', group: '补品区' },
-    { id: 'V008', name: '车辆8', status: '维护中', type: 'MW_O20.png', no: 'KW-25053', group: '补品区' },
+    {
+      id: 'V001',
+      name: '车辆1',
+      status: '在线',
+      type: 'MW_K16.png',
+      no: 'KW-25046',
+      group: '成品区',
+    },
+    {
+      id: 'V002',
+      name: '车辆2',
+      status: '离线',
+      type: 'MW_L14.png',
+      no: 'KW-25047',
+      group: '补品区',
+    },
+    {
+      id: 'V003',
+      name: '车辆3',
+      status: '在线',
+      type: 'MW_L14.png',
+      no: 'KW-25048',
+      group: '补品区',
+    },
+    {
+      id: 'V004',
+      name: '车辆4',
+      status: '维护中',
+      type: 'MW_SE20.png',
+      no: 'KW-25049',
+      group: '补品区',
+    },
+    {
+      id: 'V005',
+      name: '车辆5',
+      status: '在线',
+      type: 'MW_SL14.png',
+      no: 'KW-25050',
+      group: '补品区',
+    },
+    {
+      id: 'V006',
+      name: '车辆6',
+      status: '离线',
+      type: 'MW_SE15.png',
+      no: 'KW-25051',
+      group: '成品区',
+    },
+    {
+      id: 'V007',
+      name: '车辆7',
+      status: '在线',
+      type: 'MW_X20.png',
+      no: 'KW-25052',
+      group: '补品区',
+    },
+    {
+      id: 'V008',
+      name: '车辆8',
+      status: '维护中',
+      type: 'MW_O20.png',
+      no: 'KW-25053',
+      group: '补品区',
+    },
   ];
 
   const [selectVehicles, setSelectVehicles] = useState<any[]>(vehicles);
@@ -114,7 +178,11 @@ const VehiclesManagement = () => {
             >
               <div className='font-medium mb-2 flex items-center justify-between'>
                 <span>分组面板</span>
-                <Button size='small' shape='round' icon={<PlusOutlined />}></Button>
+                <Button
+                  size='small'
+                  shape='round'
+                  icon={<PlusOutlined />}
+                ></Button>
               </div>
 
               {/* 你可以放分组内容 */}
@@ -123,7 +191,7 @@ const VehiclesManagement = () => {
                   className={
                     selectGroupName === '成品区'
                       ? 'bg-[#00D1D1]/20 rounded-md'
-                      : 'group-hover/cards:blur-sm group-hover/cards:scale-95 hover:!blur-0 hover:!scale-102 transition-all'
+                      : ' group-hover/cards:scale-95  hover:!scale-102 transition-all'
                   }
                   onClick={() => {
                     setSelectGroupName('成品区');
@@ -163,7 +231,10 @@ const VehiclesManagement = () => {
                             ],
                           }}
                         >
-                          <IconifyIcon icon='ant-design:more-outlined' size={16} />
+                          <IconifyIcon
+                            icon='ant-design:more-outlined'
+                            size={16}
+                          />
                         </Dropdown>
                       </div>
                       <div className='text-sm text-gray-400 group-hover/cards:text-white flex items-center gap-2'>
@@ -181,7 +252,7 @@ const VehiclesManagement = () => {
                   className={
                     selectGroupName === '补品区'
                       ? 'bg-[#00D1D1]/20 rounded-md'
-                      : 'group-hover/cards:blur-sm group-hover/cards:scale-95 hover:!blur-0 hover:!scale-102 transition-all'
+                      : ' group-hover/cards:scale-95  hover:!scale-102 transition-all'
                   }
                   onClick={() => {
                     setSelectGroupName('补品区');
@@ -221,7 +292,10 @@ const VehiclesManagement = () => {
                             ],
                           }}
                         >
-                          <IconifyIcon icon='ant-design:more-outlined' size={16} />
+                          <IconifyIcon
+                            icon='ant-design:more-outlined'
+                            size={16}
+                          />
                         </Dropdown>
                       </div>
                       <div className='text-sm text-gray-400 group-hover/cards:text-white flex items-center gap-2'>
@@ -241,7 +315,11 @@ const VehiclesManagement = () => {
         </AnimatePresence>
 
         {/* 右侧主内容（自动让出左侧宽度） */}
-        <div className={`transition-all duration-300 flex-1 ease-out ${showGroup ? 'ml-62' : 'ml-0'}`}>
+        <div
+          className={`transition-all duration-300 flex-1 ease-out ${
+            showGroup ? 'ml-62' : 'ml-0'
+          }`}
+        >
           <div className='grid grid-cols-4 gap-2 2xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-3 xs:grid-cols-2'>
             {/* ... 车卡片渲染（原样保持） */}
             <AnimatePresence>
@@ -291,19 +369,29 @@ const VehiclesManagement = () => {
                                   className='text-emerald-500'
                                 />
                               ) : (
-                                <IconifyIcon icon='ant-design:stop-outlined' size={24} className='text-red-500' />
+                                <IconifyIcon
+                                  icon='ant-design:stop-outlined'
+                                  size={24}
+                                  className='text-red-500'
+                                />
                               )}
                             </div>
                           </div>
 
                           <div>
-                            <h3 className='font-semibold text-white'>车号：{vehicle.no}</h3>
-                            <p className='text-sm text-slate-400'>Version 20250930</p>
+                            <h3 className='font-semibold text-white'>
+                              车号：{vehicle.no}
+                            </h3>
+                            <p className='text-sm text-slate-400'>
+                              Version 20250930
+                            </p>
                           </div>
                         </div>
 
                         <div className='flex flex-col items-end gap-1'>
-                          <span className='text-xs text-slate-400'>2 min ago</span>
+                          <span className='text-xs text-slate-400'>
+                            2 min ago
+                          </span>
                           <span className='inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-500'>
                             <span className='h-1 w-1 rounded-full bg-emerald-500'></span>
                             运行时间
@@ -344,8 +432,13 @@ const VehiclesManagement = () => {
                           <Tooltip title='工具'>
                             <Button
                               size='small'
-                              icon={<IconifyIcon icon='si:hammer-duotone' size={14} />}
-                              onClick={() => navigate('/models')}
+                              icon={
+                                <IconifyIcon
+                                  icon='si:hammer-duotone'
+                                  size={14}
+                                />
+                              }
+                              onClick={() => navigate('/models?model=true')}
                             />
                           </Tooltip>
 
@@ -358,22 +451,42 @@ const VehiclesManagement = () => {
                                   key: '1',
                                   label: '复制',
                                   disabled: vehicle.status !== '在线',
-                                  icon: <IconifyIcon icon='mdi:content-copy' size={16} />,
+                                  icon: (
+                                    <IconifyIcon
+                                      icon='mdi:content-copy'
+                                      size={16}
+                                    />
+                                  ),
                                 },
                                 {
                                   key: '2',
                                   label: '删除',
-                                  icon: <IconifyIcon icon='lsicon:delete-outline' size={16} />,
+                                  icon: (
+                                    <IconifyIcon
+                                      icon='lsicon:delete-outline'
+                                      size={16}
+                                    />
+                                  ),
                                 },
                                 {
                                   key: '3',
                                   label: '禁用',
-                                  icon: <IconifyIcon icon='lsicon:disable-outline' size={16} />,
+                                  icon: (
+                                    <IconifyIcon
+                                      icon='lsicon:disable-outline'
+                                      size={16}
+                                    />
+                                  ),
                                 },
                                 {
                                   key: '4',
                                   label: '移动到',
-                                  icon: <IconifyIcon icon='fluent:send-32-regular' size={16} />,
+                                  icon: (
+                                    <IconifyIcon
+                                      icon='fluent:send-32-regular'
+                                      size={16}
+                                    />
+                                  ),
                                   children: [
                                     { key: '2-1', label: '成品区' },
                                     { key: '2-2', label: '测试区' },
@@ -382,7 +495,12 @@ const VehiclesManagement = () => {
                                 {
                                   key: '5',
                                   label: '同步到',
-                                  icon: <IconifyIcon icon='fluent:share-32-regular' size={16} />,
+                                  icon: (
+                                    <IconifyIcon
+                                      icon='fluent:share-32-regular'
+                                      size={16}
+                                    />
+                                  ),
                                   onClick: () => {
                                     setAsyncSettingsVisible(true);
                                   },
@@ -390,7 +508,12 @@ const VehiclesManagement = () => {
                                 {
                                   key: '6',
                                   label: '拉取至',
-                                  icon: <IconifyIcon icon='flowbite:download-outline' size={16} />,
+                                  icon: (
+                                    <IconifyIcon
+                                      icon='flowbite:download-outline'
+                                      size={16}
+                                    />
+                                  ),
                                 },
                               ],
                             }}

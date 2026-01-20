@@ -115,7 +115,9 @@ const ToolDashboard = () => {
                 <IconifyIcon icon='lets-icons:status' size={16} />
                 定位状态
               </span>
-              <span className='text-base font-semibold text-green-400'>已定位</span>
+              <span className='text-base font-semibold text-green-400'>
+                已定位
+              </span>
             </div>
             <div className='flex flex-col leading-tight'>
               <span className='text-xs opacity-70 flex items-center gap-1'>
@@ -154,7 +156,9 @@ const ToolDashboard = () => {
 
                 <div className='flex flex-col justify-center leading-tight bg-white/5 p-2 rounded-md'>
                   <span className='text-xs opacity-70'>避障状态</span>
-                  <span className='text-lg font-semibold text-green-400'>正常</span>
+                  <span className='text-lg font-semibold text-green-400'>
+                    正常
+                  </span>
                 </div>
               </div>
               <div className='flex-1 bg-white/5 rounded-md p-2 flex flex-col gap-2'>
@@ -209,7 +213,10 @@ const ToolDashboard = () => {
             <GrowPanel>
               <div className='h-full flex flex-col justify-center gap-2 p-4 items-center'>
                 <div className='flex items-center justify-center w-24 h-24 rounded-full bg-white/5'>
-                  <IconifyIcon icon='icon-park-outline:nine-points-connected' size={40} />
+                  <IconifyIcon
+                    icon='icon-park-outline:nine-points-connected'
+                    size={40}
+                  />
                 </div>
                 <div className='text-center'>
                   <span className='text-lg font-semibold'>偏移表</span>
@@ -221,7 +228,7 @@ const ToolDashboard = () => {
             <GrowPanel>
               <div
                 className='h-full flex flex-col justify-center gap-2 p-4 items-center'
-                onClick={() => navigate('/models')}
+                onClick={() => navigate('/models?model=true')}
               >
                 <div className='flex items-center justify-center w-24 h-24 rounded-full bg-white/5'>
                   <IconifyIcon icon='bi:robot' size={40} />

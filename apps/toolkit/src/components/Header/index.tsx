@@ -27,6 +27,8 @@ const GlobalHeader = () => {
   const { styles } = menuStyles();
   const navigate = useNavigate();
   const location = useLocation();
+  const model = new URLSearchParams(location.search).get('model');
+  const hasModel = Boolean(model);
   return (
     <div className=' text-xs flex flex-col h-full items-center justify-between px-2 py-4 text-white '>
       <div className='flex flex-col items-center gap-4'>
@@ -40,40 +42,75 @@ const GlobalHeader = () => {
           <>
             <Tooltip title='地图编辑器' placement='right'>
               <div className='flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
-                <IconifyIcon icon='carbon:map' size={24} className='' onClick={() => navigate(`/mapEditor`)} />
+                <IconifyIcon
+                  icon='carbon:map'
+                  size={24}
+                  className=''
+                  onClick={() => navigate(`/mapEditor`)}
+                />
                 <span>地图</span>
               </div>
             </Tooltip>
             <Tooltip title='车辆管理' placement='right'>
               <div className='flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
-                <IconifyIcon icon='material-symbols-light:forklift' size={26} onClick={() => navigate(`/dashboard`)} />
+                <IconifyIcon
+                  icon='material-symbols-light:forklift'
+                  size={26}
+                  onClick={() => navigate(`/dashboard`)}
+                />
                 <span>车辆</span>
               </div>
             </Tooltip>
 
-            {location.pathname === '/models' ? (
+            {hasModel ? (
               <>
                 <Tooltip title='车辆日志' placement='right'>
+                  <div className='flex items-center text-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
+                    <IconifyIcon
+                      icon='mingcute:robot-line'
+                      size={24}
+                      onClick={() => navigate(`/models?model=true`)}
+                    />
+                    <span>模型管理</span>
+                  </div>
+                </Tooltip>
+                <Tooltip title='车辆日志' placement='right'>
                   <div className='flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
-                    <IconifyIcon icon='solar:database-outline' size={24} onClick={() => navigate(`/vehicleLogs`)} />
+                    <IconifyIcon
+                      icon='solar:database-outline'
+                      size={24}
+                      onClick={() => navigate(`/vehicleLogs?model=true`)}
+                    />
                     <span>日志</span>
                   </div>
                 </Tooltip>
                 <Tooltip title='调度配置' placement='right'>
                   <div className='flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
-                    <IconifyIcon icon='fluent:transmission-20-regular' size={24} onClick={() => navigate(`/ftp`)} />
+                    <IconifyIcon
+                      icon='fluent:transmission-20-regular'
+                      size={24}
+                      onClick={() => navigate(`/ftp?model=true`)}
+                    />
                     <span>RCS</span>
                   </div>
                 </Tooltip>
                 <Tooltip title='远程FTP' placement='right'>
                   <div className='flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
-                    <IconifyIcon icon='mingcute:transfer-3-line' size={24} onClick={() => navigate(`/ftp`)} />
+                    <IconifyIcon
+                      icon='mingcute:transfer-3-line'
+                      size={24}
+                      onClick={() => navigate(`/ftp?model=true`)}
+                    />
                     <span>FTP</span>
                   </div>
                 </Tooltip>
                 <Tooltip title='参数管理' placement='right'>
                   <div className='flex items-center text-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
-                    <IconifyIcon icon='tabler:file-text' size={24} onClick={() => navigate(`/parameters`)} />
+                    <IconifyIcon
+                      icon='tabler:file-text'
+                      size={24}
+                      onClick={() => navigate(`/parameters?model=true`)}
+                    />
                     <span>参数管理</span>
                   </div>
                 </Tooltip>
