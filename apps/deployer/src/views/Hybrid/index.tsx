@@ -2,6 +2,7 @@ import EmptyBox from '@/components/Empty';
 import InitStage from '@/components/InitStage';
 import CoordinateSystem from '@/components/InitStage/components/coordinateSystem';
 import { Add } from '@mui/icons-material';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
@@ -30,7 +31,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useRequest, useSize } from 'ahooks';
-import { Badge, ConfigProvider, Dropdown, Modal } from 'antd';
+import { Badge, ConfigProvider, Dropdown, message, Modal } from 'antd';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,10 +43,9 @@ import ReflectorActions from './components/reflector/handles/actions';
 import ReflectorLayer from './components/reflector/reflectorLayer';
 import SlamHandles from './components/slam/handles';
 import SlamLayer from './components/slam/slamLayer';
-import { addFloor, delFloor, postFloorList, switchFloor } from './service';
+import { addFloor, delFloor, postFloorList, switchFloor, updateFloor } from './service';
 
 import ErrorPage from '@/components/ErrorPage';
-import DeleteIcon from '@/components/SvgIcon/DeleteIcon';
 import ExchangeIcon from '@/components/SvgIcon/ExchangeIcon';
 import { SwipeAction } from '@/components/SwiperAction';
 import { useLatest } from 'ahooks';
@@ -117,6 +117,7 @@ const Mapping = () => {
 
   // 获取当前楼层
   const ref = useRef<HTMLDivElement>(null);
+  const updateInputRef = useRef<HTMLInputElement>(null);
   const wsRef = useRef<any>(null);
   const size = useSize(ref);
   const [newFloor, setNewFloor] = React.useState();
@@ -124,6 +125,10 @@ const Mapping = () => {
   const [floor, setFloor] = React.useState(robot_current_status.floor_number || 1);
   const [floorButtonDisabled, setFloorButtonDisabled] = React.useState(true);
   const [alignment, setAlignment] = React.useState('slam');
+  const [updateFloorData, setUpdateFloorData] = React.useState({
+    floor_number: null,
+    new_floor: null,
+  });
 
   const currentAddFloor = useRef(0);
   useEffect(() => {
@@ -289,17 +294,17 @@ const Mapping = () => {
   const drawerWidth = 180;
 
   // 显示隐藏楼层
-  const rightActions = [
-    {
-      key: 'delete',
-      text: t('common.delete'),
-      icon: (
-        <div style={{ display: 'flex' }}>
-          <DeleteIcon fontSize={26} isActive></DeleteIcon>
-        </div>
-      ),
-    },
-  ];
+  // const rightActions = [
+  //   {
+  //     key: 'delete',
+  //     text: t('common.delete'),
+  //     icon: (
+  //       <div style={{ display: 'flex' }}>
+  //         <DeleteIcon fontSize={26} isActive></DeleteIcon>
+  //       </div>
+  //     ),
+  //   },
+  // ];
 
   // 渲染楼层列表
   const renderFloorList = useMemo(() => {
@@ -355,6 +360,39 @@ const Mapping = () => {
                     },
                     {
                       key: '2',
+                      icon: <BorderColorIcon fontSize='large' />,
+                      label: t('common.edit'),
+                      onClick: () => {
+                        MwConfirm.confirm({
+                          title: t('deployer.hybrid.floorNo'),
+                          content: (
+                            <TextField
+                              fullWidth
+                              autoFocus
+                              placeholder={t('common.plsInput')}
+                              type={'number'}
+                              inputRef={updateInputRef}
+                            ></TextField>
+                          ),
+                          onOk: async () => {
+                            const inputValue = updateInputRef.current?.value;
+                            console.log('value', value, inputValue);
+                            const { error_code, error_description }: any = await updateFloor({
+                              floor_number: Number(value),
+                              new_floor: Number(inputValue),
+                            });
+                            if (error_code != 10000) {
+                              message.error(error_description);
+                              return Promise.reject();
+                            }
+                            message.success(t('common.actionSuccess'));
+                            await getFloors();
+                          },
+                        });
+                      },
+                    },
+                    {
+                      key: '3',
                       icon: <DeleteSweepIcon fontSize='large' />,
                       label: t('common.delete'),
                       onClick: () => {

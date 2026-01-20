@@ -12,6 +12,16 @@ export const addFloor = (num: any) => {
   );
 };
 
+export const updateFloor = (data: any) => {
+  return post(
+    '/navigation/modify_map_floor',
+    {
+      ...data,
+    },
+    '10001',
+  );
+};
+
 export const getFloorData = (floor: number): Promise<any> => {
   return post(
     '/navigation/request_target_floor_map',

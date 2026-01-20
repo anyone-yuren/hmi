@@ -286,7 +286,7 @@ const PlaceMove = (props: IProps) => {
                 compensation: (originState: any, hashMap: any) => {
                   const obj = {
                     ...originState['compensation'],
-                    font: {
+                    front: {
                       ...originState['compensation']['front'],
                       offset_x: {
                         ...originState['compensation']['front']['offset_x'],
