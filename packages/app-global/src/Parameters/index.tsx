@@ -5,6 +5,7 @@ import { IconifyIcon } from 'ui';
 import RobotCapabilityTopology from '../Models/modules/Capability';
 import VisionFlow from '../Models/visionFlow';
 import BaseInformation from './modules/baseInformation';
+import PathPlanning from './modules/pathPlanning';
 
 type MenuItem = Required<MenuProps>['items'][number];
 const Parameters = () => {
@@ -182,10 +183,11 @@ const Parameters = () => {
             </Dropdown>
           </div>
         </div>
-        <div className='flex-1 bg-white/10'>
+        <div className='flex-1 bg-white/10 overflow-auto'>
           {selectedKey === '5' && <VisionFlow />}
           {selectedKey === '1-1' && <BaseInformation />}
           {selectedKey === 'base' && <RobotCapabilityTopology />}
+          {selectedKey === '7' && <PathPlanning />}
         </div>
       </div>
     </div>
