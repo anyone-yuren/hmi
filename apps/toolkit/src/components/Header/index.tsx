@@ -1,5 +1,6 @@
 import { Menu, Modal, Popover, Tooltip } from 'antd';
 import { createStyles, useResponsive, useTheme } from 'antd-style';
+import classNames from 'classnames';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IconifyIcon } from 'ui';
 // 修改antd Menu默认样式
@@ -41,7 +42,14 @@ const GlobalHeader = () => {
         {location.pathname !== '/' && (
           <>
             <Tooltip title='地图编辑器' placement='right'>
-              <div className='flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
+              <div
+                className={classNames(
+                  'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                  location.pathname === '/mapEditor'
+                    ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
+                    : '',
+                )}
+              >
                 <IconifyIcon
                   icon='carbon:map'
                   size={24}
@@ -52,7 +60,14 @@ const GlobalHeader = () => {
               </div>
             </Tooltip>
             <Tooltip title='车辆管理' placement='right'>
-              <div className='flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
+              <div
+                className={classNames(
+                  'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                  location.pathname === '/dashboard'
+                    ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
+                    : '',
+                )}
+              >
                 <IconifyIcon
                   icon='material-symbols-light:forklift'
                   size={26}
@@ -65,7 +80,14 @@ const GlobalHeader = () => {
             {hasModel ? (
               <>
                 <Tooltip title='车辆日志' placement='right'>
-                  <div className='flex items-center text-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
+                  <div
+                    className={classNames(
+                      'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                      location.pathname === '/models'
+                        ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
+                        : '',
+                    )}
+                  >
                     <IconifyIcon
                       icon='mingcute:robot-line'
                       size={24}
@@ -75,7 +97,14 @@ const GlobalHeader = () => {
                   </div>
                 </Tooltip>
                 <Tooltip title='车辆日志' placement='right'>
-                  <div className='flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
+                  <div
+                    className={classNames(
+                      'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                      location.pathname === '/vehicleLogs'
+                        ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
+                        : '',
+                    )}
+                  >
                     <IconifyIcon
                       icon='solar:database-outline'
                       size={24}
@@ -85,7 +114,14 @@ const GlobalHeader = () => {
                   </div>
                 </Tooltip>
                 <Tooltip title='调度配置' placement='right'>
-                  <div className='flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
+                  <div
+                    className={classNames(
+                      'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                      location.pathname === '/rcs'
+                        ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
+                        : '',
+                    )}
+                  >
                     <IconifyIcon
                       icon='fluent:transmission-20-regular'
                       size={24}
@@ -95,7 +131,14 @@ const GlobalHeader = () => {
                   </div>
                 </Tooltip>
                 <Tooltip title='远程FTP' placement='right'>
-                  <div className='flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
+                  <div
+                    className={classNames(
+                      'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                      location.pathname === '/ftp'
+                        ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
+                        : '',
+                    )}
+                  >
                     <IconifyIcon
                       icon='mingcute:transfer-3-line'
                       size={24}
@@ -105,7 +148,14 @@ const GlobalHeader = () => {
                   </div>
                 </Tooltip>
                 <Tooltip title='参数管理' placement='right'>
-                  <div className='flex items-center text-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'>
+                  <div
+                    className={classNames(
+                      'p-1 flex items-center text-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                      location.pathname === '/parameters'
+                        ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
+                        : '',
+                    )}
+                  >
                     <IconifyIcon
                       icon='tabler:file-text'
                       size={24}
