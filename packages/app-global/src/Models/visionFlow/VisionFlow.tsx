@@ -25,7 +25,8 @@ const nodeTypes = {
 
 // 内部组件，使用 useReactFlow hook
 function FlowContent() {
-  const { nodes, edges, init, onNodesChange, fitViewOnChange } = useVisionFlowStore();
+  const { nodes, edges, init, onNodesChange, fitViewOnChange } =
+    useVisionFlowStore();
   const { fitView } = useReactFlow();
 
   useEffect(() => {

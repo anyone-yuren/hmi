@@ -2,6 +2,7 @@ import { Dropdown, Menu, MenuProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { useState } from 'react';
 import { IconifyIcon } from 'ui';
+import RobotCapabilityTopology from '../Models/modules/Capability';
 import VisionFlow from '../Models/visionFlow';
 import BaseInformation from './modules/baseInformation';
 
@@ -44,7 +45,12 @@ const Parameters = () => {
     },
     {
       key: '2',
-      icon: <IconifyIcon icon='material-symbols-light:compass-calibration-outline' size={16} />,
+      icon: (
+        <IconifyIcon
+          icon='material-symbols-light:compass-calibration-outline'
+          size={16}
+        />
+      ),
       label: '标定',
       children: [
         { key: '2-1', label: '避障相机' },
@@ -110,7 +116,7 @@ const Parameters = () => {
   ];
   return (
     <div className='h-full w-full flex gap-2'>
-      <div className='h-full  bg-white/15  shadow-[#00d1d1] p-2'>
+      <div className='h-full  bg-white/15  shadow-[#00d1d1] p-2 overflow-auto'>
         <Menu
           defaultSelectedKeys={[selectedKey]}
           defaultOpenKeys={['1']}
@@ -178,6 +184,7 @@ const Parameters = () => {
         <div className='flex-1 bg-white/10'>
           {selectedKey === '5' && <VisionFlow />}
           {selectedKey === '1-1' && <BaseInformation />}
+          <RobotCapabilityTopology />
         </div>
       </div>
     </div>
