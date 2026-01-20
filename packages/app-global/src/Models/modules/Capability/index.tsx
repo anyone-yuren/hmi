@@ -1,14 +1,16 @@
 import {
   Background,
   Controls,
+  MiniMap,
   ReactFlow,
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
+// @ts-ignore
 import '@xyflow/react/dist/style.css';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import CapabilityNode from './components/CapabilityNode';
 import { buildCapabilityFlow } from './components/useCapabilityFlow';
 
@@ -39,9 +41,10 @@ function RobotCapabilityTopology() {
     return () => observer.disconnect();
   }, []);
 
-  const handleToggleExpand = (id: string, expanded: boolean) => {
+  // ts-ignore
+  const handleToggleExpand = useCallback((id: string, expanded: boolean) => {
     setExpandedNodes((prev) => ({ ...prev, [id]: expanded }));
-  };
+  }, []);
 
   const flow = buildCapabilityFlow(
     doneCapabilities,
@@ -85,9 +88,19 @@ function RobotCapabilityTopology() {
         maxZoom={2}
         panOnDrag
         zoomOnScroll
+        nodesConnectable={false}
       >
         <Background gap={16} />
         <Controls />
+        <MiniMap
+          nodeStrokeColor='#333'
+          nodeColor={(n) => {
+            if (n.data.status === 'done') return '#52c41a';
+            if (n.data.status === 'ready') return '#faad14';
+            return '#666';
+          }}
+          className='!bg-[#222]'
+        />
       </ReactFlow>
     </div>
   );

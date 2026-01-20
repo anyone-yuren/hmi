@@ -11,6 +11,7 @@ const Parameters = () => {
   const theme = useTheme();
   const [selectedKey, setSelectedKey] = useState('1-1');
   const items: MenuItem[] = [
+    { key: 'base', label: '配置进度' },
     {
       key: '1',
       icon: <IconifyIcon icon='ic:baseline-blur-on' size={16} />,
@@ -116,7 +117,7 @@ const Parameters = () => {
   ];
   return (
     <div className='h-full w-full flex gap-2'>
-      <div className='h-full  bg-white/15  shadow-[#00d1d1] p-2 overflow-auto'>
+      <div className='h-full  bg-white/15  shadow-[#00d1d1] p-2 overflow-auto min-w-44'>
         <Menu
           defaultSelectedKeys={[selectedKey]}
           defaultOpenKeys={['1']}
@@ -133,7 +134,7 @@ const Parameters = () => {
       </div>
       <div className='h-full shadow-xl flex gap-2 flex-col flex-1'>
         <div className='bg-white/10'>
-          <div className='flex gap-2 items-center justify-end'>
+          <div className='flex gap-2 items-center justify-end px-2'>
             <div className='flex gap-0.5 px-1 items-center cursor-pointer text-white hover:bg-[#00d1d1]/20 rounded-md'>
               <IconifyIcon
                 icon='mynaui:save'
@@ -184,7 +185,7 @@ const Parameters = () => {
         <div className='flex-1 bg-white/10'>
           {selectedKey === '5' && <VisionFlow />}
           {selectedKey === '1-1' && <BaseInformation />}
-          <RobotCapabilityTopology />
+          {selectedKey === 'base' && <RobotCapabilityTopology />}
         </div>
       </div>
     </div>

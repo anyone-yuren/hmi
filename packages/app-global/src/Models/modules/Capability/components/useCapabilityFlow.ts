@@ -17,28 +17,30 @@ export function buildCapabilityFlow(
   const doneSet = new Set(done);
   const statusMap = deriveCapabilityStatus(CAPABILITY_ORDER, EDGES, doneSet);
 
-  const columns = 4;
-  const colGap = 40;
-  const rowGap = 140; // 增加行间距以容纳子节点
+  const paddingX = 40;
+  const paddingY = 40;
+  const gapX = 60; // 水平间距
+  const gapY = 80; // 垂直间距 (子节点)
 
-  const nodeWidth = (containerWidth - colGap * (columns - 1)) / columns;
   const positionMap = new Map<string, { x: number; y: number }>();
 
   const nodes: Node<CapabilityNodeData>[] = [];
   const edges: Edge[] = []; // 改为手动收集 Edge，以便过滤
 
+  let currentX = paddingX;
+  const startY = 300; // 主节点所在的 Y 轴基线
+
   // 1. 布局主节点
-  CAPABILITY_STRUCTURE.forEach((config, index) => {
+  CAPABILITY_STRUCTURE.forEach((config) => {
     const { id, children } = config;
 
-    const row = Math.floor(index / columns);
-    const colInRow = index % columns;
-    const isReverseRow = row % 2 === 1;
+    // 假设每个节点的宽度自适应，这里先给个估算值，或者后续可以动态测量
+    // 但 ReactFlow 布局通常需要预先计算位置。
+    // 为了让宽度自适应，我们在 Node 组件里不限制 width，但在布局计算时假设一个最小宽度
+    const estimatedWidth = 150;
 
-    const col = isReverseRow ? columns - 1 - colInRow : colInRow;
-
-    const x = col * (nodeWidth + colGap);
-    const y = row * rowGap;
+    const x = currentX;
+    const y = startY;
 
     positionMap.set(id, { x, y });
 
@@ -60,30 +62,32 @@ export function buildCapabilityFlow(
 
     // 2. 布局子节点 (仅当展开时)
     if (hasChildren && isExpanded) {
-      const childCount = children!.length;
-      // 子节点放置在主节点上方
-      // 计算子节点的起始 X 坐标，使其居中对齐
-      // 假设每个子节点占用的宽度（含间距）
-      // 这里的 nodeWidth 是主节点的宽度，子节点宽度假设相同
-      // 为了不堆叠，我们可以缩小一点子节点的宽度，或者就在主节点宽度范围内挤一挤？
-      // 或者向外扩展。
+      // 子节点垂直排列在主节点上方
+      // 计算子节点的总高度
+      // 子节点从下往上排，最底下的子节点离主节点一定距离
 
-      // 简单策略：子节点并排在主节点上方，间距稍微紧凑一点
-      const childWidth = nodeWidth * 0.8; // 子节点稍微小一点？或者保持一致
-      const childGap = 10;
-      const totalChildWidth =
-        childCount * childWidth + (childCount - 1) * childGap;
-
-      // 主节点中心 X
-      const centerX = x + nodeWidth / 2;
-      const startX = centerX - totalChildWidth / 2;
-
-      // 上方偏移
-      const offsetY = -80;
+      // 子节点 X 坐标与主节点对齐 (或者稍微偏移)
+      const childX = x; // 左对齐
 
       children!.forEach((childId, childIndex) => {
-        const childX = startX + childIndex * (childWidth + childGap);
-        const childY = y + offsetY;
+        // childIndex 0 是第一个子节点，放在最上面还是最下面？
+        // 需求：子节点纵向垂直排列
+        // 我们可以从主节点上方开始往上排
+        // index 0: y - gapY
+        // index 1: y - gapY - height - gapY ...
+
+        // 反过来，从最上面往下排？
+        // 让我们假设子节点是向上生长的树枝
+        // 最后一个子节点离主节点最近
+        // childIndex 0 (lidar_2d) -> 最上面
+        // childIndex 2 (lidar_loc) -> 最下面 (离 lidar 最近)
+
+        // 或者简单的：从下往上排
+        // 第 i 个子节点 y = startY - (children.length - i) * gapY
+
+        // 调整顺序：让列表里的第一个元素在最上面
+        const reverseIndex = children!.length - 1 - childIndex;
+        const childY = y - (reverseIndex + 1) * gapY;
 
         positionMap.set(childId, { x: childX, y: childY });
 
@@ -91,7 +95,7 @@ export function buildCapabilityFlow(
           id: childId,
           type: 'capability',
           position: { x: childX, y: childY },
-          style: { width: childWidth }, // 如果需要调整宽度
+          // style: { width: estimatedWidth }, // 让它自适应
           data: {
             label: CAPABILITY_LABEL[childId],
             status: statusMap[childId],
@@ -99,6 +103,8 @@ export function buildCapabilityFlow(
         });
       });
     }
+
+    currentX += estimatedWidth + gapX;
   });
 
   // 3. 生成连线 (仅当源和目标节点都在图中时)
@@ -117,12 +123,11 @@ export function buildCapabilityFlow(
     let sourceHandle: string;
     let targetHandle: string;
 
-    // 特殊处理子节点到父节点的连线（通常是垂直的，上方连下来）
-    // 我们的子节点在上方，父节点在下方
+    // 特殊处理子节点到父节点的连线
+    // 子节点在上方 (y 小)，父节点在下方 (y 大)
     // source (child) -> target (parent)
-    // dy > 0 (parent is below child)
-    // sourceHandle: bottom
-    // targetHandle: top
+    // dy > 0
+    // 垂直排列时，连线最好是 Bottom -> Top
 
     if (isHorizontal) {
       const leftToRight = dx > 0;
@@ -144,7 +149,7 @@ export function buildCapabilityFlow(
       style: {
         stroke:
           statusMap[source] === 'done'
-            ? '#52c41a'
+            ? '#00d1d1'
             : statusMap[source] === 'ready'
             ? '#faad14'
             : '#d9d9d9',

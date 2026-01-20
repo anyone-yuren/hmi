@@ -110,7 +110,7 @@ button {
   flex: 1;
 }
 
-.react-flow__panel.right {
+.react-flow__attribution {
   z-index: -100000 !important;
 }
 
