@@ -21,6 +21,9 @@ function RobotCapabilityTopology() {
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
+  const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>(
+    {},
+  );
 
   const { fitView } = useReactFlow();
 
@@ -36,17 +39,26 @@ function RobotCapabilityTopology() {
     return () => observer.disconnect();
   }, []);
 
-  const flow = buildCapabilityFlow(doneCapabilities, width);
+  const handleToggleExpand = (id: string, expanded: boolean) => {
+    setExpandedNodes((prev) => ({ ...prev, [id]: expanded }));
+  };
+
+  const flow = buildCapabilityFlow(
+    doneCapabilities,
+    width,
+    expandedNodes,
+    handleToggleExpand,
+  );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(flow.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(flow.edges);
 
-  /** 宽度 or 能力变化时重建拓扑 */
+  /** 宽度 or 能力变化 or 展开状态变化时重建拓扑 */
   useEffect(() => {
     if (!width) return;
     setNodes(flow.nodes);
     setEdges(flow.edges);
-  }, [doneCapabilities.join(','), width]);
+  }, [doneCapabilities.join(','), width, expandedNodes]);
 
   /** 初始化 & 更新后 fitView */
   useEffect(() => {

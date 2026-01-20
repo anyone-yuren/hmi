@@ -2,6 +2,8 @@ import {
   CheckCircleFilled,
   ClockCircleFilled,
   CloseCircleFilled,
+  DownOutlined,
+  UpOutlined,
 } from '@ant-design/icons';
 import type { Node, NodeProps } from '@xyflow/react';
 import { Handle, Position } from '@xyflow/react';
@@ -18,13 +20,12 @@ const STATUS_ICON = {
 export default memo(function CapabilityNode({
   data,
 }: NodeProps<Node<CapabilityNodeData>>) {
-  const { label, status } = data;
-  console.log('status', status);
+  const { label, status, hasChildren, expanded, onToggleExpand } = data;
 
   return (
     <div
       className={clsx(
-        'bg-[#222] shadow-custom-box shadow-green-400 p-2 rounded-md',
+        'bg-[#222] shadow-custom-box shadow-green-400 p-2 rounded-md relative group',
         status,
       )}
     >
@@ -42,6 +43,18 @@ export default memo(function CapabilityNode({
 
       <span className='title'>{label}</span>
       <span className='icon'>{STATUS_ICON[status]}</span>
+
+      {hasChildren && (
+        <div
+          className='absolute -bottom-6 left-1/2 -translate-x-1/2 cursor-pointer text-white opacity-0 group-hover:opacity-100 transition-opacity'
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleExpand?.(!expanded);
+          }}
+        >
+          {expanded ? <UpOutlined /> : <DownOutlined />}
+        </div>
+      )}
     </div>
   );
 });
