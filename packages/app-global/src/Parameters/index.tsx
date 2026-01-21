@@ -4,13 +4,14 @@ import { useState } from 'react';
 import { IconifyIcon } from 'ui';
 import RobotCapabilityTopology from '../Models/modules/Capability';
 import VisionFlow from '../Models/visionFlow';
+import WorkflowDesigner from '../WorkflowDesigner';
 import BaseInformation from './modules/baseInformation';
 import PathPlanning from './modules/pathPlanning';
 
 type MenuItem = Required<MenuProps>['items'][number];
 const Parameters = () => {
   const theme = useTheme();
-  const [selectedKey, setSelectedKey] = useState('1-1');
+  const [selectedKey, setSelectedKey] = useState('base');
   const items: MenuItem[] = [
     { key: 'base', label: '配置进度' },
     {
@@ -115,6 +116,11 @@ const Parameters = () => {
       icon: <IconifyIcon icon='ion:layers-outline' size={16} />,
       label: '拓扑地图',
     },
+    {
+      key: '9',
+      icon: <IconifyIcon icon='ion:layers-outline' size={16} />,
+      label: '工作流设计器',
+    },
   ];
   return (
     <div className='h-full w-full flex gap-2'>
@@ -188,6 +194,7 @@ const Parameters = () => {
           {selectedKey === '1-1' && <BaseInformation />}
           {selectedKey === 'base' && <RobotCapabilityTopology />}
           {selectedKey === '7' && <PathPlanning />}
+          {selectedKey === '9' && <WorkflowDesigner />}
         </div>
       </div>
     </div>
