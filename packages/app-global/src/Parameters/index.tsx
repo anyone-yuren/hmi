@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { IconifyIcon } from 'ui';
 import RobotCapabilityTopology from '../Models/modules/Capability';
 import VisionFlow from '../Models/visionFlow';
-import WorkflowDesigner from '../WorkflowDesigner';
+import WorkflowDesignerContainer from '../WorkflowDesigner/container';
 import BaseInformation from './modules/baseInformation';
 import PathPlanning from './modules/pathPlanning';
 
@@ -118,8 +118,8 @@ const Parameters = () => {
     },
     {
       key: '9',
-      icon: <IconifyIcon icon='ion:layers-outline' size={16} />,
-      label: '工作流设计器',
+      icon: <IconifyIcon icon='hugeicons:workflow-circle-03' size={16} />,
+      label: '事件编排',
     },
   ];
   return (
@@ -189,12 +189,12 @@ const Parameters = () => {
             </Dropdown>
           </div>
         </div>
-        <div className='flex-1 bg-white/10 overflow-auto'>
+        <div className='flex-1 overflow-auto'>
           {selectedKey === '5' && <VisionFlow />}
           {selectedKey === '1-1' && <BaseInformation />}
           {selectedKey === 'base' && <RobotCapabilityTopology />}
           {selectedKey === '7' && <PathPlanning />}
-          {selectedKey === '9' && <WorkflowDesigner />}
+          {selectedKey === '9' && <WorkflowDesignerContainer />}
         </div>
       </div>
     </div>
