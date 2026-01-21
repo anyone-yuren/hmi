@@ -14,17 +14,34 @@ import {
   WorkflowVariable,
 } from '../types';
 
+export interface WorkflowMetadata {
+  id: string;
+  name: string;
+  description?: string;
+  status: 'available' | 'unavailable';
+  updatedAt: string;
+  nodes: WorkflowNode[];
+  edges: WorkflowEdge[];
+  variables: WorkflowVariable[];
+}
+
 interface HistoryState {
   past: { nodes: WorkflowNode[]; edges: WorkflowEdge[] }[];
   future: { nodes: WorkflowNode[]; edges: WorkflowEdge[] }[];
 }
 
 interface WorkflowState {
+  // Editor State
+  currentWorkflowId: string | null;
   nodes: WorkflowNode[];
   edges: WorkflowEdge[];
   selectedNodeId: string | null;
   variables: WorkflowVariable[];
   nodeLibrary: NodeTemplate[];
+
+  // List State
+  workflowList: WorkflowMetadata[];
+  isDesignerOpen: boolean;
 
   // History
   history: HistoryState;
@@ -38,6 +55,14 @@ interface WorkflowState {
   deleteNode: (id: string) => void;
   selectNode: (id: string | null) => void;
   updateNodeData: (id: string, data: Partial<WorkflowNode['data']>) => void;
+
+  // Workflow List Actions
+  addWorkflow: (workflow: WorkflowMetadata) => void;
+  deleteWorkflow: (id: string) => void;
+  updateWorkflow: (id: string, data: Partial<WorkflowMetadata>) => void;
+  openWorkflow: (id: string) => void;
+  closeWorkflow: () => void;
+  saveCurrentWorkflow: () => void;
 
   // Undo/Redo
   undo: () => void;
@@ -80,11 +105,25 @@ const saveHistory = (state: WorkflowState): HistoryState => {
 };
 
 export const useWorkflowStore = create<WorkflowState>((set, get) => ({
+  currentWorkflowId: null,
   nodes: [],
   edges: [],
   selectedNodeId: null,
   variables: [],
   showHistory: false,
+  workflowList: [
+    {
+      id: 'flow-1',
+      name: '示例流程 1',
+      description: '这是一个示例流程',
+      status: 'available',
+      updatedAt: '2023-01-01',
+      nodes: [],
+      edges: [],
+      variables: [],
+    },
+  ],
+  isDesignerOpen: false,
   nodeLibrary: [
     { type: 'start', label: '开始', icon: 'PlayCircleOutlined' },
     { type: 'end', label: '结束', icon: 'StopOutlined' },
@@ -98,6 +137,67 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
     { type: 'classifier', label: '分类器', icon: 'PartitionOutlined' },
   ],
   history: { past: [], future: [] },
+
+  addWorkflow: (workflow) =>
+    set((state) => ({
+      workflowList: [workflow, ...state.workflowList],
+    })),
+
+  deleteWorkflow: (id) =>
+    set((state) => ({
+      workflowList: state.workflowList.filter((w) => w.id !== id),
+    })),
+
+  updateWorkflow: (id, data) =>
+    set((state) => ({
+      workflowList: state.workflowList.map((w) =>
+        w.id === id ? { ...w, ...data } : w,
+      ),
+    })),
+
+  openWorkflow: (id) => {
+    const workflow = get().workflowList.find((w) => w.id === id);
+    if (workflow) {
+      set({
+        currentWorkflowId: id,
+        nodes: workflow.nodes,
+        edges: workflow.edges,
+        variables: workflow.variables,
+        isDesignerOpen: true,
+        history: { past: [], future: [] },
+      });
+    }
+  },
+
+  closeWorkflow: () =>
+    set({
+      currentWorkflowId: null,
+      isDesignerOpen: false,
+      nodes: [],
+      edges: [],
+      variables: [],
+      history: { past: [], future: [] },
+    }),
+
+  saveCurrentWorkflow: () => {
+    const { currentWorkflowId, nodes, edges, variables } = get();
+    if (currentWorkflowId) {
+      set((state) => ({
+        workflowList: state.workflowList.map((w) =>
+          w.id === currentWorkflowId
+            ? {
+                ...w,
+                nodes,
+                edges,
+                variables,
+                updatedAt: new Date().toISOString().split('T')[0],
+              }
+            : w,
+        ),
+      }));
+    }
+  },
+
   setShowHistory: (show: boolean) => set({ showHistory: show }),
   // History Navigation
   jumpToHistory: (index: number) => {

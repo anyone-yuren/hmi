@@ -1,4 +1,4 @@
-import { SaveOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, message, Space } from 'antd';
 import Canvas from './components/Canvas';
 import HistoryPanel from './components/HistoryPanel';
@@ -7,21 +7,25 @@ import Sidebar from './components/Sidebar';
 import { useWorkflowStore } from './store/useWorkflowStore';
 
 const WorkflowDesigner = () => {
-  const { undo, redo, validateWorkflow, history } = useWorkflowStore();
+  const {
+    undo,
+    redo,
+    validateWorkflow,
+    history,
+    closeWorkflow,
+    saveCurrentWorkflow,
+  } = useWorkflowStore();
   const [messageApi, contextHolder] = message.useMessage();
 
-  const saveWorkflow = () => {
+  const handleSave = () => {
     const isValid = validateWorkflow();
     if (!isValid) {
       messageApi.error('流程存在连接问题，请检查红色高亮节点');
       return;
     }
 
-    const { nodes, edges, variables } = useWorkflowStore.getState();
-    const data = { nodes, edges, variables };
-    console.log('Saving workflow:', JSON.stringify(data, null, 2));
+    saveCurrentWorkflow();
     messageApi.success('流程保存成功');
-    // Call API here
   };
 
   return (
@@ -29,9 +33,18 @@ const WorkflowDesigner = () => {
       {contextHolder}
       {/* Toolbar */}
       <div className='flex h-12 items-center justify-between border-b border-gray-700 bg-[#1f1f1f] px-4 shadow-sm'>
-        <div className='text-lg font-bold text-gray-200'>工作流设计器</div>
+        <div className='flex items-center gap-4'>
+          <Button
+            type='text'
+            icon={<ArrowLeftOutlined className='text-gray-300' />}
+            onClick={closeWorkflow}
+          />
+          <div className='text-lg font-bold text-gray-200'>
+            MES 工作流设计器
+          </div>
+        </div>
         <Space>
-          <Button type='primary' icon={<SaveOutlined />} onClick={saveWorkflow}>
+          <Button type='primary' icon={<SaveOutlined />} onClick={handleSave}>
             保存流程
           </Button>
         </Space>
