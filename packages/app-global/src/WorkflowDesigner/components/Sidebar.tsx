@@ -101,11 +101,11 @@ const Sidebar = () => {
           {nodeLibrary.map((node, index) => (
             <div
               key={`${node.type}-${index}`}
-              className='group relative flex cursor-move flex-col items-center justify-center gap-2 rounded border border-gray-600 bg-[#2a2a2a] p-3 text-center transition-colors hover:border-blue-500 hover:bg-[#333]'
+              className='group relative flex cursor-move flex-col items-center justify-center gap-2 rounded border border-gray-600 bg-[#2a2a2a] p-3 text-center transition-colors hover:border-[#00d1d1] hover:bg-[#333]'
               onDragStart={(event) => onDragStart(event, node.type)}
               draggable
             >
-              <div className='text-xl text-gray-400 group-hover:text-blue-400'>
+              <div className='text-xl text-gray-400 group-hover:text-[#00d1d1]'>
                 {iconMap[node.icon || 'CodeOutlined'] || <CodeOutlined />}
               </div>
               <span className='text-xs text-gray-300'>{node.label}</span>

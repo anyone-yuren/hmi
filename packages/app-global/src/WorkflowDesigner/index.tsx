@@ -29,7 +29,7 @@ const WorkflowDesigner = () => {
       {contextHolder}
       {/* Toolbar */}
       <div className='flex h-12 items-center justify-between border-b border-gray-700 bg-[#1f1f1f] px-4 shadow-sm'>
-        <div className='text-lg font-bold text-gray-200'>MES 工作流设计器</div>
+        <div className='text-lg font-bold text-gray-200'>工作流设计器</div>
         <Space>
           <Button type='primary' icon={<SaveOutlined />} onClick={saveWorkflow}>
             保存流程
