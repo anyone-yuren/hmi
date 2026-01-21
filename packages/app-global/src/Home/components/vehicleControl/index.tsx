@@ -61,7 +61,7 @@ const useStyles = createStyles(({ token, css }) => ({
 }));
 
 const VehicleControl = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { styles } = useStyles();
   const theme = useTheme();
   const { robotIsensorStatus, robotGoodsStatus } = useHomeStore(
@@ -98,7 +98,7 @@ const VehicleControl = () => {
       default:
         return '';
     }
-  }, [robotIsensorStatus.auto_manual_status]);
+  }, [robotIsensorStatus.auto_manual_status, i18n.language]);
 
   return (
     <motion.div

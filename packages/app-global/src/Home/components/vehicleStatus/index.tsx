@@ -12,7 +12,7 @@ import { getVehicleIp, getVehicleTaskMode } from '../../services';
 import { useHomeStore } from '../../store/index';
 
 const VehicleInfo = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   // const { data: agv_info, loading } = useRequest(getAgvInfo);
   const { data: vehicle_ip, loading: loading_ip } = useRequest(getVehicleIp);
   const { data: task_mode, loading: loading_task_mode } = useRequest(getVehicleTaskMode);
@@ -60,7 +60,7 @@ const VehicleInfo = () => {
         </Tag>
       );
     }
-  }, [task_mode, rcsIsOnline]);
+  }, [task_mode, rcsIsOnline, i18n.language]);
 
   return (
     <motion.div
