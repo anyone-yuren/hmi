@@ -7,7 +7,12 @@ import {
   NodeChange,
 } from '@xyflow/react';
 import { create } from 'zustand';
-import { NodeTemplate, WorkflowEdge, WorkflowNode, WorkflowVariable } from '../types';
+import {
+  NodeTemplate,
+  WorkflowEdge,
+  WorkflowNode,
+  WorkflowVariable,
+} from '../types';
 
 interface HistoryState {
   past: { nodes: WorkflowNode[]; edges: WorkflowEdge[] }[];
@@ -20,9 +25,10 @@ interface WorkflowState {
   selectedNodeId: string | null;
   variables: WorkflowVariable[];
   nodeLibrary: NodeTemplate[];
-  
+
   // History
   history: HistoryState;
+  jumpToHistory: (index: number) => void;
 
   // Actions
   onNodesChange: (changes: NodeChange[]) => void;
@@ -32,11 +38,11 @@ interface WorkflowState {
   deleteNode: (id: string) => void;
   selectNode: (id: string | null) => void;
   updateNodeData: (id: string, data: Partial<WorkflowNode['data']>) => void;
-  
+
   // Undo/Redo
   undo: () => void;
   redo: () => void;
-  
+
   // Validation
   validateWorkflow: () => boolean;
 
@@ -44,13 +50,19 @@ interface WorkflowState {
   addNodeTemplate: (template: NodeTemplate) => void;
   updateNodeTemplate: (index: number, template: NodeTemplate) => void;
   deleteNodeTemplate: (index: number) => void;
-  
+
   // Variables
   addVariable: (variable: WorkflowVariable) => void;
   removeVariable: (name: string) => void;
-  
+
   // Persistence
-  loadWorkflow: (data: { nodes: WorkflowNode[]; edges: WorkflowEdge[]; variables: WorkflowVariable[] }) => void;
+  loadWorkflow: (data: {
+    nodes: WorkflowNode[];
+    edges: WorkflowEdge[];
+    variables: WorkflowVariable[];
+  }) => void;
+  setShowHistory: (show: boolean) => void;
+  showHistory: boolean;
 }
 
 const MAX_HISTORY_LENGTH = 20;
@@ -72,6 +84,7 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   edges: [],
   selectedNodeId: null,
   variables: [],
+  showHistory: false,
   nodeLibrary: [
     { type: 'start', label: '开始', icon: 'PlayCircleOutlined' },
     { type: 'end', label: '结束', icon: 'StopOutlined' },
@@ -81,28 +94,63 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
     { type: 'execution', label: '执行动作', icon: 'RobotOutlined' },
     { type: 'integration', label: '系统集成', icon: 'ApiOutlined' },
     { type: 'sub-process', label: '子流程', icon: 'DatabaseOutlined' },
+    { type: 'condition', label: '条件分支', icon: 'NodeExpandOutlined' },
+    { type: 'classifier', label: '分类器', icon: 'PartitionOutlined' },
   ],
   history: { past: [], future: [] },
+  setShowHistory: (show: boolean) => set({ showHistory: show }),
+  // History Navigation
+  jumpToHistory: (index: number) => {
+    set((state) => {
+      const { past, future } = state.history;
+      if (index < 0 || index >= past.length) return state;
+
+      const targetState = past[index];
+      const newPast = past.slice(0, index);
+      const newFuture = [
+        ...past.slice(index + 1),
+        { nodes: state.nodes, edges: state.edges },
+        ...future,
+      ];
+
+      return {
+        nodes: targetState.nodes,
+        edges: targetState.edges,
+        history: {
+          past: newPast,
+          future: newFuture,
+        },
+      };
+    });
+  },
 
   onNodesChange: (changes) => {
     set((state) => {
       // Only save history for specific changes if needed, or all changes
       // For drag movements, we might want to debounce, but simple approach first
-      const newHistory = changes.some(c => c.type !== 'select') ? saveHistory(state) : state.history;
+      const newHistory = changes.some((c) => c.type !== 'select')
+        ? saveHistory(state)
+        : state.history;
       return {
         nodes: applyNodeChanges(changes, state.nodes) as WorkflowNode[],
-        history: changes.some(c => c.type !== 'select') ? newHistory : state.history,
+        history: changes.some((c) => c.type !== 'select')
+          ? newHistory
+          : state.history,
       };
     });
   },
 
   onEdgesChange: (changes) => {
     set((state) => {
-       const newHistory = changes.some(c => c.type !== 'select') ? saveHistory(state) : state.history;
-       return {
-         edges: applyEdgeChanges(changes, state.edges),
-         history: changes.some(c => c.type !== 'select') ? newHistory : state.history,
-       }
+      const newHistory = changes.some((c) => c.type !== 'select')
+        ? saveHistory(state)
+        : state.history;
+      return {
+        edges: applyEdgeChanges(changes, state.edges),
+        history: changes.some((c) => c.type !== 'select')
+          ? newHistory
+          : state.history,
+      };
     });
   },
 
@@ -157,7 +205,7 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
 
       const previous = past[past.length - 1];
       const newPast = past.slice(0, past.length - 1);
-      
+
       return {
         nodes: previous.nodes,
         edges: previous.edges,
@@ -191,29 +239,29 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   validateWorkflow: () => {
     const { nodes, edges } = get();
     let isValid = true;
-    
-    const newNodes = nodes.map(node => {
+
+    const newNodes = nodes.map((node) => {
       const isStart = node.type === 'start';
       const isEnd = node.type === 'end';
-      
-      const hasIncoming = edges.some(e => e.target === node.id);
-      const hasOutgoing = edges.some(e => e.source === node.id);
-      
+
+      const hasIncoming = edges.some((e) => e.target === node.id);
+      const hasOutgoing = edges.some((e) => e.source === node.id);
+
       let nodeValid = true;
       if (!isStart && !hasIncoming) nodeValid = false;
       if (!isEnd && !hasOutgoing) nodeValid = false;
-      
+
       if (!nodeValid) isValid = false;
-      
+
       return {
         ...node,
         data: {
           ...node.data,
-          isValid: nodeValid
-        }
+          isValid: nodeValid,
+        },
       };
     });
-    
+
     set({ nodes: newNodes });
     return isValid;
   },
@@ -255,7 +303,7 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
       nodes: data.nodes || [],
       edges: data.edges || [],
       variables: data.variables || [],
-      history: { past: [], future: [] }
+      history: { past: [], future: [] },
     });
   },
 }));

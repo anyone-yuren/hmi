@@ -1,7 +1,7 @@
-import { RedoOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, message, Space, Tooltip } from 'antd';
-import { IconifyIcon } from 'ui';
+import { SaveOutlined } from '@ant-design/icons';
+import { Button, message, Space } from 'antd';
 import Canvas from './components/Canvas';
+import HistoryPanel from './components/HistoryPanel';
 import PropertiesPanel from './components/PropertiesPanel';
 import Sidebar from './components/Sidebar';
 import { useWorkflowStore } from './store/useWorkflowStore';
@@ -31,22 +31,6 @@ const WorkflowDesigner = () => {
       <div className='flex h-12 items-center justify-between border-b border-gray-700 bg-[#1f1f1f] px-4 shadow-sm'>
         <div className='text-lg font-bold text-gray-200'>MES 工作流设计器</div>
         <Space>
-          <Tooltip title='撤销'>
-            <Button
-              type='text'
-              icon={<IconifyIcon icon='icon-park-outline:back' size={16} />}
-              onClick={undo}
-              disabled={history.past.length === 0}
-            />
-          </Tooltip>
-          <Tooltip title='重做'>
-            <Button
-              type='text'
-              icon={<RedoOutlined className='text-gray-300' />}
-              onClick={redo}
-              disabled={history.future.length === 0}
-            />
-          </Tooltip>
           <Button type='primary' icon={<SaveOutlined />} onClick={saveWorkflow}>
             保存流程
           </Button>
@@ -54,7 +38,8 @@ const WorkflowDesigner = () => {
       </div>
 
       {/* Main Workspace */}
-      <div className='flex flex-1 overflow-hidden'>
+      <div className='flex flex-1 overflow-hidden relative'>
+        <HistoryPanel />
         <Sidebar />
         <div className='flex-1 relative'>
           <Canvas />

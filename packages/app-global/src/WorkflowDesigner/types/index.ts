@@ -8,7 +8,9 @@ export type WorkflowNodeType =
   | 'control'
   | 'execution'
   | 'integration'
-  | 'sub-process';
+  | 'sub-process'
+  | 'condition'
+  | 'classifier';
 
 export interface WorkflowNodeData extends Record<string, unknown> {
   label: string;

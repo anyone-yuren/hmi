@@ -10,7 +10,9 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Dropdown, MenuProps } from 'antd';
+import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { IconifyIcon } from 'ui';
 import { useWorkflowStore } from '../store/useWorkflowStore';
 import { WorkflowNodeType } from '../types';
 import CommonNode from './Nodes/CommonNode';
@@ -47,6 +49,10 @@ const Flow = () => {
     onConnect,
     addNode,
     selectNode,
+    setShowHistory,
+    undo,
+    redo,
+    history,
   } = useWorkflowStore();
 
   const { screenToFlowPosition } = useReactFlow();
@@ -207,7 +213,44 @@ const Flow = () => {
         colorMode='dark'
       >
         <Background color='#333' gap={16} />
-        <Controls className='bg-[#2a2a2a] border-gray-700 fill-white' />
+        <Controls className='bg-[#2a2a2a] border-gray-700 fill-white'>
+          <div className='flex items-center flex-col justify-center'>
+            <div
+              className='px-1 flex items-center justify-center w-full cursor-pointer hover:bg-[#3a3a3a] aspect-square border-b border-[#5b5b5b]
+            '
+            >
+              <IconifyIcon
+                icon='mdi:history'
+                size={16}
+                onClick={() => setShowHistory(true)}
+              />
+            </div>
+            <div
+              className={classNames(
+                'px-1 w-full cursor-pointer hover:bg-[#3a3a3a] aspect-square border-b border-[#5b5b5b]',
+                {
+                  'cursor-not-allowed text-[#5b5b5b]':
+                    history.past.length === 0,
+                },
+              )}
+              onClick={undo}
+            >
+              <IconifyIcon icon='mdi:undo-variant' size={16} />
+            </div>
+            <div
+              className={classNames(
+                'px-1 w-full cursor-pointer hover:bg-[#3a3a3a] aspect-square',
+                {
+                  'cursor-not-allowed text-[#5b5b5b]':
+                    history.future.length === 0,
+                },
+              )}
+              onClick={redo}
+            >
+              <IconifyIcon icon='mdi:redo-variant' size={16} />
+            </div>
+          </div>
+        </Controls>
         <MiniMap
           className='!bg-[#2a2a2a]'
           nodeColor='#555'
