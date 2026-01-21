@@ -10,7 +10,11 @@ const useMapFloorData = () => {
     })),
   );
 
-  const { runAsync: getFloor, loading: floorMapLoading } = useRequest<
+  const {
+    runAsync: getFloor,
+    loading: floorMapLoading,
+    cancel,
+  } = useRequest<
     Result<{
       grid_map: {
         data: Record<any, string>;
@@ -20,6 +24,7 @@ const useMapFloorData = () => {
     }>,
     [floor: number]
   >(getFloorData, {
+    // pollingInterval: 1000,
     manual: true,
     onSuccess: (res) => {
       if (res) {
@@ -35,6 +40,7 @@ const useMapFloorData = () => {
   const getFloorMapData = async (floor: number) => {
     setMapLoading(true);
     await getFloor(floor);
+    // cancel();
   };
 
   return { getFloorMapData, floorMapLoading };

@@ -2,14 +2,14 @@ import { Icon } from '@iconify/react';
 import { Button as ButtonBase, Divider, FormControlLabel, IconButton, Switch } from '@mui/material';
 import { ButtonBaseProps } from '@mui/material/ButtonBase';
 import { styled } from '@mui/material/styles';
-import { useRequest } from 'ahooks';
+import { useInterval, useRequest } from 'ahooks';
 import { Modal } from 'antd';
 import * as React from 'react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
-import { addSlamMap, delFloorMap, extendMapping } from '../../../service';
+import { addSlamMap, delFloorMap, depict_history_pose, extendMapping, location_confidence } from '../../../service';
 import { useHybirdStore } from '../../../store/hybird.store';
 
 import { MyLocationOutlined } from '@mui/icons-material';
@@ -49,6 +49,7 @@ const SlamHandles = (props: any) => {
     setStagePos,
     agvPosition,
     ioSensor,
+    setRefreshFloorData,
   } = useHybirdStore(
     useShallow((state) => ({
       hybirdStage: state.hybirdStage,
@@ -65,13 +66,14 @@ const SlamHandles = (props: any) => {
       setStagePos: state.setStagePos,
       agvPosition: state.agvPosition,
       ioSensor: state.ioSensor,
+      setRefreshFloorData: state.setRefreshFloorData,
     })),
   );
 
   const isManual = useMemo(() => ioSensor?.auto_manual_status === 1, [ioSensor?.auto_manual_status]);
 
   const { grid_map } = floorData;
-  const { system_status = 0, floor_number }: any = robot_current_status;
+  const { system_status = 0, floor_number, pub_trajectory, pub_confidence }: any = robot_current_status;
   const { runAsync: runAdd, loading: addLoading } = useRequest(addSlamMap, {
     manual: true,
     onSuccess: (res: any) => {
@@ -118,6 +120,20 @@ const SlamHandles = (props: any) => {
       setCoverFloorData('grid_map', null);
     },
   });
+
+  const confidenceCheck = useMemo(() => {
+    return pub_confidence === 1;
+  }, [pub_confidence]);
+  const trajectoryCheck = useMemo(() => {
+    return pub_trajectory === 1;
+  }, [pub_trajectory]);
+
+  useInterval(
+    () => {
+      setRefreshFloorData();
+    },
+    confidenceCheck ? 1000 : undefined,
+  );
 
   const delSlamMap = async () => {
     modal.confirm({
@@ -263,6 +279,18 @@ const SlamHandles = (props: any) => {
       },
     });
   };
+
+  const switchLabelProps: any = {
+    // value: 'end',
+    control: <Switch color='primary' />,
+    sx: {
+      '& .MuiFormControlLabel-label': {
+        color: '#333', // 修改标签的颜色
+        fontSize: '0.875rem',
+      },
+    },
+    labelPlacement: 'start',
+  };
   return (
     <>
       <div className=' p-2 absolute bottom-2 left-2 flex flex-col'>
@@ -380,6 +408,54 @@ const SlamHandles = (props: any) => {
                   },
                 }}
                 labelPlacement='start'
+              />
+            </div>
+            <Divider orientation='vertical' variant='middle' flexItem />
+            <div className='rounded-sm shadow-md bg-white px-2 ' style={{ textAlign: 'right' }}>
+              <FormControlLabel
+                // value='end'
+                // control={<Switch color='primary' />}
+                label={t('deployer.hybrid.runTrajectory')}
+                disabled={hide}
+                checked={trajectoryCheck}
+                onChange={async (e: any) => {
+                  // handleButtonClick('radar');
+                  // console.log('E', e.target.checked);
+                  await depict_history_pose({ cmd: e.target.checked ? 1 : 0 });
+                  setRefreshFloorData();
+                }}
+                // sx={{
+                //   '& .MuiFormControlLabel-label': {
+                //     color: '#333', // 修改标签的颜色
+                //     fontSize: '0.875rem',
+                //   },
+                // }}
+                // labelPlacement='start'
+                {...switchLabelProps}
+              />
+            </div>
+            <Divider orientation='vertical' variant='middle' flexItem />
+            <div className='rounded-sm shadow-md bg-white px-2 ' style={{ textAlign: 'right' }}>
+              <FormControlLabel
+                // value='end'
+                // control={<Switch color='primary' />}
+                label={t('deployer.hybrid.confidence')}
+                disabled={hide}
+                checked={confidenceCheck}
+                onChange={async (e: any) => {
+                  // handleButtonClick('radar');
+                  // console.log('E', e.target.checked);
+                  await location_confidence({ cmd: e.target.checked ? 1 : 0 });
+                  setRefreshFloorData();
+                }}
+                // sx={{
+                //   '& .MuiFormControlLabel-label': {
+                //     color: '#333', // 修改标签的颜色
+                //     fontSize: '0.875rem',
+                //   },
+                // }}
+                // labelPlacement='start'
+                {...switchLabelProps}
               />
             </div>
           </div>

@@ -125,10 +125,6 @@ const Mapping = () => {
   const [floor, setFloor] = React.useState(robot_current_status.floor_number || 1);
   const [floorButtonDisabled, setFloorButtonDisabled] = React.useState(true);
   const [alignment, setAlignment] = React.useState('slam');
-  const [updateFloorData, setUpdateFloorData] = React.useState({
-    floor_number: null,
-    new_floor: null,
-  });
 
   const currentAddFloor = useRef(0);
   useEffect(() => {
@@ -376,7 +372,6 @@ const Mapping = () => {
                           ),
                           onOk: async () => {
                             const inputValue = updateInputRef.current?.value;
-                            console.log('value', value, inputValue);
                             const { error_code, error_description }: any = await updateFloor({
                               floor_number: Number(value),
                               new_floor: Number(inputValue),
