@@ -7,6 +7,8 @@ import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import ScanLoading from '../toolkit/components/ScanLoading';
 import DrawHandle from './components/modelHandle';
+import OffsetTableScene from './components/OffsetTable';
+import OffsetTableUI from './components/OffsetTable/OffsetTableUI';
 import RModelFbx from './components/r20';
 import RightPanel from './components/rightPanel';
 import TabsPanel from './components/tabsPanel';
@@ -128,7 +130,7 @@ function ModelLoader({ modelType }) {
 
 // 车辆模型组件
 function CarModel() {
-  const meshRef = useRef();
+  const meshRef = useRef<THREE.Group>(null);
   return (
     // <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>
     <group ref={meshRef} scale={0.05}>
@@ -201,8 +203,7 @@ export default function R3FBasicScene() {
               {/* <Forklift /> */}
               {/* <O15Model /> */}
               {isOffsetTable ? (
-                // 请在这里补充偏移表的地图组件
-                <></>
+                <OffsetTableScene />
               ) : (
                 <>
                   <CarModel />
@@ -215,6 +216,7 @@ export default function R3FBasicScene() {
           </Canvas>
           <ContextMenu /> {/* 完全独立 */}
           <PanelRoot boundsRef={panelBoundsRef} /> {/* ⭐ 只渲染一次 */}
+          {isOffsetTable && <OffsetTableUI boundsRef={panelBoundsRef} />}
         </motion.div>
         <AnimatePresence>
           {openVisionPanel && (
