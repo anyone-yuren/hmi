@@ -22,7 +22,11 @@ const router = createHashRouter([
     path: '',
     element: (
       <>
-        <ToolkitLayout header={<GlobalHeader />} footer={<Footer />} top={<Top />} />
+        <ToolkitLayout
+          header={<GlobalHeader />}
+          footer={<Footer />}
+          top={<Top />}
+        />
       </>
     ),
     children: [
@@ -60,18 +64,28 @@ const router = createHashRouter([
         element: LazyLoad(lazy(() => import('@/views/Network'))),
       },
       {
+        path: 'vehicleLogs',
+        element: LazyLoad(lazy(() => import('@/views/VehicleLogs'))),
+      },
+      {
         path: '*',
         element: <Navigate to='/404' />,
       },
       {
         path: '/403',
         element: <PageException />,
-        loader: () => ({ status: ExceptionEnum.PAGE_NOT_ACCESS, withCard: false }),
+        loader: () => ({
+          status: ExceptionEnum.PAGE_NOT_ACCESS,
+          withCard: false,
+        }),
       },
       {
         path: '/404',
         element: <PageException />,
-        loader: () => ({ status: ExceptionEnum.PAGE_NOT_FOUND, withCard: false }),
+        loader: () => ({
+          status: ExceptionEnum.PAGE_NOT_FOUND,
+          withCard: false,
+        }),
       },
       {
         path: '/500',

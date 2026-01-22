@@ -32,13 +32,23 @@ const GlobalHeader = () => {
   const hasModel = Boolean(model);
   return (
     <div className=' text-xs flex flex-col h-full items-center justify-between px-2 py-4 text-white '>
-      <div className='flex flex-col items-center gap-4'>
-        <IconifyIcon
-          icon='mdi:widgets-outline'
-          size={24}
+      <div className='flex flex-col items-center gap-4 overflow-hidden overflow-y-auto mb-2'>
+        <div
+          className={classNames(
+            'p-1 flex items-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
+            location.pathname === '/'
+              ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
+              : '',
+          )}
           onClick={() => navigate(`/`)}
-          className=' transition-all duration-300 cursor-pointer hover:opacity-100'
-        />
+        >
+          <IconifyIcon
+            icon='mdi:widgets-outline'
+            size={24}
+            onClick={() => navigate(`/`)}
+            className=' transition-all duration-300 cursor-pointer hover:opacity-100'
+          />
+        </div>
         {location.pathname !== '/' && (
           <>
             <Tooltip title='地图编辑器' placement='right'>
@@ -145,6 +155,17 @@ const GlobalHeader = () => {
                     <span>参数管理</span>
                   </div>
                 </Tooltip>
+                <div
+                  className={classNames(
+                    'p-1 flex items-center text-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
+                    location.pathname === '/parameters'
+                      ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
+                      : '',
+                  )}
+                >
+                  <IconifyIcon icon='mingcute:plugin-2-fill' size={24} />
+                  <span className=' font-semibold'>插件配置</span>
+                </div>
               </>
             ) : null}
           </>

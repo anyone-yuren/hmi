@@ -93,16 +93,11 @@ const DrawHandle = () => {
             </div>
           </div>
           <div className='h-full flex justify-center gap-1 items-center'>
-            <IconifyIcon icon='icon-park-outline:nine-points-connected' size={14} />
+            <IconifyIcon
+              icon='icon-park-outline:nine-points-connected'
+              size={14}
+            />
             <span className=' font-semibold'>偏移表</span>
-          </div>
-          <div className='h-full flex justify-center gap-1 items-center'>
-            <IconifyIcon icon='mingcute:plugin-2-fill' size={16} />
-            <span className=' font-semibold'>插件配置</span>
-          </div>
-          <div className='h-full flex justify-center gap-1 items-center'>
-            <IconifyIcon icon='mingcute:location-3-fill' size={16} />
-            <span className=' font-semibold'>导航</span>
           </div>
           <div className='h-full flex justify-center gap-1 items-center'>
             <IconifyIcon icon='carbon:document-configuration' size={16} />
