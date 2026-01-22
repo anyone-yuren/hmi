@@ -9,22 +9,37 @@ import { useSafetyStore } from '../../store/safity';
 import ObstacleHandles from './obsHandles';
 
 const TabsPanel = ({ setPanelOpen }) => {
-  const { mode, setMode, threeControl, setShowPoints, showPoints, modelSelect, setModelSelect, setSelectedPart } =
-    useModelStore(
-      useShallow((state) => {
-        return {
-          mode: state.mode,
-          setMode: state.setMode,
-          threeControl: state.threeControl,
-          setShowPoints: state.setShowPoints,
-          showPoints: state.showPoints,
-          modelSelect: state.modelSelect,
-          setModelSelect: state.setModelSelect,
-          setSelectedPart: state.setSelectedPart,
-        };
-      }),
-    );
-  const { showStrategies, setShowStrategies, selectMeshName, setSelectMeshName } = useSafetyStore(
+  const {
+    mode,
+    setMode,
+    threeControl,
+    setShowPoints,
+    showPoints,
+    modelSelect,
+    setModelSelect,
+    setSelectedPart,
+    isOffsetTable,
+  } = useModelStore(
+    useShallow((state) => {
+      return {
+        mode: state.mode,
+        setMode: state.setMode,
+        threeControl: state.threeControl,
+        setShowPoints: state.setShowPoints,
+        showPoints: state.showPoints,
+        modelSelect: state.modelSelect,
+        setModelSelect: state.setModelSelect,
+        setSelectedPart: state.setSelectedPart,
+        isOffsetTable: state.isOffsetTable,
+      };
+    }),
+  );
+  const {
+    showStrategies,
+    setShowStrategies,
+    selectMeshName,
+    setSelectMeshName,
+  } = useSafetyStore(
     useShallow((state) => ({
       showStrategies: state.showStrategies,
       setShowStrategies: state.setShowStrategies,
@@ -69,6 +84,8 @@ const TabsPanel = ({ setPanelOpen }) => {
   }, [mode, threeControl]);
   const [activeTab, setActiveTab] = useState('radar');
   const [activePoints, setActivePoints] = useState(false);
+
+  if (isOffsetTable) return null;
   const items = [
     {
       key: '1',
@@ -230,9 +247,12 @@ const TabsPanel = ({ setPanelOpen }) => {
   return (
     <>
       <div
-        className={classNames(' absolute top-10 left-2 z-10 flex flex-col gap-2  overflow-auto min-w-32 bg-[#1e1e1e]', {
-          hidden: mode !== 'editor',
-        })}
+        className={classNames(
+          ' absolute top-10 left-2 z-10 flex flex-col gap-2  overflow-auto min-w-32 bg-[#1e1e1e]',
+          {
+            hidden: mode !== 'editor',
+          },
+        )}
       >
         <Menu
           defaultSelectedKeys={[modelSelect]}
@@ -264,7 +284,11 @@ const TabsPanel = ({ setPanelOpen }) => {
             ]}
           />
         </div>
-        <div className={classNames('flex items-center justify-center gap-1', { hidden: mode !== 'obstacleAvoidance' })}>
+        <div
+          className={classNames('flex items-center justify-center gap-1', {
+            hidden: mode !== 'obstacleAvoidance',
+          })}
+        >
           <span>避障策略</span>
           <Select
             className='min-w-32'
@@ -291,7 +315,10 @@ const TabsPanel = ({ setPanelOpen }) => {
             onClick={() => setShowPoints(!showPoints)}
           >
             <Tooltip title='点云查看' placement='top'>
-              <IconifyIcon icon='icon-park-outline:nine-points-connected' size={16} />
+              <IconifyIcon
+                icon='icon-park-outline:nine-points-connected'
+                size={16}
+              />
             </Tooltip>
           </div>
           <div
@@ -303,7 +330,10 @@ const TabsPanel = ({ setPanelOpen }) => {
             onClick={() => setShowStrategies(!showStrategies)}
           >
             <Tooltip title='显示/隐藏策略' placement='bottom'>
-              <IconifyIcon icon='icon-park-outline:stereo-perspective' size={16} />
+              <IconifyIcon
+                icon='icon-park-outline:stereo-perspective'
+                size={16}
+              />
             </Tooltip>
           </div>
         </div>

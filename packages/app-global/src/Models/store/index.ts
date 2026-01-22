@@ -38,11 +38,30 @@ interface State {
   // 是否开启裁剪
   enableClip: boolean;
   setEnableClip: (enableClip: boolean) => void;
+
+  // 是否切换为偏移表操作
+  isOffsetTable: boolean;
+  setIsOffsetTable: (isOffsetTable: boolean) => void;
+
+  showMapLoading: boolean;
+  setShowMapLoading: (showMapLoading: boolean) => void;
 }
 
 export const useModelStore = create<State>()(
   persist(
     (set, get) => ({
+      showMapLoading: false,
+      setShowMapLoading: (showMapLoading: boolean) => {
+        set(() => ({
+          showMapLoading,
+        }));
+      },
+      isOffsetTable: false,
+      setIsOffsetTable: (isOffsetTable: boolean) => {
+        set(() => ({
+          isOffsetTable,
+        }));
+      },
       mode: 'editor',
       setMode: (mode: any) => {
         const currentMode = get().mode;

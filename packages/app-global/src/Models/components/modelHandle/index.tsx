@@ -1,10 +1,19 @@
 import { Dropdown, Select } from 'antd';
 import { useTheme } from 'antd-style';
+import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { IconifyIcon } from 'ui';
+import { useShallow } from 'zustand/react/shallow';
+import { useModelStore } from '../../store';
 
 const DrawHandle = () => {
   const theme = useTheme();
+  const { isOffsetTable, setIsOffsetTable } = useModelStore(
+    useShallow((state) => ({
+      isOffsetTable: state.isOffsetTable,
+      setIsOffsetTable: state.setIsOffsetTable,
+    })),
+  );
   return (
     <div className='top-0 left-0 w-full  bg-[#1a1a1a] z-20 absolute font-bold overflow-x-auto overflow-y-hidden whitespace-nowrap'>
       <div className='flex min-w-max py-1 items-center justify-between gap-2'>
@@ -92,24 +101,34 @@ const DrawHandle = () => {
               />
             </div>
           </div>
-          <div className='h-full flex justify-center gap-1 items-center'>
-            <IconifyIcon
-              icon='icon-park-outline:nine-points-connected'
-              size={14}
-            />
-            <span className=' font-semibold'>偏移表</span>
-          </div>
-          <div className='h-full flex justify-center gap-1 items-center'>
-            <IconifyIcon icon='mingcute:location-3-fill' size={16} />
-            <span className=' font-semibold'>导航</span>
-          </div>
-          <div className='h-full flex justify-center gap-1 items-center'>
-            <IconifyIcon icon='fluent:tap-single-20-filled' size={16} />
-            <span className=' font-semibold'>单机任务</span>
-          </div>
-          <div className='h-full flex justify-center gap-1 items-center'>
-            <IconifyIcon icon='fluent:cloud-sync-28-filled' size={16} />
-            <span className=' font-semibold'>云服务</span>
+          <div className='flex items-center'>
+            <div
+              className={classNames(
+                'h-full flex justify-center gap-1 items-center px-2 cursor-pointer select-none',
+                {
+                  'bg-[#00d1d1]/60': isOffsetTable,
+                },
+              )}
+              onClick={() => setIsOffsetTable(!isOffsetTable)}
+            >
+              <IconifyIcon
+                icon='icon-park-outline:nine-points-connected'
+                size={14}
+              />
+              <span className=' font-semibold'>偏移表</span>
+            </div>
+            <div className='h-full flex justify-center gap-1 items-center px-2'>
+              <IconifyIcon icon='mingcute:location-3-fill' size={16} />
+              <span className=' font-semibold'>导航</span>
+            </div>
+            <div className='h-full flex justify-center gap-1 items-center px-2'>
+              <IconifyIcon icon='fluent:tap-single-20-filled' size={16} />
+              <span className=' font-semibold'>单机任务</span>
+            </div>
+            <div className='h-full flex justify-center gap-1 items-center px-2'>
+              <IconifyIcon icon='fluent:cloud-sync-28-filled' size={16} />
+              <span className=' font-semibold'>云服务</span>
+            </div>
           </div>
         </div>
         <div className='flex gap-2 items-center'>

@@ -5,10 +5,12 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
+import ScanLoading from '../toolkit/components/ScanLoading';
 import DrawHandle from './components/modelHandle';
 import RModelFbx from './components/r20';
 import RightPanel from './components/rightPanel';
 import TabsPanel from './components/tabsPanel';
+import { useModelStore } from './store';
 import BaseElement from './threeComponent/base';
 import ContextMenu from './threeComponent/ContextMenu';
 import PanelRoot from './threeComponent/PanelRoot';
@@ -152,6 +154,18 @@ export default function R3FBasicScene() {
       };
     }),
   );
+  const { isOffsetTable } = useModelStore(
+    useShallow((store) => {
+      return {
+        isOffsetTable: store.isOffsetTable,
+      };
+    }),
+  );
+
+  useEffect(() => {
+    setIsOpen(!isOffsetTable);
+  }, [isOffsetTable]);
+
   const panelBoundsRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -172,6 +186,7 @@ export default function R3FBasicScene() {
           transition={{ duration: 0.3 }}
           ref={panelBoundsRef}
         >
+          <ScanLoading />
           <Canvas
             shadows
             className='flex-1'
@@ -185,10 +200,17 @@ export default function R3FBasicScene() {
             <Suspense fallback={<Html center>Loading...</Html>}>
               {/* <Forklift /> */}
               {/* <O15Model /> */}
-              <CarModel />
-              <CameraLimit />
-              <BaseElement />
-              <SceneRaycaster />
+              {isOffsetTable ? (
+                // 请在这里补充偏移表的地图组件
+                <></>
+              ) : (
+                <>
+                  <CarModel />
+                  <CameraLimit />
+                  <SceneRaycaster />
+                  <BaseElement />
+                </>
+              )}
             </Suspense>
           </Canvas>
           <ContextMenu /> {/* 完全独立 */}
