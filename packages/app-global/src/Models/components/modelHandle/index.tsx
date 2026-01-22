@@ -100,8 +100,8 @@ const DrawHandle = () => {
             <span className=' font-semibold'>偏移表</span>
           </div>
           <div className='h-full flex justify-center gap-1 items-center'>
-            <IconifyIcon icon='carbon:document-configuration' size={16} />
-            <span className=' font-semibold'>参数配置</span>
+            <IconifyIcon icon='mingcute:location-3-fill' size={16} />
+            <span className=' font-semibold'>导航</span>
           </div>
           <div className='h-full flex justify-center gap-1 items-center'>
             <IconifyIcon icon='fluent:tap-single-20-filled' size={16} />

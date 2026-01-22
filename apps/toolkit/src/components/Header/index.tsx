@@ -158,7 +158,7 @@ const GlobalHeader = () => {
                 <div
                   className={classNames(
                     'p-1 flex items-center text-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
-                    location.pathname === '/parameters'
+                    location.pathname === '/plugins'
                       ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
                       : '',
                   )}
