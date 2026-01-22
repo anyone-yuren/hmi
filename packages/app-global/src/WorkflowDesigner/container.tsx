@@ -56,11 +56,14 @@ const RenderItem = ({ item }: { item: WorkflowMetadata }) => {
 
   return (
     <div className='h-32'>
-      <div 
+      <div
         className='flex p-2 gap-2 flex-col w-full h-full cursor-pointer rounded-md bg-white/5 shadow-sm transition-all duration-300 ease-in-out hover:shadow-[0_0_4px_rgba(255,255,255,0.5)] relative group'
         onClick={() => openWorkflow(item.id)}
       >
-        <div className='absolute top-2 right-2' onClick={(e) => e.stopPropagation()}>
+        <div
+          className='absolute top-2 right-2'
+          onClick={(e) => e.stopPropagation()}
+        >
           <Dropdown
             menu={{
               items: [
@@ -102,15 +105,22 @@ const RenderItem = ({ item }: { item: WorkflowMetadata }) => {
             <RobotOutlined />
           </div>
           <div className='flex flex-col gap-2'>
-            <span className='text-sm font-medium text-gray-200'>{item.name}</span>
+            <span className='text-sm font-medium text-gray-200'>
+              {item.name}
+            </span>
             {item.description && (
-              <span className='text-xs text-gray-400 line-clamp-2'>{item.description}</span>
+              <span className='text-xs text-gray-400 line-clamp-2'>
+                {item.description}
+              </span>
             )}
           </div>
         </div>
         <div className='flex flex-col gap-2 mt-auto'>
           <div className='text-xs text-gray-400'>
-            <Tag color={item.status === 'available' ? 'green' : 'red'} bordered={false}>
+            <Tag
+              color={item.status === 'available' ? 'green' : 'red'}
+              bordered={false}
+            >
               {statusMap[item.status || 'available'].text}
             </Tag>
           </div>
@@ -124,7 +134,8 @@ const RenderItem = ({ item }: { item: WorkflowMetadata }) => {
 };
 
 const WorkflowDesignerContainer = () => {
-  const { workflowList, addWorkflow, openWorkflow, isDesignerOpen } = useWorkflowStore();
+  const { workflowList, addWorkflow, openWorkflow, isDesignerOpen } =
+    useWorkflowStore();
   const [form] = Form.useForm();
   const [addFlow, setAddFlow] = useState(false);
 
@@ -138,12 +149,12 @@ const WorkflowDesignerContainer = () => {
         updatedAt: new Date().toISOString().split('T')[0],
         nodes: [],
         edges: [],
-        variables: []
+        variables: [],
       };
       addWorkflow(newWorkflow);
       setAddFlow(false);
       form.resetFields();
-      
+
       // Open the designer for the new workflow
       openWorkflow(newWorkflow.id);
     });
@@ -154,7 +165,10 @@ const WorkflowDesignerContainer = () => {
       <div className='flex h-10 items-center justify-between border-b border-gray-700 bg-[#1f1f1f] px-4 shadow-sm'>
         <Form layout='inline' size='small'>
           <Form.Item name='search'>
-            <Input placeholder='请输入流程名称' className="bg-[#2a2a2a] border-gray-600 text-gray-200 placeholder-gray-500" />
+            <Input
+              placeholder='请输入流程名称'
+              className='bg-[#2a2a2a] border-gray-600 text-gray-200 placeholder-gray-500'
+            />
           </Form.Item>
           <Form.Item>
             <div className='flex items-center gap-2'>
@@ -180,9 +194,9 @@ const WorkflowDesignerContainer = () => {
           ))}
         </div>
       </div>
-      
+
       <Modal
-        title="新增流程"
+        title='新增流程'
         open={addFlow}
         onCancel={() => setAddFlow(false)}
         onOk={handleAddFlow}

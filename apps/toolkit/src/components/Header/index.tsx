@@ -36,43 +36,36 @@ const GlobalHeader = () => {
         <IconifyIcon
           icon='mdi:widgets-outline'
           size={24}
-          className='opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'
           onClick={() => navigate(`/`)}
+          className=' transition-all duration-300 cursor-pointer hover:opacity-100'
         />
         {location.pathname !== '/' && (
           <>
             <Tooltip title='地图编辑器' placement='right'>
               <div
                 className={classNames(
-                  'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                  'p-1 flex items-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
                   location.pathname === '/mapEditor'
                     ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
                     : '',
                 )}
+                onClick={() => navigate(`/mapEditor`)}
               >
-                <IconifyIcon
-                  icon='carbon:map'
-                  size={24}
-                  className=''
-                  onClick={() => navigate(`/mapEditor`)}
-                />
+                <IconifyIcon icon='carbon:map' size={24} className='' />
                 <span>地图</span>
               </div>
             </Tooltip>
             <Tooltip title='车辆管理' placement='right'>
               <div
                 className={classNames(
-                  'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                  'p-1 flex items-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
                   location.pathname === '/dashboard'
                     ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
                     : '',
                 )}
+                onClick={() => navigate(`/dashboard`)}
               >
-                <IconifyIcon
-                  icon='material-symbols-light:forklift'
-                  size={26}
-                  onClick={() => navigate(`/dashboard`)}
-                />
+                <IconifyIcon icon='material-symbols-light:forklift' size={26} />
                 <span>车辆</span>
               </div>
             </Tooltip>
@@ -82,50 +75,44 @@ const GlobalHeader = () => {
                 <Tooltip title='车辆日志' placement='right'>
                   <div
                     className={classNames(
-                      'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                      'p-1 flex items-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
                       location.pathname === '/models'
                         ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
                         : '',
                     )}
+                    onClick={() => navigate(`/models?model=true`)}
                   >
-                    <IconifyIcon
-                      icon='mingcute:robot-line'
-                      size={24}
-                      onClick={() => navigate(`/models?model=true`)}
-                    />
+                    <IconifyIcon icon='mingcute:robot-line' size={24} />
                     <span>模型管理</span>
                   </div>
                 </Tooltip>
                 <Tooltip title='车辆日志' placement='right'>
                   <div
                     className={classNames(
-                      'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                      'p-1 flex items-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
                       location.pathname === '/vehicleLogs'
                         ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
                         : '',
                     )}
+                    onClick={() => navigate(`/vehicleLogs?model=true`)}
                   >
-                    <IconifyIcon
-                      icon='solar:database-outline'
-                      size={24}
-                      onClick={() => navigate(`/vehicleLogs?model=true`)}
-                    />
+                    <IconifyIcon icon='solar:database-outline' size={24} />
                     <span>日志</span>
                   </div>
                 </Tooltip>
                 <Tooltip title='调度配置' placement='right'>
                   <div
                     className={classNames(
-                      'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                      'p-1 flex items-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
                       location.pathname === '/rcs'
                         ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
                         : '',
                     )}
+                    onClick={() => navigate(`/ftp?model=true`)}
                   >
                     <IconifyIcon
                       icon='fluent:transmission-20-regular'
                       size={24}
-                      onClick={() => navigate(`/ftp?model=true`)}
                     />
                     <span>RCS</span>
                   </div>
@@ -133,34 +120,28 @@ const GlobalHeader = () => {
                 <Tooltip title='远程FTP' placement='right'>
                   <div
                     className={classNames(
-                      'p-1 flex items-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                      'p-1 flex items-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
                       location.pathname === '/ftp'
                         ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
                         : '',
                     )}
+                    onClick={() => navigate(`/ftp?model=true`)}
                   >
-                    <IconifyIcon
-                      icon='mingcute:transfer-3-line'
-                      size={24}
-                      onClick={() => navigate(`/ftp?model=true`)}
-                    />
+                    <IconifyIcon icon='mingcute:transfer-3-line' size={24} />
                     <span>FTP</span>
                   </div>
                 </Tooltip>
                 <Tooltip title='参数管理' placement='right'>
                   <div
                     className={classNames(
-                      'p-1 flex items-center text-center flex-col gap-1 opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100',
+                      'p-1 flex items-center text-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
                       location.pathname === '/parameters'
                         ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
                         : '',
                     )}
+                    onClick={() => navigate(`/parameters?model=true`)}
                   >
-                    <IconifyIcon
-                      icon='tabler:file-text'
-                      size={24}
-                      onClick={() => navigate(`/parameters?model=true`)}
-                    />
+                    <IconifyIcon icon='tabler:file-text' size={24} />
                     <span>参数管理</span>
                   </div>
                 </Tooltip>
@@ -173,7 +154,7 @@ const GlobalHeader = () => {
         <IconifyIcon
           icon='teenyicons:user-circle-solid'
           size={22}
-          className='opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'
+          className=' transition-all duration-300 cursor-pointer hover:opacity-100'
         />
         <Popover
           placement='rightTop'
@@ -206,7 +187,7 @@ const GlobalHeader = () => {
           <IconifyIcon
             icon='ant-design:setting-outlined'
             size={24}
-            className='opacity-40 transition-all duration-300 cursor-pointer hover:opacity-100'
+            className=' transition-all duration-300 cursor-pointer hover:opacity-100'
           />
         </Popover>
       </div>

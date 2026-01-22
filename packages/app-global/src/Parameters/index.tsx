@@ -13,7 +13,11 @@ const Parameters = () => {
   const theme = useTheme();
   const [selectedKey, setSelectedKey] = useState('base');
   const items: MenuItem[] = [
-    { key: 'base', label: '配置进度' },
+    {
+      key: 'base',
+      label: '配置进度',
+      icon: <IconifyIcon icon='ri:hourglass-fill' size={16} />,
+    },
     {
       key: '1',
       icon: <IconifyIcon icon='ic:baseline-blur-on' size={16} />,
