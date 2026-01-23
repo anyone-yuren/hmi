@@ -8,13 +8,9 @@ import { useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useModelStore } from '../../store';
+import { OptimizedLabels } from './components/LabelsLayer';
+import { PointsLayer } from './components/PointsLayer';
 import { useOffsetTableStore } from './store';
-
-// ================== Constants ==================
-const POINT_SIZE = 0.5;
-const SELECTED_COLOR = '#1890ff';
-const OFFSET_COLOR = '#faad14';
-const DEFAULT_COLOR = '#d9d9d9';
 
 // ================== Utils ==================
 function isPointInRect(
@@ -45,7 +41,7 @@ export default function OffsetTableScene() {
   // ========== loading ==========
   useEffect(() => {
     setShowMapLoading(true);
-    const t = setTimeout(() => setShowMapLoading(false), 500);
+    const t = setTimeout(() => setShowMapLoading(false), 2500);
     return () => clearTimeout(t);
   }, [setShowMapLoading]);
 
@@ -130,6 +126,19 @@ export default function OffsetTableScene() {
 
       // ========== Ctrl / Meta：点选 ==========
       if (e.ctrlKey || e.metaKey) {
+        // Handled by PointsLayer onContextMenu or similar?
+        // No, click selection is usually on pointer down/up on the object.
+        // But since we use InstancedMesh, we rely on raycasting or the onClick of the mesh.
+        // However, PointsLayer doesn't handle Left Click for selection, only Right Click for context menu.
+        // We should handle single click selection here if not box selecting.
+
+        // Let's implement single click selection via raycaster here for consistency?
+        // Actually, let's keep it simple: Ctrl+Click is handled below or via box select (tiny box).
+        // But the previous code had specific raycasting for click.
+
+        // Let's stick to the box select logic which handles single click as a tiny box?
+        // Or specific raycast.
+
         const rect = canvas.getBoundingClientRect();
         const mouse = new THREE.Vector2(
           ((e.clientX - rect.left) / rect.width) * 2 - 1,
@@ -139,14 +148,20 @@ export default function OffsetTableScene() {
         const raycaster = new THREE.Raycaster();
         raycaster.setFromCamera(mouse, camera);
 
-        const meshes: THREE.Object3D[] = [];
-        scene.traverse((obj) => {
-          if (obj.userData?.id) meshes.push(obj);
+        // Raycast against InstancedMesh
+        let intersectedInstanceId: number | undefined;
+        scene.traverse((child) => {
+          if (child.type === 'InstancedMesh' && child.userData.isStoragePoint) {
+            const mesh = child as THREE.InstancedMesh;
+            const intersects = raycaster.intersectObject(mesh);
+            if (intersects.length > 0) {
+              intersectedInstanceId = intersects[0].instanceId;
+            }
+          }
         });
 
-        const hits = raycaster.intersectObjects(meshes);
-        if (hits.length > 0) {
-          const id = hits[0].object.userData.id;
+        if (intersectedInstanceId !== undefined) {
+          const id = points[intersectedInstanceId].id;
           const newSet = new Set(selectedIds);
           newSet.has(id) ? newSet.delete(id) : newSet.add(id);
           setSelectedIds(newSet);
@@ -158,22 +173,20 @@ export default function OffsetTableScene() {
       // ========== 普通左键：矩形框选 ==========
       const now = Date.now();
 
-      // 双击完成
-      if (isDrawingRef.current && now - lastClick < 300) {
-        finishRect(e.clientX, e.clientY);
-        lastClick = 0;
-        return;
-      }
+      // 双击完成 (Not typical for box select, usually drag release)
+      // But keeping existing logic structure if user wanted double click to finish?
+      // No, box select is usually drag.
 
-      lastClick = now;
+      // Let's stick to Drag = Box.
 
-      // 开始绘制
       if (!isDrawingRef.current) {
         startRef.current = getWorldPoint(e);
         currentRef.current = startRef.current.clone();
         isDrawingRef.current = true;
         setVersion((v) => v + 1);
       }
+
+      lastClick = now;
     };
 
     const onPointerMove = (e: PointerEvent) => {
@@ -182,9 +195,16 @@ export default function OffsetTableScene() {
       setVersion((v) => v + 1);
     };
 
+    const onPointerUp = (e: PointerEvent) => {
+      if (isDrawingRef.current) {
+        finishRect(e.clientX, e.clientY);
+      }
+    };
+
     const onContextMenu = (e: MouseEvent) => {
-      // 防止浏览器默认右键菜单
-      e.preventDefault();
+      // 防止浏览器默认右键菜单 (handled by Canvas usually but good to enforce)
+      // e.preventDefault();
+      // Actually we want ContextMenu for our right click features, but not browser's.
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -195,12 +215,14 @@ export default function OffsetTableScene() {
 
     canvas.addEventListener('pointerdown', onPointerDown);
     canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerup', onPointerUp);
     canvas.addEventListener('contextmenu', onContextMenu);
     window.addEventListener('keydown', onKeyDown);
 
     return () => {
       canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('pointermove', onPointerMove);
+      canvas.removeEventListener('pointerup', onPointerUp);
       canvas.removeEventListener('contextmenu', onContextMenu);
       window.removeEventListener('keydown', onKeyDown);
     };
@@ -246,24 +268,6 @@ export default function OffsetTableScene() {
     ]);
   })();
 
-  // ================== Right Click ==================
-  const handleContextMenu = (e: any, id: string) => {
-    e.stopPropagation();
-
-    let newSelected = new Set(selectedIds);
-    if (!newSelected.has(id)) {
-      newSelected = new Set([id]);
-      setSelectedIds(newSelected);
-    }
-
-    setEditModal({
-      visible: true,
-      x: e.clientX,
-      y: e.clientY,
-      targetIds: Array.from(newSelected),
-    });
-  };
-
   return (
     <>
       <OrthographicCamera makeDefault position={[0, 0, 50]} zoom={20} />
@@ -280,49 +284,58 @@ export default function OffsetTableScene() {
       />
 
       <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 10]} intensity={1} />
+      <directionalLight position={[10, 10, 10]} intensity={10} />
 
       <GizmoHelper alignment='bottom-right' margin={[80, 80]}>
         <GizmoViewport />
       </GizmoHelper>
 
-      {/* ================= Points ================= */}
+      {/* ================= Layers ================= */}
       <group>
-        {points.map((point) => {
-          const isSelected = selectedIds.has(point.id);
-          const hasOffset = point.offset.x !== 0 || point.offset.y !== 0;
-
-          let color = DEFAULT_COLOR;
-          if (hasOffset) color = OFFSET_COLOR;
-          if (isSelected) color = SELECTED_COLOR;
-
-          return (
-            <mesh
-              key={point.id}
-              position={new THREE.Vector3(...point.position)}
-              userData={{ id: point.id }}
-              onContextMenu={(e) => handleContextMenu(e, point.id)}
-            >
-              <boxGeometry args={[POINT_SIZE, POINT_SIZE, 0.1]} />
-              <meshStandardMaterial color={color} />
-            </mesh>
-          );
-        })}
+        <PointsLayer />
+        <OptimizedLabels />
       </group>
 
       {/* ================= Rect Visual ================= */}
-      {rectPositions && (
-        <lineSegments key={version}>
-          <bufferGeometry>
-            <bufferAttribute
-              attach='attributes-position'
-              array={rectPositions}
-              itemSize={3}
-              count={rectPositions.length / 3}
+      {startRef.current && currentRef.current && (
+        <group key={version}>
+          {/* 半透明填充面 */}
+          <mesh
+            position={[
+              (startRef.current.x + currentRef.current.x) / 2,
+              (startRef.current.y + currentRef.current.y) / 2,
+              0.01,
+            ]}
+          >
+            <planeGeometry
+              args={[
+                Math.abs(currentRef.current.x - startRef.current.x),
+                Math.abs(currentRef.current.y - startRef.current.y),
+              ]}
             />
-          </bufferGeometry>
-          <lineBasicMaterial color='#00d1d1' />
-        </lineSegments>
+            <meshBasicMaterial
+              color='#00d1d1'
+              transparent
+              opacity={0.18}
+              depthWrite={false}
+            />
+          </mesh>
+
+          {/* 描边 */}
+          {rectPositions && (
+            <lineSegments>
+              <bufferGeometry>
+                <bufferAttribute
+                  attach='attributes-position'
+                  array={rectPositions}
+                  itemSize={3}
+                  count={rectPositions.length / 3}
+                />
+              </bufferGeometry>
+              <lineBasicMaterial color='#00ffff' />
+            </lineSegments>
+          )}
+        </group>
       )}
     </>
   );

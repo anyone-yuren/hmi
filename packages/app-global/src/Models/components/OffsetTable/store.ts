@@ -47,7 +47,7 @@ const generateTestPoints = (rows: number, cols: number): StoragePoint[] => {
 };
 
 export const useOffsetTableStore = create<OffsetTableState>((set) => ({
-  points: generateTestPoints(20, 20),
+  points: generateTestPoints(100, 100),
   setPoints: (points) =>
     set((state) => ({
       points: typeof points === 'function' ? points(state.points) : points,

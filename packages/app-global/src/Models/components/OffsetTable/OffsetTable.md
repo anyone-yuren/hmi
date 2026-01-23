@@ -7,7 +7,8 @@
 ## 2. 功能特性
 
 ### 2.1 3D 渲染
-- **库位点**: 使用 `Mesh` (BoxGeometry) 渲染库位点，位置基于网格分布。
+- **库位点**: 使用 `InstancedMesh` 渲染大量库位点（支持 10k+），大幅提升渲染性能。
+- **标签显示**: 智能显示库位点 ID，仅在相机缩放级别足够大（放大查看）时显示，并限制同屏最大显示数量（50个），避免 DOM 性能瓶颈。
 - **颜色标识**:
   - **默认**: 灰色 (`#d9d9d9`)
   - **选中**: 蓝色 (`#1890ff`)
@@ -16,50 +17,64 @@
 
 ### 2.2 交互操作
 - **选择**:
-  - **单选**: 鼠标左键点击单个库位点。
-  - **多选 (Ctrl)**: 按住 `Ctrl` 或 `Cmd` 键点击，可叠加选择。
-  - **框选**: 鼠标左键拖拽，绘制矩形框，选中框内的所有库位点。支持 `Ctrl` 叠加框选。
-  - **取消选择**: 点击空白区域（不按 `Ctrl`）可清空选择。
+  - **单选 (Ctrl/Meta + Click)**: 按住 `Ctrl` 或 `Cmd` 键点击单个库位点，可叠加选择。
+  - **框选**: 鼠标左键拖拽绘制矩形框，选中框内的所有库位点。支持 `Ctrl` 叠加框选。
+  - **右键菜单**: 右键点击库位点，选中该点并直接弹出偏移修改面板。
 - **导航**:
   - **平移**: 鼠标右键拖拽。
   - **缩放**: 鼠标滚轮滚动。
-  - **重置**: 双击画布空白处（保留扩展接口）。
-
-### 2.3 数据编辑
-- **偏移量修改**: 选中库位点后，右下角会出现编辑面板。
-- **批量修改**: 输入偏移值后，所有选中的库位点将同步更新。
+- **编辑**:
+  - **偏移量修改**: 选中库位点后，弹出可拖拽的编辑面板 (`Rnd` 组件)。
+  - **批量修改**: 输入偏移值后，所有选中的库位点将同步更新。
 
 ## 3. 技术实现
 
 ### 3.1 核心依赖
 - `@react-three/fiber`: 3D 渲染引擎。
-- `@react-three/drei`: 提供 `MapControls`, `Html` 等实用组件。
+- `@react-three/drei`: 提供 `MapControls`, `Html`, `Instances` 等实用组件。
 - `three`: 基础 3D 库。
+- `zustand`: 状态管理 (`useOffsetTableStore`)。
+- `react-rnd`: 可拖拽 UI 面板。
 
 ### 3.2 关键逻辑
 
-#### 坐标转换 (World to Screen)
-组件内部维护了 `getScreenPos` 方法，利用 `vector.project(camera)` 将 3D 世界坐标转换为 2D 屏幕坐标，用于框选判定。
+#### 性能优化 (InstancedMesh)
+使用 `THREE.InstancedMesh` 替代数千个独立的 `Mesh` 对象。
+- **矩阵更新**: 初始化时计算所有点位的变换矩阵。
+- **颜色更新**: 当选中状态或偏移数据变化时，直接更新 `instanceColor` 缓冲区，避免重新创建几何体。
+
+#### 智能标签 (OptimizedLabels)
+- **视锥体剔除**: 每一帧（节流）计算视锥体，仅筛选出视野内的点位。
+- **Zoom 阈值**: 仅当相机 Zoom > 25 时才开始计算和显示标签。
+- **数量限制**: 强制限制同屏渲染的 HTML 标签数量（Max 50），优先显示视口内的前 50 个点。
 
 #### 框选判定
-在 `pointerup` 事件中，计算每个库位点的屏幕投影是否位于框选矩形范围内 (AABB 测试)。
+利用屏幕空间投影算法：
+1. 将所有点位的 3D 坐标投影到 2D 屏幕坐标。
+2. 判断投影点是否位于鼠标拖拽形成的矩形框内。
 
-#### 状态管理
-- `points`: 存储所有库位点数据 `{ id, position, offset }`。
-- `selectedIds`:存储当前选中的库位点 ID 集合 `Set<string>`。
-- `selectionBox`: 存储框选的起始和结束屏幕坐标。
+## 4. 目录结构
 
-## 4. 使用示例
+```
+src/Models/components/OffsetTable/
+├── index.tsx            # 入口组件，场景配置与交互逻辑
+├── store.ts             # Zustand 状态管理
+├── OffsetTableUI.tsx    # 偏移量编辑弹窗
+├── components/
+│   ├── PointsLayer.tsx  # InstancedMesh 点位渲染层
+│   └── LabelsLayer.tsx  # 智能标签渲染层
+└── OffsetTable.md       # 本文档
+```
+
+## 5. 使用示例
 
 ```tsx
 import OffsetTableScene from './components/OffsetTable';
+import OffsetTableUI from './components/OffsetTable/OffsetTableUI';
 
-// 在 Canvas 中使用
-<Canvas>
-  <OffsetTableScene />
-</Canvas>
+// 在 Canvas 内部
+<OffsetTableScene />
+
+// 在 Canvas 外部 (UI 层)
+<OffsetTableUI />
 ```
-
-## 5. 待优化项
-- 大量数据（>1000点）时建议迁移至 `InstancedMesh` 以提升性能。
-- 目前偏移修改仅在前端 State 中生效，需对接后端 API 进行持久化。
