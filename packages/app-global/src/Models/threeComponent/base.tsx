@@ -1,4 +1,11 @@
-import { CameraControls, GizmoHelper, GizmoViewport, Grid, PerspectiveCamera, SoftShadows } from '@react-three/drei';
+import {
+  CameraControls,
+  GizmoHelper,
+  GizmoViewport,
+  Grid,
+  PerspectiveCamera,
+  SoftShadows,
+} from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -42,7 +49,7 @@ const BaseElement = () => {
         setThreeControl: state.setThreeControl,
         showPoints: state.showPoints,
       };
-    }),
+    })
   );
 
   useEffect(() => {
@@ -108,7 +115,11 @@ const BaseElement = () => {
       <Suspense fallback={null}>
         {showPoints && (
           <PCDModel
-            url={isProd ? '/toolkit/static/pcd/radar-cloud.pcd' : '/static/pcd/radar-cloud.pcd'}
+            url={
+              isProd
+                ? '/toolkit/static/pcd/radar-cloud.pcd'
+                : '/static/pcd/radar-cloud.pcd'
+            }
             rotation={[Math.PI / 2, Math.PI / 11, -Math.PI / 2]}
           />
           // <PCDModel url='/static/pcd/radar-cloud1.pcd' />
@@ -120,7 +131,10 @@ const BaseElement = () => {
         alignment='bottom-right' // 显示位置
         margin={[80, 80]} // 距离边缘的间距（可调）
       >
-        <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor='white' />
+        <GizmoViewport
+          axisColors={['red', 'green', 'blue']}
+          labelColor='white'
+        />
       </GizmoHelper>
     </>
   );

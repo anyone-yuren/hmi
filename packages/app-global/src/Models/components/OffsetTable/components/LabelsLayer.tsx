@@ -23,7 +23,7 @@ export const OptimizedLabels = memo(() => {
       const frustum = new THREE.Frustum();
       const matrix = new THREE.Matrix4().multiplyMatrices(
         camera.projectionMatrix,
-        camera.matrixWorldInverse,
+        camera.matrixWorldInverse
       );
       frustum.setFromProjectionMatrix(matrix);
 
@@ -38,7 +38,7 @@ export const OptimizedLabels = memo(() => {
         const vec = new THREE.Vector3(
           point.position[0],
           point.position[1],
-          point.position[2],
+          point.position[2]
         );
         if (frustum.containsPoint(vec)) {
           const dist = vec.distanceToSquared(center);
@@ -93,7 +93,7 @@ export const OptimizedLabels = memo(() => {
       const frustum = new THREE.Frustum();
       const matrix = new THREE.Matrix4().multiplyMatrices(
         camera.projectionMatrix,
-        camera.matrixWorldInverse,
+        camera.matrixWorldInverse
       );
       frustum.setFromProjectionMatrix(matrix);
 
@@ -107,7 +107,7 @@ export const OptimizedLabels = memo(() => {
         const vec = new THREE.Vector3(
           point.position[0],
           point.position[1],
-          point.position[2],
+          point.position[2]
         );
         if (frustum.containsPoint(vec)) {
           const dist = vec.distanceToSquared(center);
@@ -140,6 +140,7 @@ export const OptimizedLabels = memo(() => {
           anchorY='middle'
           outlineWidth={0.01}
           outlineColor='black'
+          font='./1Ptrg8zYS_SKggPNwK4vaqI.woff'
         >
           {p.id}
         </DreiText>
