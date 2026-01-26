@@ -1,8 +1,23 @@
-import { Checkbox, Collapse, ColorPicker, Form, Input, Modal, Select, Tooltip } from 'antd';
+import {
+  Checkbox,
+  Collapse,
+  ColorPicker,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Tooltip,
+} from 'antd';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { IconifyIcon } from 'ui';
-const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boolean }) => {
+const TemplateManagement = ({
+  onClick,
+  open,
+}: {
+  onClick?: () => void;
+  open: boolean;
+}) => {
   const [visible, setVisible] = useState(open);
   useEffect(() => {
     setVisible(open);
@@ -43,7 +58,7 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
                         'bg-white/5': index % 2 === 0,
                         'text-gray-400': !item.isSelected,
                         'bg-[#00d1d1]/80 !text-black': index === 1,
-                      },
+                      }
                     )}
                     key={item.key}
                   >
@@ -98,7 +113,7 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
                         'bg-white/5': index % 2 === 0,
                         'text-gray-400': !item.isSelected,
                         'bg-[#00d1d1]/80 !text-black': index === 1,
-                      },
+                      }
                     )}
                     key={item.key}
                   >
@@ -129,11 +144,38 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
           initialValues={{ remember: true }}
           autoComplete='off'
         >
-          <Form.Item label='模板名称' name='templateName' rules={[{ required: true, message: '请输入模板名称' }]}>
+          <Form.Item
+            label='模板名称'
+            name='templateName'
+            rules={[{ required: true, message: '请输入模板名称' }]}
+          >
             <Input size='small' />
           </Form.Item>
-          <Form.Item label='模板颜色' name='templateColor' rules={[{ required: true, message: '请输入模板颜色' }]}>
-            <ColorPicker defaultValue='#00d1d1' size='small' showText className='w-full' />
+          <Form.Item
+            label='模板颜色'
+            name='templateColor'
+            rules={[{ required: true, message: '请输入模板颜色' }]}
+          >
+            <ColorPicker
+              defaultValue='#00d1d1'
+              size='small'
+              showText
+              className='w-full'
+            />
+          </Form.Item>
+          <Form.Item
+            label='关联事件'
+            name='templateType'
+            rules={[{ required: true, message: '请选择关联事件' }]}
+            tooltip={<span>详细配置请查看事件编排</span>}
+          >
+            <Select
+              size='small'
+              options={[
+                { label: '先升后走', value: 'ascendThenDescend' },
+                { label: '先转后走', value: 'turnThenDescend' },
+              ]}
+            />
           </Form.Item>
         </Form>
       ),
@@ -150,13 +192,25 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
           initialValues={{ remember: true }}
           autoComplete='off'
         >
-          <Form.Item name='disableCall' valuePropName='checked' label={'禁止呼叫'}>
+          <Form.Item
+            name='disableCall'
+            valuePropName='checked'
+            label={'禁止呼叫'}
+          >
             <Checkbox></Checkbox>
           </Form.Item>
-          <Form.Item name='allowDock' valuePropName='checked' label={'允许停靠'}>
+          <Form.Item
+            name='allowDock'
+            valuePropName='checked'
+            label={'允许停靠'}
+          >
             <Checkbox></Checkbox>
           </Form.Item>
-          <Form.Item label='点类型' name='pointType' rules={[{ required: true, message: '请输入点类型' }]}>
+          <Form.Item
+            label='点类型'
+            name='pointType'
+            rules={[{ required: true, message: '请输入点类型' }]}
+          >
             <Select
               size='small'
               options={[
@@ -166,7 +220,11 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
               ]}
             />
           </Form.Item>
-          <Form.Item label='自旋优先级' name='spinPriority' rules={[{ required: true, message: '请选择自旋优先级' }]}>
+          <Form.Item
+            label='自旋优先级'
+            name='spinPriority'
+            rules={[{ required: true, message: '请选择自旋优先级' }]}
+          >
             <Select
               size='small'
               options={[
@@ -176,7 +234,11 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
               ]}
             />
           </Form.Item>
-          <Form.Item label='动作类型' name='actionType' rules={[{ required: true, message: '请选择动作类型' }]}>
+          <Form.Item
+            label='动作类型'
+            name='actionType'
+            rules={[{ required: true, message: '请选择动作类型' }]}
+          >
             <Select
               size='small'
               options={[
@@ -186,10 +248,18 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
               ]}
             />
           </Form.Item>
-          <Form.Item label='楼层号' name='floorId' rules={[{ required: true, message: '请输入楼层号' }]}>
+          <Form.Item
+            label='楼层号'
+            name='floorId'
+            rules={[{ required: true, message: '请输入楼层号' }]}
+          >
             <Input size='small' />
           </Form.Item>
-          <Form.Item label='分组号' name='groupId' rules={[{ required: true, message: '请输入分组号' }]}>
+          <Form.Item
+            label='分组号'
+            name='groupId'
+            rules={[{ required: true, message: '请输入分组号' }]}
+          >
             <Input size='small' />
           </Form.Item>
           <Form.Item
@@ -221,22 +291,42 @@ const TemplateManagement = ({ onClick, open }: { onClick?: () => void; open: boo
           initialValues={{ remember: true }}
           autoComplete='off'
         >
-          <Form.Item label='逻辑值1' name='logicalValue1' rules={[{ required: true, message: '请输入逻辑值1' }]}>
+          <Form.Item
+            label='逻辑值1'
+            name='logicalValue1'
+            rules={[{ required: true, message: '请输入逻辑值1' }]}
+          >
             <Input size='small' />
           </Form.Item>
-          <Form.Item label='逻辑值2' name='logicalValue2' rules={[{ required: true, message: '请输入逻辑值2' }]}>
+          <Form.Item
+            label='逻辑值2'
+            name='logicalValue2'
+            rules={[{ required: true, message: '请输入逻辑值2' }]}
+          >
             <Input size='small' />
           </Form.Item>
-          <Form.Item label='逻辑值3' name='logicalValue3' rules={[{ required: true, message: '请输入逻辑值3' }]}>
+          <Form.Item
+            label='逻辑值3'
+            name='logicalValue3'
+            rules={[{ required: true, message: '请输入逻辑值3' }]}
+          >
             <Input size='small' />
           </Form.Item>
-          <Form.Item label='逻辑值4' name='logicalValue4' rules={[{ required: true, message: '请输入逻辑值4' }]}>
+          <Form.Item
+            label='逻辑值4'
+            name='logicalValue4'
+            rules={[{ required: true, message: '请输入逻辑值4' }]}
+          >
             <Input size='small' />
           </Form.Item>
           <Form.Item name='remember' valuePropName='checked' label={null}>
             <Checkbox className='text-xs'>禁止＞120°自旋</Checkbox>
           </Form.Item>
-          <Form.Item name='disableTurnAround' valuePropName='checked' label={null}>
+          <Form.Item
+            name='disableTurnAround'
+            valuePropName='checked'
+            label={null}
+          >
             <Checkbox>禁止掉头</Checkbox>
           </Form.Item>
         </Form>
