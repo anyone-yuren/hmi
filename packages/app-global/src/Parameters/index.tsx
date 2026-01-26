@@ -2,6 +2,7 @@ import { Dropdown, Menu, MenuProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { useState } from 'react';
 import { IconifyIcon } from 'ui';
+import AutoCompile from '../Models/components/AutoCompile';
 import RobotCapabilityTopology from '../Models/modules/Capability';
 import VisionFlow from '../Models/visionFlow';
 import WorkflowDesignerContainer from '../WorkflowDesigner/container';
@@ -125,6 +126,11 @@ const Parameters = () => {
       icon: <IconifyIcon icon='hugeicons:workflow-circle-03' size={16} />,
       label: '事件编排',
     },
+    {
+      key: '10',
+      icon: <IconifyIcon icon='hugeicons:workflow-circle-03' size={16} />,
+      label: '自动编译',
+    },
   ];
   return (
     <div className='h-full w-full flex gap-2'>
@@ -199,6 +205,7 @@ const Parameters = () => {
           {selectedKey === 'base' && <RobotCapabilityTopology />}
           {selectedKey === '7' && <PathPlanning />}
           {selectedKey === '9' && <WorkflowDesignerContainer />}
+          {selectedKey === '10' && <AutoCompile />}
         </div>
       </div>
     </div>
