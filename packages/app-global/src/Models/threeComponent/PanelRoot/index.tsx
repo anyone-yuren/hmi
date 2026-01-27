@@ -2,6 +2,9 @@
 import { Rnd } from 'react-rnd';
 import { useShallow } from 'zustand/react/shallow';
 import { useEditorStore } from '../../store/editorStore';
+import BodyPanel from './BodyPanel';
+import ForkPanel from './ForkPanel';
+
 interface PanelRootProps {
   boundsRef: React.RefObject<Element>;
 }
@@ -39,7 +42,9 @@ export default function PanelRoot({ boundsRef }: PanelRootProps) {
         </div>
 
         {/* 内容区 */}
-        <div className='flex-1 p-3 overflow-auto'>{renderPanel(panelType, selected)}</div>
+        <div className='flex-1 p-3 overflow-auto'>
+          {renderPanel(panelType, selected)}
+        </div>
       </div>
     </Rnd>
   );
@@ -51,6 +56,8 @@ function getPanelTitle(type: string) {
     density: '点云密度',
     focus: '聚焦 / 标定',
     calibration: '标定面板',
+    fork: '叉臂参数设置',
+    body: '车身参数设置',
   }[type];
 }
 
@@ -65,6 +72,10 @@ function renderPanel(type: string, selected: THREE.Object3D | null) {
     case 'focus':
       return <>focus panel</>;
     // return <FocusPanel target={selected} />;
+    case 'fork':
+      return <ForkPanel useTabFilter={true} />;
+    case 'body':
+      return <BodyPanel useTabFilter={true} />;
     default:
       return null;
   }

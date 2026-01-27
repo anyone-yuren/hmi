@@ -1,10 +1,23 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
+import { useModelStore } from '../../store';
 import { useEditorStore } from '../../store/editorStore';
 
 export default function ContextMenu() {
-  const { contextMenuVisible, contextMenuPosition, selected, hideContextMenu, showPanel } = useEditorStore(
+  const { setModelSelect } = useModelStore(
+    useShallow((store) => ({
+      setModelSelect: store.setModelSelect,
+    })),
+  );
+  const {
+    contextMenuVisible,
+    contextMenuPosition,
+    selected,
+    hideContextMenu,
+    showPanel,
+    setPanelTab,
+  } = useEditorStore(
     useShallow((store) => {
       return {
         showPanel: store.showPanel,
@@ -12,6 +25,7 @@ export default function ContextMenu() {
         contextMenuPosition: store.contextMenuPosition,
         selected: store.selected,
         hideContextMenu: store.hideContextMenu,
+        setPanelTab: store.setPanelTab,
       };
     }),
   );
@@ -44,9 +58,11 @@ export default function ContextMenu() {
     }
     if (selected.name === 'body') {
       return [
-        { key: 'focus', label: '聚焦物体' },
-        { key: 'hide', label: '隐藏' },
-        { key: 'delete', label: '删除' },
+        { key: '1', label: '通用' },
+        { key: '2', label: '叉分' },
+        { key: '3', label: '全向车' },
+        { key: '4', label: '双舵' },
+        { key: '5', label: '单舵' },
       ];
     }
 
@@ -63,6 +79,17 @@ export default function ContextMenu() {
         { key: 'focus', label: '标定' },
         { key: 'hide', label: '隐藏' },
         { key: 'delete', label: '删除' },
+      ];
+    }
+
+    if (selected?.name === 'fork-left') {
+      return [
+        { key: '1', label: '前移' },
+        { key: '2', label: '横移' },
+        { key: '3', label: '俯仰' },
+        { key: '4', label: '横滚' },
+        { key: '5', label: '升降' },
+        { key: '6', label: '叉间距' },
       ];
     }
     return []; // 预留默认弹窗
@@ -89,12 +116,18 @@ export default function ContextMenu() {
             key={item.key}
             onClick={() => {
               console.log('menu:', item.key, selected);
-              showPanel(item.key as any); // ⭐ 打开面板
+              if (selected?.name === 'fork-left') {
+                setPanelTab(item.key);
+                showPanel('fork');
+              } else if (selected?.name === 'body') {
+                setPanelTab(item.key);
+                showPanel('body');
+              } else {
+                showPanel(item.key as any); // ⭐ 打开面板
+              }
               hideContextMenu();
             }}
-            className='px-2 py-1 cursor-pointer'
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#333')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+            className='hover:bg-blue-600 px-3 py-1 cursor-pointer text-sm rounded transition-colors'
           >
             {item.label}
           </div>

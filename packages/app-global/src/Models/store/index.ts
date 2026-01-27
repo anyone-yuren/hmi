@@ -45,11 +45,35 @@ interface State {
 
   showMapLoading: boolean;
   setShowMapLoading: (showMapLoading: boolean) => void;
+
+  // 叉臂参数
+  forkParams: {
+    liftSpeed: number;
+    dropSpeed: number;
+    dropIntervalSpeed: number;
+    liftIntervalSpeed: number;
+    dropSpeedInterval: number;
+  };
+  setForkParams: (params: Partial<State['forkParams']>) => void;
 }
 
 export const useModelStore = create<State>()(
   persist(
     (set, get) => ({
+      // 叉臂参数默认值
+      forkParams: {
+        liftSpeed: 10,
+        dropSpeed: 10,
+        dropIntervalSpeed: 5,
+        liftIntervalSpeed: 5,
+        dropSpeedInterval: 5,
+      },
+      setForkParams: (params) => {
+        set((state) => ({
+          forkParams: { ...state.forkParams, ...params },
+        }));
+      },
+
       showMapLoading: false,
       setShowMapLoading: (showMapLoading: boolean) => {
         set(() => ({

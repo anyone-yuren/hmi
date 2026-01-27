@@ -9,9 +9,17 @@ interface EditorState {
   contextMenuPosition: { x: number; y: number } | null;
 
   // ⭐ 面板
-  panelType: null | 'clip' | 'density' | 'focus' | 'calibration';
+  panelType:
+    | null
+    | 'clip'
+    | 'density'
+    | 'focus'
+    | 'calibration'
+    | 'fork'
+    | 'body';
   panelVisible: boolean;
-
+  panelTab: string | null;
+  setPanelTab: (panelTab: string | null) => void;
   showPanel: (type: EditorState['panelType']) => void;
   hidePanel: () => void;
 
@@ -31,6 +39,9 @@ export const useEditorStore = create<EditorState>()(
 
       panelType: null,
       panelVisible: false,
+      panelTab: null,
+
+      setPanelTab: (panelTab) => set({ panelTab }),
 
       showPanel: (type) =>
         set({
@@ -42,6 +53,7 @@ export const useEditorStore = create<EditorState>()(
         set({
           panelVisible: false,
           panelType: null,
+          panelTab: null,
         }),
 
       selectObject: (obj) => set({ selected: obj }),

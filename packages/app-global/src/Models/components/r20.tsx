@@ -84,165 +84,213 @@ const createGlowMaterial = (originalMaterial, glowIntensity = 2) => {
 };
 
 // 货叉组件 - 第一阶段升降
-const ForkLeft = forwardRef(({ forkMesh, forkHeight, children, isSelected, onClick, opacity }, ref) => {
-  // 第一阶段：0-2.5m，货叉单独升高
-  // const stage1Height = Math.min(forkHeight, FIRST_STAGE_MAX) * SCALE;
+interface ForkLeftProps {
+  forkMesh: any;
+  forkHeight: number;
+  children?: React.ReactNode;
+  isSelected?: boolean;
+  onClick?: (event: any) => void;
+  opacity?: number;
+}
 
-  const MIN_HEIGHT = 100; // mm
-  const MAX_HEIGHT = forkHeight * SCALE;
+const ForkLeft = forwardRef<any, ForkLeftProps>(
+  ({ forkMesh, forkHeight, children, isSelected, onClick, opacity }, ref) => {
+    // 第一阶段：0-2.5m，货叉单独升高
+    // const stage1Height = Math.min(forkHeight, FIRST_STAGE_MAX) * SCALE;
 
-  const { mode } = useModelStore(
-    useShallow((state) => {
-      return {
-        mode: state.mode,
-      };
-    }),
-  );
-  const { displayStrategies, setSelectMeshName, selectMeshName } = useSafetyStore(
-    useShallow((state) => {
-      return {
-        displayStrategies: state.displayStrategies,
-        setSelectMeshName: state.setSelectMeshName,
-        selectMeshName: state.selectMeshName,
-      };
-    }),
-  );
+    const MIN_HEIGHT = 100; // mm
+    const MAX_HEIGHT = forkHeight * SCALE;
 
-  // 🟢 react-spring 动画
-  // const { y } = useSpring({
-  //   from: { y: MIN_HEIGHT, positionY: 50, scaleY: 1 },
-  //   to: { y: MAX_HEIGHT, positionY: MAX_HEIGHT / 2, scaleY: 3 },
-  //   config: {
-  //     mass: 1,
-  //     tension: 120,
-  //     friction: 20,
-  //     duration: 2000,
-  //   },
-  //   loop: { reverse: mode === 'obstacleAvoidance' }, // ✨ 上下往返循环
-  // });
+    const { mode, setModelSelect } = useModelStore(
+      useShallow((state) => {
+        return {
+          mode: state.mode,
+          setModelSelect: state.setModelSelect,
+        };
+      }),
+    );
 
-  // 创建材质副本
-  const [clonedMaterial, setClonedMaterial] = useState(null);
-  const meshRef = useRef();
+    const { selectObject, showContextMenu, showPanel, setPanelTab, hidePanel } =
+      useEditorStore(
+        useShallow((state) => ({
+          selectObject: state.selectObject,
+          showContextMenu: state.showContextMenu,
+          showPanel: state.showPanel,
+          setPanelTab: state.setPanelTab,
+          hidePanel: state.hidePanel,
+        })),
+      );
+    const { displayStrategies, setSelectMeshName, selectMeshName } =
+      useSafetyStore(
+        useShallow((state) => {
+          return {
+            displayStrategies: state.displayStrategies,
+            setSelectMeshName: state.setSelectMeshName,
+            selectMeshName: state.selectMeshName,
+          };
+        }),
+      );
 
-  useEffect(() => {
-    if (forkMesh && forkMesh.material) {
-      const material = createMaterialClone(forkMesh.material);
-      setClonedMaterial(material);
-    }
-  }, [forkMesh]);
+    // 🟢 react-spring 动画
+    // const { y } = useSpring({
+    //   from: { y: MIN_HEIGHT, positionY: 50, scaleY: 1 },
+    //   to: { y: MAX_HEIGHT, positionY: MAX_HEIGHT / 2, scaleY: 3 },
+    //   config: {
+    //     mass: 1,
+    //     tension: 120,
+    //     friction: 20,
+    //     duration: 2000,
+    //   },
+    //   loop: { reverse: mode === 'obstacleAvoidance' }, // ✨ 上下往返循环
+    // });
 
-  useEffect(() => {
-    if (clonedMaterial) {
-      updateMaterialOpacity(clonedMaterial, opacity);
-    }
-  }, [clonedMaterial, opacity]);
+    // 创建材质副本
+    const [clonedMaterial, setClonedMaterial] = useState(null);
+    const meshRef = useRef();
 
-  const { scaleY, positionY, y } = useSpring({
-    from: {
-      scaleY: 1,
-      y: MIN_HEIGHT,
-      positionY: 50, // 初始位置补偿，使底部在原点
-    },
-    to: async (next) => {
-      while (true) {
-        // 向上拉伸到3倍
-        await next({ scaleY: 1, positionY: 25, y: MAX_HEIGHT });
-        // 恢复
-        await next({ scaleY: 2, positionY: 50, y: MIN_HEIGHT });
+    useEffect(() => {
+      if (forkMesh && forkMesh.material) {
+        const material = createMaterialClone(forkMesh.material);
+        setClonedMaterial(material);
       }
-    },
-    config: { mass: 1, tension: 120, friction: 20, duration: 2000 },
-    loop: { reverse: mode === 'obstacleAvoidance' }, // ✨ 上下往返循环
-  });
+    }, [forkMesh]);
 
-  if (!forkMesh || !clonedMaterial) return null;
+    useEffect(() => {
+      if (clonedMaterial) {
+        updateMaterialOpacity(clonedMaterial, opacity);
+      }
+    }, [clonedMaterial, opacity]);
 
-  return (
-    <>
-      <animated.group position-y={y}>
-        {mode === 'obstacleAvoidance' && displayStrategies.includes('dropSpaceDetection') ? (
-          <>
-            <mesh
-              position={[-150, 0, 0]}
-              geometry={new BoxGeometry(100, 10, 100)}
-              material={new MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.3 })}
-            />
-          </>
-        ) : null}
-        {/* 叉尖 */}
-        {mode === 'obstacleAvoidance' && displayStrategies.includes('pickupTipProtection') ? (
-          <>
-            <mesh
-              position={[-110, 5, 25]}
-              geometry={new BoxGeometry(20, 1, 20)}
-              material={
-                new MeshBasicMaterial({
-                  color: 0x00ffff,
-                  transparent: true,
-                  opacity: 0.3,
-                  depthTest: false,
-                  depthWrite: false,
-                })
-              }
-            />
-            <mesh
-              position={[-110, 5, -25]}
-              geometry={new BoxGeometry(20, 1, 20)}
-              material={
-                new MeshBasicMaterial({
-                  color: 0x00ffff,
-                  transparent: true,
-                  opacity: 0.3,
-                  depthTest: false,
-                  depthWrite: false,
-                })
-              }
-            />
-          </>
-        ) : null}
+    const { scaleY, positionY, y } = useSpring({
+      from: {
+        scaleY: 1,
+        y: MIN_HEIGHT,
+        positionY: 50, // 初始位置补偿，使底部在原点
+      },
+      to: async (next) => {
+        while (true) {
+          // 向上拉伸到3倍
+          await next({ scaleY: 1, positionY: 25, y: MAX_HEIGHT });
+          // 恢复
+          await next({ scaleY: 2, positionY: 50, y: MIN_HEIGHT });
+        }
+      },
+      config: { mass: 1, tension: 120, friction: 20, duration: 2000 },
+      loop: { reverse: mode === 'obstacleAvoidance' }, // ✨ 上下往返循环
+    });
 
-        <mesh
-          ref={ref || meshRef}
-          geometry={forkMesh.geometry}
-          material={clonedMaterial}
-          scale={forkMesh.scale}
-          castShadow
-          receiveShadow
-          onClick={onClick}
-        >
-          {isSelected && (
-            // 添加额外的发光层
-            <mesh geometry={forkMesh.geometry} scale={1.02}>
-              <meshBasicMaterial
-                color={0x00ff00}
-                transparent
-                opacity={0.3}
-                side={2} // 双面渲染
+    if (!forkMesh || !clonedMaterial) return null;
+
+    return (
+      <>
+        <animated.group position-y={y}>
+          {mode === 'obstacleAvoidance' &&
+          displayStrategies.includes('dropSpaceDetection') ? (
+            <>
+              <mesh
+                position={[-150, 0, 0]}
+                geometry={new BoxGeometry(100, 10, 100)}
+                material={
+                  new MeshBasicMaterial({
+                    color: 0xff0000,
+                    transparent: true,
+                    opacity: 0.3,
+                  })
+                }
               />
-            </mesh>
-          )}
-        </mesh>
-        {children}
-      </animated.group>
-      {mode === 'obstacleAvoidance' && displayStrategies.includes('underForkProtection') ? (
-        <>
-          <animated.mesh
-            position-y={positionY}
-            scale-y={scaleY}
-            position-x={-50}
+            </>
+          ) : null}
+          {/* 叉尖 */}
+          {mode === 'obstacleAvoidance' &&
+          displayStrategies.includes('pickupTipProtection') ? (
+            <>
+              <mesh
+                position={[-110, 5, 25]}
+                geometry={new BoxGeometry(20, 1, 20)}
+                material={
+                  new MeshBasicMaterial({
+                    color: 0x00ffff,
+                    transparent: true,
+                    opacity: 0.3,
+                    depthTest: false,
+                    depthWrite: false,
+                  })
+                }
+              />
+              <mesh
+                position={[-110, 5, -25]}
+                geometry={new BoxGeometry(20, 1, 20)}
+                material={
+                  new MeshBasicMaterial({
+                    color: 0x00ffff,
+                    transparent: true,
+                    opacity: 0.3,
+                    depthTest: false,
+                    depthWrite: false,
+                  })
+                }
+              />
+            </>
+          ) : null}
+
+          <mesh
+            ref={ref || meshRef}
+            name='fork-left'
+            geometry={forkMesh.geometry}
+            material={clonedMaterial}
+            scale={forkMesh.scale}
+            castShadow
+            receiveShadow
             onClick={(e) => {
-              setSelectMeshName(selectMeshName === 'underForkProtection' ? '' : 'underForkProtection');
+              onClick?.(e);
+              setModelSelect('fork');
+              setPanelTab(null);
+              hidePanel();
+            }}
+            onContextMenu={(e) => {
+              e.stopPropagation();
+              selectObject(e.object);
+              showContextMenu(e.clientX, e.clientY);
             }}
           >
-            <boxGeometry args={[100, 50, 100]} />
-            <meshStandardMaterial color='hotpink' transparent opacity={0.3} />
-          </animated.mesh>
-        </>
-      ) : null}
-    </>
-  );
-});
+            {isSelected && (
+              // 添加额外的发光层
+              <mesh geometry={forkMesh.geometry} scale={1.02}>
+                <meshBasicMaterial
+                  color={0x00ff00}
+                  transparent
+                  opacity={0.3}
+                  side={2} // 双面渲染
+                />
+              </mesh>
+            )}
+          </mesh>
+          {children}
+        </animated.group>
+        {mode === 'obstacleAvoidance' &&
+        displayStrategies.includes('underForkProtection') ? (
+          <>
+            <animated.mesh
+              position-y={positionY}
+              scale-y={scaleY}
+              position-x={-50}
+              onClick={(e) => {
+                setSelectMeshName(
+                  selectMeshName === 'underForkProtection'
+                    ? ''
+                    : 'underForkProtection',
+                );
+              }}
+            >
+              <boxGeometry args={[100, 50, 100]} />
+              <meshStandardMaterial color='hotpink' transparent opacity={0.3} />
+            </animated.mesh>
+          </>
+        ) : null}
+      </>
+    );
+  },
+);
 
 // 第一门架组件 - 第二阶段升降
 interface FirstDoorProps {
@@ -258,7 +306,9 @@ const FirstDoor = forwardRef<any, FirstDoorProps>(
   ({ doorMesh, forkHeight, children, isSelected, onClick, opacity }, ref) => {
     // 第二阶段：2.5m-5m，第一门架开始升高
     const stage2Height =
-      forkHeight > FIRST_STAGE_MAX ? Math.min(forkHeight - FIRST_STAGE_MAX, FIRST_STAGE_MAX) * SCALE : 0;
+      forkHeight > FIRST_STAGE_MAX
+        ? Math.min(forkHeight - FIRST_STAGE_MAX, FIRST_STAGE_MAX) * SCALE
+        : 0;
 
     // 创建材质副本
     const [clonedMaterial, setClonedMaterial] = useState(null);
@@ -292,7 +342,12 @@ const FirstDoor = forwardRef<any, FirstDoorProps>(
         >
           {isSelected && (
             <mesh geometry={doorMesh.geometry} scale={1.02}>
-              <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+              <meshBasicMaterial
+                color={0x00ff00}
+                transparent
+                opacity={0.3}
+                side={2}
+              />
             </mesh>
           )}
         </mesh>
@@ -315,7 +370,10 @@ interface SecondDoorProps {
 const SecondDoor = forwardRef<any, SecondDoorProps>(
   ({ doorMesh, forkHeight, children, isSelected, onClick, opacity }, ref) => {
     // 第三阶段：5m以上，第二门架开始升高
-    const stage3Height = forkHeight > SECOND_STAGE_MAX ? (forkHeight - SECOND_STAGE_MAX) * SCALE : 0;
+    const stage3Height =
+      forkHeight > SECOND_STAGE_MAX
+        ? (forkHeight - SECOND_STAGE_MAX) * SCALE
+        : 0;
 
     // 创建材质副本
     const [clonedMaterial, setClonedMaterial] = useState(null);
@@ -349,7 +407,12 @@ const SecondDoor = forwardRef<any, SecondDoorProps>(
         >
           {isSelected && (
             <mesh geometry={doorMesh.geometry} scale={1.02}>
-              <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+              <meshBasicMaterial
+                color={0x00ff00}
+                transparent
+                opacity={0.3}
+                side={2}
+              />
             </mesh>
           )}
         </mesh>
@@ -360,263 +423,333 @@ const SecondDoor = forwardRef<any, SecondDoorProps>(
 );
 
 // 立柱组件 - 固定不动
-const BaseDoor = forwardRef(({ columnMesh, isSelected, onClick, opacity }, ref) => {
-  // 创建材质副本
-  const [clonedMaterial, setClonedMaterial] = useState(null);
-  const meshRef = useRef();
+const BaseDoor = forwardRef(
+  ({ columnMesh, isSelected, onClick, opacity }, ref) => {
+    // 创建材质副本
+    const [clonedMaterial, setClonedMaterial] = useState(null);
+    const meshRef = useRef();
 
-  useEffect(() => {
-    if (columnMesh && columnMesh.material) {
-      const material = createMaterialClone(columnMesh.material);
+    useEffect(() => {
+      if (columnMesh && columnMesh.material) {
+        const material = createMaterialClone(columnMesh.material);
 
-      // 设置立柱的特殊颜色
-      const updateMaterialColor = (mat) => {
-        if (mat.color) mat.color.setHex(0xffffff);
-        if (mat.specular) mat.specular.setHex(0x222222);
-      };
+        // 设置立柱的特殊颜色
+        const updateMaterialColor = (mat) => {
+          if (mat.color) mat.color.setHex(0xffffff);
+          if (mat.specular) mat.specular.setHex(0x222222);
+        };
 
-      if (Array.isArray(material)) {
-        material.forEach(updateMaterialColor);
-      } else {
-        updateMaterialColor(material);
+        if (Array.isArray(material)) {
+          material.forEach(updateMaterialColor);
+        } else {
+          updateMaterialColor(material);
+        }
+
+        setClonedMaterial(material);
       }
+    }, [columnMesh]);
 
-      setClonedMaterial(material);
-    }
-  }, [columnMesh]);
+    useEffect(() => {
+      if (clonedMaterial) {
+        updateMaterialOpacity(clonedMaterial, opacity);
+      }
+    }, [clonedMaterial, opacity]);
 
-  useEffect(() => {
-    if (clonedMaterial) {
-      updateMaterialOpacity(clonedMaterial, opacity);
-    }
-  }, [clonedMaterial, opacity]);
+    if (!columnMesh || !clonedMaterial) return null;
 
-  if (!columnMesh || !clonedMaterial) return null;
-
-  return (
-    <mesh
-      ref={ref || meshRef}
-      geometry={columnMesh.geometry}
-      material={clonedMaterial}
-      scale={columnMesh.scale}
-      castShadow
-      onClick={onClick}
-    >
-      {isSelected && (
-        <mesh geometry={columnMesh.geometry} scale={1.02}>
-          <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
-        </mesh>
-      )}
-    </mesh>
-  );
-});
-
-// 车身组件 - 固定不动
-const RBody = forwardRef(({ bodyMesh, isSelected, onClick, opacity }, ref) => {
-  const { mode } = useModelStore(
-    useShallow((state) => {
-      return {
-        mode: state.mode,
-      };
-    }),
-  );
-  const { displayStrategies } = useSafetyStore(
-    useShallow((state) => {
-      return {
-        displayStrategies: state.displayStrategies,
-      };
-    }),
-  );
-
-  const { openVisionPanel, setOpenVisionPanel } = useVisionFlowStore(
-    useShallow((store) => {
-      return {
-        openVisionPanel: store.openVisionPanel,
-        setOpenVisionPanel: store.setOpenVisionPanel,
-      };
-    }),
-  );
-  // 创建材质副本
-  const [clonedMaterial, setClonedMaterial] = useState(null);
-  const meshRef = useRef();
-
-  useEffect(() => {
-    if (bodyMesh && bodyMesh.material) {
-      const material = createMaterialClone(bodyMesh.material);
-      // const glowMat = createGlowMaterial(bodyMesh.material);
-      setClonedMaterial(material);
-      // setGlowMaterial(glowMat);
-    }
-  }, [bodyMesh]);
-
-  useEffect(() => {
-    if (clonedMaterial) {
-      updateMaterialOpacity(clonedMaterial, opacity);
-    }
-  }, [clonedMaterial, opacity]);
-
-  if (!bodyMesh || !clonedMaterial) return null;
-  return (
-    <>
-      {/* 顶部绘制一个发光的保护区域 */}
-      {mode === 'obstacleAvoidance' && displayStrategies.includes('topProtection') ? (
-        <>
-          <mesh
-            position={[-100, FIRST_STAGE_MAX * SCALE, 0]}
-            geometry={new BoxGeometry(100, 10, 100)}
-            material={new MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.3 })}
-          />
-
-          <mesh
-            position={[-100, FIRST_STAGE_MAX * SCALE - 100, 0]}
-            geometry={new BoxGeometry(100, 10, 100)}
-            material={new MeshBasicMaterial({ color: 0xffff00, transparent: true, opacity: 0.3 })}
-          />
-        </>
-      ) : null}
-
+    return (
       <mesh
         ref={ref || meshRef}
-        name='body'
-        geometry={bodyMesh.geometry}
+        geometry={columnMesh.geometry}
         material={clonedMaterial}
-        scale={bodyMesh.scale}
+        scale={columnMesh.scale}
         castShadow
-        onClick={(e) => {
-          // setOpenVisionPanel(!openVisionPanel);
-          onClick && onClick(e);
-        }}
+        onClick={onClick}
       >
         {isSelected && (
-          <mesh geometry={bodyMesh.geometry} scale={1.02}>
-            <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
+          <mesh geometry={columnMesh.geometry} scale={1.02}>
+            <meshBasicMaterial
+              color={0x00ff00}
+              transparent
+              opacity={0.3}
+              side={2}
+            />
           </mesh>
         )}
       </mesh>
-    </>
-  );
-});
+    );
+  },
+);
+
+// 车身组件 - 固定不动
+interface RBodyProps {
+  bodyMesh: any;
+  isSelected?: boolean;
+  onClick?: (event: any) => void;
+  opacity?: number;
+}
+
+const RBody = forwardRef<any, RBodyProps>(
+  ({ bodyMesh, isSelected, onClick, opacity }, ref) => {
+    const { mode, setModelSelect } = useModelStore(
+      useShallow((state) => {
+        return {
+          mode: state.mode,
+          setModelSelect: state.setModelSelect,
+        };
+      }),
+    );
+    const { selectObject, showContextMenu, showPanel, setPanelTab, hidePanel } =
+      useEditorStore(
+        useShallow((state) => ({
+          selectObject: state.selectObject,
+          showContextMenu: state.showContextMenu,
+          showPanel: state.showPanel,
+          setPanelTab: state.setPanelTab,
+          hidePanel: state.hidePanel,
+        })),
+      );
+
+    const { displayStrategies } = useSafetyStore(
+      useShallow((state) => {
+        return {
+          displayStrategies: state.displayStrategies,
+        };
+      }),
+    );
+
+    const { openVisionPanel, setOpenVisionPanel } = useVisionFlowStore(
+      useShallow((store) => {
+        return {
+          openVisionPanel: store.openVisionPanel,
+          setOpenVisionPanel: store.setOpenVisionPanel,
+        };
+      }),
+    );
+    // 创建材质副本
+    const [clonedMaterial, setClonedMaterial] = useState(null);
+    const meshRef = useRef();
+
+    useEffect(() => {
+      if (bodyMesh && bodyMesh.material) {
+        const material = createMaterialClone(bodyMesh.material);
+        // const glowMat = createGlowMaterial(bodyMesh.material);
+        setClonedMaterial(material);
+        // setGlowMaterial(glowMat);
+      }
+    }, [bodyMesh]);
+
+    useEffect(() => {
+      if (clonedMaterial) {
+        updateMaterialOpacity(clonedMaterial, opacity);
+      }
+    }, [clonedMaterial, opacity]);
+
+    if (!bodyMesh || !clonedMaterial) return null;
+    return (
+      <>
+        {/* 顶部绘制一个发光的保护区域 */}
+        {mode === 'obstacleAvoidance' &&
+        displayStrategies.includes('topProtection') ? (
+          <>
+            <mesh
+              position={[-100, FIRST_STAGE_MAX * SCALE, 0]}
+              geometry={new BoxGeometry(100, 10, 100)}
+              material={
+                new MeshBasicMaterial({
+                  color: 0x00ff00,
+                  transparent: true,
+                  opacity: 0.3,
+                })
+              }
+            />
+
+            <mesh
+              position={[-100, FIRST_STAGE_MAX * SCALE - 100, 0]}
+              geometry={new BoxGeometry(100, 10, 100)}
+              material={
+                new MeshBasicMaterial({
+                  color: 0xffff00,
+                  transparent: true,
+                  opacity: 0.3,
+                })
+              }
+            />
+          </>
+        ) : null}
+
+        <mesh
+          ref={ref || meshRef}
+          name='body'
+          geometry={bodyMesh.geometry}
+          material={clonedMaterial}
+          scale={bodyMesh.scale}
+          castShadow
+          receiveShadow
+          onClick={(e) => {
+            onClick?.(e);
+            setModelSelect('body');
+            setPanelTab(null);
+            hidePanel();
+          }}
+        >
+          {isSelected && (
+            <mesh geometry={bodyMesh.geometry} scale={1.02}>
+              <meshBasicMaterial
+                color={0x00ff00}
+                transparent
+                opacity={0.3}
+                side={2}
+              />
+            </mesh>
+          )}
+        </mesh>
+      </>
+    );
+  },
+);
 
 // 颜色漆面
-const ColorMesh = forwardRef(({ colorMesh, isSelected, onClick, opacity }, ref) => {
-  // 创建材质副本
-  const [clonedMaterial, setClonedMaterial] = useState(null);
-  const meshRef = useRef();
+const ColorMesh = forwardRef(
+  ({ colorMesh, isSelected, onClick, opacity }, ref) => {
+    // 创建材质副本
+    const [clonedMaterial, setClonedMaterial] = useState(null);
+    const meshRef = useRef();
 
-  useEffect(() => {
-    if (colorMesh && colorMesh.material) {
-      const material = createMaterialClone(colorMesh.material);
-      const glowMat = createGlowMaterial(colorMesh.material);
-      setClonedMaterial(material);
-    }
-  }, [colorMesh]);
+    useEffect(() => {
+      if (colorMesh && colorMesh.material) {
+        const material = createMaterialClone(colorMesh.material);
+        const glowMat = createGlowMaterial(colorMesh.material);
+        setClonedMaterial(material);
+      }
+    }, [colorMesh]);
 
-  useEffect(() => {
-    if (clonedMaterial) {
-      updateMaterialOpacity(clonedMaterial, opacity);
-    }
-  }, [clonedMaterial, opacity]);
+    useEffect(() => {
+      if (clonedMaterial) {
+        updateMaterialOpacity(clonedMaterial, opacity);
+      }
+    }, [clonedMaterial, opacity]);
 
-  if (!colorMesh || !clonedMaterial) return null;
+    if (!colorMesh || !clonedMaterial) return null;
 
-  return (
-    <mesh
-      ref={ref || meshRef}
-      geometry={colorMesh.geometry}
-      material={clonedMaterial}
-      scale={colorMesh.scale}
-      castShadow
-      receiveShadow
-      onClick={onClick}
-    >
-      {isSelected && (
-        <mesh geometry={colorMesh.geometry} scale={1.02}>
-          <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
-        </mesh>
-      )}
-    </mesh>
-  );
-});
+    return (
+      <mesh
+        ref={ref || meshRef}
+        geometry={colorMesh.geometry}
+        material={clonedMaterial}
+        scale={colorMesh.scale}
+        castShadow
+        receiveShadow
+        onClick={onClick}
+      >
+        {isSelected && (
+          <mesh geometry={colorMesh.geometry} scale={1.02}>
+            <meshBasicMaterial
+              color={0x00ff00}
+              transparent
+              opacity={0.3}
+              side={2}
+            />
+          </mesh>
+        )}
+      </mesh>
+    );
+  },
+);
 
-const RadarMesh = forwardRef(({ radarMesh, isSelected, onClick, opacity }, ref) => {
-  // 创建材质副本
-  const [clonedMaterial, setClonedMaterial] = useState(null);
-  const meshRef = useRef();
+const RadarMesh = forwardRef(
+  ({ radarMesh, isSelected, onClick, opacity }, ref) => {
+    // 创建材质副本
+    const [clonedMaterial, setClonedMaterial] = useState(null);
+    const meshRef = useRef();
 
-  useEffect(() => {
-    if (radarMesh && radarMesh.material) {
-      const material = createMaterialClone(radarMesh.material);
-      setClonedMaterial(material);
-    }
-  }, [radarMesh]);
+    useEffect(() => {
+      if (radarMesh && radarMesh.material) {
+        const material = createMaterialClone(radarMesh.material);
+        setClonedMaterial(material);
+      }
+    }, [radarMesh]);
 
-  useEffect(() => {
-    if (clonedMaterial) {
-      updateMaterialOpacity(clonedMaterial, opacity);
-    }
-  }, [clonedMaterial, opacity]);
+    useEffect(() => {
+      if (clonedMaterial) {
+        updateMaterialOpacity(clonedMaterial, opacity);
+      }
+    }, [clonedMaterial, opacity]);
 
-  if (!radarMesh || !clonedMaterial) return null;
+    if (!radarMesh || !clonedMaterial) return null;
 
-  return (
-    <mesh
-      ref={ref || meshRef}
-      geometry={radarMesh.geometry}
-      material={clonedMaterial}
-      scale={radarMesh.scale}
-      castShadow
-      receiveShadow
-      onClick={onClick}
-      name='radar'
-    >
-      {isSelected && (
-        <mesh geometry={radarMesh.geometry} scale={1}>
-          <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
-        </mesh>
-      )}
-    </mesh>
-  );
-});
+    return (
+      <mesh
+        ref={ref || meshRef}
+        geometry={radarMesh.geometry}
+        material={clonedMaterial}
+        scale={radarMesh.scale}
+        castShadow
+        receiveShadow
+        onClick={onClick}
+        name='radar'
+      >
+        {isSelected && (
+          <mesh geometry={radarMesh.geometry} scale={1}>
+            <meshBasicMaterial
+              color={0x00ff00}
+              transparent
+              opacity={0.3}
+              side={2}
+            />
+          </mesh>
+        )}
+      </mesh>
+    );
+  },
+);
 
-const CameraMesh = forwardRef(({ cameraMesh, isSelected, onClick, opacity }, ref) => {
-  // 创建材质副本
-  const [clonedMaterial, setClonedMaterial] = useState(null);
-  const meshRef = useRef();
+const CameraMesh = forwardRef(
+  ({ cameraMesh, isSelected, onClick, opacity }, ref) => {
+    // 创建材质副本
+    const [clonedMaterial, setClonedMaterial] = useState(null);
+    const meshRef = useRef();
 
-  useEffect(() => {
-    if (cameraMesh && cameraMesh.material) {
-      const material = createMaterialClone(cameraMesh.material);
-      setClonedMaterial(material);
-    }
-  }, [cameraMesh]);
+    useEffect(() => {
+      if (cameraMesh && cameraMesh.material) {
+        const material = createMaterialClone(cameraMesh.material);
+        setClonedMaterial(material);
+      }
+    }, [cameraMesh]);
 
-  useEffect(() => {
-    if (clonedMaterial) {
-      updateMaterialOpacity(clonedMaterial, opacity);
-    }
-  }, [clonedMaterial, opacity]);
+    useEffect(() => {
+      if (clonedMaterial) {
+        updateMaterialOpacity(clonedMaterial, opacity);
+      }
+    }, [clonedMaterial, opacity]);
 
-  if (!cameraMesh || !clonedMaterial) return null;
+    if (!cameraMesh || !clonedMaterial) return null;
 
-  return (
-    <mesh
-      ref={ref || meshRef}
-      geometry={cameraMesh.geometry}
-      material={clonedMaterial}
-      scale={cameraMesh.scale}
-      castShadow
-      receiveShadow
-      onClick={onClick}
-      name={cameraMesh.name ?? 'camera'}
-    >
-      {isSelected && (
-        <mesh geometry={cameraMesh.geometry} scale={1}>
-          <meshBasicMaterial color={0x00ff00} transparent opacity={0.3} side={2} />
-        </mesh>
-      )}
-    </mesh>
-  );
-});
+    return (
+      <mesh
+        ref={ref || meshRef}
+        geometry={cameraMesh.geometry}
+        material={clonedMaterial}
+        scale={cameraMesh.scale}
+        castShadow
+        receiveShadow
+        onClick={onClick}
+        name={cameraMesh.name ?? 'camera'}
+      >
+        {isSelected && (
+          <mesh geometry={cameraMesh.geometry} scale={1}>
+            <meshBasicMaterial
+              color={0x00ff00}
+              transparent
+              opacity={0.3}
+              side={2}
+            />
+          </mesh>
+        )}
+      </mesh>
+    );
+  },
+);
 
 export default function RModelFbx(props) {
   const { isHasGoods, forkHeight = 500 } = props;
@@ -642,7 +775,9 @@ export default function RModelFbx(props) {
   // const [selectedPart, setSelectedPart] = useState(null);
   // 区分生产环境和开发环境
   const isProd = process.env.NODE_ENV === 'production';
-  const fbxPath = isProd ? '/toolkit/static/fbx/r15-15.fbx' : '/static/fbx/r15-15.fbx';
+  const fbxPath = isProd
+    ? '/toolkit/static/fbx/r15-15.fbx'
+    : '/static/fbx/r15-15.fbx';
   const fbx = useFBX(fbxPath);
   const clonedFbx = useMemo(() => SkeletonUtils.clone(fbx), [fbx]);
   const { selectedPart, setSelectedPart } = useModelStore(
@@ -728,7 +863,11 @@ export default function RModelFbx(props) {
   };
 
   return (
-    <group rotation={[Math.PI, 0, 0 - Math.PI]} scale={0.1} position={[0, 0, 0]}>
+    <group
+      rotation={[Math.PI, 0, 0 - Math.PI]}
+      scale={0.1}
+      position={[0, 0, 0]}
+    >
       {/* 固定部件 */}
       <RBody
         bodyMesh={bodyMesh}
