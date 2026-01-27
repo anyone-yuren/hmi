@@ -5,7 +5,7 @@ import { useAutoCompileStore } from '../store';
 const AddNodeModal = () => {
   const visible = useAutoCompileStore((state) => state.addNodeModalVisible);
   const setVisible = useAutoCompileStore(
-    (state) => state.setAddNodeModalVisible,
+    (state) => state.setAddNodeModalVisible
   );
   const addNewNode = useAutoCompileStore((state) => state.addNewNode);
   const [form] = Form.useForm();
@@ -35,7 +35,7 @@ const AddNodeModal = () => {
       onCancel={handleCancel}
       destroyOnClose
     >
-      <Form form={form} layout='vertical'>
+      <Form form={form} layout='horizontal'>
         <Form.Item
           name='layerId'
           label='所属层级'

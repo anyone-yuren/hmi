@@ -39,9 +39,7 @@ const WorkflowDesigner = () => {
             icon={<ArrowLeftOutlined className='text-gray-300' />}
             onClick={closeWorkflow}
           />
-          <div className='text-lg font-bold text-gray-200'>
-            MES 工作流设计器
-          </div>
+          <div className='text-lg font-bold text-gray-200'>工作流设计器</div>
         </div>
         <Space>
           <Button type='primary' icon={<SaveOutlined />} onClick={handleSave}>

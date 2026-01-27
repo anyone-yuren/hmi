@@ -24,7 +24,7 @@ const ControlPanel = () => {
             <Progress
               percent={progress}
               status={isCompiling ? 'active' : 'normal'}
-              strokeColor='#52c41a'
+              strokeColor='#00d1d1'
             />
           </div>
         </motion.div>

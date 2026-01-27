@@ -35,7 +35,7 @@ const AutoCompile = () => {
           <Alert
             message='正在查看历史构建快照'
             description='当前视图为只读模式'
-            type='info'
+            type='warning'
             showIcon
             action={
               <Button
