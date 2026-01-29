@@ -132,7 +132,7 @@ const SlamHandles = (props: any) => {
     () => {
       setRefreshFloorData();
     },
-    confidenceCheck ? 1000 : undefined,
+    confidenceCheck ? 5000 : undefined,
   );
 
   const delSlamMap = async () => {
@@ -422,7 +422,7 @@ const SlamHandles = (props: any) => {
                   // handleButtonClick('radar');
                   // console.log('E', e.target.checked);
                   await depict_history_pose({ cmd: e.target.checked ? 1 : 0 });
-                  setRefreshFloorData();
+                  e.target.checked && setRefreshFloorData();
                 }}
                 // sx={{
                 //   '& .MuiFormControlLabel-label': {
@@ -446,7 +446,7 @@ const SlamHandles = (props: any) => {
                   // handleButtonClick('radar');
                   // console.log('E', e.target.checked);
                   await location_confidence({ cmd: e.target.checked ? 1 : 0 });
-                  setRefreshFloorData();
+                  e.target.checked && setRefreshFloorData();
                 }}
                 // sx={{
                 //   '& .MuiFormControlLabel-label': {
