@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useRef } from 'react';
-import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorMenuStore } from '../../../store/mapMenuStore';
 
 export default function ContextMenu() {
-  const { contextMenuVisible, contextMenuPosition, selected, hideContextMenu, showPanel } = useMapEditorMenuStore(
+  const {
+    contextMenuVisible,
+    contextMenuPosition,
+    selected,
+    hideContextMenu,
+    showPanel,
+  } = useMapEditorMenuStore(
     useShallow((store) => {
       return {
         showPanel: store.showPanel,
@@ -34,11 +39,12 @@ export default function ContextMenu() {
   const items = useMemo(() => {
     console.log('selected:', selected);
     if (!selected) return [];
-    if (selected instanceof THREE.Points) {
+    // if (selected instanceof THREE.Points) {
+    if (selected.type === 'Sprite') {
       return [
-        { key: 'clip', label: '裁剪设置' },
-        { key: 'density', label: '点云密度' },
-        { key: 'delete', label: '删除点云' },
+        { key: 'clip', label: '偏移复制' },
+        { key: 'density', label: '镜像复制' },
+        { key: 'delete', label: '删除' },
       ];
     }
     if (selected.name === 'body') {
@@ -109,7 +115,9 @@ export default function ContextMenu() {
             }}
             className='px-2 py-1 cursor-pointer'
             onMouseEnter={(e) => (e.currentTarget.style.background = '#333')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = 'transparent')
+            }
           >
             {item.label}
           </div>
