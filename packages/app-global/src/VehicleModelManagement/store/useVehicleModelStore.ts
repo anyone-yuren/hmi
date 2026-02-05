@@ -177,7 +177,7 @@ const recalculateLayout = (
       type: 'parameterNode', // Reuse parameter node
       position: { x: posX, y: posY },
       data: nodeData,
-      draggable: false, // Child nodes not draggable
+      draggable: true, // Child nodes draggable
     });
 
     // Create Edge
