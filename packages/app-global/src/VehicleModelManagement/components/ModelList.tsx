@@ -33,6 +33,20 @@ const ModelList = () => {
       key: 'stationTypeCount',
     },
     {
+      title: '绑定托盘',
+      dataIndex: 'trayModels',
+      key: 'trayModels',
+      render: (trayModels: string[]) => (
+        <Space size={[0, 8]} wrap>
+          {trayModels?.map((tag) => (
+            <Tag key={tag} color='blue'>
+              {tag}
+            </Tag>
+          ))}
+        </Space>
+      ),
+    },
+    {
       title: '状态',
       dataIndex: 'status',
       key: 'status',

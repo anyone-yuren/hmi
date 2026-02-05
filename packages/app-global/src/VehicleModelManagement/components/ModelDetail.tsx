@@ -1,10 +1,38 @@
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
-import { Background, Controls, MiniMap, ReactFlow } from '@xyflow/react';
+import {
+  Background,
+  Controls,
+  MiniMap,
+  ReactFlow,
+  ReactFlowProvider,
+  useReactFlow,
+} from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Button, Card, Form, Input, Select, Switch } from 'antd';
+import { useEffect } from 'react';
 import { useVehicleModelStore } from '../store/useVehicleModelStore';
-import { PARAMETER_GROUPS, VEHICLE_TYPES, VehicleType } from '../types';
+import {
+  PARAMETER_GROUPS,
+  TRAY_MODELS,
+  VEHICLE_TYPES,
+  VehicleType,
+} from '../types';
 import { nodeTypes } from './nodes';
+
+const AutoFitHandler = () => {
+  const { fitView } = useReactFlow();
+  const nodes = useVehicleModelStore((state) => state.nodes);
+
+  useEffect(() => {
+    // Debounce or wait for next tick to ensure nodes are rendered
+    const timer = setTimeout(() => {
+      fitView({ duration: 800 });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [nodes.length, fitView]);
+
+  return null;
+};
 
 const ModelDetail = () => {
   const {
@@ -18,6 +46,8 @@ const ModelDetail = () => {
     onEdgesChange,
     activeGroups,
     toggleGroup,
+    trayModels,
+    setTrayModels,
   } = useVehicleModelStore();
 
   const [form] = Form.useForm();
@@ -73,6 +103,19 @@ const ModelDetail = () => {
           {selectedVehicleType && (
             <Card size='small' title='参数配置开关'>
               <div className='flex flex-col gap-4'>
+                {/* Tray Model Selection */}
+                <div className='mb-4 border-b border-gray-700 pb-4'>
+                  <div className='mb-2 text-sm'>关联托盘模型</div>
+                  <Select
+                    mode='multiple'
+                    style={{ width: '100%' }}
+                    placeholder='选择托盘模型 (支持多选)'
+                    value={trayModels}
+                    onChange={setTrayModels}
+                    options={TRAY_MODELS}
+                  />
+                </div>
+
                 {PARAMETER_GROUPS.map((group) => (
                   <div
                     key={group.key}
@@ -92,19 +135,25 @@ const ModelDetail = () => {
 
         {/* Center: React Flow Canvas */}
         <div className='flex-1 h-full relative'>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            nodeTypes={nodeTypes}
-            fitView
-            colorMode='dark'
-          >
-            <Background />
-            <Controls />
-            <MiniMap />
-          </ReactFlow>
+          <ReactFlowProvider>
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              nodeTypes={nodeTypes}
+              fitView
+              nodesConnectable={false}
+              nodesDraggable={true} // Allow root to be draggable, children are controlled via node.draggable property
+              elementsSelectable={true}
+              colorMode='dark'
+            >
+              <Background />
+              <Controls />
+              <MiniMap />
+              <AutoFitHandler />
+            </ReactFlow>
+          </ReactFlowProvider>
         </div>
       </div>
     </div>
