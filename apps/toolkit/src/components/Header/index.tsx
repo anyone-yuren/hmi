@@ -80,6 +80,24 @@ const GlobalHeader = () => {
               </div>
             </Tooltip>
 
+            <Tooltip title='车型管理' placement='right'>
+              <div
+                className={classNames(
+                  'p-1 flex items-center flex-col gap-1  transition-all duration-300 cursor-pointer hover:opacity-100',
+                  location.pathname === '/vehicleModels'
+                    ? 'bg-[#00D1D1]/50 opacity-100 rounded-md'
+                    : '',
+                )}
+                onClick={() => navigate(`/vehicleModels`)}
+              >
+                <IconifyIcon
+                  icon='fluent:vehicle-car-profile-ltr-20-regular'
+                  size={24}
+                />
+                <span>车型</span>
+              </div>
+            </Tooltip>
+
             {hasModel ? (
               <>
                 <Tooltip title='车辆日志' placement='right'>
