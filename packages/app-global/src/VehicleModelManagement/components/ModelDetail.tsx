@@ -10,6 +10,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import { Button, Card, Form, Input, Select, Switch } from 'antd';
 import { useEffect } from 'react';
+import { useParkingRuleStore } from '../store/useParkingRuleStore';
 import { useVehicleModelStore } from '../store/useVehicleModelStore';
 import {
   PARAMETER_GROUPS,
@@ -49,6 +50,7 @@ const ModelDetail = () => {
     trayModels,
     setTrayModels,
   } = useVehicleModelStore();
+  const { rules } = useParkingRuleStore();
 
   const [form] = Form.useForm();
 
@@ -93,6 +95,15 @@ const ModelDetail = () => {
                   {VEHICLE_TYPES.map((type) => (
                     <Select.Option key={type} value={type}>
                       {type}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item label='关联停车规则' name='parkingRuleIds'>
+                <Select mode='multiple' placeholder='选择停车规则'>
+                  {rules.map((rule) => (
+                    <Select.Option key={rule.id} value={rule.id}>
+                      {rule.name}
                     </Select.Option>
                   ))}
                 </Select>

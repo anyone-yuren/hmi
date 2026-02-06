@@ -8,6 +8,7 @@ export interface VehicleModel {
   status: 'enabled' | 'disabled';
   updateTime: string;
   trayModels?: string[];
+  parkingRuleIds?: string[];
   parameterValues?: Record<string, any>; // Stores values for each parameter group
 }
 
@@ -61,3 +62,27 @@ export const STEERING_TYPES = [
   { label: 'Ackermann', value: 'ACKERMANN' },
   { label: 'Omni', value: 'OMNI' },
 ];
+
+export interface ParkingRule {
+  id: string;
+  name: string;
+  vehicleModelIds: string[];
+  stationType: string; // or string[] if multiple types
+  priority: number;
+  enabled: boolean;
+  description?: string;
+  // Parking Point Generation Rules
+  parkingPoint: {
+    anchor: string;
+    offsetX: number;
+    offsetY: number;
+    direction: string;
+    angle: number;
+  };
+  // Safety Constraints
+  safety: {
+    visualDetection: boolean;
+    obstacleAvoidanceScheme?: string;
+  };
+  updateTime: string;
+}

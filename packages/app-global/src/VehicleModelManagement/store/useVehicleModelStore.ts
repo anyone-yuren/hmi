@@ -63,6 +63,7 @@ const MOCK_MODELS: VehicleModel[] = [
     status: 'enabled',
     updateTime: '2023-10-27 10:00:00',
     trayModels: ['T1'],
+    parkingRuleIds: ['PR001'],
     parameterValues: {
       basic_id: { enabled: true, id: 2838124, name: 'X20' },
     },

@@ -1,10 +1,19 @@
 import { Button, Space, Table, Tag } from 'antd';
+import { useState } from 'react';
 import { IconifyIcon } from 'ui';
+import { useParkingRuleStore } from '../store/useParkingRuleStore';
 import { useVehicleModelStore } from '../store/useVehicleModelStore';
 import { VehicleModel } from '../types';
+import ParkingRuleManager from './ParkingRuleManager';
 
 const ModelList = () => {
   const { models, startEditing, deleteModel } = useVehicleModelStore();
+  const { rules, startEditing: startEditingRule } = useParkingRuleStore();
+  const [isRuleManagerOpen, setIsRuleManagerOpen] = useState(false);
+
+  const getRuleName = (id: string) => {
+    return rules.find((r) => r.id === id)?.name || id;
+  };
 
   const columns = [
     {
@@ -47,6 +56,32 @@ const ModelList = () => {
       ),
     },
     {
+      title: '关联停车规则',
+      dataIndex: 'parkingRuleIds',
+      key: 'parkingRuleIds',
+      render: (parkingRuleIds: string[]) => (
+        <Space size={[0, 8]} wrap>
+          {parkingRuleIds?.map((id) => {
+            const rule = rules.find((r) => r.id === id);
+            return (
+              <Tag
+                key={id}
+                color='cyan'
+                className='cursor-pointer'
+                onClick={() => {
+                  if (rule) {
+                    startEditingRule(rule);
+                  }
+                }}
+              >
+                {rule?.name || id}
+              </Tag>
+            );
+          })}
+        </Space>
+      ),
+    },
+    {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
@@ -64,6 +99,8 @@ const ModelList = () => {
     {
       title: '操作',
       key: 'action',
+      fixed: 'right' as const,
+      width: 200,
       render: (_: any, record: VehicleModel) => (
         <Space size='middle'>
           <Button type='link' size='small' onClick={() => startEditing(record)}>
@@ -89,13 +126,18 @@ const ModelList = () => {
     <div className='flex flex-col h-full gap-4 p-4 bg-white/5 rounded-lg'>
       <div className='flex justify-between items-center'>
         <div className='text-lg font-bold'>车型管理</div>
-        <Button
-          type='primary'
-          icon={<IconifyIcon icon='mingcute:add-line' size={16} />}
-          onClick={() => startEditing()}
-        >
-          新建车型
-        </Button>
+        <Space>
+          <Button onClick={() => setIsRuleManagerOpen(true)}>
+            停车规则设计
+          </Button>
+          <Button
+            type='primary'
+            icon={<IconifyIcon icon='mingcute:add-line' size={16} />}
+            onClick={() => startEditing()}
+          >
+            新建车型
+          </Button>
+        </Space>
       </div>
 
       <div className='flex-1 overflow-auto'>
@@ -104,8 +146,13 @@ const ModelList = () => {
           dataSource={models}
           rowKey='id'
           pagination={{ pageSize: 10 }}
+          scroll={{ x: 'max-content' }}
         />
       </div>
+      <ParkingRuleManager
+        open={isRuleManagerOpen}
+        onClose={() => setIsRuleManagerOpen(false)}
+      />
     </div>
   );
 };
