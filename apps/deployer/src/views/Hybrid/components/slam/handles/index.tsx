@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react';
 import { Button as ButtonBase, Divider, FormControlLabel, IconButton, Switch } from '@mui/material';
 import { ButtonBaseProps } from '@mui/material/ButtonBase';
 import { styled } from '@mui/material/styles';
-import { useInterval, useRequest } from 'ahooks';
+import { useRequest } from 'ahooks';
 import { Modal } from 'antd';
 import * as React from 'react';
 import { memo, useMemo, useState } from 'react';
@@ -128,12 +128,12 @@ const SlamHandles = (props: any) => {
     return pub_trajectory === 1;
   }, [pub_trajectory]);
 
-  useInterval(
-    () => {
-      setRefreshFloorData();
-    },
-    confidenceCheck ? 5000 : undefined,
-  );
+  // useInterval(
+  //   () => {
+  //     setRefreshFloorData();
+  //   },
+  //   confidenceCheck ? 5000 : undefined,
+  // );
 
   const delSlamMap = async () => {
     modal.confirm({
@@ -435,29 +435,20 @@ const SlamHandles = (props: any) => {
               />
             </div>
             <Divider orientation='vertical' variant='middle' flexItem />
-            <div className='rounded-sm shadow-md bg-white px-2 ' style={{ textAlign: 'right' }}>
-              <FormControlLabel
-                // value='end'
-                // control={<Switch color='primary' />}
-                label={t('deployer.hybrid.confidence')}
-                disabled={hide}
-                checked={confidenceCheck}
-                onChange={async (e: any) => {
-                  // handleButtonClick('radar');
-                  // console.log('E', e.target.checked);
-                  await location_confidence({ cmd: e.target.checked ? 1 : 0 });
-                  e.target.checked && setRefreshFloorData();
-                }}
-                // sx={{
-                //   '& .MuiFormControlLabel-label': {
-                //     color: '#333', // 修改标签的颜色
-                //     fontSize: '0.875rem',
-                //   },
-                // }}
-                // labelPlacement='start'
-                {...switchLabelProps}
-              />
-            </div>
+            {false && (
+              <div className='rounded-sm shadow-md bg-white px-2 ' style={{ textAlign: 'right' }}>
+                <FormControlLabel
+                  label={t('deployer.hybrid.confidence')}
+                  disabled={hide}
+                  checked={confidenceCheck}
+                  onChange={async (e: any) => {
+                    await location_confidence({ cmd: e.target.checked ? 1 : 0 });
+                    e.target.checked && setRefreshFloorData();
+                  }}
+                  {...switchLabelProps}
+                />
+              </div>
+            )}
           </div>
         </>
       ) : null}
