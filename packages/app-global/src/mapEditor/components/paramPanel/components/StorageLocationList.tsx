@@ -27,6 +27,7 @@ const StorageLocationList: React.FC = () => {
     setShowBindVehicleDialog,
     editingPoint,
     setEditingPoint,
+    setFocusTarget,
   } = useStorageLocationStore(
     useShallow((state) => ({
       storageLocations: state.storageLocations,
@@ -37,6 +38,7 @@ const StorageLocationList: React.FC = () => {
       setShowBindVehicleDialog: state.setShowBindVehicleDialog,
       editingPoint: state.editingPoint,
       setEditingPoint: state.setEditingPoint,
+      setFocusTarget: state.setFocusTarget,
     })),
   );
 
@@ -167,7 +169,10 @@ const StorageLocationList: React.FC = () => {
                     className={`cursor-pointer hover:bg-gray-800 transition-colors px-4 py-2 ${
                       selectedIds.includes(item.id) ? 'bg-blue-900/30' : ''
                     }`}
-                    onClick={() => select([item.id])}
+                    onClick={() => {
+                      select([item.id]);
+                      setFocusTarget(item.id);
+                    }}
                     actions={[
                       <Tooltip title='绑定车型'>
                         <Button

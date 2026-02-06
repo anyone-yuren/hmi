@@ -25,7 +25,7 @@ const MOCK_RULES: ParkingRule[] = [
     description: 'Standard parking rule for loading stations',
     parkingPoint: {
       anchor: 'CENTER',
-      offsetX: 0,
+      offsetX: 0.6,
       offsetY: 0,
       direction: 'FORWARD',
       angle: 0,

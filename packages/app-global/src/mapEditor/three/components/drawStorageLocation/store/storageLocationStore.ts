@@ -71,6 +71,10 @@ type StorageLocationState = {
   // Editing Point (for offset)
   editingPoint: any | null;
   setEditingPoint: (point: any | null) => void;
+
+  // Camera Focus
+  focusTarget: string | null;
+  setFocusTarget: (id: string | null) => void;
 };
 
 export const useStorageLocationStore = create<StorageLocationState>()(
@@ -115,6 +119,9 @@ export const useStorageLocationStore = create<StorageLocationState>()(
 
       editingPoint: null,
       setEditingPoint: (point) => set({ editingPoint: point }),
+
+      focusTarget: null,
+      setFocusTarget: (id) => set({ focusTarget: id }),
     }),
     {
       name: 'storage-location-store',

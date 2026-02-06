@@ -1,4 +1,5 @@
 import { ThreeEvent, useThree } from '@react-three/fiber';
+import { message } from 'antd';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
@@ -136,7 +137,7 @@ const ParkingPointSprite = ({
 };
 
 export default function DrawStorageLocation() {
-  const { controls } = useThree();
+  const { controls, camera } = useThree();
 
   const {
     mode,
@@ -147,6 +148,8 @@ export default function DrawStorageLocation() {
     setContextMenuPosition,
     setEditingPoint,
     setMode,
+    focusTarget,
+    setFocusTarget,
   } = useStorageLocationStore(
     useShallow((state) => ({
       mode: state.mode,
@@ -157,6 +160,8 @@ export default function DrawStorageLocation() {
       setContextMenuPosition: state.setContextMenuPosition,
       setEditingPoint: state.setEditingPoint,
       setMode: state.setMode,
+      focusTarget: state.focusTarget,
+      setFocusTarget: state.setFocusTarget,
     })),
   );
 
@@ -214,6 +219,34 @@ export default function DrawStorageLocation() {
     };
   }, [controls]);
 
+  // Camera Focus Effect
+  useEffect(() => {
+    if (focusTarget && controls) {
+      const targetLoc = storageLocations.find((l) => l.id === focusTarget);
+      if (targetLoc) {
+        // Smoothly move camera or jump
+        // For simple implementation, let's jump the target and keep camera offset
+        const ctrl = controls as any;
+        if (!ctrl.target) return;
+
+        const currentTarget = ctrl.target.clone();
+        const newTarget = new THREE.Vector3(
+          targetLoc.position.x,
+          targetLoc.position.y,
+          0,
+        );
+        const offset = camera.position.clone().sub(currentTarget);
+
+        ctrl.target.copy(newTarget);
+        camera.position.copy(newTarget).add(offset);
+        ctrl.update();
+
+        // Clear focus target to avoid repeated jumps
+        setFocusTarget(null);
+      }
+    }
+  }, [focusTarget, storageLocations, controls, camera, setFocusTarget]);
+
   return (
     <group>
       {/* Background plane for catching clicks when in draw mode */}
@@ -224,6 +257,23 @@ export default function DrawStorageLocation() {
             if (isDragging.current) return;
             e.stopPropagation();
             const { point } = e;
+
+            // Check overlap
+            const MIN_DISTANCE = 1; // Define overlap threshold
+            const hasOverlap = storageLocations.some((loc) => {
+              const locPos = new THREE.Vector3(
+                loc.position.x,
+                loc.position.y,
+                loc.position.z,
+              );
+              return locPos.distanceTo(point) < MIN_DISTANCE;
+            });
+
+            if (hasOverlap) {
+              message.warning('该位置与现有库位重叠，请选择其他位置');
+              return;
+            }
+
             const newLocation = {
               id: `SL${Date.now()}`,
               position: { x: point.x, y: point.y, z: 0 },

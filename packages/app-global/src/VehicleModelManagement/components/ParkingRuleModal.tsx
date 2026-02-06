@@ -32,7 +32,7 @@ const ParkingRuleModal = () => {
           priority: 1,
           parkingPoint: {
             anchor: 'CENTER',
-            offsetX: 400,
+            offsetX: 0.6,
             offsetY: 0,
             direction: 'FORWARD',
             angle: 0,

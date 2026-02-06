@@ -112,6 +112,7 @@ const BindVehicleDialog = () => {
           const ruleX = selectedRule.parkingPoint.offsetX || 0;
           const ruleY = selectedRule.parkingPoint.offsetY || 0;
           const ruleAngle = selectedRule.parkingPoint.angle || 0;
+          const ruleDirection = selectedRule.parkingPoint.direction;
 
           const pointPosition = {
             x: location.position.x + ruleX,
@@ -125,6 +126,7 @@ const BindVehicleDialog = () => {
             name: `${location.name}_点`,
             type: 'station',
             angle: ruleAngle,
+            direction: ruleDirection,
             storageLocationId: id,
           };
           generatedPoints.push(newPoint);
