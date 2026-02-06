@@ -19,8 +19,10 @@ export type StorageLocationData = {
   position: THREE.Vector3; // Serialized as object in JSON, but hydrated to Vector3 usually if manual, here we stick to simple object for persistence or handle it
   name: string;
   vehicleModelIds?: string[];
+  allowedVehicleModelIds?: string[];
   parkingRuleId?: string;
   type: 'storage' | 'shelf';
+  storageType?: string;
   shelfConfig?: ShelfConfig;
 };
 
@@ -65,6 +67,10 @@ type StorageLocationState = {
   // Bind Vehicle Modal
   showBindVehicleDialog: boolean;
   setShowBindVehicleDialog: (show: boolean) => void;
+
+  // Editing Point (for offset)
+  editingPoint: any | null;
+  setEditingPoint: (point: any | null) => void;
 };
 
 export const useStorageLocationStore = create<StorageLocationState>()(
@@ -106,10 +112,16 @@ export const useStorageLocationStore = create<StorageLocationState>()(
 
       showBindVehicleDialog: false,
       setShowBindVehicleDialog: (show) => set({ showBindVehicleDialog: show }),
+
+      editingPoint: null,
+      setEditingPoint: (point) => set({ editingPoint: point }),
     }),
     {
-      name: 'map-editor-storage-location-store',
+      name: 'storage-location-store',
       storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        storageLocations: state.storageLocations,
+      }),
     },
   ),
 );

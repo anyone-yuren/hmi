@@ -2,6 +2,7 @@ import { ThreeEvent, useThree } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useShallow } from 'zustand/react/shallow';
+import { useMapEditorStore } from '../../../store';
 import { useMapEditorMenuStore } from '../../../store/mapMenuStore';
 import { useStorageLocationStore } from './store/storageLocationStore';
 
@@ -10,6 +11,7 @@ const LocationSprite = ({
   position,
   selected,
   name,
+  type,
   onContextMenu,
   onClick,
 }: {
@@ -17,6 +19,7 @@ const LocationSprite = ({
   position: THREE.Vector3;
   selected: boolean;
   name: string;
+  type?: string;
   onContextMenu: (e: ThreeEvent<MouseEvent>) => void;
   onClick: (e: ThreeEvent<MouseEvent>) => void;
 }) => {
@@ -26,24 +29,48 @@ const LocationSprite = ({
     canvas.height = 128;
     const ctx = canvas.getContext('2d')!;
 
+    const getColor = (t?: string) => {
+      switch (t) {
+        case '货架工位':
+          return '#f97316'; // orange-500
+        case '堆叠工位':
+          return '#a855f7'; // purple-500
+        case '平库工位':
+        default:
+          return '#14b8a6'; // teal-500
+      }
+    };
+
+    const getLabel = (t?: string) => {
+      switch (t) {
+        case '货架工位':
+          return 'R';
+        case '堆叠工位':
+          return 'S';
+        case '平库工位':
+        default:
+          return 'F';
+      }
+    };
+
     // Background
     ctx.beginPath();
     ctx.arc(64, 64, 60, 0, Math.PI * 2);
-    ctx.fillStyle = selected ? '#3b82f6' : '#14b8a6'; // blue-500 or teal-500
+    ctx.fillStyle = selected ? '#3b82f6' : getColor(type);
     ctx.fill();
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 8;
     ctx.stroke();
 
-    // Text "L"
+    // Text
     ctx.fillStyle = 'white';
     ctx.font = 'bold 80px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('L', 64, 64);
+    ctx.fillText(getLabel(type), 64, 64);
 
     return new THREE.CanvasTexture(canvas);
-  }, [selected]);
+  }, [selected, type]);
 
   return (
     <sprite
@@ -52,6 +79,52 @@ const LocationSprite = ({
       onClick={onClick}
       onContextMenu={onContextMenu}
     >
+      <spriteMaterial
+        map={texture}
+        depthTest={false}
+        transparent
+        toneMapped={false}
+      />
+    </sprite>
+  );
+};
+
+const ParkingPointSprite = ({
+  position,
+  selected,
+  onClick,
+}: {
+  position: THREE.Vector3;
+  selected: boolean;
+  onClick: (e: ThreeEvent<MouseEvent>) => void;
+}) => {
+  const texture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d')!;
+
+    // Background
+    ctx.beginPath();
+    ctx.arc(32, 32, 28, 0, Math.PI * 2);
+    ctx.fillStyle = selected ? '#eab308' : '#3b82f6'; // yellow-500 (selected) or blue-500
+    ctx.fill();
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    // Text "P"
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 40px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('P', 32, 34);
+
+    return new THREE.CanvasTexture(canvas);
+  }, [selected]);
+
+  return (
+    <sprite position={position} scale={[0.3, 0.3, 1]} onClick={onClick}>
       <spriteMaterial
         map={texture}
         depthTest={false}
@@ -72,6 +145,8 @@ export default function DrawStorageLocation() {
     select,
     selectedIds,
     setContextMenuPosition,
+    setEditingPoint,
+    setMode,
   } = useStorageLocationStore(
     useShallow((state) => ({
       mode: state.mode,
@@ -80,6 +155,8 @@ export default function DrawStorageLocation() {
       select: state.select,
       selectedIds: state.selectedIds,
       setContextMenuPosition: state.setContextMenuPosition,
+      setEditingPoint: state.setEditingPoint,
+      setMode: state.setMode,
     })),
   );
 
@@ -89,6 +166,21 @@ export default function DrawStorageLocation() {
       selectObject: state.selectObject,
     })),
   );
+
+  const { staticPoints, selectDrawType } = useMapEditorStore(
+    useShallow((state) => ({
+      staticPoints: state.staticPoints,
+      selectDrawType: state.selectDrawType,
+    })),
+  );
+
+  useEffect(() => {
+    if (selectDrawType === 'storageLocation') {
+      setMode('draw-storage-location');
+    } else {
+      setMode('idle');
+    }
+  }, [selectDrawType, setMode]);
 
   const isDragging = useRef(false);
   const hasCameraMoved = useRef(false);
@@ -137,12 +229,13 @@ export default function DrawStorageLocation() {
               position: { x: point.x, y: point.y, z: 0 },
               name: `库位 ${storageLocations.length + 1}`,
               type: 'storage' as const,
+              storageType: '平库工位',
             };
             addStorageLocation(newLocation);
           }}
         >
           <planeGeometry args={[10000, 10000]} />
-          <meshBasicMaterial visible={false} />
+          <meshBasicMaterial transparent opacity={0} depthWrite={false} />
         </mesh>
       )}
 
@@ -155,6 +248,7 @@ export default function DrawStorageLocation() {
           }
           selected={selectedIds.includes(loc.id)}
           name={loc.name}
+          type={loc.storageType}
           onClick={(e: ThreeEvent<MouseEvent>) => {
             if (isDragging.current) return;
             e.stopPropagation(); // Stop click from propagating to background
@@ -170,6 +264,56 @@ export default function DrawStorageLocation() {
           }}
         />
       ))}
+
+      {/* Visualize connection to parking points and allow editing */}
+      {staticPoints.map((p) => {
+        if (!p.storageLocationId) return null;
+        const loc = storageLocations.find((l) => l.id === p.storageLocationId);
+        if (!loc) return null;
+        const isSelected = selectedIds.includes(loc.id);
+
+        return (
+          <group key={`conn-${p.id}`}>
+            {/* Connection Line */}
+            <line>
+              <bufferGeometry>
+                <bufferAttribute
+                  attach='attributes-position'
+                  count={2}
+                  array={
+                    new Float32Array([
+                      loc.position.x,
+                      loc.position.y,
+                      0,
+                      p.position.x,
+                      p.position.y,
+                      0,
+                    ])
+                  }
+                  itemSize={3}
+                />
+              </bufferGeometry>
+              <lineBasicMaterial
+                color={isSelected ? '#ffff00' : '#cccccc'}
+                opacity={0.5}
+                transparent
+              />
+            </line>
+
+            {/* Clickable Target on Point */}
+            <ParkingPointSprite
+              position={new THREE.Vector3(p.position.x, p.position.y, 0)}
+              selected={isSelected}
+              onClick={(e) => {
+                if (isDragging.current) return;
+                e.stopPropagation();
+                setEditingPoint(p);
+                select([loc.id]); // Also select the parent storage location
+              }}
+            />
+          </group>
+        );
+      })}
     </group>
   );
 }

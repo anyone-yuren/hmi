@@ -36,17 +36,35 @@ const BindVehicleDialog = () => {
   }));
 
   const [form] = Form.useForm();
-  const vehicleModelId = Form.useWatch('vehicleModelId', form);
+  const vehicleModelIds = Form.useWatch('vehicleModelIds', form);
 
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      const { vehicleModelId, parkingRuleId } = values;
+      const { vehicleModelIds, parkingRuleId } = values;
 
       const selectedRule = rules.find((r) => r.id === parkingRuleId);
       if (!selectedRule) {
         message.error('未找到选中的停车规则');
         return;
+      }
+
+      // Validation: Check allowedVehicleModelIds
+      for (const id of selectedIds) {
+        const loc = storageLocations.find((l) => l.id === id);
+        if (
+          loc &&
+          loc.allowedVehicleModelIds &&
+          loc.allowedVehicleModelIds.length > 0
+        ) {
+          const invalid = vehicleModelIds.some(
+            (vid: string) => !loc.allowedVehicleModelIds?.includes(vid),
+          );
+          if (invalid) {
+            message.error(`库位 ${loc.name} 不允许绑定选中的某些车型`);
+            return;
+          }
+        }
       }
 
       // Filter out existing points linked to selected storage locations to avoid duplicates
@@ -64,7 +82,7 @@ const BindVehicleDialog = () => {
 
         // 1. Update storage location with bound vehicle model and rule
         updateStorageLocation(id, {
-          vehicleModelIds: [vehicleModelId], // Currently binding one, but array for future
+          vehicleModelIds: vehicleModelIds,
           parkingRuleId: parkingRuleId,
         });
 
@@ -124,13 +142,6 @@ const BindVehicleDialog = () => {
     }
   };
 
-  const availableRules = vehicleModelId
-    ? rules.filter((r) => {
-        const model = models.find((m) => m.id === vehicleModelId);
-        return model?.parkingRuleIds?.includes(r.id);
-      })
-    : [];
-
   return (
     <Modal
       title='绑定车型'
@@ -141,11 +152,12 @@ const BindVehicleDialog = () => {
     >
       <Form form={form} layout='vertical'>
         <Form.Item
-          name='vehicleModelId'
+          name='vehicleModelIds'
           label='选择车型'
           rules={[{ required: true, message: '请选择车型' }]}
         >
           <Select
+            mode='multiple'
             placeholder='请选择车型'
             options={models.map((m) => ({ label: m.name, value: m.id }))}
           />
@@ -158,11 +170,7 @@ const BindVehicleDialog = () => {
         >
           <Select
             placeholder='请选择停车规则'
-            options={availableRules.map((r) => ({
-              label: r.name,
-              value: r.id,
-            }))}
-            disabled={!vehicleModelId}
+            options={rules.map((r) => ({ label: r.name, value: r.id }))}
           />
         </Form.Item>
       </Form>
