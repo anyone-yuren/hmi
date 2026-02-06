@@ -7,6 +7,7 @@ import DrawPlaneSelect from '../../../drawPlane';
 import DrawPointsSelect from '../../../drawPoints';
 import DrawStationSelect from '../../../drawStation';
 import DrawDeviceSelect from './components/device';
+import DrawStorageLocationSelect from './components/DrawStorageLocationSelect';
 
 const DrawHandle = () => {
   const theme = useTheme();
@@ -19,6 +20,7 @@ const DrawHandle = () => {
           <DrawLinesSelect />
           <DrawPlaneSelect />
           <DrawDeviceSelect />
+          <DrawStorageLocationSelect />
           {/* <DrawNavigationSelect /> */}
         </div>
       </div>

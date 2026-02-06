@@ -20,6 +20,7 @@ import { SceneRaycaster } from './three/components/SceneRaycaster';
 import { SlamMapFloor } from './three/components/SlamMap';
 import RenderMesh from './three/components/drawArea';
 import RenderPolygon from './three/components/drawPolygon';
+import DrawStorageLocation from './three/components/drawStorageLocation/draw';
 
 const MapEditor = () => {
   const { showMapEditor } = useMapEditorViewStore(
@@ -64,6 +65,7 @@ const MapEditor = () => {
                 <CursorGuideLine />
                 <RenderMesh />
                 <RenderPolygon />
+                <DrawStorageLocation />
                 {/* <SlamPointCloud url='/static/ply/warehouse_slam.ply' /> */}
                 <SlamMapFloor mapIndex={0} />
                 <SelectionOverlayBox />

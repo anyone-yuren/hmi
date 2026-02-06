@@ -4,13 +4,21 @@ import AreaContextMenu from '../drawArea/components/contextMenu';
 import { useAreaStore } from '../drawArea/store/areaStore';
 import PolygonContextMenu from '../drawPolygon/components/contextMenu';
 import { usePolygonStore } from '../drawPolygon/store/polygonStore';
+import BindVehicleDialog from '../drawStorageLocation/components/BindVehicleDialog';
+import StorageLocationContextMenu from '../drawStorageLocation/components/ContextMenu';
+import ShelfConfigPanel from '../drawStorageLocation/components/ShelfConfigPanel';
 import AreaParams from './modules/areaParams';
 import BatchGenerateDialog from './modules/batchGenerateDialog';
 interface PanelRootProps {
   boundsRef: React.RefObject<Element>;
 }
 const ContextMenuGroup = ({ boundsRef }: PanelRootProps) => {
-  const { selectedIds, showAreaParamsDialog, contextMenuPosition, setShowAreaParamsDialog } = useAreaStore(
+  const {
+    selectedIds,
+    showAreaParamsDialog,
+    contextMenuPosition,
+    setShowAreaParamsDialog,
+  } = useAreaStore(
     useShallow((store) => ({
       selectedIds: store.selectedIds,
       showAreaParamsDialog: store.showAreaParamsDialog,
@@ -37,6 +45,9 @@ const ContextMenuGroup = ({ boundsRef }: PanelRootProps) => {
     <>
       <AreaContextMenu />
       <PolygonContextMenu />
+      <StorageLocationContextMenu />
+      <ShelfConfigPanel boundsRef={boundsRef} />
+      <BindVehicleDialog />
       <BatchGenerateDialog
         boundsRef={boundsRef}
         contextMenuPosition={contextMenuPosition}

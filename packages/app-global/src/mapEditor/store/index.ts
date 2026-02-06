@@ -35,6 +35,7 @@ interface State {
   // 静态点数据
   staticPoints: Record<any, any>[];
   setStaticPoints: (staticPoints: Record<any, any>[]) => void;
+  addStaticPoint: (point: Record<any, any>) => void;
   flyToPoint: { x: number; y: number; z: number };
   setFlyToPoint: (flyToPoint: { x: number; y: number; z: number }) => void;
   lineList: any[];
@@ -46,7 +47,7 @@ interface State {
 export const useMapEditorStore = create<State>()(
   persist(
     (set, get) => ({
-      paramsPanelCollapsed: true,
+      paramsPanelCollapsed: false,
       setParamsPanelCollapsed: (paramsPanelCollapsed: boolean) => {
         set(() => ({
           paramsPanelCollapsed,
@@ -168,6 +169,11 @@ export const useMapEditorStore = create<State>()(
         }
         set(() => ({
           staticPoints,
+        }));
+      },
+      addStaticPoint: (point: Record<any, any>) => {
+        set((state) => ({
+          staticPoints: [...state.staticPoints, point],
         }));
       },
       flyToPoint: { x: 0, y: 0, z: 0 },

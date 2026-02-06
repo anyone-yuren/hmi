@@ -1,7 +1,6 @@
 import { MoreOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Input } from 'antd';
 import classNames from 'classnames';
-import { motion } from 'framer-motion';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../store';
@@ -13,23 +12,24 @@ import LineList from './components/lineList';
 import PanelTab from './components/panelTab';
 import PointList from './components/pointList';
 import PolygonList from './components/polygonList';
+import StorageLocationList from './components/StorageLocationList';
 const { Search } = Input;
 const ParamsPanel = () => {
-  const { paramsPanelCollapsed, selectDrawType } = useMapEditorStore(
+  const { selectDrawType } = useMapEditorStore(
     useShallow((state) => {
       return {
-        paramsPanelCollapsed: state.paramsPanelCollapsed,
         selectDrawType: state.selectDrawType,
       };
     }),
   );
-  const { selectFloor, setSelectFloor, setShowMapEditor } = useMapEditorViewStore(
-    useShallow((state) => ({
-      selectFloor: state.selectFloor,
-      setSelectFloor: state.setSelectFloor,
-      setShowMapEditor: state.setShowMapEditor,
-    })),
-  );
+  const { selectFloor, setSelectFloor, setShowMapEditor } =
+    useMapEditorViewStore(
+      useShallow((state) => ({
+        selectFloor: state.selectFloor,
+        setSelectFloor: state.setSelectFloor,
+        setShowMapEditor: state.setShowMapEditor,
+      })),
+    );
   const mapData = [
     {
       img: '/static/floor/map-1.png',
@@ -47,15 +47,9 @@ const ParamsPanel = () => {
     },
   ];
   return (
-    <motion.div
-      animate={{
-        width: !paramsPanelCollapsed ? 0 : 400,
-        opacity: !paramsPanelCollapsed ? 0 : 1,
-      }}
-      transition={{
-        type: 'spring',
-        stiffness: 200,
-        damping: 24,
+    <div
+      style={{
+        width: 400,
       }}
       className='bg-white/5 overflow-hidden flex flex-col gap-2'
     >
@@ -147,7 +141,8 @@ const ParamsPanel = () => {
                       'cursor-pointer hover:bg-cyan-500/30 px-2 py-0.5 flex items-center justify-between',
                       {
                         'bg-white/5': index % 2 === 0,
-                        '!bg-[#00d1d1]/80 !text-black': selectFloor === item.key,
+                        '!bg-[#00d1d1]/80 !text-black':
+                          selectFloor === item.key,
                       },
                     )}
                     key={item.key}
@@ -162,21 +157,24 @@ const ParamsPanel = () => {
         </div>
       </div>
       <div className='flex-1 flex overflow-hidden'>
-        <div className='bg-white/5'>
+        <div className='bg-white/10'>
           <PanelTab />
         </div>
         <div className='flex-1 h-full overflow-auto bg-white/15'>
           {/* {selectDrawType === 'point' && <DrawPointsParamsPanel />} */}
           {selectDrawType === 'point' && <PointList />}
           {/* {(selectDrawType === 'line' || selectDrawType === 'bspline') && <DrawLinesParamsPanel />} */}
-          {(selectDrawType === 'line' || selectDrawType === 'bspline') && <LineList />}
+          {(selectDrawType === 'line' || selectDrawType === 'bspline') && (
+            <LineList />
+          )}
           {selectDrawType === 'device' && <DrawDeviceParamsPanel />}
           {selectDrawType === 'navigation' && <DrawNavigationParamsPanel />}
           {selectDrawType === 'area' && <AreaList />}
           {selectDrawType === 'polygon' && <PolygonList />}
+          {selectDrawType === 'storageLocation' && <StorageLocationList />}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
