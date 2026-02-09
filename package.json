@@ -64,6 +64,7 @@
     "release-it": "^17.5.0",
     "rimraf": "^5.0.5",
     "swiper": "^11.2.10",
+    "three-mesh-bvh": "^0.9.8",
     "turbo": "^1.11.0",
     "typescript": "^5.2.2",
     "unbuild": "^3.5.0",

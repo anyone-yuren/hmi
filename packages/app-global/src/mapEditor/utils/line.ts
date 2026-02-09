@@ -13,11 +13,13 @@ export function buildSelectLineData(line: any): SelectLineData {
     id: line.id,
     length,
     angle,
-    points: line.points.map((p) => ({
+    points: line.points.map((p: any) => ({
       x: p.x,
       y: p.y,
       z: p.z,
     })),
+    startPointId: line.startPointId,
+    endPointId: line.endPointId,
   };
 }
 

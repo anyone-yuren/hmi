@@ -1,313 +1,560 @@
-import { Line } from '@react-three/drei';
-import { useThree } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
+import { Line, Text } from '@react-three/drei';
+import { ThreeEvent, useThree } from '@react-three/fiber';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
+import {
+  acceleratedRaycast,
+  computeBoundsTree,
+  disposeBoundsTree,
+} from 'three-mesh-bvh';
 import { useShallow } from 'zustand/react/shallow';
 import { usePickOnXYPlane } from '../../hooks/usePickOnXYPanel';
 import { useMapEditorStore } from '../../store';
 import { THREE_LAYERS } from '../../three/constants/threeLayers';
 import { buildSelectLineData } from '../../utils/line';
 
+// Extend BufferGeometry with three-mesh-bvh methods
+THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
+THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
+THREE.Mesh.prototype.raycast = acceleratedRaycast;
+
 interface LineData {
   id: number;
   start: THREE.Vector3;
   end: THREE.Vector3;
   points: THREE.Vector3[];
+  startPointId: string;
+  endPointId: string;
 }
 
-const ARROW_LENGTH = 0.2;
-const ARROW_WIDTH = 0.125;
+const ENDPOINT_RADIUS = 0.15;
+const ENDPOINT_COLOR_DEFAULT = '#ffffff';
+const ENDPOINT_COLOR_HOVER = '#ffff00';
+const ENDPOINT_COLOR_SELECTED = '#ff0000';
+const LINE_WIDTH = 4;
+const SNAP_DISTANCE = 0.5;
 
-let nextLineId = 1;
-const NUM_POINTS = 5;
+export default function DrawLines() {
+  const {
+    selectDrawType,
+    lineList,
+    setLineList,
+    selectedLineId,
+    setSelectedLineId,
+    setSelectLineData,
+    setParamsPanelCollapsed,
+    setSelectDrawType,
+  } = useMapEditorStore(
+    useShallow((s) => ({
+      selectDrawType: s.selectDrawType,
+      lineList: s.lineList,
+      setLineList: s.setLineList,
+      selectedLineId: s.selectedLineId,
+      setSelectedLineId: s.setSelectedLineId,
+      setSelectLineData: s.setSelectLineData,
+      setParamsPanelCollapsed: s.setParamsPanelCollapsed,
+      setSelectDrawType: s.setSelectDrawType,
+    })),
+  );
 
-function DrawLines() {
-  const { paramsPanelCollapsed, selectDrawType, selectLineData, setSelectLineData, lineList, setLineList } =
-    useMapEditorStore(
-      useShallow((s) => ({
-        paramsPanelCollapsed: s.paramsPanelCollapsed,
-        selectDrawType: s.selectDrawType,
-        selectLineData: s.selectLineData,
-        setSelectLineData: s.setSelectLineData,
-        lineList: s.lineList,
-        setLineList: s.setLineList,
-      })),
-    );
+  const { controls, camera } = useThree();
   const pick = usePickOnXYPlane();
-  const { controls, camera, gl } = useThree();
+  const [drawing, setDrawing] = useState<{
+    start: THREE.Vector3;
+    end: THREE.Vector3;
+    startId: string;
+  } | null>(null);
+
+  const [hoveredPoint, setHoveredPoint] = useState<{
+    pos: THREE.Vector3;
+    id: string;
+  } | null>(null);
+  const [isOrtho, setIsOrtho] = useState(false);
+
+  // Refs for event listeners to avoid stale closures
+  const drawingRef = useRef(drawing);
+  drawingRef.current = drawing;
+  const lineListRef = useRef(lineList);
+  lineListRef.current = lineList;
+  const isOrthoRef = useRef(isOrtho);
+  isOrthoRef.current = isOrtho;
+
+  // BVH Geometry and ID Map
+  const { bvhGeometry, faceIdMap } = useMemo(() => {
+    const pointMap = new Map<string, THREE.Vector3>();
+    lineList.forEach((line) => {
+      const start =
+        line.start instanceof THREE.Vector3
+          ? line.start
+          : new THREE.Vector3(
+              (line.start as any).x,
+              (line.start as any).y,
+              (line.start as any).z || 0,
+            );
+      const end =
+        line.end instanceof THREE.Vector3
+          ? line.end
+          : new THREE.Vector3(
+              (line.end as any).x,
+              (line.end as any).y,
+              (line.end as any).z || 0,
+            );
+      pointMap.set(line.startPointId, start);
+      pointMap.set(line.endPointId, end);
+    });
+
+    const points = Array.from(pointMap.entries());
+    if (points.length === 0) return { bvhGeometry: null, faceIdMap: [] };
+
+    const positions: number[] = [];
+    const pointIndices: number[] = [];
+    const ids: string[] = [];
+    const size = 0.05; // Tiny triangle size
+
+    points.forEach(([id, pos], index) => {
+      // Create a tiny triangle centered at pos
+      // v1
+      positions.push(pos.x, pos.y + size, pos.z);
+      // v2
+      positions.push(pos.x - size, pos.y - size, pos.z);
+      // v3
+      positions.push(pos.x + size, pos.y - size, pos.z);
+
+      pointIndices.push(index, index, index);
+      ids.push(id);
+    });
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute(
+      'position',
+      new THREE.Float32BufferAttribute(positions, 3),
+    );
+    geometry.setAttribute(
+      'pointIndex',
+      new THREE.Float32BufferAttribute(pointIndices, 1),
+    );
+    geometry.computeBoundsTree();
+
+    return { bvhGeometry: geometry, faceIdMap: ids };
+  }, [lineList]);
+
+  // Generate new Point ID
+  const generatePointId = (currentList: LineData[]) => {
+    let maxId = 0;
+    const extractId = (id: string) => {
+      if (id && id.startsWith('P')) {
+        const num = parseInt(id.substring(1));
+        if (!isNaN(num)) return num;
+      }
+      return 0;
+    };
+
+    currentList.forEach((line) => {
+      maxId = Math.max(maxId, extractId(line.startPointId));
+      maxId = Math.max(maxId, extractId(line.endPointId));
+    });
+
+    // Also consider currently drawing start point if applicable
+    if (drawingRef.current) {
+      maxId = Math.max(maxId, extractId(drawingRef.current.startId));
+    }
+
+    return `P${maxId + 1}`;
+  };
+
+  // Enable layers
   useEffect(() => {
     camera.layers.enable(THREE_LAYERS.DRAW);
-  }, []);
+  }, [camera]);
 
-  const [lines, setLines] = useState<LineData[]>([]);
-  const [drawing, setDrawing] = useState<LineData | null>(null);
-  const [selectedLineId, setSelectedLineId] = useState<number | null>(null);
-
-  const pressedKey = useRef<'x' | 'y' | null>(null);
-  const draggingPoint = useRef<{ lineId: number; pointIndex: number } | null>(null);
-
-  /* ------------------- 键盘监听 ------------------- */
+  // Handle controls enablement and rotation
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'x') pressedKey.current = 'x';
-      if (e.key === 'y') pressedKey.current = 'y';
+    if (!controls) return;
+    (controls as any).enablePan = !drawing;
+    // Always disable rotation as per requirement
+    (controls as any).enableRotate = false;
+
+    // If drawing, also ensure we don't accidentally rotate if logic changes
+    if (drawing) {
+      (controls as any).enableRotate = false;
+    }
+  }, [drawing, controls]);
+
+  // Ortho Mode Listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        setIsOrtho(true);
+      }
       if (e.key === 'Escape') {
-        setSelectedLineId(null);
-        draggingPoint.current = null;
-        setSelectLineData(null);
-        if (controls) controls.enablePan = true;
+        setDrawing(null);
       }
     };
-    const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key === pressedKey.current) pressedKey.current = null;
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        setIsOrtho(false);
+      }
+    };
+    const handleContextMenu = (e: MouseEvent) => {
+      if (drawingRef.current) {
+        e.preventDefault();
+        setDrawing(null);
+      }
     };
 
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('contextmenu', handleContextMenu);
+
     return () => {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('contextmenu', handleContextMenu);
     };
   }, []);
 
-  useEffect(() => {
-    if (!controls) return;
+  // Snap logic using BVH
+  const findSnapPoint = (pos: THREE.Vector3) => {
+    if (!bvhGeometry || !bvhGeometry.boundsTree) return null;
 
-    // ❗禁止 controls 吃掉右键
-    controls.mouseButtons.RIGHT = null;
-  }, [controls]);
+    const target: any = {};
+    const result = bvhGeometry.boundsTree.closestPointToPoint(
+      pos,
+      target,
+      SNAP_DISTANCE,
+    );
 
-  /* ------------------- 鼠标事件 ------------------- */
-  const onMouseDown = (e: MouseEvent) => {
-    if (!paramsPanelCollapsed && selectDrawType !== 'line') return;
-    if (selectDrawType === 'line' && !selectedLineId) {
-      if (controls) controls.enablePan = false;
-      const p = pick(e);
-      if (!p) return;
-      setDrawing({ id: nextLineId++, start: p.clone(), end: p.clone(), points: [] });
-    }
-  };
+    if (result && result.distance < SNAP_DISTANCE) {
+      if (result.faceIndex !== undefined) {
+        // Robust lookup using pointIndex attribute
+        const faceIndex = result.faceIndex;
+        // Check if indexed
+        const indexAttr = bvhGeometry.index;
+        const vertIndex = indexAttr
+          ? indexAttr.getX(faceIndex * 3)
+          : faceIndex * 3;
 
-  const onMouseMove = (e: MouseEvent) => {
-    if (drawing) {
-      const p = pick(e);
-      if (!p) return;
+        const pointIndexAttr = bvhGeometry.getAttribute('pointIndex');
+        if (pointIndexAttr) {
+          const idIndex = pointIndexAttr.getX(vertIndex);
+          const id = faceIdMap[idIndex];
 
-      const newEnd = p.clone();
-      if (pressedKey.current === 'x') newEnd.y = drawing.start.y;
-      if (pressedKey.current === 'y') newEnd.x = drawing.start.x;
-
-      setDrawing((prev) => prev && { ...prev, end: newEnd });
-    }
-
-    if (draggingPoint.current) {
-      const p = pick(e);
-      if (!p) return;
-
-      const { lineId, pointIndex } = draggingPoint.current;
-      if (pointIndex !== 0 && pointIndex !== NUM_POINTS - 1) return;
-
-      setLines((prev) =>
-        prev.map((line) => {
-          if (line.id !== lineId) return line;
-
-          const newPoints = [...line.points];
-          let newPos = p.clone();
-          if (pressedKey.current === 'x') newPos.y = newPoints[pointIndex].y;
-          if (pressedKey.current === 'y') newPos.x = newPoints[pointIndex].x;
-
-          newPoints[pointIndex] = newPos;
-
-          const start = newPoints[0];
-          const end = newPoints[NUM_POINTS - 1];
-
-          const interpolated: THREE.Vector3[] = [];
-          for (let i = 0; i < NUM_POINTS; i++) {
-            const t = i / (NUM_POINTS - 1);
-            interpolated.push(new THREE.Vector3(start.x + (end.x - start.x) * t, start.y + (end.y - start.y) * t, 0));
+          // Find precise position from lineList
+          let foundPos: THREE.Vector3 | null = null;
+          for (const line of lineListRef.current) {
+            if (line.startPointId === id) {
+              foundPos =
+                line.start instanceof THREE.Vector3
+                  ? line.start
+                  : new THREE.Vector3(
+                      (line.start as any).x,
+                      (line.start as any).y,
+                      (line.start as any).z || 0,
+                    );
+              break;
+            }
+            if (line.endPointId === id) {
+              foundPos =
+                line.end instanceof THREE.Vector3
+                  ? line.end
+                  : new THREE.Vector3(
+                      (line.end as any).x,
+                      (line.end as any).y,
+                      (line.end as any).z || 0,
+                    );
+              break;
+            }
           }
-
-          const updatedLine = {
-            ...line,
-            start,
-            end,
-            points: interpolated,
-          };
-          // ✅ 如果正在编辑的是选中线，同步 Zustand
-          if (line.id === selectedLineId) {
-            setSelectLineData(buildSelectLineData(updatedLine));
-          }
-
-          return updatedLine;
-        }),
-      );
-    }
-  };
-
-  const onMouseUp = () => {
-    if (drawing) {
-      // 控制不可平移 但是可缩放
-      if (controls) controls.enablePan = true;
-
-      if (drawing.start.distanceTo(drawing.end) < 0.01) {
-        setDrawing(null);
-        return;
+          if (foundPos) return { pos: foundPos, id };
+        }
       }
+    }
+    return null;
+  };
 
-      const points: THREE.Vector3[] = [];
-      for (let i = 0; i < NUM_POINTS; i++) {
-        const t = i / (NUM_POINTS - 1);
-        points.push(
-          new THREE.Vector3(
-            drawing.start.x + (drawing.end.x - drawing.start.x) * t,
-            drawing.start.y + (drawing.end.y - drawing.start.y) * t,
+  // Global event listeners for dragging
+  useEffect(() => {
+    if (!drawing) return;
+
+    const handleGlobalMove = (e: MouseEvent) => {
+      const p = pick(e);
+      if (p) {
+        // Apply Ortho Mode
+        let endPos = p.clone();
+        if (isOrthoRef.current && drawingRef.current) {
+          const start = drawingRef.current.start;
+          const dx = Math.abs(endPos.x - start.x);
+          const dy = Math.abs(endPos.y - start.y);
+          if (dx > dy) {
+            endPos.y = start.y;
+          } else {
+            endPos.x = start.x;
+          }
+        }
+
+        // Check snap for end point
+        const snap = findSnapPoint(endPos);
+        const finalPos = snap ? snap.pos.clone() : endPos;
+
+        setDrawing((prev) => prev && { ...prev, end: finalPos });
+      }
+    };
+
+    const handleGlobalUp = (e: MouseEvent) => {
+      const currentDrawing = drawingRef.current;
+      if (currentDrawing) {
+        const { start, end, startId } = currentDrawing;
+
+        // Check if line is long enough
+        if (start.distanceTo(end) > 0.1) {
+          const currentList = lineListRef.current;
+
+          // Determine End ID
+          const snap = findSnapPoint(end);
+
+          let endId = snap ? snap.id : null;
+          if (!endId) {
+            endId = generatePointId(currentList);
+            const startNum = parseInt(startId.substring(1));
+            const endNum = parseInt(endId.substring(1));
+            if (endNum <= startNum) {
+              endId = `P${startNum + 1}`;
+            }
+          }
+
+          const maxId = currentList.reduce(
+            (max, line) => Math.max(max, line.id),
             0,
-          ),
-        );
+          );
+          const newId = maxId + 1;
+
+          const points = [start.clone(), end.clone()];
+          const newLine: LineData = {
+            id: newId,
+            start: start.clone(),
+            end: end.clone(),
+            points: points,
+            startPointId: startId,
+            endPointId: endId,
+          };
+
+          setLineList([...currentList, newLine]);
+
+          setSelectedLineId(newLine.id);
+          setSelectLineData(buildSelectLineData(newLine));
+          setParamsPanelCollapsed(false);
+        }
       }
-
-      const newLine: LineData = { ...drawing, points };
-
-      setLines((prev) => [...prev, newLine]);
-      // ✅ 更新 Zustand 中的线列表
-      setLineList([...lines, newLine]);
-
-      // ✅ 选中刚画的线
-      setSelectedLineId(newLine.id);
-
-      // ✅ 写入 Zustand
-      setSelectLineData(buildSelectLineData(newLine));
-
       setDrawing(null);
-    }
+    };
 
-    draggingPoint.current = null;
-  };
-
-  useEffect(() => {
-    if (!gl) return;
-    const canvas = gl.domElement;
-
-    const handleDown = (e: MouseEvent) => onMouseDown(e);
-    const handleMove = (e: MouseEvent) => onMouseMove(e);
-    const handleUp = (e: MouseEvent) => onMouseUp();
-
-    canvas.addEventListener('mousedown', handleDown);
-    canvas.addEventListener('mousemove', handleMove);
-    canvas.addEventListener('mouseup', handleUp);
+    window.addEventListener('pointermove', handleGlobalMove);
+    window.addEventListener('pointerup', handleGlobalUp);
 
     return () => {
-      canvas.removeEventListener('mousedown', handleDown);
-      canvas.removeEventListener('mousemove', handleMove);
-      canvas.removeEventListener('mouseup', handleUp);
+      window.removeEventListener('pointermove', handleGlobalMove);
+      window.removeEventListener('pointerup', handleGlobalUp);
     };
-  }, [gl, drawing, selectedLineId, paramsPanelCollapsed, selectDrawType, controls, lines]);
+  }, [
+    drawing,
+    pick,
+    setLineList,
+    setSelectedLineId,
+    setSelectLineData,
+    setParamsPanelCollapsed,
+    bvhGeometry,
+    faceIdMap,
+  ]); // Added bvh deps
 
-  /* ------------------- 相机控制 ------------------- */
-  // useFrame(() => {
-  //   if (controls) controls.enablePan = !drawing && selectedLineId === null;
-  // });
-  useEffect(() => {
-    if (!controls) return;
-    controls.enablePan = !drawing && selectedLineId === null;
-  }, [drawing, selectedLineId, controls]);
+  const handlePointerDown = (e: ThreeEvent<MouseEvent>) => {
+    if (selectDrawType !== 'line') return;
+    e.stopPropagation();
 
-  /* ------------------- 箭头组件 ------------------- */
-  const Arrow = ({ start, end, selected }: { start: THREE.Vector3; end: THREE.Vector3; selected: boolean }) => {
-    // 2D 方向（XY 平面）
-    const dir = end.clone().sub(start);
-    const angle = Math.atan2(dir.y, dir.x); // Z 轴旋转角
+    if (e.button !== 0) return; // Only left click
 
-    // 三角形（局部坐标，指向 +X）
-    const vertices = new Float32Array([
-      ARROW_LENGTH / 2,
-      0,
-      0, // 尖端
-      -ARROW_LENGTH / 2,
-      ARROW_WIDTH / 2,
-      0, // 左
-      -ARROW_LENGTH / 2,
-      -ARROW_WIDTH / 2,
-      0, // 右
-    ]);
+    const p = pick(e.nativeEvent);
+    if (!p) return;
 
-    return (
-      <mesh position={end} rotation={[0, 0, angle]}>
-        <bufferGeometry>
-          <bufferAttribute attach='attributes-position' array={vertices} count={3} itemSize={3} />
-        </bufferGeometry>
+    // Start point: prioritized hovered point (snap), else picked point
+    const snap = findSnapPoint(p);
 
-        <meshBasicMaterial color={selected ? '#ff0000' : '#00ff00'} side={THREE.DoubleSide} wireframe />
-      </mesh>
-    );
+    const startPoint = snap ? snap.pos.clone() : p.clone();
+    const startId = snap ? snap.id : generatePointId(lineList);
+
+    setDrawing({
+      start: startPoint,
+      end: startPoint.clone(),
+      startId: startId,
+    });
   };
-  /* ------------------- 渲染 ------------------- */
+
+  const handlePointerMove = (e: ThreeEvent<MouseEvent>) => {
+    if (selectDrawType !== 'line' || drawing) return;
+    const p = pick(e.nativeEvent);
+    if (p) {
+      const snap = findSnapPoint(p);
+      setHoveredPoint(snap);
+      document.body.style.cursor = snap ? 'crosshair' : 'auto';
+    }
+  };
+
+  // Interaction for existing lines
+  const handleLineClick = (e: ThreeEvent<MouseEvent>, line: LineData) => {
+    if (drawing) return;
+    e.stopPropagation();
+    setSelectedLineId(line.id);
+    setSelectLineData(buildSelectLineData(line));
+    setParamsPanelCollapsed(false);
+    setSelectDrawType('line');
+  };
+
+  // Helper to get unique points for rendering text/spheres
+  const getAllPoints = () => {
+    const pointMap = new Map<string, THREE.Vector3>();
+    lineList.forEach((line: LineData) => {
+      const start =
+        line.start instanceof THREE.Vector3
+          ? line.start
+          : new THREE.Vector3(
+              (line.start as any).x,
+              (line.start as any).y,
+              (line.start as any).z || 0,
+            );
+      const end =
+        line.end instanceof THREE.Vector3
+          ? line.end
+          : new THREE.Vector3(
+              (line.end as any).x,
+              (line.end as any).y,
+              (line.end as any).z || 0,
+            );
+      pointMap.set(line.startPointId, start);
+      pointMap.set(line.endPointId, end);
+    });
+    return Array.from(pointMap.entries());
+  };
+
   return (
     <group>
-      {lines.map((line) => (
-        <group key={line.id}>
-          {line.points.length >= 2 && (
+      {/* Background Plane for starting drawing */}
+      {selectDrawType === 'line' && (
+        <mesh
+          visible={false}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+        >
+          <planeGeometry args={[10000, 10000]} />
+          <meshBasicMaterial />
+        </mesh>
+      )}
+
+      {/* Existing Lines */}
+      {lineList.map((line: LineData) => {
+        // Ensure start/end are Vector3s
+        const start =
+          line.start instanceof THREE.Vector3
+            ? line.start
+            : new THREE.Vector3(
+                (line.start as any).x,
+                (line.start as any).y,
+                (line.start as any).z || 0,
+              );
+        const end =
+          line.end instanceof THREE.Vector3
+            ? line.end
+            : new THREE.Vector3(
+                (line.end as any).x,
+                (line.end as any).y,
+                (line.end as any).z || 0,
+              );
+        const isSelected = line.id === selectedLineId;
+
+        // Direction Arrow
+        const mid = start.clone().add(end).multiplyScalar(0.5);
+        const dir = end.clone().sub(start).normalize();
+        const length = start.distanceTo(end);
+
+        return (
+          <group key={line.id}>
             <Line
-              points={line.points}
-              color={line.id === selectedLineId ? '#ff0000' : '#00ff00'}
-              lineWidth={4}
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedLineId(line.id);
-                setSelectLineData(buildSelectLineData(line));
-              }}
+              points={[start, end]}
+              color={isSelected ? '#ff0000' : '#00ff00'}
+              lineWidth={LINE_WIDTH}
+              onClick={(e) => handleLineClick(e, line)}
             />
-          )}
-          <mesh
-            ref={(obj) => {
-              if (obj) obj.layers.set(THREE_LAYERS.DRAW);
-            }}
-            position={[0, 0, -0.01]}
-            onPointerDown={(e) => {
-              e.stopPropagation();
-
-              if (e.button === 0 || e.button === 2) {
-                setSelectedLineId(line.id);
-                setSelectLineData(buildSelectLineData(line));
-              }
-            }}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <tubeGeometry args={[new THREE.CatmullRomCurve3(line.points), 8, 0.05, 6, false]} />
-            <meshBasicMaterial transparent opacity={0} depthWrite={false} />
-          </mesh>
-
-          {/* 箭头 */}
-          <Arrow start={line.start} end={line.end} selected={line.id === selectedLineId} />
-
-          {/* 端点控制 */}
-          {line.id === selectedLineId &&
-            line.points.map((pt, index) => (
-              <mesh
-                key={index}
-                position={pt}
-                onPointerDown={(e) => {
-                  e.stopPropagation();
-                  if (index === 0 || index === NUM_POINTS - 1) {
-                    draggingPoint.current = { lineId: line.id, pointIndex: index };
-                  }
-                }}
-              >
-                <sphereGeometry args={[0.05, 8, 8]} />
-                <meshStandardMaterial color={index === 0 || index === NUM_POINTS - 1 ? '#ff0000' : '#ffffff'} />
+            {/* Direction Arrow */}
+            <group position={mid} ref={(ref) => ref && ref.lookAt(end)}>
+              <mesh rotation={[Math.PI / 2, 0, 0]}>
+                <coneGeometry args={[0.2, 0.5, 8]} />
+                <meshBasicMaterial color={isSelected ? '#ff0000' : '#00ff00'} />
               </mesh>
-            ))}
+            </group>
+            {/* Line ID at center */}
+            <Text
+              position={[mid.x, mid.y, mid.z + 0.5]}
+              fontSize={0.5}
+              color='white'
+              anchorX='center'
+              anchorY='bottom'
+            >
+              {line.id}
+            </Text>
+          </group>
+        );
+      })}
+
+      {/* Render Unique Points (Endpoints) */}
+      {getAllPoints().map(([id, pos]) => (
+        <group key={id} position={pos}>
+          <mesh>
+            <sphereGeometry args={[ENDPOINT_RADIUS, 16, 16]} />
+            <meshBasicMaterial
+              color={
+                hoveredPoint?.id === id
+                  ? ENDPOINT_COLOR_HOVER
+                  : ENDPOINT_COLOR_DEFAULT
+              }
+            />
+          </mesh>
+          {/* Point ID at top */}
+          <Text
+            position={[0, 0, ENDPOINT_RADIUS + 0.3]}
+            fontSize={0.4}
+            color='white'
+            anchorX='center'
+            anchorY='bottom'
+          >
+            {id}
+          </Text>
         </group>
       ))}
 
-      {drawing && drawing.start && drawing.end && (
-        <Line points={[drawing.start, drawing.end]} color='#ff0000' lineWidth={2} />
+      {/* Currently Drawing Line */}
+      {drawing && (
+        <group>
+          <Line
+            points={[drawing.start, drawing.end]}
+            color='#0000ff'
+            lineWidth={LINE_WIDTH}
+          />
+          <mesh position={drawing.start}>
+            <sphereGeometry args={[ENDPOINT_RADIUS, 16, 16]} />
+            <meshBasicMaterial color={ENDPOINT_COLOR_SELECTED} />
+          </mesh>
+          <mesh position={drawing.end}>
+            <sphereGeometry args={[ENDPOINT_RADIUS, 16, 16]} />
+            <meshBasicMaterial color={ENDPOINT_COLOR_SELECTED} />
+          </mesh>
+          {/* Current Start ID */}
+          <Text
+            position={[drawing.start.x, drawing.start.y, drawing.start.z + 0.5]}
+            fontSize={0.5}
+            color='white'
+          >
+            {drawing.startId}
+          </Text>
+        </group>
       )}
     </group>
   );
 }
-
-export default DrawLines;

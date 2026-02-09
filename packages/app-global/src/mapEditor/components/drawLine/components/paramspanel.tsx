@@ -26,6 +26,8 @@ const DrawLinesParamsPanel = () => {
       })),
       lineLength: Number(selectLineData.length.toFixed(3)),
       headingAngle: Number(((selectLineData.angle * 180) / Math.PI).toFixed(2)),
+      startPoint: selectLineData.startPointId,
+      endPoint: selectLineData.endPointId,
     });
   }, [selectLineData]);
 

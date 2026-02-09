@@ -5,6 +5,8 @@ export interface SelectLineData {
   points: { x: number; y: number; z: number }[];
   length: number;
   angle: number; // rad（或你要的 deg）
+  startPointId?: string;
+  endPointId?: string;
 }
 
 export interface Elevator {
