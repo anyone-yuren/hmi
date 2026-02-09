@@ -24,7 +24,10 @@ export interface LineData {
 const ENDPOINT_RADIUS = 0.025; // Scaled down from 0.15
 const PICKING_RADIUS = 0.15; // Reduced for tighter snap boundary
 
-export const useEndpointSystem = (lineList: LineData[]) => {
+export const useEndpointSystem = (
+  lineList: LineData[],
+  pickingRadius = PICKING_RADIUS,
+) => {
   const { gl, scene, camera, size } = useThree();
 
   // 1. Extract Unique Points
@@ -122,11 +125,11 @@ export const useEndpointSystem = (lineList: LineData[]) => {
   const pickingMesh = useMemo(() => {
     if (uniquePoints.length === 0) return null;
     // Use larger radius for picking
-    const geom = new THREE.SphereGeometry(PICKING_RADIUS, 8, 8);
+    const geom = new THREE.SphereGeometry(pickingRadius, 8, 8);
     const mat = new THREE.MeshBasicMaterial({ vertexColors: true });
     const mesh = new THREE.InstancedMesh(geom, mat, uniquePoints.length);
     return mesh;
-  }, [uniquePoints.length]);
+  }, [uniquePoints.length, pickingRadius]);
 
   const pickingScene = useMemo(() => {
     const s = new THREE.Scene();

@@ -303,9 +303,9 @@ export default function DrawLines() {
 
   const handlePointerDown = (e: ThreeEvent<MouseEvent>) => {
     if (selectDrawType !== 'line') return;
-    e.stopPropagation();
 
     if (e.button !== 0) return; // Only left click
+    e.stopPropagation();
 
     // GPU Picking for start point (High priority)
     const gpuSnap = getHoveredIdFromGPU(e.pointer);
@@ -404,16 +404,36 @@ export default function DrawLines() {
         // Direction Arrow
         const mid = start.clone().add(end).multiplyScalar(0.5);
 
+        // Use points from line data if available (for curves), otherwise use start/end
+        const points =
+          line.points && line.points.length > 2
+            ? line.points.map((p: any) =>
+                p instanceof THREE.Vector3
+                  ? p
+                  : new THREE.Vector3(p.x, p.y, p.z || 0),
+              )
+            : [start, end];
+
+        const isBSplineMode = selectDrawType === 'bspline';
+
         return (
           <group key={line.id}>
             <Line
-              points={[start, end]}
+              points={points}
               color={isSelected ? '#ff0000' : '#00ff00'}
               lineWidth={LINE_WIDTH}
-              onClick={(e) => handleLineClick(e, line as unknown as LineData)}
+              onClick={
+                isBSplineMode
+                  ? undefined
+                  : (e) => handleLineClick(e, line as unknown as LineData)
+              }
+              raycast={isBSplineMode ? () => null : undefined}
             />
             {/* Direction Arrow (Request 2: Scaled down) */}
             <group position={mid} ref={(ref) => ref && ref.lookAt(end)}>
+              position={mid}
+              ref={(ref) => ref && ref.lookAt(lookAtTarget)}
+            >
               <mesh rotation={[Math.PI / 2, 0, 0]}>
                 <coneGeometry args={[0.02, 0.05, 8]} />
                 <meshBasicMaterial color={isSelected ? '#ff0000' : '#00ff00'} />
