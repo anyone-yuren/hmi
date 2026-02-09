@@ -1,38 +1,20 @@
 import { Line, Text } from '@react-three/drei';
 import { ThreeEvent, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import {
-  acceleratedRaycast,
-  computeBoundsTree,
-  disposeBoundsTree,
-} from 'three-mesh-bvh';
 import { useShallow } from 'zustand/react/shallow';
 import { usePickOnXYPlane } from '../../hooks/usePickOnXYPanel';
 import { useMapEditorStore } from '../../store';
 import { THREE_LAYERS } from '../../three/constants/threeLayers';
 import { buildSelectLineData } from '../../utils/line';
+import { LineData, useEndpointSystem } from './useEndpointSystem';
 
-// Extend BufferGeometry with three-mesh-bvh methods
-THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
-THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
-THREE.Mesh.prototype.raycast = acceleratedRaycast;
-
-interface LineData {
-  id: number;
-  start: THREE.Vector3;
-  end: THREE.Vector3;
-  points: THREE.Vector3[];
-  startPointId: string;
-  endPointId: string;
-}
-
-const ENDPOINT_RADIUS = 0.15;
+const ENDPOINT_RADIUS = 0.025; // Scaled down from 0.15
 const ENDPOINT_COLOR_DEFAULT = '#ffffff';
 const ENDPOINT_COLOR_HOVER = '#ffff00';
 const ENDPOINT_COLOR_SELECTED = '#ff0000';
-const LINE_WIDTH = 4;
-const SNAP_DISTANCE = 0.5;
+const LINE_WIDTH = 2;
+// SNAP_DISTANCE handled in hook
 
 export default function DrawLines() {
   const {
@@ -57,12 +39,13 @@ export default function DrawLines() {
     })),
   );
 
-  const { controls, camera } = useThree();
+  const { controls, camera, size, gl } = useThree();
   const pick = usePickOnXYPlane();
   const [drawing, setDrawing] = useState<{
     start: THREE.Vector3;
     end: THREE.Vector3;
     startId: string;
+    endId?: string;
   } | null>(null);
 
   const [hoveredPoint, setHoveredPoint] = useState<{
@@ -70,6 +53,10 @@ export default function DrawLines() {
     id: string;
   } | null>(null);
   const [isOrtho, setIsOrtho] = useState(false);
+
+  // Hook for Endpoint System (Visuals, BVH, Picking)
+  const { EndpointRender, findSnapPoint, getHoveredIdFromGPU, uniquePoints } =
+    useEndpointSystem(lineList as unknown as LineData[]);
 
   // Refs for event listeners to avoid stale closures
   const drawingRef = useRef(drawing);
@@ -79,67 +66,8 @@ export default function DrawLines() {
   const isOrthoRef = useRef(isOrtho);
   isOrthoRef.current = isOrtho;
 
-  // BVH Geometry and ID Map
-  const { bvhGeometry, faceIdMap } = useMemo(() => {
-    const pointMap = new Map<string, THREE.Vector3>();
-    lineList.forEach((line) => {
-      const start =
-        line.start instanceof THREE.Vector3
-          ? line.start
-          : new THREE.Vector3(
-              (line.start as any).x,
-              (line.start as any).y,
-              (line.start as any).z || 0,
-            );
-      const end =
-        line.end instanceof THREE.Vector3
-          ? line.end
-          : new THREE.Vector3(
-              (line.end as any).x,
-              (line.end as any).y,
-              (line.end as any).z || 0,
-            );
-      pointMap.set(line.startPointId, start);
-      pointMap.set(line.endPointId, end);
-    });
-
-    const points = Array.from(pointMap.entries());
-    if (points.length === 0) return { bvhGeometry: null, faceIdMap: [] };
-
-    const positions: number[] = [];
-    const pointIndices: number[] = [];
-    const ids: string[] = [];
-    const size = 0.05; // Tiny triangle size
-
-    points.forEach(([id, pos], index) => {
-      // Create a tiny triangle centered at pos
-      // v1
-      positions.push(pos.x, pos.y + size, pos.z);
-      // v2
-      positions.push(pos.x - size, pos.y - size, pos.z);
-      // v3
-      positions.push(pos.x + size, pos.y - size, pos.z);
-
-      pointIndices.push(index, index, index);
-      ids.push(id);
-    });
-
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute(
-      'position',
-      new THREE.Float32BufferAttribute(positions, 3),
-    );
-    geometry.setAttribute(
-      'pointIndex',
-      new THREE.Float32BufferAttribute(pointIndices, 1),
-    );
-    geometry.computeBoundsTree();
-
-    return { bvhGeometry: geometry, faceIdMap: ids };
-  }, [lineList]);
-
   // Generate new Point ID
-  const generatePointId = (currentList: LineData[]) => {
+  const generatePointId = (currentList: any[]) => {
     let maxId = 0;
     const extractId = (id: string) => {
       if (id && id.startsWith('P')) {
@@ -170,15 +98,12 @@ export default function DrawLines() {
   // Handle controls enablement and rotation
   useEffect(() => {
     if (!controls) return;
+    // Request 1: Right click pan enabled
+    // Request 6: Disable pan when drawing
     (controls as any).enablePan = !drawing;
     // Always disable rotation as per requirement
     (controls as any).enableRotate = false;
-
-    // If drawing, also ensure we don't accidentally rotate if logic changes
-    if (drawing) {
-      (controls as any).enableRotate = false;
-    }
-  }, [drawing, controls]);
+  }, [controls, drawing]);
 
   // Ortho Mode Listener
   useEffect(() => {
@@ -213,106 +138,113 @@ export default function DrawLines() {
     };
   }, []);
 
-  // Snap logic using BVH
-  const findSnapPoint = (pos: THREE.Vector3) => {
-    if (!bvhGeometry || !bvhGeometry.boundsTree) return null;
+  // RAF Refs
+  const mouseEventRef = useRef<MouseEvent | null>(null);
+  const rafRef = useRef<number | null>(null);
 
-    const target: any = {};
-    const result = bvhGeometry.boundsTree.closestPointToPoint(
-      pos,
-      target,
-      SNAP_DISTANCE,
-    );
-
-    if (result && result.distance < SNAP_DISTANCE) {
-      if (result.faceIndex !== undefined) {
-        // Robust lookup using pointIndex attribute
-        const faceIndex = result.faceIndex;
-        // Check if indexed
-        const indexAttr = bvhGeometry.index;
-        const vertIndex = indexAttr
-          ? indexAttr.getX(faceIndex * 3)
-          : faceIndex * 3;
-
-        const pointIndexAttr = bvhGeometry.getAttribute('pointIndex');
-        if (pointIndexAttr) {
-          const idIndex = pointIndexAttr.getX(vertIndex);
-          const id = faceIdMap[idIndex];
-
-          // Find precise position from lineList
-          let foundPos: THREE.Vector3 | null = null;
-          for (const line of lineListRef.current) {
-            if (line.startPointId === id) {
-              foundPos =
-                line.start instanceof THREE.Vector3
-                  ? line.start
-                  : new THREE.Vector3(
-                      (line.start as any).x,
-                      (line.start as any).y,
-                      (line.start as any).z || 0,
-                    );
-              break;
-            }
-            if (line.endPointId === id) {
-              foundPos =
-                line.end instanceof THREE.Vector3
-                  ? line.end
-                  : new THREE.Vector3(
-                      (line.end as any).x,
-                      (line.end as any).y,
-                      (line.end as any).z || 0,
-                    );
-              break;
-            }
-          }
-          if (foundPos) return { pos: foundPos, id };
-        }
-      }
-    }
-    return null;
-  };
-
-  // Global event listeners for dragging
+  // Global event listeners for dragging with RAF Throttle (Request 3)
   useEffect(() => {
     if (!drawing) return;
 
-    const handleGlobalMove = (e: MouseEvent) => {
-      const p = pick(e);
-      if (p) {
-        // Apply Ortho Mode
-        let endPos = p.clone();
-        if (isOrthoRef.current && drawingRef.current) {
-          const start = drawingRef.current.start;
-          const dx = Math.abs(endPos.x - start.x);
-          const dy = Math.abs(endPos.y - start.y);
-          if (dx > dy) {
-            endPos.y = start.y;
-          } else {
-            endPos.x = start.x;
+    const updateLoop = () => {
+      if (mouseEventRef.current) {
+        const e = mouseEventRef.current;
+        const p = pick(e);
+        if (p) {
+          // Apply Ortho Mode
+          let endPos = p.clone();
+          if (isOrthoRef.current && drawingRef.current) {
+            const start = drawingRef.current.start;
+            const dx = Math.abs(endPos.x - start.x);
+            const dy = Math.abs(endPos.y - start.y);
+            if (dx > dy) {
+              endPos.y = start.y;
+            } else {
+              endPos.x = start.x;
+            }
           }
+
+          // Check snap for end point
+          let snap: { pos: THREE.Vector3; id: string } | null = null;
+
+          // Try GPU Picking first (if we can map mouseEvent to NDC)
+          // mouseEventRef.current.clientX is relative to window
+          // We need coordinates relative to the canvas?
+          // Assuming the canvas covers the window or we can use event.offsetX/Y if available on MouseEvent?
+          // Standard MouseEvent has clientX/Y.
+          // We need to convert to NDC [-1, 1].
+          // Let's assume full screen canvas for now or simple conversion.
+          // Better: use the 'pick' result 'p' is world coord.
+          // getHoveredIdFromGPU needs NDC.
+
+          // Construct NDC from mouse event
+          // Note: This assumes canvas is full window size or we need bounding rect
+          // Since we are in a React component, getting canvas rect is hard without ref.
+          // But 'size' from useThree gives us canvas width/height.
+          // And we can assume the event clientX/Y matches if the canvas is full screen.
+          // Let's try to be robust.
+
+          const rect = gl.domElement.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const ndc = new THREE.Vector2(
+            (x / rect.width) * 2 - 1,
+            -(y / rect.height) * 2 + 1,
+          );
+
+          const gpuResult = getHoveredIdFromGPU(ndc);
+          if (gpuResult) {
+            snap = gpuResult;
+          } else {
+            // Fallback to spatial BVH
+            snap = findSnapPoint(endPos);
+          }
+
+          const finalPos = snap ? snap.pos.clone() : endPos;
+          const endId = snap ? snap.id : undefined;
+
+          setDrawing((prev) => prev && { ...prev, end: finalPos, endId });
         }
+        mouseEventRef.current = null;
+      }
+      rafRef.current = null;
+    };
 
-        // Check snap for end point
-        const snap = findSnapPoint(endPos);
-        const finalPos = snap ? snap.pos.clone() : endPos;
-
-        setDrawing((prev) => prev && { ...prev, end: finalPos });
+    const handleGlobalMove = (e: MouseEvent) => {
+      mouseEventRef.current = e;
+      if (!rafRef.current) {
+        rafRef.current = requestAnimationFrame(updateLoop);
       }
     };
 
     const handleGlobalUp = (e: MouseEvent) => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+
       const currentDrawing = drawingRef.current;
       if (currentDrawing) {
-        const { start, end, startId } = currentDrawing;
+        const {
+          start,
+          end,
+          startId,
+          endId: preCalculatedEndId,
+        } = currentDrawing;
 
         // Check if line is long enough
         if (start.distanceTo(end) > 0.1) {
           const currentList = lineListRef.current;
 
           // Determine End ID
-          const snap = findSnapPoint(end);
+          // Priority: Snapped ID from Drawing State > Fallback Snap > Generate New
+          let endId = preCalculatedEndId;
 
-          let endId = snap ? snap.id : null;
+          if (!endId) {
+            const snap = findSnapPoint(end);
+            endId = snap ? snap.id : undefined;
+          }
+
           if (!endId) {
             endId = generatePointId(currentList);
             const startNum = parseInt(startId.substring(1));
@@ -329,7 +261,7 @@ export default function DrawLines() {
           const newId = maxId + 1;
 
           const points = [start.clone(), end.clone()];
-          const newLine: LineData = {
+          const newLine: any = {
             id: newId,
             start: start.clone(),
             end: end.clone(),
@@ -354,6 +286,10 @@ export default function DrawLines() {
     return () => {
       window.removeEventListener('pointermove', handleGlobalMove);
       window.removeEventListener('pointerup', handleGlobalUp);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
     };
   }, [
     drawing,
@@ -362,9 +298,8 @@ export default function DrawLines() {
     setSelectedLineId,
     setSelectLineData,
     setParamsPanelCollapsed,
-    bvhGeometry,
-    faceIdMap,
-  ]); // Added bvh deps
+    findSnapPoint,
+  ]);
 
   const handlePointerDown = (e: ThreeEvent<MouseEvent>) => {
     if (selectDrawType !== 'line') return;
@@ -372,14 +307,32 @@ export default function DrawLines() {
 
     if (e.button !== 0) return; // Only left click
 
+    // GPU Picking for start point (High priority)
+    const gpuSnap = getHoveredIdFromGPU(e.pointer);
+
+    if (gpuSnap) {
+      setDrawing({
+        start: gpuSnap.pos.clone(),
+        end: gpuSnap.pos.clone(),
+        startId: gpuSnap.id,
+      });
+      return;
+    }
+
     const p = pick(e.nativeEvent);
     if (!p) return;
 
-    // Start point: prioritized hovered point (snap), else picked point
-    const snap = findSnapPoint(p);
+    // Fallback: Check snap for start point using BVH
+    let startPoint = p.clone();
+    let startId = '';
 
-    const startPoint = snap ? snap.pos.clone() : p.clone();
-    const startId = snap ? snap.id : generatePointId(lineList);
+    const snap = findSnapPoint(startPoint);
+    if (snap) {
+      startPoint = snap.pos.clone();
+      startId = snap.id;
+    } else {
+      startId = generatePointId(lineList);
+    }
 
     setDrawing({
       start: startPoint,
@@ -390,11 +343,16 @@ export default function DrawLines() {
 
   const handlePointerMove = (e: ThreeEvent<MouseEvent>) => {
     if (selectDrawType !== 'line' || drawing) return;
-    const p = pick(e.nativeEvent);
-    if (p) {
-      const snap = findSnapPoint(p);
-      setHoveredPoint(snap);
-      document.body.style.cursor = snap ? 'crosshair' : 'auto';
+
+    // GPU Picking for hover feedback
+    const gpuSnap = getHoveredIdFromGPU(e.pointer);
+
+    if (gpuSnap) {
+      setHoveredPoint(gpuSnap);
+      document.body.style.cursor = 'crosshair';
+    } else {
+      setHoveredPoint(null);
+      document.body.style.cursor = 'auto';
     }
   };
 
@@ -406,32 +364,6 @@ export default function DrawLines() {
     setSelectLineData(buildSelectLineData(line));
     setParamsPanelCollapsed(false);
     setSelectDrawType('line');
-  };
-
-  // Helper to get unique points for rendering text/spheres
-  const getAllPoints = () => {
-    const pointMap = new Map<string, THREE.Vector3>();
-    lineList.forEach((line: LineData) => {
-      const start =
-        line.start instanceof THREE.Vector3
-          ? line.start
-          : new THREE.Vector3(
-              (line.start as any).x,
-              (line.start as any).y,
-              (line.start as any).z || 0,
-            );
-      const end =
-        line.end instanceof THREE.Vector3
-          ? line.end
-          : new THREE.Vector3(
-              (line.end as any).x,
-              (line.end as any).y,
-              (line.end as any).z || 0,
-            );
-      pointMap.set(line.startPointId, start);
-      pointMap.set(line.endPointId, end);
-    });
-    return Array.from(pointMap.entries());
   };
 
   return (
@@ -449,7 +381,7 @@ export default function DrawLines() {
       )}
 
       {/* Existing Lines */}
-      {lineList.map((line: LineData) => {
+      {lineList.map((line: any) => {
         // Ensure start/end are Vector3s
         const start =
           line.start instanceof THREE.Vector3
@@ -471,8 +403,6 @@ export default function DrawLines() {
 
         // Direction Arrow
         const mid = start.clone().add(end).multiplyScalar(0.5);
-        const dir = end.clone().sub(start).normalize();
-        const length = start.distanceTo(end);
 
         return (
           <group key={line.id}>
@@ -480,19 +410,19 @@ export default function DrawLines() {
               points={[start, end]}
               color={isSelected ? '#ff0000' : '#00ff00'}
               lineWidth={LINE_WIDTH}
-              onClick={(e) => handleLineClick(e, line)}
+              onClick={(e) => handleLineClick(e, line as unknown as LineData)}
             />
-            {/* Direction Arrow */}
+            {/* Direction Arrow (Request 2: Scaled down) */}
             <group position={mid} ref={(ref) => ref && ref.lookAt(end)}>
               <mesh rotation={[Math.PI / 2, 0, 0]}>
-                <coneGeometry args={[0.2, 0.5, 8]} />
+                <coneGeometry args={[0.02, 0.05, 8]} />
                 <meshBasicMaterial color={isSelected ? '#ff0000' : '#00ff00'} />
               </mesh>
             </group>
             {/* Line ID at center */}
             <Text
               position={[mid.x, mid.y, mid.z + 0.5]}
-              fontSize={0.5}
+              fontSize={0.1}
               color='white'
               anchorX='center'
               anchorY='bottom'
@@ -503,26 +433,23 @@ export default function DrawLines() {
         );
       })}
 
-      {/* Render Unique Points (Endpoints) */}
-      {getAllPoints().map(([id, pos]) => (
+      {/* Render Unique Points (Endpoints) via InstancedMesh (Request 5) */}
+      <EndpointRender />
+
+      {/* Point ID Text (Still needed as separate Text objects) */}
+      {uniquePoints.map(([id, pos]) => (
         <group key={id} position={pos}>
-          <mesh>
-            <sphereGeometry args={[ENDPOINT_RADIUS, 16, 16]} />
-            <meshBasicMaterial
-              color={
-                hoveredPoint?.id === id
-                  ? ENDPOINT_COLOR_HOVER
-                  : ENDPOINT_COLOR_DEFAULT
-              }
-            />
-          </mesh>
-          {/* Point ID at top */}
+          {/* Visual sphere is now in InstancedMesh */}
+          {/* We just render the Text */}
           <Text
             position={[0, 0, ENDPOINT_RADIUS + 0.3]}
-            fontSize={0.4}
+            fontSize={0.1}
             color='white'
             anchorX='center'
             anchorY='bottom'
+            // @ts-ignore
+            depthTest={false}
+            renderOrder={1001}
           >
             {id}
           </Text>
@@ -537,22 +464,39 @@ export default function DrawLines() {
             color='#0000ff'
             lineWidth={LINE_WIDTH}
           />
-          <mesh position={drawing.start}>
+          {/* Start Point: Always render sphere for feedback, text only if new */}
+          <mesh position={drawing.start} renderOrder={1000}>
             <sphereGeometry args={[ENDPOINT_RADIUS, 16, 16]} />
-            <meshBasicMaterial color={ENDPOINT_COLOR_SELECTED} />
+            <meshBasicMaterial
+              color={ENDPOINT_COLOR_SELECTED}
+              depthTest={false}
+            />
           </mesh>
-          <mesh position={drawing.end}>
+          {!uniquePoints.some(([id]) => id === drawing.startId) && (
+            <Text
+              position={[
+                drawing.start.x,
+                drawing.start.y,
+                drawing.start.z + 0.5,
+              ]}
+              fontSize={0.1}
+              color='white'
+              // @ts-ignore
+              depthTest={false}
+              renderOrder={1001}
+            >
+              {drawing.startId}
+            </Text>
+          )}
+
+          {/* End Point: Always render sphere for feedback */}
+          <mesh position={drawing.end} renderOrder={1000}>
             <sphereGeometry args={[ENDPOINT_RADIUS, 16, 16]} />
-            <meshBasicMaterial color={ENDPOINT_COLOR_SELECTED} />
+            <meshBasicMaterial
+              color={ENDPOINT_COLOR_SELECTED}
+              depthTest={false}
+            />
           </mesh>
-          {/* Current Start ID */}
-          <Text
-            position={[drawing.start.x, drawing.start.y, drawing.start.z + 0.5]}
-            fontSize={0.5}
-            color='white'
-          >
-            {drawing.startId}
-          </Text>
         </group>
       )}
     </group>
