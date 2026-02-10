@@ -431,9 +431,6 @@ export default function DrawLines() {
             />
             {/* Direction Arrow (Request 2: Scaled down) */}
             <group position={mid} ref={(ref) => ref && ref.lookAt(end)}>
-              position={mid}
-              ref={(ref) => ref && ref.lookAt(lookAtTarget)}
-            >
               <mesh rotation={[Math.PI / 2, 0, 0]}>
                 <coneGeometry args={[0.02, 0.05, 8]} />
                 <meshBasicMaterial color={isSelected ? '#ff0000' : '#00ff00'} />

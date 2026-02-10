@@ -7,15 +7,16 @@ import { useShallow } from 'zustand/react/shallow';
 import { useMapEditorStore } from '../../store';
 const DrawLinesSelect = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const { setParamsPanelCollapsed, selectDrawType, setSelectDrawType } = useMapEditorStore(
-    useShallow((state) => {
-      return {
-        setParamsPanelCollapsed: state.setParamsPanelCollapsed,
-        selectDrawType: state.selectDrawType,
-        setSelectDrawType: state.setSelectDrawType,
-      };
-    }),
-  );
+  const { setParamsPanelCollapsed, selectDrawType, setSelectDrawType } =
+    useMapEditorStore(
+      useShallow((state) => {
+        return {
+          setParamsPanelCollapsed: state.setParamsPanelCollapsed,
+          selectDrawType: state.selectDrawType,
+          setSelectDrawType: state.setSelectDrawType,
+        };
+      }),
+    );
   console.log('selectDrawType', selectDrawType);
   const [form] = Form.useForm();
   const vehicleOptions = [
@@ -29,7 +30,11 @@ const DrawLinesSelect = () => {
     },
   ];
   useEffect(() => {
-    if (selectDrawType === 'line' || selectDrawType === 'bspline') {
+    if (
+      selectDrawType === 'line' ||
+      selectDrawType === 'bspline' ||
+      selectDrawType === 'bezier'
+    ) {
       setCollapsed(false);
     } else {
       setCollapsed(true);
@@ -42,7 +47,8 @@ const DrawLinesSelect = () => {
         className={classNames(
           'flex gap-0.5 px-1 items-center cursor-pointer text-white hover:bg-[#00d1d1]/20 rounded-md',
           {
-            'bg-[#00d1d1]/60': selectDrawType === 'line' || selectDrawType === 'bspline',
+            'bg-[#00d1d1]/60':
+              selectDrawType === 'line' || selectDrawType === 'bspline',
           },
         )}
         onClick={() => {
@@ -71,9 +77,12 @@ const DrawLinesSelect = () => {
         <div className='flex items-center justify-between px-2 py-1'>
           <div className='flex gap-2 items-center text-white/80'>
             <div
-              className={classNames('hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer', {
-                'bg-[#00d1d1]/60': selectDrawType === 'line',
-              })}
+              className={classNames(
+                'hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer',
+                {
+                  'bg-[#00d1d1]/60': selectDrawType === 'line',
+                },
+              )}
               onClick={() => {
                 setParamsPanelCollapsed(true);
                 debugger;
@@ -83,9 +92,12 @@ const DrawLinesSelect = () => {
               直线
             </div>
             <div
-              className={classNames('hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer', {
-                'bg-[#00d1d1]/60': selectDrawType === 'bspline',
-              })}
+              className={classNames(
+                'hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer',
+                {
+                  'bg-[#00d1d1]/60': selectDrawType === 'bspline',
+                },
+              )}
               onClick={() => {
                 setParamsPanelCollapsed(true);
                 setSelectDrawType('bspline');
@@ -94,7 +106,12 @@ const DrawLinesSelect = () => {
               B样条
             </div>
             <div
-              className='hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer'
+              className={classNames(
+                'hover:bg-[#00d1d1]/20 px-1 rounded-md cursor-pointer',
+                {
+                  'bg-[#00d1d1]/60': selectDrawType === 'bezier',
+                },
+              )}
               onClick={() => {
                 setParamsPanelCollapsed(true);
                 setSelectDrawType('bezier');
@@ -121,8 +138,16 @@ const DrawLinesSelect = () => {
               <Form.Item name='isSnap' label='吸附'>
                 <Checkbox></Checkbox>
               </Form.Item>
-              <Form.Item name='vehicleId' label='点类型' tooltip='生成线段的点类型'>
-                <Select options={vehicleOptions} className='min-w-24' size='small' />
+              <Form.Item
+                name='vehicleId'
+                label='点类型'
+                tooltip='生成线段的点类型'
+              >
+                <Select
+                  options={vehicleOptions}
+                  className='min-w-24'
+                  size='small'
+                />
               </Form.Item>
               <Form.Item name='vehicleId' label='线类型'>
                 <Select

@@ -5,6 +5,7 @@ import { useShallow } from 'zustand/react/shallow';
 import CursorGuideLine from './components/cursorGuideLine';
 import DrawBsline from './components/drawLine/deawBsline';
 import DrawLine from './components/drawLine/draw';
+import DrawBezier from './components/drawLine/drawBezier';
 import DrawPoints from './components/drawPoints/draw';
 import Handles from './components/handles';
 import ParamsPanel from './components/paramPanel';
@@ -62,6 +63,7 @@ const MapEditor = () => {
                 <DrawPoints />
                 <DrawLine />
                 <DrawBsline />
+                <DrawBezier />
                 <CursorGuideLine />
                 <RenderMesh />
                 <RenderPolygon />
