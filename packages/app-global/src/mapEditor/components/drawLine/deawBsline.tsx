@@ -186,9 +186,21 @@ export default function DrawBSpline() {
     const pts = points.map((p) => p.pos);
     if (tempPoint) pts.push(tempPoint);
 
-    if (pts.length < 2) return null;
+    // Filter adjacent duplicates
+    const uniquePts: THREE.Vector3[] = [];
+    for (const p of pts) {
+      if (uniquePts.length === 0) {
+        uniquePts.push(p);
+      } else {
+        if (uniquePts[uniquePts.length - 1].distanceTo(p) > 0.001) {
+          uniquePts.push(p);
+        }
+      }
+    }
 
-    const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal');
+    if (uniquePts.length < 2) return null;
+
+    const curve = new THREE.CatmullRomCurve3(uniquePts, false, 'centripetal');
     return curve.getPoints(CURVE_SEGMENTS);
   })();
 
@@ -208,7 +220,11 @@ export default function DrawBSpline() {
 
       {/* Preview Curve */}
       {selectDrawType === 'bspline' && previewPoints && (
-        <Line points={previewPoints} color='#00ff00' lineWidth={2} />
+        <Line 
+          points={previewPoints} 
+          color='#00ff00' 
+          lineWidth={2} 
+        />
       )}
 
       {/* Control Points (Visual feedback) */}

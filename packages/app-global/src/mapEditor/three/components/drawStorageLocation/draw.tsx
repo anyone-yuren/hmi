@@ -79,6 +79,7 @@ const LocationSprite = ({
       scale={[0.5, 0.5, 1]}
       onClick={onClick}
       onContextMenu={onContextMenu}
+      renderOrder={100}
     >
       <spriteMaterial
         map={texture}
@@ -125,7 +126,12 @@ const ParkingPointSprite = ({
   }, [selected]);
 
   return (
-    <sprite position={position} scale={[0.3, 0.3, 1]} onClick={onClick}>
+    <sprite
+      position={position}
+      scale={[0.3, 0.3, 1]}
+      onClick={onClick}
+      renderOrder={100}
+    >
       <spriteMaterial
         map={texture}
         depthTest={false}

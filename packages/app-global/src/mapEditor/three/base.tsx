@@ -46,9 +46,10 @@ const BaseElement = ({ size }) => {
       };
     }),
   );
-  const { flyToPoint } = useMapEditorStore(
+  const { flyToPoint, setFlyToPoint } = useMapEditorStore(
     useShallow((state) => ({
       flyToPoint: state.flyToPoint,
+      setFlyToPoint: state.setFlyToPoint,
     })),
   );
   const gridConfig = {
@@ -64,6 +65,23 @@ const BaseElement = ({ size }) => {
   };
 
   useFlyToPointSpring(controlsRef, flyToPoint);
+
+  // Clear flyToPoint when user interacts with controls to prevent fighting
+  useEffect(() => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+
+    const onStart = () => {
+      if (flyToPoint) {
+        setFlyToPoint(null);
+      }
+    };
+
+    controls.addEventListener('start', onStart);
+    return () => {
+      controls.removeEventListener('start', onStart);
+    };
+  }, [flyToPoint, setFlyToPoint]);
 
   return (
     <>

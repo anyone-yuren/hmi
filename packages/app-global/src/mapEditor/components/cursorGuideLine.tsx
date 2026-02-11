@@ -68,7 +68,7 @@ function CursorGuideLine() {
     };
   }, [gl, pick]);
 
-  if (!pos) return null;
+  if (!pos || !Number.isFinite(pos.x) || !Number.isFinite(pos.y)) return null;
 
   return (
     <>

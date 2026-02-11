@@ -32,7 +32,11 @@ export function DragDrawPolygon() {
     mouse.current.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
     raycaster.current.setFromCamera(mouse.current, camera);
     const p = new THREE.Vector3();
-    raycaster.current.ray.intersectPlane(plane, p);
+    const result = raycaster.current.ray.intersectPlane(plane, p);
+    
+    if (!result || !Number.isFinite(p.x) || !Number.isFinite(p.y)) {
+      return null;
+    }
     return p;
   };
 
@@ -49,9 +53,12 @@ export function DragDrawPolygon() {
 
     const onDown = (e: MouseEvent) => {
       if (e.button !== 0) return;
-      controls && (controls.enablePan = false);
+      controls && ((controls as any).enablePan = false);
 
-      start.current = getPoint(e);
+      const p = getPoint(e);
+      if (!p) return;
+
+      start.current = p;
       meshRef.current.position.copy(start.current);
       meshRef.current.scale.set(0, 0, 1);
       setVisible(true);
@@ -60,9 +67,11 @@ export function DragDrawPolygon() {
     const onMove = (e: MouseEvent) => {
       if (!start.current) return;
       const p = getPoint(e);
+      if (!p) return;
+
       const c = start.current;
 
-      meshRef.current.position.set((p.x + c.x) / 2, (p.y + c.y) / 2, 0);
+      meshRef.current.position.set((p.x + c.x) / 2, (p.y + c.y) / 2, 0.05);
       meshRef.current.scale.set(Math.abs(p.x - c.x), Math.abs(p.y - c.y), 1);
     };
 
@@ -75,18 +84,14 @@ export function DragDrawPolygon() {
       const position = meshRef.current.position.clone();
       addPolygon({
         id,
-        center: {
-          x: position.x,
-          y: position.y,
-          z: position.z,
-        },
+        center: new THREE.Vector3(position.x, position.y, position.z),
         width: x,
         height: y,
         name: `区域${id}`,
       });
 
       reset();
-      // controls && (controls.enablePan = true);
+      // controls && ((controls as any).enablePan = true);
 
       // ⭐ 自动进入 select
       setMode('select');
@@ -101,14 +106,14 @@ export function DragDrawPolygon() {
       dom.removeEventListener('mousedown', onDown);
       dom.removeEventListener('mousemove', onMove);
       dom.removeEventListener('mouseup', onUp);
-      controls && (controls.enablePan = true);
+      controls && ((controls as any).enablePan = true);
     };
   }, [mode]);
 
   return (
-    <mesh ref={meshRef} visible={visible}>
+    <mesh ref={meshRef} visible={visible} position={[0, 0, 0.05]} renderOrder={1}>
       <planeGeometry args={[1, 1]} />
-      <meshBasicMaterial color='#60a5fa' transparent opacity={0.3} />
+      <meshBasicMaterial color='#60a5fa' transparent opacity={0.3} depthTest={false} />
     </mesh>
   );
 }

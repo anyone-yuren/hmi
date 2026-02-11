@@ -72,7 +72,11 @@ export function DragDrawArea() {
     mouse.current.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
     raycaster.current.setFromCamera(mouse.current, camera);
     const p = new THREE.Vector3();
-    raycaster.current.ray.intersectPlane(plane, p);
+    const result = raycaster.current.ray.intersectPlane(plane, p);
+    
+    if (!result || !Number.isFinite(p.x) || !Number.isFinite(p.y)) {
+      return null;
+    }
     return p;
   };
 
@@ -101,7 +105,9 @@ export function DragDrawArea() {
       type: 'area',
       points: pointsRef.current.map((p) => ({ x: p.x, y: p.y })),
       name: `区域${id}`,
-      center,
+      center: new THREE.Vector3(center.x, center.y, center.z),
+      width: 0,
+      height: 0,
     });
 
     reset();
@@ -113,17 +119,24 @@ export function DragDrawArea() {
     if (mode !== 'draw-area') return;
 
     const dom = gl.domElement;
-    controls && (controls.enablePan = false);
+    if (controls) {
+      (controls as any).enablePan = false;
+    }
 
     const onClick = (e: MouseEvent) => {
       if (e.button !== 0) return;
       const p = getPoint(e);
-      pointsRef.current.push(p.clone());
+      if (p) {
+        pointsRef.current.push(p.clone());
+      }
     };
 
     const onMove = (e: MouseEvent) => {
       if (pointsRef.current.length === 0) return;
-      setPreviewPoint(getPoint(e));
+      const p = getPoint(e);
+      if (p) {
+        setPreviewPoint(p);
+      }
     };
 
     // const onDblClick = () => finish();
@@ -152,15 +165,29 @@ export function DragDrawArea() {
       // dom.removeEventListener('dblclick', onDblClick);
       dom.removeEventListener('contextmenu', onContextMenu);
       window.removeEventListener('keydown', onKeyDown);
-      controls && (controls.enablePan = true);
+      if (controls) {
+        (controls as any).enablePan = true;
+      }
     };
   }, [mode]);
 
   /** 轮廓点（包含预览点） */
   const linePoints = useMemo(() => {
-    const pts = [...pointsRef.current];
-    if (previewPoint) pts.push(previewPoint);
-    return pts;
+    const rawPts = [...pointsRef.current];
+    if (previewPoint) rawPts.push(previewPoint);
+
+    // Filter adjacent duplicates to prevent degenerate segments
+    const filtered: THREE.Vector3[] = [];
+    for (const p of rawPts) {
+      if (filtered.length === 0) {
+        filtered.push(p);
+      } else {
+        if (filtered[filtered.length - 1].distanceTo(p) > 0.01) {
+          filtered.push(p);
+        }
+      }
+    }
+    return filtered;
   }, [previewPoint, pointsRef.current.length]);
 
   /** 面几何 */
@@ -174,13 +201,15 @@ export function DragDrawArea() {
     <>
       {/* 面 */}
       {shapeGeometry && (
-        <mesh geometry={shapeGeometry}>
-          <meshBasicMaterial color='#a855f7' transparent opacity={0.3} />
+        <mesh geometry={shapeGeometry} position={[0, 0, 0.05]} renderOrder={1}>
+          <meshBasicMaterial color='#a855f7' transparent opacity={0.3} depthTest={false} />
         </mesh>
       )}
 
       {/* 边 */}
-      {linePoints.length > 1 && <Line points={linePoints} color='#a855f7' lineWidth={1} />}
+      {linePoints.length > 1 && (
+        <Line points={linePoints} color='#a855f7' lineWidth={1} position={[0, 0, 0.05]} renderOrder={2} />
+      )}
     </>
   );
 }

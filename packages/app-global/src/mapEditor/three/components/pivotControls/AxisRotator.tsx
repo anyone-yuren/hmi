@@ -188,7 +188,8 @@ export const AxisRotator: React.FC<{ dir1: THREE.Vector3; dir2: THREE.Vector3; a
     return new THREE.Matrix4().makeBasis(dir1N, dir2N, dir1N.clone().cross(dir2N));
   }, [dir1, dir2]);
 
-  const r = fixed ? 0.65 : scale * 0.65;
+  const safeScale = Number.isFinite(scale) && scale > 1e-5 ? scale : 1;
+  const r = fixed ? 0.65 : safeScale * 0.65;
 
   const arc = React.useMemo(() => {
     const segments = 32;

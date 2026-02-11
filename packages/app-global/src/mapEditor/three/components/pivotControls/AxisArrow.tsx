@@ -124,9 +124,10 @@ export const AxisArrow: React.FC<{ direction: THREE.Vector3; axis: 0 | 1 | 2 }> 
   }, []);
 
   const { cylinderLength, coneWidth, coneLength, matrixL } = React.useMemo(() => {
-    const coneWidth = fixed ? (lineWidth / scale) * 1.6 : scale / 20;
-    const coneLength = fixed ? 0.2 : scale / 5;
-    const cylinderLength = fixed ? 1 - coneLength : scale - coneLength;
+    const safeScale = Number.isFinite(scale) && scale > 1e-5 ? scale : 1;
+    const coneWidth = fixed ? (lineWidth / safeScale) * 1.6 : safeScale / 20;
+    const coneLength = fixed ? 0.2 : safeScale / 5;
+    const cylinderLength = fixed ? 1 - coneLength : safeScale - coneLength;
     const quaternion = new THREE.Quaternion().setFromUnitVectors(upV, direction.clone().normalize());
     const matrixL = new THREE.Matrix4().makeRotationFromQuaternion(quaternion);
     return { cylinderLength, coneWidth, coneLength, matrixL };

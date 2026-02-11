@@ -142,6 +142,10 @@ export const PivotControls = React.forwardRef<THREE.Group, PivotControlsProps>(
     },
     fRef,
   ) => {
+    // Ensure scale and lineWidth are finite numbers to prevent NaN propagation
+    const safeScale = Number.isFinite(scale) ? scale : 1;
+    const safeLineWidth = Number.isFinite(lineWidth) ? lineWidth : 2;
+
     const invalidate = useThree((state) => state.invalidate);
     const parentRef = React.useRef<THREE.Group>(null!);
     const ref = React.useRef<THREE.Group>(null!);

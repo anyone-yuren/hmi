@@ -75,11 +75,11 @@ export function PolygonMesh({ polygon }: { polygon: PolygonData }) {
         const delta = lastDeltaRef.current;
 
         updatePolygon(polygon.id, {
-          center: {
-            x: start.x + delta.x,
-            y: start.y + delta.y,
-            z: start.z,
-          },
+          center: new THREE.Vector3(
+            start.x + delta.x,
+            start.y + delta.y,
+            start.z,
+          ),
         });
 
         // 清理
@@ -90,9 +90,10 @@ export function PolygonMesh({ polygon }: { polygon: PolygonData }) {
       }}
     >
       <mesh
-        position={[polygon.center.x, polygon.center.y, polygon.center.z]}
+        position={[polygon.center.x, polygon.center.y, polygon.center.z + 0.05]}
+        renderOrder={1}
         name={polygon.name}
-        rotation={[0, 0, polygon.rotation ?? 0]}
+        rotation={[0, 0, 0]}
         scale={[polygon.width, polygon.height, 1]}
         onPointerDown={(e) => {
           // 🚫 右键不处理
@@ -113,15 +114,16 @@ export function PolygonMesh({ polygon }: { polygon: PolygonData }) {
         }}
       >
         <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial color={selected ? '#fab005' : '#51cf66'} transparent opacity={0.4} />
+        <meshBasicMaterial color={selected ? '#fab005' : '#51cf66'} transparent opacity={0.4} depthTest={false} />
       </mesh>
     </PivotControls>
   ) : (
     <>
       <mesh
-        position={[polygon.center.x, polygon.center.y, polygon.center.z]}
+        position={[polygon.center.x, polygon.center.y, polygon.center.z + 0.05]}
+        renderOrder={1}
         name={polygon.name}
-        rotation={[0, 0, polygon.rotation ?? 0]}
+        rotation={[0, 0, 0]}
         scale={[polygon.width, polygon.height, 1]}
         onPointerDown={(e) => {
           e.stopPropagation();
@@ -139,7 +141,7 @@ export function PolygonMesh({ polygon }: { polygon: PolygonData }) {
         }}
       >
         <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial color={selected ? '#fab005' : '#60a5fa'} transparent opacity={0.4} />
+        <meshBasicMaterial color={selected ? '#fab005' : '#60a5fa'} transparent opacity={0.4} depthTest={false} />
       </mesh>
     </>
   );

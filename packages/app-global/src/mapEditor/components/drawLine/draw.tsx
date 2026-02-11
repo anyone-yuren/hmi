@@ -416,10 +416,36 @@ export default function DrawLines() {
 
         const isBSplineMode = selectDrawType === 'bspline';
 
+        // Check if line length is sufficient to avoid RangeError
+        // For simple segments (2 points), check total distance.
+        // For polylines (>2 points), filter duplicates and ensure at least one valid segment exists.
+        
+        let safePoints = points;
+        if (points.length > 2) {
+             const filtered: THREE.Vector3[] = [];
+             for (const p of points) {
+               if (filtered.length === 0) {
+                 filtered.push(p);
+               } else {
+                 if (filtered[filtered.length - 1].distanceTo(p) > 0.001) {
+                   filtered.push(p);
+                 }
+               }
+             }
+             safePoints = filtered;
+        }
+
+        const isLengthValid = safePoints.length > 1 && 
+          (safePoints.length === 2 
+            ? safePoints[0].distanceTo(safePoints[1]) > 0.01 
+            : true); 
+
+        if (!isLengthValid) return null;
+
         return (
           <group key={line.id}>
             <Line
-              points={points}
+              points={safePoints}
               color={isSelected ? '#ff0000' : '#00ff00'}
               lineWidth={LINE_WIDTH}
               onClick={
@@ -476,11 +502,13 @@ export default function DrawLines() {
       {/* Currently Drawing Line */}
       {drawing && (
         <group>
-          <Line
-            points={[drawing.start, drawing.end]}
-            color='#0000ff'
-            lineWidth={LINE_WIDTH}
-          />
+          {drawing.start.distanceTo(drawing.end) > 0.01 && (
+            <Line
+              points={[drawing.start, drawing.end]}
+              color='#0000ff'
+              lineWidth={LINE_WIDTH}
+            />
+          )}
           {/* Start Point: Always render sphere for feedback, text only if new */}
           <mesh position={drawing.start} renderOrder={1000}>
             <sphereGeometry args={[ENDPOINT_RADIUS, 16, 16]} />

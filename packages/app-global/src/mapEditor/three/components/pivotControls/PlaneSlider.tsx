@@ -163,8 +163,9 @@ export const PlaneSlider: React.FC<{ dir1: THREE.Vector3; dir2: THREE.Vector3; a
     return new THREE.Matrix4().makeBasis(dir1N, dir2N, dir1N.clone().cross(dir2N));
   }, [dir1, dir2]);
 
-  const pos1 = fixed ? 1 / 7 : scale / 7;
-  const length = fixed ? 0.225 : scale * 0.225;
+  const safeScale = Number.isFinite(scale) ? scale : 1;
+  const pos1 = fixed ? 1 / 7 : safeScale / 7;
+  const length = fixed ? 0.225 : safeScale * 0.225;
   const color = isHovered ? hoveredColor : axisColors[axis];
 
   const points = React.useMemo(

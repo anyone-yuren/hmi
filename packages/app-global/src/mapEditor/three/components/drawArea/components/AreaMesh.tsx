@@ -95,12 +95,12 @@ export function AreaMesh({ area }: { area: AreaData }) {
 
   useEffect(() => {
     if (!selected) return;
-    setPointsInArea(area.id, pointsInArea);
+    setPointsInArea(area.id, pointsInArea as any);
   }, [selected]);
   const { run: runComputeAfterDrag } = useDebounceFn(
     (points: { x: number; y: number }[]) => {
       const result = queryPointsInPolygon(points);
-      setPointsInArea(area.id, result);
+      setPointsInArea(area.id, result as any);
     },
     { wait: 200 },
   );
@@ -141,7 +141,11 @@ export function AreaMesh({ area }: { area: AreaData }) {
 
       updateArea(area.id, {
         points: draftPointsRef.current,
-        center: draftCenterRef.current!,
+        center: new THREE.Vector3(
+          draftCenterRef.current!.x,
+          draftCenterRef.current!.y,
+          draftCenterRef.current!.z,
+        ),
       });
       // 计算当前区域内的点
       runComputeAfterDrag(draftPointsRef.current);
@@ -164,7 +168,8 @@ export function AreaMesh({ area }: { area: AreaData }) {
     <>
       {/* ---------- 多边形 ---------- */}
       <mesh
-        position={[renderCenter.x, renderCenter.y, renderCenter.z]}
+        position={[renderCenter.x, renderCenter.y, renderCenter.z + 0.05]}
+        renderOrder={1}
         onPointerDown={(e) => {
           e.stopPropagation();
           select(selected ? [] : [area.id]);
@@ -181,6 +186,7 @@ export function AreaMesh({ area }: { area: AreaData }) {
           color={selected ? "#fab005" : "#a855f7"}
           transparent
           opacity={selected ? 0.4 : 0.25}
+          depthTest={false}
         />
       </mesh>
 
@@ -189,7 +195,8 @@ export function AreaMesh({ area }: { area: AreaData }) {
         renderPoints.map((p, i) => (
           <mesh
             key={i}
-            position={[p.x, p.y, 0.01]}
+            position={[p.x, p.y, 0.1]}
+            renderOrder={2}
             onPointerDown={(e) => {
               e.stopPropagation();
               draggingIndex.current = i;
@@ -199,7 +206,7 @@ export function AreaMesh({ area }: { area: AreaData }) {
             }}
           >
             <circleGeometry args={[0.6, 16]} />
-            <meshBasicMaterial color="#ff922b" />
+            <meshBasicMaterial color="#ff922b" depthTest={false} />
           </mesh>
         ))}
     </>

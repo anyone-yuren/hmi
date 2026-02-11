@@ -220,9 +220,21 @@ export default function DrawBezier() {
     const pts = points.map((p) => p.pos);
     if (tempPoint) pts.push(tempPoint);
 
-    if (pts.length < 2) return null;
+    // Filter adjacent duplicates
+    const uniquePts: THREE.Vector3[] = [];
+    for (const p of pts) {
+      if (uniquePts.length === 0) {
+        uniquePts.push(p);
+      } else {
+        if (uniquePts[uniquePts.length - 1].distanceTo(p) > 0.001) {
+          uniquePts.push(p);
+        }
+      }
+    }
 
-    return getBezierPoints(pts, CURVE_SEGMENTS);
+    if (uniquePts.length < 2) return null;
+
+    return getBezierPoints(uniquePts, CURVE_SEGMENTS);
   })();
 
   // Hull (Control Polygon)
@@ -230,7 +242,20 @@ export default function DrawBezier() {
     if (points.length === 0) return null;
     const pts = points.map((p) => p.pos);
     if (tempPoint) pts.push(tempPoint);
-    return pts;
+    
+    // Filter adjacent duplicates for hull as well
+    const uniquePts: THREE.Vector3[] = [];
+    for (const p of pts) {
+      if (uniquePts.length === 0) {
+        uniquePts.push(p);
+      } else {
+        if (uniquePts[uniquePts.length - 1].distanceTo(p) > 0.001) {
+          uniquePts.push(p);
+        }
+      }
+    }
+    
+    return uniquePts.length >= 2 ? uniquePts : null;
   })();
 
   return (
@@ -249,7 +274,11 @@ export default function DrawBezier() {
 
       {/* Preview Curve */}
       {selectDrawType === 'bezier' && previewPoints && (
-        <Line points={previewPoints} color='#00ff00' lineWidth={2} />
+        <Line 
+          points={previewPoints} 
+          color='#00ff00' 
+          lineWidth={2} 
+        />
       )}
 
       {/* Control Polygon (Hull) */}
