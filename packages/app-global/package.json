@@ -24,6 +24,7 @@
     "@react-three/drei": "^9.121.3",
     "@react-three/fiber": "^8.15.14",
     "@react-three/postprocessing": "^2.4.6",
+    "@xyflow/react": "^12.10.0",
     "ahooks": "catalog:",
     "antd": "catalog:",
     "axios": "catalog:",

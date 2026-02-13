@@ -5,6 +5,7 @@ import { IconifyIcon } from 'ui';
 import AutoCompile from '../Models/components/AutoCompile';
 import RobotCapabilityTopology from '../Models/modules/Capability';
 import VisionFlow from '../Models/visionFlow';
+import TaskEventRuleManagement from '../TaskEventRuleManagement';
 import WorkflowDesignerContainer from '../WorkflowDesigner/container';
 import BaseInformation from './modules/baseInformation';
 import PathPlanning from './modules/pathPlanning';
@@ -131,6 +132,11 @@ const Parameters = () => {
       icon: <IconifyIcon icon='hugeicons:workflow-circle-03' size={16} />,
       label: '自动编译',
     },
+    {
+      key: '11',
+      icon: <IconifyIcon icon='eos-icons:decision-tree' size={16} />,
+      label: '任务事件规则',
+    },
   ];
   return (
     <div className='h-full w-full flex gap-2'>
@@ -206,6 +212,7 @@ const Parameters = () => {
           {selectedKey === '7' && <PathPlanning />}
           {selectedKey === '9' && <WorkflowDesignerContainer />}
           {selectedKey === '10' && <AutoCompile />}
+          {selectedKey === '11' && <TaskEventRuleManagement />}
         </div>
       </div>
     </div>
