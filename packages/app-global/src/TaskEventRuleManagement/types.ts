@@ -67,3 +67,10 @@ export interface RuleRelation {
   sceneId: string;
   eventFlowId: string;
 }
+
+export interface LocationTemplate {
+  id: string;
+  name: string;
+  type: 'POINTS' | 'REGION';
+  values: string[];
+}

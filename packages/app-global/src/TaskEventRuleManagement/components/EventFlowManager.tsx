@@ -1,3 +1,4 @@
+import { CopyOutlined } from '@ant-design/icons';
 import {
   addEdge,
   Background,
@@ -83,6 +84,11 @@ export const EventFlowManager = () => {
   const [pendingSourceNodeId, setPendingSourceNodeId] = useState<string | null>(
     null
   );
+
+  // Copy Flow State
+  const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
+  const [copyTargetId, setCopyTargetId] = useState<string | null>(null);
+  const [copyForm] = Form.useForm();
 
   // Layout helper
   const layoutNodes = useCallback((nodes: EventNode[], edges: Edge[]) => {
@@ -399,11 +405,37 @@ export const EventFlowManager = () => {
             data: { label: '结束', isEnd: true },
           },
         ],
-        edges: [],
+        edges: [{ id: 'e-start-end', source: 'start', target: 'end' }],
       });
       setIsFlowMetaModalOpen(false);
       handleSelectFlow(newId);
     });
+  };
+
+  const handleCopyFlow = () => {
+    copyForm.validateFields().then((values) => {
+      const flow = eventFlows.find((f) => f.id === copyTargetId);
+      if (flow) {
+        const newId = nanoid();
+        addEventFlow({
+          ...flow,
+          id: newId,
+          name: values.name,
+          isDefault: false, // Copied flow should not be default initially
+        });
+        message.success('复制成功');
+        setIsCopyModalOpen(false);
+        setCopyTargetId(null);
+        copyForm.resetFields();
+      }
+    });
+  };
+
+  const openCopyModal = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCopyTargetId(id);
+    setIsCopyModalOpen(true);
+    copyForm.resetFields();
   };
 
   return (
@@ -413,9 +445,9 @@ export const EventFlowManager = () => {
         <div className='mb-4 flex justify-between items-center'>
           <span className='font-bold text-lg text-white'>事件流列表</span>
           <div className='space-x-2'>
-            <Button size='small' onClick={exportEventFlows}>
+            {/* <Button size='small' onClick={exportEventFlows}>
               导出
-            </Button>
+            </Button> */}
             <Button type='primary' size='small' onClick={handleCreateFlow}>
               新建流程
             </Button>
@@ -427,20 +459,33 @@ export const EventFlowManager = () => {
             renderItem={(flow) => (
               <List.Item
                 className={`border-b border-white/10 hover:bg-white/10 cursor-pointer p-2 ${
-                  selectedFlowId === flow.id ? 'bg-white/10' : ''
+                  selectedFlowId === flow.id ? 'bg-primary/20' : ''
                 }`}
                 onClick={() => handleSelectFlow(flow.id)}
               >
                 <div className='w-full'>
-                  <div className='flex justify-between'>
-                    <span className='font-medium text-white'>{flow.name}</span>
-                    <Tag>
-                      {TASK_TYPES.find((t) => t.value === flow.taskType)
-                        ?.label || flow.taskType}
-                    </Tag>
-                  </div>
-                  <div className='text-xs text-white/60 mt-1'>
-                    包含 {flow.nodes?.length || 0} 个节点
+                  <div className='flex justify-between items-start'>
+                    <div>
+                      <div className='flex items-center gap-2'>
+                        <span className='font-medium text-white'>
+                          {flow.name}
+                        </span>
+                        <Tag className='mr-0'>
+                          {TASK_TYPES.find((t) => t.value === flow.taskType)
+                            ?.label || flow.taskType}
+                        </Tag>
+                      </div>
+                      <div className='text-xs text-white/60 mt-1'>
+                        包含 {flow.nodes?.length || 0} 个节点
+                      </div>
+                    </div>
+                    <Button
+                      type='text'
+                      size='small'
+                      icon={<CopyOutlined />}
+                      onClick={(e) => openCopyModal(flow.id, e)}
+                      className='text-white/60 hover:text-white'
+                    />
                   </div>
                 </div>
               </List.Item>
@@ -497,8 +542,9 @@ export const EventFlowManager = () => {
         open={isNodeModalOpen}
         onOk={saveNode}
         onCancel={() => setIsNodeModalOpen(false)}
+        width={600}
       >
-        <Form form={nodeForm} layout='vertical'>
+        <Form form={nodeForm} layout='horizontal' labelCol={{ span: 4 }}>
           <Form.Item name='label' label='节点名称' rules={[{ required: true }]}>
             <Input />
           </Form.Item>
@@ -574,6 +620,24 @@ export const EventFlowManager = () => {
             rules={[{ required: true }]}
           >
             <Select options={TASK_TYPES} />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Copy Flow Modal */}
+      <Modal
+        title='复制事件流'
+        open={isCopyModalOpen}
+        onOk={handleCopyFlow}
+        onCancel={() => setIsCopyModalOpen(false)}
+      >
+        <Form form={copyForm} layout='vertical'>
+          <Form.Item
+            name='name'
+            label='新流程名称'
+            rules={[{ required: true, message: '请输入新流程名称' }]}
+          >
+            <Input placeholder='请输入新流程名称' />
           </Form.Item>
         </Form>
       </Modal>

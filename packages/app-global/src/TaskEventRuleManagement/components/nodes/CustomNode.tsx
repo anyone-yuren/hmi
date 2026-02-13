@@ -78,7 +78,7 @@ const CustomNode = ({ data, isConnectable, id }: NodeProps) => {
 
   return (
     <div
-      className={`relative px-3 py-2 shadow-lg rounded-md bg-[#1e293b] border text-white min-w-[180px] transition-colors ${
+      className={`relative px-3 py-2 shadow-lg rounded-md bg-white/20 border text-white min-w-[180px] transition-colors ${
         hasError ? 'border-red-500 animate-pulse' : 'border-[#334155]'
       }`}
       onMouseEnter={() => setHovered(true)}

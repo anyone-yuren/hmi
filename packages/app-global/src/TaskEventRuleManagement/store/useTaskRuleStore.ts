@@ -1,10 +1,11 @@
 import { create } from 'zustand';
-import { EventFlow, RuleRelation, Scene } from '../types';
+import { EventFlow, LocationTemplate, RuleRelation, Scene } from '../types';
 
 interface TaskRuleState {
   scenes: Scene[];
   eventFlows: EventFlow[];
   relations: RuleRelation[];
+  locationTemplates: LocationTemplate[];
 
   // Actions
   addScene: (scene: Scene) => void;
@@ -19,6 +20,13 @@ interface TaskRuleState {
   unlinkScene: (sceneId: string) => void;
   exportScenes: () => void;
   exportEventFlows: () => void;
+
+  addLocationTemplate: (template: LocationTemplate) => void;
+  updateLocationTemplate: (
+    id: string,
+    template: Partial<LocationTemplate>
+  ) => void;
+  deleteLocationTemplate: (id: string) => void;
 }
 
 export const useTaskRuleStore = create<TaskRuleState>((set) => ({
@@ -245,6 +253,15 @@ export const useTaskRuleStore = create<TaskRuleState>((set) => ({
     { sceneId: '3', eventFlowId: '3' },
     { sceneId: '4', eventFlowId: '4' },
   ],
+  locationTemplates: [
+    {
+      id: '1',
+      name: '常用库位组A',
+      type: 'POINTS',
+      values: ['101', '102', '103'],
+    },
+    { id: '2', name: '禁行区域B', type: 'REGION', values: ['A-Zone'] },
+  ],
 
   addScene: (scene) => set((state) => ({ scenes: [...state.scenes, scene] })),
   updateScene: (id, patch) =>
@@ -308,4 +325,19 @@ export const useTaskRuleStore = create<TaskRuleState>((set) => ({
     a.click();
     URL.revokeObjectURL(url);
   },
+
+  addLocationTemplate: (template) =>
+    set((state) => ({
+      locationTemplates: [...state.locationTemplates, template],
+    })),
+  updateLocationTemplate: (id, template) =>
+    set((state) => ({
+      locationTemplates: state.locationTemplates.map((t) =>
+        t.id === id ? { ...t, ...template } : t
+      ),
+    })),
+  deleteLocationTemplate: (id) =>
+    set((state) => ({
+      locationTemplates: state.locationTemplates.filter((t) => t.id !== id),
+    })),
 }));

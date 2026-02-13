@@ -1,7 +1,14 @@
 import {
+  CopyOutlined,
+  DeleteOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
+import {
   Button,
   Card,
   Col,
+  Collapse,
+  Drawer,
   Form,
   Input,
   InputNumber,
@@ -14,7 +21,7 @@ import {
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useTaskRuleStore } from '../store/useTaskRuleStore';
-import { TaskType, VehicleModel } from '../types';
+import { LocationTemplate, TaskType, VehicleModel } from '../types';
 
 const TASK_TYPES: { label: string; value: TaskType }[] = [
   { label: '取货', value: 'PICKUP' },
@@ -42,14 +49,39 @@ export const SceneManager = () => {
     eventFlows,
     updateSceneFlowRelations,
     exportScenes,
+    locationTemplates,
+    addLocationTemplate,
+    updateLocationTemplate,
+    deleteLocationTemplate,
   } = useTaskRuleStore();
   const [form] = Form.useForm();
+  const [templateForm] = Form.useForm();
+  const [copyForm] = Form.useForm();
   const [selectedSceneId, setSelectedSceneId] = useState<string | null>(null);
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [isManageTemplatesOpen, setIsManageTemplatesOpen] = useState(false);
+  const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
+  const [copyTargetId, setCopyTargetId] = useState<string | null>(null);
+  const [editingTemplate, setEditingTemplate] =
+    useState<LocationTemplate | null>(null);
+  const [locationModeUI, setLocationModeUI] = useState<
+    'ALL' | 'POINTS' | 'REGION' | 'TEMPLATE'
+  >('ALL');
+
   const [simulationResult, setSimulationResult] = useState<{
     success: boolean;
     msg: string;
     details?: string;
   } | null>(null);
+
+  // Mock Vehicles Data (should be from store or API)
+  const VEHICLES_DATA = [
+    { id: 'V001', model: 'X20' },
+    { id: 'V002', model: 'X20' },
+    { id: 'V003', model: 'X20S' },
+    { id: 'V004', model: 'K16' },
+    { id: 'V005', model: 'O20' },
+  ];
 
   // Form handling
   const handleSelectScene = (sceneId: string) => {
@@ -64,13 +96,109 @@ export const SceneManager = () => {
 
       form.setFieldsValue({
         name: scene.name,
-        taskType: scene.taskType,
+        // taskType: scene.taskType, // Removed
         conditions: scene.conditions,
         linkedFlowIds: rels,
       });
+
+      // Set UI state for location mode
+      const locMode = scene.conditions.locations.mode;
+      setLocationModeUI(locMode as 'ALL' | 'POINTS' | 'REGION');
     }
     setSimulationResult(null);
   };
+
+  const handleSaveTemplate = () => {
+    templateForm.validateFields().then((values) => {
+      // Creating new template from current form values
+      const currentValues = form.getFieldValue([
+        'conditions',
+        'locations',
+        'values',
+      ]);
+      const currentMode = form.getFieldValue([
+        'conditions',
+        'locations',
+        'mode',
+      ]);
+
+      if (!currentValues || currentValues.length === 0) {
+        message.warning('当前没有配置库位数据，无法保存模板');
+        return;
+      }
+
+      addLocationTemplate({
+        id: nanoid(),
+        name: values.name,
+        type: currentMode,
+        values: currentValues,
+      });
+      message.success('模板保存成功');
+      setIsTemplateModalOpen(false);
+      templateForm.resetFields();
+    });
+  };
+
+  const handleDeleteTemplate = (id: string) => {
+    Modal.confirm({
+      title: '确认删除',
+      content: '确定要删除该模板吗？',
+      onOk: () => {
+        deleteLocationTemplate(id);
+        message.success('删除成功');
+      },
+    });
+  };
+
+  const applyTemplate = (templateId: string) => {
+    const template = locationTemplates.find((t) => t.id === templateId);
+    if (template) {
+      form.setFieldsValue({
+        conditions: {
+          locations: {
+            mode: template.type,
+            values: template.values,
+          },
+        },
+      });
+      // Do NOT change locationModeUI, keep it as TEMPLATE so user knows they selected a template
+      message.success(`已应用模板: ${template.name}`);
+    }
+  };
+
+  const handleCopyScene = () => {
+    copyForm.validateFields().then((values) => {
+      const scene = scenes.find((s) => s.id === copyTargetId);
+      if (scene) {
+        const newId = nanoid();
+        addScene({
+          ...scene,
+          id: newId,
+          name: values.name,
+        });
+
+        // Also copy relations
+        const rels = relations
+          .filter((r) => r.sceneId === scene.id)
+          .map((r) => r.eventFlowId);
+        updateSceneFlowRelations(newId, rels);
+
+        message.success('复制成功');
+        setIsCopyModalOpen(false);
+        setCopyTargetId(null);
+        copyForm.resetFields();
+      }
+    });
+  };
+
+  const openCopyModal = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCopyTargetId(id);
+    setIsCopyModalOpen(true);
+    copyForm.resetFields();
+  };
+
+  // ... (rest of logic)
 
   const handleCreateScene = () => {
     setSelectedSceneId(null);
@@ -91,7 +219,7 @@ export const SceneManager = () => {
     form.validateFields().then((values) => {
       const sceneData = {
         name: values.name,
-        taskType: values.taskType,
+        taskType: 'PICKUP' as TaskType, // Default or inferred, since field is removed
         conditions: values.conditions,
       };
 
@@ -231,9 +359,9 @@ export const SceneManager = () => {
         <div className='mb-4 flex justify-between items-center'>
           <span className='font-bold text-lg text-white'>场景列表</span>
           <div className='space-x-2'>
-            <Button size='small' onClick={exportScenes}>
+            {/* <Button size='small' onClick={exportScenes}>
               导出
-            </Button>
+            </Button> */}
             <Button type='primary' size='small' onClick={handleCreateScene}>
               新建
             </Button>
@@ -246,15 +374,24 @@ export const SceneManager = () => {
               size='small'
               hoverable
               className={`cursor-pointer bg-white/5 border-white/10 ${
-                selectedSceneId === s.id
-                  ? '!border-blue-500 !bg-blue-500/20'
-                  : ''
+                selectedSceneId === s.id ? '!border-primary !bg-primary/20' : ''
               }`}
               onClick={() => handleSelectScene(s.id)}
             >
-              <div className='font-medium text-white'>{s.name}</div>
-              <div className='text-xs text-white/60 mt-1'>
-                {TASK_TYPES.find((t) => t.value === s.taskType)?.label}
+              <div className='flex justify-between items-start'>
+                <div>
+                  <div className='font-medium text-white'>{s.name}</div>
+                  <div className='text-xs text-white/60 mt-1'>
+                    {TASK_TYPES.find((t) => t.value === s.taskType)?.label}
+                  </div>
+                </div>
+                <Button
+                  type='text'
+                  size='small'
+                  icon={<CopyOutlined />}
+                  onClick={(e) => openCopyModal(s.id, e)}
+                  className='text-white/60 hover:text-white'
+                />
               </div>
             </Card>
           ))}
@@ -285,7 +422,7 @@ export const SceneManager = () => {
             className='mb-4 bg-white/5 border-white/10'
           >
             <Row gutter={16}>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item
                   label={<span className='text-white'>场景名称</span>}
                   name='name'
@@ -294,16 +431,7 @@ export const SceneManager = () => {
                   <Input placeholder='请输入场景名称' />
                 </Form.Item>
               </Col>
-              <Col span={8}>
-                <Form.Item
-                  label={<span className='text-white'>任务类型</span>}
-                  name='taskType'
-                  rules={[{ required: true }]}
-                >
-                  <Select options={TASK_TYPES} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item
                   label={<span className='text-white'>关联事件流</span>}
                   name='linkedFlowIds'
@@ -311,13 +439,10 @@ export const SceneManager = () => {
                   <Select
                     mode='multiple'
                     placeholder='选择要执行的流程'
-                    options={eventFlows
-                      .filter(
-                        (f) =>
-                          !form.getFieldValue('taskType') ||
-                          f.taskType === form.getFieldValue('taskType')
-                      )
-                      .map((f) => ({ label: f.name, value: f.id }))}
+                    options={eventFlows.map((f) => ({
+                      label: f.name,
+                      value: f.id,
+                    }))}
                     allowClear
                   />
                 </Form.Item>
@@ -374,55 +499,171 @@ export const SceneManager = () => {
               </Form.Item>
             </div>
 
-            {/* Location */}
+            {/* Vehicles */}
             <div className='mb-4 p-4 bg-white/5 rounded border border-white/10'>
-              <div className='font-medium mb-2 text-white'>库位点限制</div>
-              <Form.Item
-                name={['conditions', 'locations', 'mode']}
-                initialValue='ALL'
-              >
-                <Radio.Group>
-                  <Radio value='ALL' className='text-white'>
-                    所有库位
-                  </Radio>
-                  <Radio value='POINTS' className='text-white'>
-                    指定点号
-                  </Radio>
-                  <Radio value='REGION' className='text-white'>
-                    地图区域
-                  </Radio>
-                </Radio.Group>
-              </Form.Item>
+              <div className='font-medium mb-2 text-white'>车辆限制</div>
               <Form.Item
                 noStyle
                 shouldUpdate={(prev, curr) =>
-                  prev.conditions?.locations?.mode !==
-                  curr.conditions?.locations?.mode
+                  prev.conditions?.vehicleModels !==
+                  curr.conditions?.vehicleModels
                 }
               >
                 {({ getFieldValue }) => {
-                  const mode = getFieldValue([
+                  const modelMode = getFieldValue([
                     'conditions',
-                    'locations',
+                    'vehicleModels',
                     'mode',
                   ]);
-                  if (mode === 'POINTS') {
-                    return (
-                      <Form.Item name={['conditions', 'locations', 'values']}>
-                        <Select mode='tags' placeholder='输入点ID' />
+                  const selectedModels =
+                    getFieldValue(['conditions', 'vehicleModels', 'values']) ||
+                    [];
+
+                  // Filter vehicles based on selected models
+                  let filteredVehicles = VEHICLES_DATA;
+                  if (modelMode === 'INCLUDE' && selectedModels.length > 0) {
+                    filteredVehicles = VEHICLES_DATA.filter((v) =>
+                      selectedModels.includes(v.model)
+                    );
+                  } else if (
+                    modelMode === 'EXCLUDE' &&
+                    selectedModels.length > 0
+                  ) {
+                    filteredVehicles = VEHICLES_DATA.filter(
+                      (v) => !selectedModels.includes(v.model)
+                    );
+                  }
+
+                  return (
+                    <>
+                      <Form.Item
+                        name={['conditions', 'vehicles', 'mode']}
+                        initialValue='ALL'
+                      >
+                        <Radio.Group>
+                          <Radio value='ALL' className='text-white'>
+                            所有车辆
+                          </Radio>
+                          <Radio value='INCLUDE' className='text-white'>
+                            包含指定
+                          </Radio>
+                          <Radio value='EXCLUDE' className='text-white'>
+                            排除指定
+                          </Radio>
+                        </Radio.Group>
                       </Form.Item>
-                    );
-                  }
-                  if (mode === 'REGION') {
-                    return (
-                      <div className='text-white/60'>
-                        地图区域选择器 (待集成)
-                      </div>
-                    );
-                  }
-                  return null;
+                      <Form.Item
+                        noStyle
+                        shouldUpdate={(prev, curr) =>
+                          prev.conditions?.vehicles?.mode !==
+                          curr.conditions?.vehicles?.mode
+                        }
+                      >
+                        {({ getFieldValue }) => {
+                          const mode = getFieldValue([
+                            'conditions',
+                            'vehicles',
+                            'mode',
+                          ]);
+                          return mode !== 'ALL' ? (
+                            <Form.Item
+                              name={['conditions', 'vehicles', 'values']}
+                            >
+                              <Select
+                                mode='multiple'
+                                placeholder='请选择车辆'
+                                options={filteredVehicles.map((v) => ({
+                                  label: `${v.id} (${v.model})`,
+                                  value: v.id,
+                                }))}
+                              />
+                            </Form.Item>
+                          ) : null;
+                        }}
+                      </Form.Item>
+                    </>
+                  );
                 }}
               </Form.Item>
+            </div>
+
+            {/* Location */}
+            <div className='mb-4 p-4 bg-white/5 rounded border border-white/10'>
+              <div className='flex justify-between items-center mb-2'>
+                <div className='font-medium text-white'>库位点限制</div>
+                <div className='space-x-2'>
+                  <Button
+                    size='small'
+                    onClick={() => setIsTemplateModalOpen(true)}
+                  >
+                    保存为模板
+                  </Button>
+                  <Button
+                    size='small'
+                    icon={<SettingOutlined />}
+                    onClick={() => setIsManageTemplatesOpen(true)}
+                  >
+                    管理模板
+                  </Button>
+                </div>
+              </div>
+              <Form.Item name={['conditions', 'locations', 'mode']} hidden />
+              <Radio.Group
+                value={locationModeUI}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setLocationModeUI(val);
+                  if (val !== 'TEMPLATE') {
+                    form.setFieldValue(
+                      ['conditions', 'locations', 'mode'],
+                      val
+                    );
+                    if (val === 'ALL') {
+                      form.setFieldValue(
+                        ['conditions', 'locations', 'values'],
+                        []
+                      );
+                    }
+                  }
+                }}
+              >
+                <Radio value='ALL' className='text-white'>
+                  所有库位
+                </Radio>
+                <Radio value='POINTS' className='text-white'>
+                  指定点号
+                </Radio>
+                <Radio value='REGION' className='text-white'>
+                  地图区域
+                </Radio>
+                <Radio value='TEMPLATE' className='text-white'>
+                  引用模板
+                </Radio>
+              </Radio.Group>
+
+              <div className='mt-4'>
+                {locationModeUI === 'POINTS' && (
+                  <Form.Item name={['conditions', 'locations', 'values']}>
+                    <Select mode='tags' placeholder='输入点ID' />
+                  </Form.Item>
+                )}
+                {locationModeUI === 'REGION' && (
+                  <div className='text-white/60'>地图区域选择器 (待集成)</div>
+                )}
+                {locationModeUI === 'TEMPLATE' && (
+                  <Select
+                    placeholder='选择模板'
+                    style={{ width: '100%' }}
+                    onChange={(val) => {
+                      applyTemplate(val);
+                    }}
+                    options={locationTemplates.map((t) => ({
+                      label: t.name,
+                      value: t.id,
+                    }))}
+                  />
+                )}
+              </div>
             </div>
 
             {/* Height */}
@@ -524,6 +765,119 @@ export const SceneManager = () => {
             )}
           </Card>
         </Form>
+
+        <Modal
+          title='保存库位模板'
+          open={isTemplateModalOpen}
+          onOk={handleSaveTemplate}
+          onCancel={() => setIsTemplateModalOpen(false)}
+        >
+          <Form form={templateForm} layout='vertical'>
+            <Form.Item
+              name='name'
+              label='模板名称'
+              rules={[{ required: true }]}
+            >
+              <Input placeholder='请输入模板名称' />
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        <Drawer
+          title='管理库位模板'
+          placement='right'
+          width={400}
+          onClose={() => setIsManageTemplatesOpen(false)}
+          open={isManageTemplatesOpen}
+        >
+          <Collapse
+            accordion
+            items={locationTemplates.map((template) => ({
+              key: template.id,
+              label: (
+                <div
+                  className='flex justify-between items-center w-full'
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <span>{template.name}</span>
+                  <Button
+                    type='text'
+                    danger
+                    icon={<DeleteOutlined />}
+                    size='small'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteTemplate(template.id);
+                    }}
+                  />
+                </div>
+              ),
+              children: (
+                <Form
+                  layout='horizontal'
+                  initialValues={{
+                    name: template.name,
+                    values: template.values,
+                  }}
+                  onFinish={(values) => {
+                    updateLocationTemplate(template.id, {
+                      name: values.name,
+                      values: values.values,
+                    });
+                    message.success('更新成功');
+                  }}
+                >
+                  <Form.Item
+                    label='模板名称'
+                    name='name'
+                    rules={[{ required: true, message: '请输入模板名称' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item label='类型' className='mb-2'>
+                    <span className='text-white/60'>
+                      {template.type === 'POINTS' ? '指定点号' : '地图区域'}
+                    </span>
+                  </Form.Item>
+                  {template.type === 'POINTS' && (
+                    <Form.Item
+                      label='包含点位'
+                      name='values'
+                      rules={[{ required: true, message: '请添加点位' }]}
+                    >
+                      <Select mode='tags' placeholder='输入点ID' />
+                    </Form.Item>
+                  )}
+                  <div className='flex justify-end'>
+                    <Button type='primary' htmlType='submit' size='small'>
+                      保存修改
+                    </Button>
+                  </div>
+                </Form>
+              ),
+            }))}
+          />
+        </Drawer>
+
+        <Modal
+          title='复制场景'
+          open={isCopyModalOpen}
+          onOk={handleCopyScene}
+          onCancel={() => {
+            setIsCopyModalOpen(false);
+            copyForm.resetFields();
+          }}
+        >
+          <Form form={copyForm} layout='vertical'>
+            <Form.Item
+              name='name'
+              label='新场景名称'
+              rules={[{ required: true, message: '请输入新场景名称' }]}
+            >
+              <Input placeholder='请输入新场景名称' />
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
     </div>
   );
