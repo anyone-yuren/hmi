@@ -153,6 +153,12 @@ const DrawerContent = (props: IProps) => {
 
   const [initFormValue, setInitalValue] = useState(currentObsInfo ?? {});
 
+  // 替换原来的 useEffect
+  useEffect(() => {
+    // 每次 currentObsInfo 更新时都设置表单值
+    form.setFieldsValue(currentObsInfo ?? {});
+  }, [currentObsInfo, form]);
+
   const serviceLanguage = useMemo(() => {
     return i18n.language;
   }, [i18n.language]);
