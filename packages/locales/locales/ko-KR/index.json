@@ -313,6 +313,7 @@
       "autoReLocation": "스마트 재위치 설정",
       "cancelView": "미리보기 취소",
       "clam": "안정화",
+      "confidence": "신뢰도",
       "confirmDelete": "삭제 확인",
       "confirmDeleteFloorTip": "해당 층을 삭제하시겠습니까?",
       "confirmDeleteMap": "해당 지도를 삭제하시겠습니까?",
@@ -418,15 +419,14 @@
       "reflectorsNavigation": "반사판 내비게이션",
       "reviewFloor": "층 미리보기 중",
       "reviewFloorTips": "먼저 현재 층을 미리보기 하세요",
+      "runTrajectory": "매핑 궤적",
       "skyNavigation": "스카이 내비게이션",
       "slamNavigation": "SLAM 내비게이션",
       "solution": "솔루션",
       "switch": "전환",
       "switchFloor": "층 전환",
       "unknown": "알 수 없음",
-      "vehicleExistFloor": "현재 차량 위치(층)",
-      "confidence": "신뢰도",
-      "runTrajectory": "매핑 궤적"
+      "vehicleExistFloor": "현재 차량 위치(층)"
     },
     "io": {
       "input": "입력",
@@ -833,6 +833,7 @@
       "right": "우",
       "rightCompensation": "우측 보정 파라미터",
       "rightDetectDist": "우측 탐지 거리",
+      "savePointCloud": "포인트 클라우드 저장",
       "sceneStorage": "현장 위치",
       "secondVision": "2차 비전",
       "secondVisualPoint": "2차 비전 포인트",
@@ -929,8 +930,7 @@
       "vehicleStartShelfDist": "차체 정렬 시 기준점에서 랙까지의 거리",
       "vehicleStopShelfDist": "정지 후 기준점에서 랙까지의 거리",
       "visionChangeWarning": "비전 설정 파일이 변경되었습니다. 최신 파라미터를 확인하세요",
-      "width": "너비(Width)",
-      "savePointCloud": "포인트 클라우드 저장"
+      "width": "너비(Width)"
     }
   }
 }
