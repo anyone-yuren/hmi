@@ -6,6 +6,7 @@ import { getStringItem } from '@/utils/storage';
 import globalLocales from '@gbeata/locales';
 
 import en_US from './locales/lang/en-US';
+import es_ES from './locales/lang/es-ES';
 import fr_FR from './locales/lang/fr-FR';
 import ja_JP from './locales/lang/ja-JP';
 import ko_KR from './locales/lang/ko-KR';
@@ -25,6 +26,7 @@ const langMap: Record<string, string> = {
   fr_FR: 'fr_FR',
   ja_JP: 'ja_JP',
   ko_KR: 'ko_KR',
+  es_ES: 'es_ES',
 };
 
 // 2️⃣ 再查浏览器语言
@@ -54,6 +56,7 @@ i18n
       ja_JP: { translation: { ...ja_JP, ...globalLocales['ja-JP'] } },
       ko_KR: { translation: { ...ko_KR, ...globalLocales['ko-KR'] } },
       fr_FR: { translation: { ...fr_FR, ...globalLocales['fr-FR'] } },
+      es_ES: { translation: { ...es_ES, ...globalLocales['es-ES'] } },
     },
   });
 

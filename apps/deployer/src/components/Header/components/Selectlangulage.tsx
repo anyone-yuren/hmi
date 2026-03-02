@@ -40,6 +40,11 @@ const Selectlangulage = () => {
       matchKey: 'fr',
       label: 'Français',
     },
+    {
+      key: 'es_ES',
+      matchKey: 'es',
+      label: 'Español',
+    },
   ];
   useEffect(() => {
     console.log('data', data);

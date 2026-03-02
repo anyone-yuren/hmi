@@ -7,6 +7,7 @@ const languageMap = {
   "fr-FR": "法语",
   "ko-KR": "韩语",
   "ja-JP": "日语",
+  "es-ES": "西班牙语",
 };
 export const baseLanguageMap = Object.entries(languageMap).reduce(
   (acc, [key, value]) => {
@@ -26,6 +27,7 @@ export const hmiLocalePaths = [
   "/packages/locales/locales/fr-FR/index.json",
   "/packages/locales/locales/ko-KR/index.json",
   "/packages/locales/locales/ja-JP/index.json",
+  "/packages/locales/locales/es-ES/index.json",
 ];
 export const hmiRegex = /\/packages\/locales\/locales\/(.*)\//;
 export const hmiOutputPath = getCurrentPath(hmiFilename);
