@@ -1,9 +1,9 @@
-import { useAsyncEffect } from 'ahooks';
-import { memo, useState } from 'react';
-import { Circle, Group, Image as KonvaImage, Text } from 'react-konva';
-import chargeImages from '../../../assets/points/charge.png';
-import parkingImages from '../../../assets/points/parking.png';
-import { IPoint } from '../../index.d';
+import { useAsyncEffect } from "ahooks";
+import { memo, useState } from "react";
+import { Circle, Group, Image as KonvaImage, Text } from "react-konva";
+import chargeImages from "../../../assets/points/charge.png";
+import parkingImages from "../../../assets/points/parking.png";
+import { IPoint } from "../../index.d";
 
 interface IMapPointsProps {
   visible: boolean;
@@ -15,16 +15,27 @@ interface IMapPointsProps {
 }
 const textFontSize = 4;
 const StationPoints = (props: IMapPointsProps) => {
-  const { points, stationProps, onPointsClick, visible, stationTextProps = {}, stationTextVisible } = props;
+  const {
+    points,
+    stationProps,
+    onPointsClick,
+    visible,
+    stationTextProps = {},
+    stationTextVisible,
+  } = props;
   const [imagesHashMap, setImagesHashMap] = useState({});
-  const [textSizeHashMap, setTextSizeHashMap] = useState<Record<IPoint['id'], any>>({});
+  const [textSizeHashMap, setTextSizeHashMap] = useState<
+    Record<IPoint["id"], any>
+  >({});
   const getPointImage = async (type: string) => {
     const imagesTypeDict = {
       2: parkingImages,
       6: chargeImages,
     };
     if (!Object.keys(imagesTypeDict).includes(type)) {
-      return Promise.reject(new Error('[getPointImage]: 获取图片失败,类型不符合'));
+      return Promise.reject(
+        new Error("[getPointImage]: 获取图片失败,类型不符合"),
+      );
     }
     return Promise.resolve(imagesTypeDict[type]);
   };
@@ -45,7 +56,7 @@ const StationPoints = (props: IMapPointsProps) => {
           });
         };
         image.onerror = () => {
-          console.log('[StationPoints]:图片加载失败了');
+          console.log("[StationPoints]:图片加载失败了");
         };
       }
     });
@@ -68,7 +79,10 @@ const StationPoints = (props: IMapPointsProps) => {
             }}
             visible={visible}
           >
-            <KonvaImage image={imagesHashMap[station.type]} {...stationProps}></KonvaImage>
+            <KonvaImage
+              image={imagesHashMap[station.type]}
+              {...stationProps}
+            ></KonvaImage>
             {stationTextVisible && (
               <Text
                 ref={(refs: any) => {
@@ -87,17 +101,20 @@ const StationPoints = (props: IMapPointsProps) => {
                     });
                 }}
                 text={station.id}
-                fill={'white'}
+                fill={"white"}
                 fontSize={textFontSize}
                 offsetX={(textSizeHashMap[station.id]?.width || 2) / 2}
-                offsetY={(textSizeHashMap[station.id]?.height || 2) + (stationProps?.height || 0) / 2}
+                offsetY={
+                  (textSizeHashMap[station.id]?.height || 2) +
+                  (stationProps?.height || 0) / 2
+                }
                 {...stationTextProps}
               ></Text>
             )}
-            {station.offsetX != null && station.offsetY && (
+            {station.offsetX != null && station.offsetY != null && (
               <Circle
                 radius={0.8} // 小圆点半径
-                fill={'red'} // 红色填充
+                fill={"red"} // 红色填充
                 x={0} // 相对于 Group 的位置
                 y={0} // 相对于 Group 的位置
               />
