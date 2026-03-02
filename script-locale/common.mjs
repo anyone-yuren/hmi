@@ -16,10 +16,10 @@ export const baseLanguageMap = Object.entries(languageMap).reduce(
       [value]: key,
     };
   },
-  {}
+  {},
 );
 
-export const hmiFilename = "HMI250930多语言翻译.xlsx";
+export const hmiFilename = "HMI250930-G1多语言翻译.xlsx";
 export const hmiLocalePaths = [
   "/packages/locales/locales/zh-CN/index.json",
   "/packages/locales/locales/en-US/index.json",
