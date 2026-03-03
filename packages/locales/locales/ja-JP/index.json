@@ -275,6 +275,7 @@
       "error": "エラー",
       "init": "初期化",
       "running": "実行中",
+      "stop": "一時停止",
       "success": "完了",
       "unexecuted": "未実行"
     },
@@ -632,6 +633,7 @@
       "rcsMode": "スケジューリングモード",
       "requireVehicleNum": "車両番号の取得に失敗しました。ページを更新してください",
       "restCount": "残り回数",
+      "restoreTask": "現在のタスクを再開する",
       "right": "右",
       "saveAsTemplate": "テンプレートとして保存",
       "saveTemplate": "テンプレートを保存",

@@ -275,6 +275,7 @@
       "error": "Erreur",
       "init": "Initialisation",
       "running": "En cours d'exécution",
+      "stop": "pause",
       "success": "Terminé",
       "unexecuted": "Non exécuté"
     },
@@ -632,6 +633,7 @@
       "rcsMode": "Mode de planification",
       "requireVehicleNum": "Impossible d'obtenir le numéro du véhicule, veuillez actualiser la page",
       "restCount": "Nombre restant",
+      "restoreTask": "Reprendre la tâche en cours",
       "right": "Droite",
       "saveAsTemplate": "Enregistrer comme Template",
       "saveTemplate": "Enregistrer le modèle",

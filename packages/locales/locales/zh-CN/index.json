@@ -275,6 +275,7 @@
       "error": "错误",
       "init": "初始化",
       "running": "执行中",
+      "stop": "暂停",
       "success": "完成",
       "unexecuted": "未执行"
     },
@@ -632,6 +633,7 @@
       "rcsMode": "调度模式",
       "requireVehicleNum": "获取车号失败，请刷新页面",
       "restCount": "剩余次数",
+      "restoreTask": "恢复当前任务",
       "right": "右",
       "saveAsTemplate": "保存为模板",
       "saveTemplate": "保存模版",

@@ -275,6 +275,7 @@
       "error": "Error",
       "init": "Initialize",
       "running": "Under execution",
+      "stop": "pause",
       "success": "Success",
       "unexecuted": "Not executed"
     },
@@ -632,6 +633,7 @@
       "rcsMode": "Scheduling mode",
       "requireVehicleNum": "Failed to obtain vehicle number, please refresh the page",
       "restCount": "Remain time",
+      "restoreTask": "Resume current task",
       "right": "Right",
       "saveAsTemplate": "Save As Template",
       "saveTemplate": "Save template",

@@ -275,6 +275,7 @@
       "error": "에러",
       "init": "초기화",
       "running": "실행 중",
+      "stop": "정지시키다",
       "success": "완료",
       "unexecuted": "미실행"
     },
@@ -632,6 +633,7 @@
       "rcsMode": "관제 모드",
       "requireVehicleNum": "차량 번호 획득 실패, 페이지를 새로고침 하세요",
       "restCount": "남은 횟수",
+      "restoreTask": "현재 작업 재개",
       "right": "우",
       "saveAsTemplate": "템플릿으로 저장",
       "saveTemplate": "템플릿 저장",

@@ -1,5 +1,3 @@
-import Konva from 'konva';
-
 export interface IPoint {
   id: string;
   type: number;
@@ -20,7 +18,7 @@ export interface ITaskItem {
   task_group_id: string;
   loop_count?: number;
   task_interval?: string;
-  task_state: "Init" | "Running" | "Completed" | "Cancel" | "Error";
+  task_state: "Init" | "Running" | "Completed" | "Cancel" | "Error" | "Stop";
   tasks: ISubTaskItem[];
 }
 
@@ -28,9 +26,9 @@ export interface ISubTaskItem {
   task_id: string;
   task_point_id: string;
   task_type: "Pick" | "Place" | "Null" | "Charge";
-  task_state: "Init" | "Running" | "Completed" | "Cancel" | "Error";
-  loop_count: string
+  task_state: "Init" | "Running" | "Completed" | "Cancel" | "Error" | "Stop";
+  loop_count: string;
 }
 
 // 0调度 3单机 100其他
-export type IMode = 0 | 3 | 100
+export type IMode = 0 | 3 | 100;

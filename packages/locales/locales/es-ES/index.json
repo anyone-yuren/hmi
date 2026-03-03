@@ -275,6 +275,7 @@
       "error": "Error",
       "init": "Inicializar",
       "running": "Ejecutando",
+      "stop": "pausa",
       "success": "Completado",
       "unexecuted": "No ejecutado"
     },
@@ -632,6 +633,7 @@
       "rcsMode": "Modo de despacho",
       "requireVehicleNum": "Fallo al obtener el número del vehículo. Actualice la página",
       "restCount": "Veces restantes",
+      "restoreTask": "Reanudar la tarea actual",
       "right": "Derecha",
       "saveAsTemplate": "Guardar como plantilla",
       "saveTemplate": "Guardar plantilla",
