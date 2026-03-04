@@ -1,13 +1,13 @@
-import { CheckCircle, NotInterested } from '@mui/icons-material';
+import { CheckCircle, NotInterested } from "@mui/icons-material";
 
-import { Typography } from 'antd';
-import { createStyles, useTheme } from 'antd-style';
-import { motion } from 'framer-motion';
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useShallow } from 'zustand/react/shallow';
-import earth from '../../../assets/img/earth.png';
-import { useHomeStore } from '../../store';
+import { Typography } from "antd";
+import { createStyles, useTheme } from "antd-style";
+import { motion } from "framer-motion";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
+import earth from "../../../assets/img/earth.png";
+import { useHomeStore } from "../../store";
 
 const useStyles = createStyles(({ token, css }) => ({
   customSwitch: css`
@@ -77,57 +77,63 @@ const VehicleControl = () => {
   const mamualStatusIcon = useMemo(() => {
     switch (robotIsensorStatus.auto_manual_status) {
       case 1:
-        return 'handle';
+        return "handle";
       case 2:
-        return 'auto';
+        return "auto";
       case 3:
-        return 'semiAuto';
+        return "semiAuto";
       default:
-        return '';
+        return "";
     }
   }, [robotIsensorStatus.auto_manual_status]);
 
   const mamualStatusText = useMemo(() => {
     switch (robotIsensorStatus.auto_manual_status) {
       case 1:
-        return t('common.home.monual');
+        return t("common.home.monual");
       case 2:
-        return t('common.home.auto');
+        return t("common.home.auto");
       case 3:
-        return t('common.home.semiAuto');
+        return t("common.home.semiAuto");
       default:
-        return '';
+        return "";
     }
   }, [robotIsensorStatus.auto_manual_status, i18n.language]);
 
   return (
     <motion.div
-      className='relative h-full p-4 rounded-2xl bg-white/10  backdrop-blur-xl shadow-2xl overflow-hidden'
-      transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+      className="relative h-full p-4 rounded-2xl bg-white/10  backdrop-blur-xl shadow-2xl overflow-hidden"
+      transition={{ type: "spring", stiffness: 200, damping: 15 }}
     >
       {/* 内容 */}
-      <div className='relative z-10 text-white flex flex-col h-full'>
+      <div className="relative z-10 text-white flex flex-col h-full">
         {/* <SvgIcon name='slam' className='absolute -right-10 -bottom-10 scale-125 opacity-5' size={160} /> */}
-        <img src={earth} className='w-60 absolute -right-10 top-0 scale-125 opacity-35' />
+        <img
+          src={earth}
+          className="w-60 absolute -right-10 top-0 scale-125 opacity-35"
+        />
 
-        <div className='w-full'>
-          <h2 className='text-lg font-bold mb-1'>{t('common.home.vehicleControl')}</h2>
+        <div className="w-full">
+          <h2 className="text-lg font-bold mb-1">
+            {t("common.home.vehicleControl")}
+          </h2>
           <motion.div
-            className='!w-full h-px'
+            className="!w-full h-px"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
           >
             <div
-              className='w-full h-full'
+              className="w-full h-full"
               style={{
-                background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)',
+                background:
+                  "linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent)",
               }}
             />
           </motion.div>
         </div>
-        <div className='flex-1 grid grid-cols-3'>
-          <div className='flex-1 flex flex-col justify-center items-center'>
+        <div className="flex-1 grid grid-cols-3">
+          <div className="flex-1 flex flex-col justify-center items-center">
             <Typography.Title level={4}>
               {/* <Switch
                 className={`${styles.customSwitch} shadow-lg shadow-teal-500/20 `}
@@ -135,11 +141,13 @@ const VehicleControl = () => {
                 unCheckedChildren='单机'
                 defaultChecked
               /> */}
-              {robotGoodsStatus.number}
+              {robotGoodsStatus.weight}
             </Typography.Title>
-            <Typography.Text className='opacity-50'>{t('common.home.vehicleControlWeight')}</Typography.Text>
+            <Typography.Text className="opacity-50">
+              {t("common.home.vehicleControlWeight")}
+            </Typography.Text>
           </div>
-          <div className='flex-1 flex flex-col justify-center items-center'>
+          <div className="flex-1 flex flex-col justify-center items-center">
             <Typography.Title
               style={{
                 color: theme.colorPrimary,
@@ -147,25 +155,29 @@ const VehicleControl = () => {
               level={4}
             >
               {/* {mamualStatusIcon ? <SvgIcon name={mamualStatusIcon} size={24} /> : '-'} */}
-              {mamualStatusIcon ? <span>{mamualStatusText}</span> : '-'}
+              {mamualStatusIcon ? <span>{mamualStatusText}</span> : "-"}
             </Typography.Title>
-            <Typography.Text className='opacity-50'>{t('common.home.vehicleControlMode')}</Typography.Text>
+            <Typography.Text className="opacity-50">
+              {t("common.home.vehicleControlMode")}
+            </Typography.Text>
           </div>
-          <div className='flex-1 flex flex-col justify-center items-center'>
+          <div className="flex-1 flex flex-col justify-center items-center">
             <Typography.Title level={4}>
               {robotGoodsStatus.number ? (
-                <div className='flex items-center gap-2'>
-                  <CheckCircle color='success' />
-                  {t('deployer.safety.hasGoods')}
+                <div className="flex items-center gap-2">
+                  <CheckCircle color="success" />
+                  {t("deployer.safety.hasGoods")}
                 </div>
               ) : (
-                <div className='flex items-center gap-2'>
-                  <NotInterested color='inherit' />
-                  {t('deployer.safety.noGoods')}
+                <div className="flex items-center gap-2">
+                  <NotInterested color="inherit" />
+                  {t("deployer.safety.noGoods")}
                 </div>
               )}
             </Typography.Title>
-            <Typography.Text className='opacity-50'>{t('common.home.vehicleControlStatus')}</Typography.Text>
+            <Typography.Text className="opacity-50">
+              {t("common.home.vehicleControlStatus")}
+            </Typography.Text>
           </div>
         </div>
       </div>
