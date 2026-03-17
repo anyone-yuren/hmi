@@ -456,7 +456,7 @@ const Mapping = () => {
               },
             })}
           >
-            <Paper className='flex items-baseline flex-col justify-between absolute  w-[220px] z-[999] text-black p-2 left-2 top-2'>
+            <Paper className='flex items-baseline flex-col justify-between absolute  w-[240px] z-[999] text-black p-2 left-2 top-2'>
               {wsState === 1 ? (
                 isSameFloor ? (
                   <>
