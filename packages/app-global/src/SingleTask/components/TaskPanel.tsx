@@ -205,7 +205,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
 
   const handleTaskStart = async (template: any) => {
     const params = _.cloneDeep(template);
-    delete params.name;
+    // delete params.name;
     const { code } = await createTask(params);
     if (code === 200) {
       toast.success(t("common.actionSuccess"));
@@ -264,7 +264,9 @@ const TaskPanel = forwardRef((props: any, ref) => {
                     }}
                   >
                     <div className="title">
-                      <span>{taskItem?.task_group_id || "-"}</span>
+                      <span>
+                        {taskItem?.name || taskItem?.task_group_id || "-"}
+                      </span>
                       <span style={{ fontSize: "12px" }}>
                         {t("deployer.singleTask.loopCount")}:{" "}
                         {taskItem?.loop_count}
