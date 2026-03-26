@@ -46,6 +46,10 @@ const router = createHashRouter([
       },
       {
         path: 'hybrid',
+        element: LazyLoad(lazy(() => import('@/views/FloorMapViewer'))),
+      },
+      {
+        path: 'hybridPc',
         element: LazyLoad(lazy(() => import('@/views/Hybrid'))),
       },
       {
