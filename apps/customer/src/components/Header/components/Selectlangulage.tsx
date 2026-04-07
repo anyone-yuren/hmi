@@ -34,6 +34,10 @@ const Selectlangulage = () => {
       key: 'fr_FR',
       label: 'Français',
     },
+    {
+      key: 'tr_TR',
+      label: 'Türkçe',
+    },
   ];
   const handleChange = async (key: string) => {
     await commonServices.postLanguageType(key.split('_')[0]);

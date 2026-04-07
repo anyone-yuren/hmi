@@ -1,13 +1,18 @@
 // import { useHybirdStore } from '@/components/Pages/Hybrid/store/hybird.store';
-import { animated, useSpring } from '@react-spring/three';
-import { useHelper } from '@react-three/drei';
-import { useEffect, useMemo, useRef } from 'react';
-import { PointLightHelper, type DirectionalLight } from 'three';
-import { useShallow } from 'zustand/react/shallow';
-import { useAgvType } from '../../../../hooks/useAgvType';
-import { Fork15lift, O15Model, Sl14Model, X20Model } from '../../../../Models/components';
-import { useHomeHybirdStore } from '../../../store/hybird';
-import { useHomeStore } from '../../../store/index';
+import { animated, useSpring } from "@react-spring/three";
+import { useHelper } from "@react-three/drei";
+import { useEffect, useMemo, useRef } from "react";
+import { PointLightHelper, type DirectionalLight } from "three";
+import { useShallow } from "zustand/react/shallow";
+import { useAgvType } from "../../../../hooks/useAgvType";
+import {
+  Fork15lift,
+  O15Model,
+  Sl14Model,
+  X20Model,
+} from "../../../../Models/components";
+import { useHomeHybirdStore } from "../../../store/hybird";
+import { useHomeStore } from "../../../store/index";
 // import { PointLight } from "@react-three/drei";
 
 export const convertToMeters = (value: number) => value / 1000;
@@ -30,7 +35,9 @@ const Car = (props) => {
   );
 
   const headRadar = useMemo(() => {
-    const headData = robotRadarStatus?.filter((item) => item?.name?.includes('head'));
+    const headData = robotRadarStatus?.filter((item) =>
+      item?.name?.includes("head"),
+    );
     if (headData?.length) {
       return headData[0];
     }
@@ -42,7 +49,11 @@ const Car = (props) => {
     })),
   );
 
-  const position = [0 - agvPosition?.x / 1000 || 0, 0, agvPosition?.y / 1000 || 0];
+  const position = [
+    0 - agvPosition?.x / 1000 || 0,
+    0,
+    agvPosition?.y / 1000 || 0,
+  ];
 
   const directionalLightRef = useRef<DirectionalLight>(null!);
   useHelper(directionalLightRef, PointLightHelper, 2);
@@ -97,12 +108,35 @@ const Car = (props) => {
         castShadow={true} // 启用阴影投射
       /> */}
       <group>
-        <animated.group position={groupProps.position as unknown as THREE.Vector3} rotation={[0, agvPosition.angel, 0]}>
+        <animated.group
+          position={groupProps.position as unknown as THREE.Vector3}
+          rotation={[0, agvPosition.angel, 0]}
+        >
           {/* <PointCloud /> */}
-          {agvType === 'SE15' ? <Fork15lift forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
-          {agvType === 'SL14' ? <Sl14Model forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
-          {agvType === 'X20' ? <X20Model forkHeight={robotForkarmStatus.z} headerRadar={headRadar} /> : null}
-          {agvType === 'O15' ? <O15Model forkX={robotForkarmStatus.x} forkHeight={robotForkarmStatus.z} /> : null}
+          {agvType === "SE15" || agvType === "SE30" ? (
+            <Fork15lift
+              forkHeight={robotForkarmStatus.z}
+              headerRadar={headRadar}
+            />
+          ) : null}
+          {agvType === "SL14" ? (
+            <Sl14Model
+              forkHeight={robotForkarmStatus.z}
+              headerRadar={headRadar}
+            />
+          ) : null}
+          {agvType === "X20" ? (
+            <X20Model
+              forkHeight={robotForkarmStatus.z}
+              headerRadar={headRadar}
+            />
+          ) : null}
+          {agvType === "O15" ? (
+            <O15Model
+              forkX={robotForkarmStatus.x}
+              forkHeight={robotForkarmStatus.z}
+            />
+          ) : null}
         </animated.group>
         {/* <group position={[agvPosition.x / 1000, 0.01, agvPosition.y / 1000]} rotation={[0, deltaRotation, 0]}>
           {agvType === 'SE15' ? <Fork15lift /> : null}

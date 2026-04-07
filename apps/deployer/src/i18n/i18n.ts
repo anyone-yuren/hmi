@@ -11,6 +11,7 @@ import fr_FR from './locales/lang/fr-FR';
 import ja_JP from './locales/lang/ja-JP';
 import ko_KR from './locales/lang/ko-KR';
 import zh_CN from './locales/lang/zh-CN';
+// import tr_TR from './locales/lang/tr-TR';
 
 import { LocalEnum, StorageEnum } from '#/enum';
 
@@ -27,6 +28,7 @@ const langMap: Record<string, string> = {
   ja_JP: 'ja_JP',
   ko_KR: 'ko_KR',
   es_ES: 'es_ES',
+  tr_TR: 'tr_TR',
 };
 
 // 2️⃣ 再查浏览器语言
@@ -57,6 +59,7 @@ i18n
       ko_KR: { translation: { ...ko_KR, ...globalLocales['ko-KR'] } },
       fr_FR: { translation: { ...fr_FR, ...globalLocales['fr-FR'] } },
       es_ES: { translation: { ...es_ES, ...globalLocales['es-ES'] } },
+      tr_TR: { translation: { ...globalLocales['tr-TR'] } },
     },
   });
 
