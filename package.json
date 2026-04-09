@@ -24,7 +24,8 @@
     "clean:turbo-cache": "turbo run clean && rimraf node_modules",
     "create:app": "plop app",
     "dev:customer": "pnpm -F @gbeata/customer run dev",
-    "dev:3d": "pnpm -F @gbeata/twin run dev"
+    "dev:3d": "pnpm -F @gbeata/twin run dev",
+    "dev:tol": "pnpm -F @gbeata/toolkit run dev"
   },
   "keywords": [],
   "author": "",
