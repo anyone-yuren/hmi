@@ -45,6 +45,16 @@ const Selectlangulage = () => {
       matchKey: 'es',
       label: 'Español',
     },
+    {
+      key: 'tr_TR',
+      matchKey: 'tr',
+      label: 'Türkçe',
+    },
+    {
+      key: 'pl_PL',
+      matchKey: 'pl',
+      label: 'polski',
+    },
   ];
   useEffect(() => {
     console.log('data', data);

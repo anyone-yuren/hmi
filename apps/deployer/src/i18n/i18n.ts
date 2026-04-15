@@ -29,6 +29,7 @@ const langMap: Record<string, string> = {
   ko_KR: 'ko_KR',
   es_ES: 'es_ES',
   tr_TR: 'tr_TR',
+  pl_PL: 'pl_PL',
 };
 
 // 2️⃣ 再查浏览器语言
