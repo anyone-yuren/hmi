@@ -369,7 +369,8 @@ const TaskAction = forwardRef((props: any, ref) => {
 
                 <div>
                   {(task.task_type === "Pick" ||
-                    task.task_type === "Place") && (
+                    task.task_type === "Place" ||
+                    task.task_type === "Null") && (
                     <>
                       <div
                         style={{
@@ -394,7 +395,10 @@ const TaskAction = forwardRef((props: any, ref) => {
                                 (item: any) => item.name === name,
                               );
                               if (obj) {
-                                if (list[index]["task_type"] === "Pick") {
+                                if (
+                                  list[index]["task_type"] === "Pick" ||
+                                  list[index]["task_type"] === "Null"
+                                ) {
                                   list[index]["task_low_height"] =
                                     obj.low_height;
                                   list[index]["task_high_height"] =
@@ -486,48 +490,60 @@ const TaskAction = forwardRef((props: any, ref) => {
                               )}
                             </MapTaskSelect>
                           </InputGroup>
-                          {isKVehicle ? (
-                            <InputGroup>
-                              <div className="title">
-                                {t("deployer.singleTask.forkDirection")}
-                              </div>
-                              <MapTaskSelect
-                                size={"small"}
-                                variant={"outlined"}
-                                displayEmpty
-                                defaultValue={""}
-                                onChange={(event: any) => {
-                                  const name = event.target.value;
-                                  onValueChange("fork_direction", index, name);
+                          {task.task_type != "Null" && (
+                            <>
+                              {isKVehicle ? (
+                                <InputGroup>
+                                  <div className="title">
+                                    {t("deployer.singleTask.forkDirection")}
+                                  </div>
+                                  <MapTaskSelect
+                                    size={"small"}
+                                    variant={"outlined"}
+                                    displayEmpty
+                                    defaultValue={""}
+                                    onChange={(event: any) => {
+                                      const name = event.target.value;
+                                      onValueChange(
+                                        "fork_direction",
+                                        index,
+                                        name,
+                                      );
+                                    }}
+                                  >
+                                    <MenuItem value={0}>{`${t(
+                                      "deployer.singleTask.front",
+                                    )}`}</MenuItem>
+                                    <MenuItem value={1}>{`${t(
+                                      "deployer.singleTask.left",
+                                    )}`}</MenuItem>
+                                    <MenuItem value={2}>{`${t(
+                                      "deployer.singleTask.right",
+                                    )}`}</MenuItem>
+                                  </MapTaskSelect>
+                                </InputGroup>
+                              ) : (
+                                <InputGroupText
+                                  title={
+                                    t("deployer.singleTask.extraParams") + "1"
+                                  }
+                                  value={task?.params1}
+                                  onChange={(val: number) => {
+                                    onValueChange("params1", index, val);
+                                  }}
+                                ></InputGroupText>
+                              )}
+                              <InputGroupText
+                                title={
+                                  t("deployer.singleTask.extraParams") + "2"
+                                }
+                                value={task?.params2}
+                                onChange={(val: number) => {
+                                  onValueChange("params2", index, val);
                                 }}
-                              >
-                                <MenuItem value={0}>{`${t(
-                                  "deployer.singleTask.front",
-                                )}`}</MenuItem>
-                                <MenuItem value={1}>{`${t(
-                                  "deployer.singleTask.left",
-                                )}`}</MenuItem>
-                                <MenuItem value={2}>{`${t(
-                                  "deployer.singleTask.right",
-                                )}`}</MenuItem>
-                              </MapTaskSelect>
-                            </InputGroup>
-                          ) : (
-                            <InputGroupText
-                              title={t("deployer.singleTask.extraParams") + "1"}
-                              value={task?.params1}
-                              onChange={(val: number) => {
-                                onValueChange("params1", index, val);
-                              }}
-                            ></InputGroupText>
+                              ></InputGroupText>
+                            </>
                           )}
-                          <InputGroupText
-                            title={t("deployer.singleTask.extraParams") + "2"}
-                            value={task?.params2}
-                            onChange={(val: number) => {
-                              onValueChange("params2", index, val);
-                            }}
-                          ></InputGroupText>
                           <div className="w-[15px]"></div>
                         </div>
                       )}
@@ -609,7 +625,7 @@ const TaskAction = forwardRef((props: any, ref) => {
                     </>
                   )}
 
-                  {task.task_type === "Null" && (
+                  {false && task.task_type === "Null" && (
                     <div
                       style={{
                         display: "flex",

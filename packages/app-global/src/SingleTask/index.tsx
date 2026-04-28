@@ -1,78 +1,111 @@
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, ThemeProvider } from '@mui/material';
-import { useSize } from 'ahooks';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
-import { cancelTask, getAgvInfo, getFloorData, getLineList, getPointList, getTaskMode, offsetTable } from './services';
-import { InitStage } from './stage/index';
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  ThemeProvider,
+} from "@mui/material";
+import { useSize } from "ahooks";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
+import {
+  cancelTask,
+  getAgvInfo,
+  getFloorData,
+  getLineList,
+  getPointList,
+  getTaskMode,
+  offsetTable,
+} from "./services";
+import { InitStage } from "./stage/index";
 
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import { createTheme } from '@mui/material/styles';
-import { useRequest } from 'ahooks';
-import _ from 'lodash';
-import { useTranslation } from 'react-i18next';
-import { useShallow } from 'zustand/react/shallow';
-import { generateUniqueId, MapContainer, MapTaskPanelEmptyContainer, MapTaskPopup, RenderItemRow } from './Style';
-import EmptyBox from './components/Empty';
-import MapActionBar from './components/MapActionBar';
-import MouseEvent from './components/MouseEvent';
-import OffsetModal from './components/OffsetModal';
-import OffsetPanel from './components/OffsetPanel';
-import RcsTaskPanel from './components/RcsTaskPanel';
-import SecondaryPage from './components/SecondaryPage';
-import TaskPanel from './components/TaskPanel';
-import TaskSetting from './components/TaskSetting';
-import WsContainer from './components/wsContainer';
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { createTheme } from "@mui/material/styles";
+import { useRequest } from "ahooks";
+import _ from "lodash";
+import { useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
+import {
+  generateUniqueId,
+  MapContainer,
+  MapTaskPanelEmptyContainer,
+  MapTaskPopup,
+  RenderItemRow,
+} from "./Style";
+import EmptyBox from "./components/Empty";
+import MapActionBar from "./components/MapActionBar";
+import MouseEvent from "./components/MouseEvent";
+import OffsetModal from "./components/OffsetModal";
+import OffsetPanel from "./components/OffsetPanel";
+import RcsTaskPanel from "./components/RcsTaskPanel";
+import SecondaryPage from "./components/SecondaryPage";
+import TaskPanel from "./components/TaskPanel";
+import TaskSetting from "./components/TaskSetting";
+import WsContainer from "./components/wsContainer";
 
-import { toast } from 'sonner';
-import RcsTaskModal from './components/RcsTaskModal';
-import { IMode, IPoint, ISubTaskItem, ITaskItem } from './index.d';
-import { useSingleTaskStore } from './store/singleTask.store';
-import useConstants from './useConstants';
+import { toast } from "sonner";
+import RcsTaskModal from "./components/RcsTaskModal";
+import { IMode, IPoint, ISubTaskItem, ITaskItem } from "./index.d";
+import { useSingleTaskStore } from "./store/singleTask.store";
+import useConstants from "./useConstants";
 
 const initTaskActionRow = {
   id: generateUniqueId(),
-  task_type: '',
-  task_point_id: '',
+  task_type: "",
+  task_point_id: "",
   param: [0, 0, 0, 0],
-  task_type_name: '',
+  task_type_name: "",
   task_high_height: 0,
   task_low_height: 0,
   threshold: 100,
   task_charge_type: 1,
-  fork_direction: '0',
+  fork_direction: "0",
   expand: false,
   params1: 0,
   params2: 0,
-  palletNo: 1,
+  palletNo: 0,
 };
 
 const SingleTask = () => {
-  const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  const [activePoints, setActivePoints] = useState<IPoint['id'][]>([]);
+  const isMobile = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+  const [activePoints, setActivePoints] = useState<IPoint["id"][]>([]);
   const [taskVisible, setTaskVisible] = useState(false);
   const [rcsTaskVisible, setRcsTaskVisible] = useState(false);
   const [taskSettingVisible, setTaskSettingVisible] = useState(false);
   const [offsetVisible, setOffsetVisible] = useState(false);
   const [offsetModalVisible, setOffsetModalVisible] = useState(false);
-  const [offsetModalConfig, setOffsetModalConfig] = useState({ type: '', point: {} });
-  const [preTaskList, setPreTaskList] = useState([_.cloneDeep(initTaskActionRow)]);
+  const [offsetModalConfig, setOffsetModalConfig] = useState({
+    type: "",
+    point: {},
+  });
+  const [preTaskList, setPreTaskList] = useState([
+    _.cloneDeep(initTaskActionRow),
+  ]);
   const [subTask, setSubTask] = useState<ITaskItem>();
-  const [activeKey, setActiveKey] = useState('task');
+  const [activeKey, setActiveKey] = useState("task");
   const [PopUp, setPopUp] = useState(false);
   const [rcsModalConfig, setRcsModalConfig] = useState({
     visible: false,
-    mode: 'task',
+    mode: "task",
     rows: [],
-    id: '',
+    id: "",
   });
 
   const [moveToTarget, setMoveToTarget] = useState({ x: null, y: null });
 
   const { data: agvInfo }: any = useRequest(getAgvInfo);
-  const { data: pointsData, loading }: Record<string, any> = useRequest(getPointList, {});
+  const { data: pointsData, loading }: Record<string, any> = useRequest(
+    getPointList,
+    {},
+  );
   const { data: linesList } = useRequest(() => getLineList(), {});
 
-  const { data: taskMode, runAsync: getMapTaskMode }: Record<string, any> = useRequest(getTaskMode, {});
-  const { data: offsetList, runAsync: getOffsetList }: Record<string, any> = useRequest(offsetTable, {});
+  const { data: taskMode, runAsync: getMapTaskMode }: Record<string, any> =
+    useRequest(getTaskMode, {});
+  const { data: offsetList, runAsync: getOffsetList }: Record<string, any> =
+    useRequest(offsetTable, {});
 
   const { data: floorMapData, runAsync: getFloorMapData }: any = useRequest(
     (floor) => {
@@ -105,15 +138,15 @@ const SingleTask = () => {
     showTaskPanelOnly: Record<IMode, () => void> | any;
   } = {
     title: {
-      0: t('deployer.singleTask.rcsMode'),
-      3: t('deployer.singleTask.singleMode'),
-      100: '',
+      0: t("deployer.singleTask.rcsMode"),
+      3: t("deployer.singleTask.singleMode"),
+      100: "",
     },
     showTaskPanel: {
       0: () => {
         // toast.error(t('deployer.singleTask.changeModeTips'));
         if (!vehicleNum) {
-          toast.error(t('deployer.singleTask.requireVehicleNum'));
+          toast.error(t("deployer.singleTask.requireVehicleNum"));
           return;
         }
         setTaskSettingVisible(false);
@@ -145,7 +178,7 @@ const SingleTask = () => {
   };
 
   const isTask = useMemo(() => {
-    return activeKey === 'task';
+    return activeKey === "task";
   }, [activeKey]);
 
   // 0调度 3单机
@@ -175,7 +208,7 @@ const SingleTask = () => {
       locations: any = [];
     let seenIds = new Set();
     for (let index = 0; index < pointsData?.data?.length; index++) {
-      const point = pointsData?.['data']?.[index] || {};
+      const point = pointsData?.["data"]?.[index] || {};
       // 检查是否已经处理过这个ID
       if (seenIds.has(point.id)) {
         continue; // 如果已经处理过，跳过这个点
@@ -185,7 +218,10 @@ const SingleTask = () => {
       seenIds.add(point.id);
       // 暂时先这么临时处理,后面看看有没有什么办法
       point.types.length &&
-        (point.type = point.types[0] === 0 && point.types.length > 1 ? point.types[1] : point.types[0]);
+        (point.type =
+          point.types[0] === 0 && point.types.length > 1
+            ? point.types[1]
+            : point.types[0]);
       const newPoint = {
         ...point,
         x: (point.x / 1000) * 20,
@@ -209,7 +245,8 @@ const SingleTask = () => {
   const lines = useMemo(() => {
     const ary: any = [];
     for (let index = 0; index < linesList?.data?.length; index++) {
-      const { id, end_point, start_point, control_points } = linesList?.data?.[index];
+      const { id, end_point, start_point, control_points } =
+        linesList?.data?.[index];
       ary.push({
         id,
         type: 1,
@@ -232,12 +269,12 @@ const SingleTask = () => {
   }, [robotCurrentStatus]);
 
   const handleMouse = (type: any, point: any) => {
-    const taskActionAry = ['Pick', 'Place', 'Null', 'Charge'];
+    const taskActionAry = ["Pick", "Place", "Null", "Charge"];
     if (taskActionAry.includes(type)) {
       taskAction(type, point.id);
       return;
     }
-    const offsetAry = ['Offset', 'Info'];
+    const offsetAry = ["Offset", "Info"];
     if (offsetAry.includes(type)) {
       setOffsetModalVisible(true);
       setOffsetModalConfig({
@@ -248,11 +285,13 @@ const SingleTask = () => {
     }
   };
 
-  const taskAction = (type: ISubTaskItem['task_type'], id: IPoint['id']) => {
+  const taskAction = (type: ISubTaskItem["task_type"], id: IPoint["id"]) => {
     // !taskVisible && setTaskVisible(true);
     modeHashMap.showTaskPanelOnly?.[mapTaskMode](true);
     const list: any = [...preTaskList];
-    const newList = list.filter((item: any) => item.task_point_id && item.task_type);
+    const newList = list.filter(
+      (item: any) => item.task_point_id && item.task_type,
+    );
     newList.push(
       _.cloneDeep({
         ...initTaskActionRow,
@@ -262,14 +301,18 @@ const SingleTask = () => {
       }),
     );
     setPreTaskList(newList);
-    const newActivePoints = activePoints.filter((activeId: IPoint['id']) => activeId != id);
+    const newActivePoints = activePoints.filter(
+      (activeId: IPoint["id"]) => activeId != id,
+    );
     setActivePoints(newActivePoints);
     taskPanelRef?.current?.scrollToBottom();
   };
 
   const updateTask = (tasks: ITaskItem[]) => {
     if (tasks.length) {
-      const ary = tasks?.filter((item: ITaskItem) => item?.task_group_id === subTask?.task_group_id);
+      const ary = tasks?.filter(
+        (item: ITaskItem) => item?.task_group_id === subTask?.task_group_id,
+      );
       ary.length ? setSubTask(ary[0]) : setPopUp(false);
     } else {
       setPopUp(false);
@@ -288,9 +331,9 @@ const SingleTask = () => {
               setPreTaskList,
               initTaskActionRow,
             }}
-            {..._.pick(pointsDict, ['points', 'charges', 'locations'])}
+            {..._.pick(pointsDict, ["points", "charges", "locations"])}
             updateTask={updateTask}
-            handleTaskOption={(item: ITaskItem, key: 'task' | 'template') => {
+            handleTaskOption={(item: ITaskItem, key: "task" | "template") => {
               if (PopUp) return;
               setActiveKey(key);
               setSubTask(item);
@@ -307,7 +350,7 @@ const SingleTask = () => {
               setRcsTaskVisible(false);
               setPreTaskList([]);
             }}
-            {..._.pick(pointsDict, ['points', 'charges', 'locations'])}
+            {..._.pick(pointsDict, ["points", "charges", "locations"])}
             preTaskList={preTaskList}
             setPreTaskList={setPreTaskList}
             initTaskActionRow={initTaskActionRow}
@@ -348,17 +391,17 @@ const SingleTask = () => {
         {
           <div
             style={{
-              borderRadius: '80px',
-              transform: 'translate(0%, -50%)',
+              borderRadius: "80px",
+              transform: "translate(0%, -50%)",
             }}
-            className='absolute bg-[#00D1D1] w-[80px] h-[80px] pl-[10px] items-center right-[-40px] top-[50%] flex z-[1211]'
+            className="absolute bg-[#00D1D1] w-[80px] h-[80px] pl-[10px] items-center right-[-40px] top-[50%] flex z-[1211]"
             onClick={modeHashMap.showTaskPanel[mapTaskMode]}
           >
             <ArrowBackIosNewIcon></ArrowBackIosNewIcon>
           </div>
         }
 
-        <div ref={ref} className='flex-1 w-full h-full min-h-[300px]'>
+        <div ref={ref} className="flex-1 w-full h-full min-h-[300px]">
           {/* 放开点位的判断显示,没有点位就展示图片 */}
           {pointsDict.render ? (
             <InitStage
@@ -378,13 +421,13 @@ const SingleTask = () => {
               size={size}
               floorMapData={floorMapData?.grid_map}
               pointsValue={activePoints}
-              onPointsSelect={(points: IPoint['id'][]) => {
+              onPointsSelect={(points: IPoint["id"][]) => {
                 const point = points[points.length - 1];
                 point ? setActivePoints([point]) : setActivePoints([]);
               }}
               moveToTarget={moveToTarget}
               activePointsPopupDivProps={{ style: {} }}
-              activePointsPopup={(id: IPoint['id']) => {
+              activePointsPopup={(id: IPoint["id"]) => {
                 return (
                   <MouseEvent
                     id={id}
@@ -403,22 +446,22 @@ const SingleTask = () => {
           open={PopUp as boolean}
           setOpen={setPopUp}
           fullScreen={false}
-          sx={{ zIndex: 1213, width: '800px!important' }}
+          sx={{ zIndex: 1213, width: "800px!important" }}
         >
           <div
             style={{
               borderBottom: 1,
-              borderColor: 'divider',
-              background: 'white',
+              borderColor: "divider",
+              background: "white",
             }}
           >
             <RenderItemRow>
               <ThemeProvider
                 theme={createTheme({
                   palette: {
-                    mode: 'light',
+                    mode: "light",
                     primary: {
-                      main: '#00D1D1',
+                      main: "#00D1D1",
                     },
                   },
                   typography: {
@@ -426,16 +469,36 @@ const SingleTask = () => {
                   },
                 })}
               >
-                <TableContainer sx={{ maxHeight: '450px' }}>
-                  <Table size='medium' stickyHeader>
+                <TableContainer sx={{ maxHeight: "450px" }}>
+                  <Table size="medium" stickyHeader>
                     <TableHead>
                       <TableRow>
-                        {isTask && <TableCell align='center'>{t('deployer.singleTask.taskNo')}</TableCell>}
-                        <TableCell align='center'>{t('deployer.singleTask.point')}</TableCell>
-                        <TableCell align='center'>{t('deployer.singleTask.taskType')}</TableCell>
-                        {isTask && <TableCell align='center'>{t('deployer.singleTask.restCount')}</TableCell>}
-                        {isTask && <TableCell align='center'>{t('common.status')}</TableCell>}
-                        {isTask && <TableCell align='center'>{t('common.action')}</TableCell>}
+                        {isTask && (
+                          <TableCell align="center">
+                            {t("deployer.singleTask.taskNo")}
+                          </TableCell>
+                        )}
+                        <TableCell align="center">
+                          {t("deployer.singleTask.point")}
+                        </TableCell>
+                        <TableCell align="center">
+                          {t("deployer.singleTask.taskType")}
+                        </TableCell>
+                        {isTask && (
+                          <TableCell align="center">
+                            {t("deployer.singleTask.restCount")}
+                          </TableCell>
+                        )}
+                        {isTask && (
+                          <TableCell align="center">
+                            {t("common.status")}
+                          </TableCell>
+                        )}
+                        {isTask && (
+                          <TableCell align="center">
+                            {t("common.action")}
+                          </TableCell>
+                        )}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -443,27 +506,42 @@ const SingleTask = () => {
                         subTask?.tasks?.map((row: any, index) => (
                           <TableRow key={row?.task_id}>
                             {isTask && (
-                              <TableCell align='center' component='th' scope='row'>
-                                {row?.task_id || '-'}
+                              <TableCell
+                                align="center"
+                                component="th"
+                                scope="row"
+                              >
+                                {row?.task_id || "-"}
                               </TableCell>
                             )}
-                            <TableCell align='center'>{row?.task_point_id}</TableCell>
-                            <TableCell align='center'>{TaskTypeHashMap?.[row?.task_type] || '-'}</TableCell>
-                            {isTask && <TableCell align='center'>{row?.remain_count}</TableCell>}
+                            <TableCell align="center">
+                              {row?.task_point_id}
+                            </TableCell>
+                            <TableCell align="center">
+                              {TaskTypeHashMap?.[row?.task_type] || "-"}
+                            </TableCell>
+                            {isTask && (
+                              <TableCell align="center">
+                                {row?.remain_count}
+                              </TableCell>
+                            )}
 
                             {isTask && (
-                              <TableCell align='center'>
+                              <TableCell align="center">
                                 <span
                                   style={{
-                                    color: TaskStatusHashMap?.[row?.task_state]?.color || '-',
+                                    color:
+                                      TaskStatusHashMap?.[row?.task_state]
+                                        ?.color || "-",
                                   }}
                                 >
-                                  {TaskStatusHashMap?.[row?.task_state]?.text || '-'}
+                                  {TaskStatusHashMap?.[row?.task_state]?.text ||
+                                    "-"}
                                 </span>
                               </TableCell>
                             )}
                             {isTask && (
-                              <TableCell align='center'>
+                              <TableCell align="center">
                                 <Button
                                   onClick={async () => {
                                     const { code }: any = await cancelTask({
@@ -479,12 +557,14 @@ const SingleTask = () => {
                                       if (!list.length) {
                                         setPopUp(false);
                                       }
-                                      taskPanelRef && taskPanelRef?.current && taskPanelRef?.current?.getTaskList();
+                                      taskPanelRef &&
+                                        taskPanelRef?.current &&
+                                        taskPanelRef?.current?.getTaskList();
                                     }
                                   }}
-                                  color='error'
+                                  color="error"
                                 >
-                                  {t('common.delete')}
+                                  {t("common.delete")}
                                 </Button>
                               </TableCell>
                             )}
@@ -493,7 +573,11 @@ const SingleTask = () => {
                       ) : (
                         <MapTaskPanelEmptyContainer>
                           <div>
-                            <EmptyBox title={t('common.noData')} iconColor='#000' titleColor='#000'></EmptyBox>
+                            <EmptyBox
+                              title={t("common.noData")}
+                              iconColor="#000"
+                              titleColor="#000"
+                            ></EmptyBox>
                           </div>
                         </MapTaskPanelEmptyContainer>
                       )}
@@ -505,7 +589,11 @@ const SingleTask = () => {
           </div>
         </SecondaryPage>
 
-        <SecondaryPage open={taskSettingVisible} setOpen={setTaskSettingVisible} fullScreen={true}>
+        <SecondaryPage
+          open={taskSettingVisible}
+          setOpen={setTaskSettingVisible}
+          fullScreen={true}
+        >
           <TaskSetting></TaskSetting>
         </SecondaryPage>
 
@@ -515,8 +603,11 @@ const SingleTask = () => {
           fullScreen={false}
           sx={{
             zIndex: 1213,
-            width: '600px!important',
-            top: isMobile && offsetModalConfig?.type != 'Info' ? '230px!important' : null,
+            width: "600px!important",
+            top:
+              isMobile && offsetModalConfig?.type != "Info"
+                ? "230px!important"
+                : null,
           }}
         >
           <OffsetModal
@@ -535,7 +626,7 @@ const SingleTask = () => {
             });
           }}
           fullScreen={false}
-          sx={{ zIndex: 1213, width: '600px!important' }}
+          sx={{ zIndex: 1213, width: "600px!important" }}
         >
           <RcsTaskModal
             rows={rcsModalConfig.rows}

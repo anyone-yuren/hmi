@@ -37,7 +37,7 @@ const FloorMapViewer: React.FC<FloorMapViewerProps> = () => {
     if (container) {
       const { offsetWidth, offsetHeight } = container;
       stage.position({ x: offsetWidth / 2, y: offsetHeight / 2 });
-      stage.scale({ x: 1, y: 1 });
+      stage?.scale({ x: 1, y: 1 });
       stage.batchDraw();
     }
 
@@ -63,14 +63,14 @@ const FloorMapViewer: React.FC<FloorMapViewerProps> = () => {
         requestAnimationFrame(() => {
           const pointer = stage.getPointerPosition();
           if (!pointer) return;
-          const newScale = oldScale * e.scale;
+          const newScale = oldScale * e?.scale;
           // 限制最小缩放
           const limitedScale = Math.max(0.5, newScale);
           const mousePointTo = {
             x: (pointer.x - oldPos.x) / oldScale,
             y: (pointer.y - oldPos.y) / oldScale,
           };
-          stage.scale({ x: limitedScale, y: limitedScale });
+          stage?.scale({ x: limitedScale, y: limitedScale });
           stage.position({
             x: pointer.x - mousePointTo.x * limitedScale,
             y: pointer.y - mousePointTo.y * limitedScale,
@@ -109,7 +109,7 @@ const FloorMapViewer: React.FC<FloorMapViewerProps> = () => {
       y: (pointer.y - stage.y()) / oldScale,
     };
 
-    stage.scale({ x: newScale, y: newScale });
+    stage?.scale({ x: newScale, y: newScale });
     const newPos = {
       x: pointer.x - mousePointTo.x * newScale,
       y: pointer.y - mousePointTo.y * newScale,

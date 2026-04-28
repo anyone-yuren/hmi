@@ -44,7 +44,7 @@ const useStage = (props: Props) => {
     };
 
     // 这里改变的是 Stage 的内容缩放，而不是 Stage 的实际大小
-    stage.scale({ x: newScale, y: newScale });
+    stage?.scale({ x: newScale, y: newScale });
 
     const newPos = {
       x: pointer.x - mousePointTo.x * newScale,

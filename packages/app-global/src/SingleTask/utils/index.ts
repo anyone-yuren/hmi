@@ -74,6 +74,8 @@ export const transformTaskListToParams = (params: any, isKVehicle) => {
       return obj;
     },
     Null: (obj: any) => {
+      obj["param"][0] = Number(obj?.task_low_height) || 0;
+      obj["param"][1] = Number(obj?.task_high_height) || 0;
       obj["pallet_id"] = Number(obj.palletNo) || 0;
       return obj;
     },
