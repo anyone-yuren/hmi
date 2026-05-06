@@ -61,6 +61,7 @@ i18n
       fr_FR: { translation: { ...fr_FR, ...globalLocales['fr-FR'] } },
       es_ES: { translation: { ...es_ES, ...globalLocales['es-ES'] } },
       tr_TR: { translation: { ...globalLocales['tr-TR'] } },
+      pl_PL: { translation: { ...globalLocales['pl-PL'] } },
     },
   });
 
