@@ -719,6 +719,7 @@
       "forkUpPointCloud": "叉臂上方点云",
       "forkWidth": "进叉宽度",
       "forkWidthPallet": "使用不同进叉深度叉取不同类型托盘",
+      "forkarmFinalWidth": "调叉宽度",
       "frontDetectDist": "前探测距离",
       "goods": "货物",
       "goodsAroundGap": "货物前后间隙",

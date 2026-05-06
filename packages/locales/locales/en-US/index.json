@@ -719,6 +719,7 @@
       "forkUpPointCloud": "Point Cloud Above Fork Arm",
       "forkWidth": "Fork width",
       "forkWidthPallet": "Use different fork depths to handle different types of pallets",
+      "forkarmFinalWidth": "Adjustment fork width",
       "frontDetectDist": "Front detection distance",
       "goods": "Goods",
       "goodsAroundGap": "Pallet front and back gap",

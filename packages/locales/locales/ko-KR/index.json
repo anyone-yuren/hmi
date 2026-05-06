@@ -719,6 +719,7 @@
       "forkUpPointCloud": "포크 상단 포인트 클라우드",
       "forkWidth": "진입 너비",
       "forkWidthPallet": "팔레트 유형별 다른 진입 깊이 사용",
+      "forkarmFinalWidth": "조정 포크 폭",
       "frontDetectDist": "전방 탐지 거리",
       "goods": "화물",
       "goodsAroundGap": "화물 전후 간격",

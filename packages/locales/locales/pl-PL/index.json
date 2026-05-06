@@ -719,6 +719,7 @@
       "forkUpPointCloud": "Chmura punktów nad ramionami wideł",
       "forkWidth": "Szerokość wejścia wideł",
       "forkWidthPallet": "Obsługa różnych typów palet przy użyciu różnych głębokości wejścia wideł",
+      "forkarmFinalWidth": "Regulacja szerokości wideł",
       "frontDetectDist": "Odległość wykrywania przedniego",
       "goods": "Ładunek",
       "goodsAroundGap": "Przedni i tylny prześwit ładunku",

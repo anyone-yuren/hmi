@@ -719,6 +719,7 @@
       "forkUpPointCloud": "フォークアーム上部点群",
       "forkWidth": "フォーク差し込み幅",
       "forkWidthPallet": "異なるフォーク差し込み深度で異なるタイプのパレットを取り扱う",
+      "forkarmFinalWidth": "調整フォーク幅",
       "frontDetectDist": "前方検出距離",
       "goods": "貨物",
       "goodsAroundGap": "貨物前後隙間",

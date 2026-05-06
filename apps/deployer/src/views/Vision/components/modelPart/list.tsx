@@ -133,7 +133,10 @@ const ModelList = forwardRef((props: any, ref: any) => {
                         {t('deployer.vision.extraDepthCompensation')}: {container?.extra_deep_compensation}
                       </Typography>
                       <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14, margin: 0 }}>
-                        {t('deployer.vision.forkExtendParams')}: {container?.forkarm_final_width}
+                        {t('deployer.vision.forkExtendParams')}: {container?.forkarm_height_based_pallet_type}
+                      </Typography>
+                      <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14, margin: 0 }}>
+                        {t('deployer.vision.forkarmFinalWidth')}: {container?.forkarm_final_width}
                       </Typography>
                     </>
                   )}

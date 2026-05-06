@@ -719,6 +719,7 @@
       "forkUpPointCloud": "Nuage de points au-dessus du bras de fourche",
       "forkWidth": "Largeur de la fourche",
       "forkWidthPallet": "Utiliser différentes profondeurs de fourche pour différents types de palettes",
+      "forkarmFinalWidth": "Largeur des fourches de réglage",
       "frontDetectDist": "Distance de détection avant",
       "goods": "Marchandises",
       "goodsAroundGap": "Écart avant/arrière des marchandises",

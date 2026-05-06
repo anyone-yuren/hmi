@@ -719,6 +719,7 @@
       "forkUpPointCloud": "Nube de puntos sobre el brazo de horquilla",
       "forkWidth": "Ancho de entrada",
       "forkWidthPallet": "Utilice diferentes profundidades de entrada para recoger diferentes tipos de palets",
+      "forkarmFinalWidth": "Ancho de la horquilla de ajuste",
       "frontDetectDist": "Distancia de detección frontal",
       "goods": "Mercancía",
       "goodsAroundGap": "Espacio frontal/trasero de la mercancía",
