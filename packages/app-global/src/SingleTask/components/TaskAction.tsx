@@ -283,7 +283,7 @@ const TaskAction = forwardRef((props: any, ref) => {
         )}
         {preTaskList.map((task: any, index: number) => {
           return (
-            <SubTaskContainer key={"task_action_" + task?.id}>
+            <SubTaskContainer key={"task_action_" + task?.id + index}>
               <div className="flex flex-col gap-[5px]">
                 <div
                   className="flex-1 flex items-center justify-items-center bg-[#627881] rounded-[5px]"

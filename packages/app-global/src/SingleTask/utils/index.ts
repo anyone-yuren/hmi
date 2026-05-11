@@ -10,6 +10,7 @@ export const translateTempToTaskList = (template, isKVehicle) => {
         ? (obj.fork_direction = obj.param[2])
         : (obj.params1 = obj.param[2]);
       obj.params2 = obj.param[3];
+      obj.pallet_id = obj.palletNo;
       return obj;
     },
     Place: (obj: any) => {
@@ -19,14 +20,17 @@ export const translateTempToTaskList = (template, isKVehicle) => {
         ? (obj.fork_direction = obj.param[2])
         : (obj.params1 = obj.param[2]);
       obj.params2 = obj.param[3];
+      obj.pallet_id = obj.palletNo;
       return obj;
     },
     Null: (obj: any) => {
+      obj.pallet_id = obj.palletNo;
       return obj;
     },
     Charge: (obj: any) => {
       obj.task_charge_type = obj["param"][0];
       obj.threshold = obj["param"][1];
+      obj.pallet_id = obj.palletNo;
       return obj;
     },
   };
