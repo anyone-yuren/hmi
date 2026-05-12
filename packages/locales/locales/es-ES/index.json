@@ -836,7 +836,7 @@
       "right": "Derecha",
       "rightCompensation": "Parámetros de compensación derecha",
       "rightDetectDist": "Distancia de detección derecha",
-      "savePointCloud": "Guardar nube de puntos",
+      "savePointCloud": "Guardar nube de puntos original",
       "sceneStorage": "Ubicación de escenario",
       "secondVision": "Segunda visión",
       "secondVisualPoint": "Segundo punto visual",

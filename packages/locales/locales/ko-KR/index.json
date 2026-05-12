@@ -836,7 +836,7 @@
       "right": "우",
       "rightCompensation": "우측 보정 파라미터",
       "rightDetectDist": "우측 탐지 거리",
-      "savePointCloud": "포인트 클라우드 저장",
+      "savePointCloud": "원본 포인트 클라우드 저장",
       "sceneStorage": "현장 위치",
       "secondVision": "2차 비전",
       "secondVisualPoint": "2차 비전 포인트",

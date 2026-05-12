@@ -836,7 +836,7 @@
       "right": "右側",
       "rightCompensation": "右側補正パラメーター",
       "rightDetectDist": "右側検出距離",
-      "savePointCloud": "点群を保存する",
+      "savePointCloud": "元の点群を保存する",
       "sceneStorage": "シナリオロケーション",
       "secondVision": "2回目視覚検知",
       "secondVisualPoint": "2回目視覚検知ポイント",

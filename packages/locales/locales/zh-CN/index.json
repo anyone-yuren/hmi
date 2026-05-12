@@ -836,7 +836,7 @@
       "right": "右",
       "rightCompensation": "右侧补偿参数",
       "rightDetectDist": "右探测距离",
-      "savePointCloud": "保存点云",
+      "savePointCloud": "保存原始点云",
       "sceneStorage": "场景库位",
       "secondVision": "第二次视觉",
       "secondVisualPoint": "第二次视觉点",

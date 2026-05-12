@@ -483,6 +483,7 @@ const PointCloudFilter = (props: IProps) => {
                         sx={{ color: 'white', marginBottom: '20px' }}
                         onClick={async () => {
                           await saveCloudPoint();
+                          toast.success(t('common.actionSuccess'));
                         }}
                       >
                         {t('deployer.vision.savePointCloud')}
