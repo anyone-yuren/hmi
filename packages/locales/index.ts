@@ -1,3 +1,4 @@
+import czCz from "./locales/cz-CZ";
 import enUS from "./locales/en-US";
 import esES from "./locales/es-ES";
 import frFR from "./locales/fr-FR";
@@ -16,4 +17,5 @@ export default {
   "es-ES": esES,
   "tr-TR": trTr,
   "pl-PL": plPL,
+  "cz-CZ": czCz,
 };

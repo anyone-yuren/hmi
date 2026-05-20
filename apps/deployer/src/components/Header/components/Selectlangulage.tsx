@@ -55,6 +55,11 @@ const Selectlangulage = () => {
       matchKey: 'pl',
       label: 'polski',
     },
+    {
+      key: 'cz_CZ',
+      matchKey: 'czech',
+      label: 'Czech',
+    },
   ];
   useEffect(() => {
     console.log('data', data);
