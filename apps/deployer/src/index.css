@@ -87,3 +87,16 @@ button {
 .floor_menu li {
   color: black !important;
 }
+.rc-virtual-list-scrollbar.rc-virtual-list-scrollbar-vertical {
+  opacity: 1 !important;
+  width: 8px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  visibility: visible !important;
+}
+.rc-virtual-list-scrollbar.rc-virtual-list-scrollbar-vertical .rc-virtual-list-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 9999px !important;
+}
+.rc-virtual-list-scrollbar.rc-virtual-list-scrollbar-vertical .rc-virtual-list-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
