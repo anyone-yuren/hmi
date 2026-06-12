@@ -290,7 +290,7 @@ const SwiperPage = () => {
             <div
               className='flex flex-col items-center justify-center gap-2'
               onClick={() => {
-                navigate('/ai');
+                navigate('/vla');
               }}
             >
               {/* AI 渐变背景 */}

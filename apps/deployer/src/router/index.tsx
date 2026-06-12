@@ -82,6 +82,10 @@ const router = createHashRouter([
         element: LazyLoad(lazy(() => import('@/views/Charging'))),
       },
       {
+        path: 'vla',
+        element: LazyLoad(lazy(() => import('@/views/Vla'))),
+      },
+      {
         path: 'maintenance',
         element: LazyLoad(lazy(() => import('@/views/maintenance'))),
       },
