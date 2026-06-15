@@ -33,10 +33,10 @@ function MinimalTaskBar({
           </span>
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-semibold text-[#f0f5fa] tracking-wide">
-              中央控制大盘
+              具身智能主控台
             </h1>
             <span className="text-xs px-2 py-0.5 font-mono text-[#00e5ff] bg-[#102a45] rounded border border-[#1e4670] font-bold">
-              单号 #{t?.task_id || "--"}
+              任务号 #{t?.task_id || "--"}
             </span>
             <Tag
               color={typeInfo.tag}
@@ -55,7 +55,7 @@ function MinimalTaskBar({
             </span>
           </div>
           <div>
-            载荷标识:{" "}
+            载荷标识:
             <span className="text-[#e0e8f0] font-bold">
               {t?.pallet_name || "--"}
             </span>
@@ -82,7 +82,7 @@ function MinimalTaskBar({
   );
 }
 
-// ==================== 动态动作执行链 ====================
+// ==================== 动态动作执行链 (满足最后一条始终高亮需求) ====================
 function ActionQueue({
   actions,
   currentIdx,
@@ -120,7 +120,7 @@ function ActionQueue({
         "bg-[#0b2442] border-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.2)] scale-[1.02]",
     },
     done: {
-      badge: "✓ 已完成",
+      badge: "✓ 已就绪",
       textClass: "text-[#4b6d8f]",
       containerClass: "bg-[#04090f] border-[#0d1824] opacity-35",
     },
@@ -156,9 +156,15 @@ function ActionQueue({
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {actions?.map((a, i) => {
-          const currentStatus =
-            a.status ||
-            (i === currentIdx ? "active" : i < currentIdx ? "done" : "pending");
+          // 【核心修改点】：判断当前项是否为列表的最后一条
+          const isLastAction = i === actions.length - 1;
+
+          // 如果是最后一条，无论原本数据状态是什么，都强制赋予 "active" 执行中高亮状态
+          // 否则，正常读取 action.status 状态，没有状态则按老逻辑降级处理
+          const currentStatus = isLastAction
+            ? "active"
+            : a.status || (i < currentIdx ? "done" : "pending");
+
           const styleConfig = STATUS_MAP[currentStatus] || STATUS_MAP.pending;
 
           return (
@@ -166,6 +172,7 @@ function ActionQueue({
               key={a.action_id || i}
               className={`p-4 rounded-xl border transition-all duration-300 relative overflow-hidden ${styleConfig.containerClass}`}
             >
+              {/* 高亮状态下的左侧光条指示 */}
               {currentStatus === "active" && (
                 <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[#00e5ff]" />
               )}
@@ -502,7 +509,7 @@ function AgentBrain({
                         isActive ? "text-[#00e5ff]" : "text-[#5c7c9c]"
                       }`}
                     >
-                      步骤 {String(idx + 1).padStart(2, "0")} //{" "}
+                      步骤 {String(idx + 1).padStart(2, "0")} /{" "}
                       {stepStatus === "done" ? "已完成" : "执行中"}
                     </div>
                     <div className="text-[11px] font-mono font-medium text-[#4b6d8f] bg-[#050d14] px-1.5 py-0.5 rounded border border-[#142638]">
@@ -558,6 +565,7 @@ function VlaEmptyState() {
           未接收到自主核核心数据
         </h3>
         <p className="text-sm text-[#527ca6] leading-relaxed mb-6 font-mono">
+          STANDBY //
           数据通道当前处于收敛空载状态。无线链路丢失或自主核服务异常，系统正在发起无线重连，请检查网关及上位机状态。
         </p>
 
@@ -663,15 +671,12 @@ const VlaConsole = () => {
     }
   }, [vlaData, isActionThinking]);
 
-  // 处理无业务数据时的拦截与缺省逻辑分流
   const task = vlaData?.task || null;
   const timestamp = vlaData?.timestamp || 0;
   const actions = vlaData?.actions || [];
   const fallbackIdx = actions.length ? actions.length - 1 : 0;
   const currentAction = actions[fallbackIdx] || null;
 
-  // 【核心修改点】：细分首帧无数据场景
-  // 1. 如果 readyState === 0（连接中），则展示科技感 Loading 动效转圈
   if (!vlaData && readyState === 0) {
     return (
       <div className="text-white p-6 bg-[#03060a] h-screen flex flex-col items-center justify-center font-mono gap-3">
@@ -702,7 +707,6 @@ const VlaConsole = () => {
 
       <div className="flex-1 flex gap-5 p-5 min-h-0 w-full bg-gradient-to-b from-transparent to-[#020407]">
         <AnimatePresence mode="wait">
-          {/* 2. 如果无数据，且 readyState !== 0（已断开或连接失败），进入科技感空状态缺省页 */}
           {!vlaData ? (
             <motion.div
               key="vla-empty-container"
@@ -714,7 +718,6 @@ const VlaConsole = () => {
               <VlaEmptyState />
             </motion.div>
           ) : (
-            // 正常有业务增量数据流入时的控制台面板
             <motion.div
               key="vla-dashboard-content"
               initial={{ opacity: 0 }}
@@ -722,6 +725,7 @@ const VlaConsole = () => {
               exit={{ opacity: 0 }}
               className="flex-1 flex gap-5 min-h-0"
             >
+              {/* 这里传入 fallbackIdx (即最后一项的索引位置) 用于控制内部渲染滚动对齐 */}
               <ActionQueue actions={actions} currentIdx={fallbackIdx} />
 
               <div className="flex-1 flex flex-col gap-5 min-h-0 relative">
