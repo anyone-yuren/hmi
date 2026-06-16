@@ -9,7 +9,6 @@ import { useEffect } from 'react';
 
 const Selectlangulage = () => {
   const { i18n, t } = useTranslation();
-
   useEffect(() => {
     setLanguage(i18n.language);
   }, [i18n.language]);
@@ -33,10 +32,6 @@ const Selectlangulage = () => {
     {
       key: 'fr_FR',
       label: 'Français',
-    },
-    {
-      key: 'tr_TR',
-      label: 'Türkçe',
     },
   ];
   const handleChange = async (key: string) => {

@@ -4,22 +4,21 @@ import { FileUpload } from '@mui/icons-material';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import GrainIcon from '@mui/icons-material/Grain';
 import StreamIcon from '@mui/icons-material/Stream';
-import { IconButton, InputBase, Menu, MenuItem, Paper, ThemeProvider, Tooltip } from '@mui/material';
+import { Menu, MenuItem, ThemeProvider, Tooltip } from '@mui/material';
 import { toast } from 'sonner';
 import 'swiper/css';
 import { IMode } from '../index.d';
 
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import { createTheme } from '@mui/material/styles';
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { IconStyleButton } from '../Style';
 import { setTaskMode, uploadRcsMap } from '../services';
 
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import SearchIcon from '@mui/icons-material/Search';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Tooltip as AntdTooltip, Upload, UploadProps } from 'antd';
+import { Upload, UploadProps } from 'antd';
 import { UploadChangeParam, UploadFile } from 'antd/es/upload';
 import { useShallow } from 'zustand/react/shallow';
 import { useSingleTaskStore } from '../store/singleTask.store';
@@ -34,12 +33,10 @@ const MapActionBar = forwardRef((props: any, ref) => {
     modeHashMap,
     getMapTaskMode,
     setOffsetVisible,
-    pointHashMap,
   } = props;
   const { t } = useTranslation();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const {
     showRealTimePoints,
@@ -261,39 +258,6 @@ const MapActionBar = forwardRef((props: any, ref) => {
           <Tooltip title={t('deployer.singleTask.agvViewLock')}>
             {agvViewLock ? <LockIcon fontSize={'large'} style={{}} /> : <LockOpenIcon fontSize={'large'} style={{}} />}
           </Tooltip>
-        </IconStyleButton>
-        <IconStyleButton
-          onClick={() => {
-            // setAgvViewLock(!agvViewLock);
-          }}
-        >
-          <AntdTooltip
-            trigger='click'
-            title={
-              <Paper component='form' sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
-                <InputBase sx={{ ml: 1, flex: 1 }} placeholder='' inputRef={searchInputRef} />
-                <IconButton
-                  type='button'
-                  sx={{ p: '2px' }}
-                  aria-label='search'
-                  onClick={() => {
-                    const inputValue: any = searchInputRef.current?.value;
-                    const { x, y } = pointHashMap?.[inputValue];
-                    if (x != null && y != null) {
-                      setMoveToTarget({ x: x, y: -y });
-                      stageRef?.current?.refresh();
-                    } else {
-                      toast.error(t('common.noData'));
-                    }
-                  }}
-                >
-                  <SearchIcon />
-                </IconButton>
-              </Paper>
-            }
-          >
-            {<SearchIcon fontSize={'large'} style={{}} />}
-          </AntdTooltip>
         </IconStyleButton>
       </div>
     </div>

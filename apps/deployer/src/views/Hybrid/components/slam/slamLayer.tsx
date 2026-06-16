@@ -39,7 +39,7 @@ const SlamLayer = () => {
 
   const resetStage = (stage) => {
     stage.position({ x: 0, y: 0 });
-    stage?.scale({ x: 1, y: 1 });
+    stage.scale({ x: 1, y: 1 });
     stage.batchDraw();
     setStagePos({ x: 0, y: 0 });
     setStageScale(1);
@@ -73,7 +73,7 @@ const SlamLayer = () => {
 
     // 直接设置位置，不使用动画
     hybirdStage.position({ x: targetX, y: targetY });
-    hybirdStage?.scale({ x: 0.8, y: 0.8 });
+    hybirdStage.scale({ x: 0.8, y: 0.8 });
     hybirdStage.batchDraw();
     setStagePos({ x: targetX, y: targetY });
     setStageScale(0.8);

@@ -12,16 +12,6 @@ export const addFloor = (num: any) => {
   );
 };
 
-export const updateFloor = (data: any) => {
-  return post(
-    '/navigation/modify_map_floor',
-    {
-      ...data,
-    },
-    '10001',
-  );
-};
-
 export const getFloorData = (floor: number): Promise<any> => {
   return post(
     '/navigation/request_target_floor_map',
@@ -77,7 +67,3 @@ export const relocatePoint = (data: any) => post('/navigation/relocate_point', d
 export const requestNavigationRegion = () => post('/navigation/request_navigation_region', {}, '10001'); // /navigation/cmd/request_navigation_region
 
 export const qrcode_mapping = (data: any) => post('/navigation/qrcode_mapping', data, '10001');
-
-export const location_confidence = (data: any) => post('/navigation/location_confidence', data, '10001');
-
-export const depict_history_pose = (data: any) => post('/navigation/depict_history_pose', data, '10001');

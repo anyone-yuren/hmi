@@ -1,17 +1,17 @@
-import { useWebSocket } from "ahooks";
-import dayjs from "dayjs";
-import { isEqual } from "lodash-es";
-import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { toast as sonnerToast } from "sonner";
-import { toast } from "../components/CustomToast";
-import useObsError from "./useObsError";
+import { useWebSocket } from 'ahooks';
+import dayjs from 'dayjs';
+import { isEqual } from 'lodash-es';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast as sonnerToast } from 'sonner';
+import { toast } from '../components/CustomToast';
+import useObsError from './useObsError';
 
 // 动态获取当前 host
 const currentHost = window.location.hostname;
 // 使用相对路径，Vite 会自动处理代理
 const HYBRID_URL = import.meta.env.DEV
-  ? "/ws10009" // 开发环境使用代理
+  ? '/ws10009' // 开发环境使用代理
   : `ws://${currentHost}:10009`; // 生产环境使用真实地址
 
 export const useNotification = () => {
@@ -22,10 +22,10 @@ export const useNotification = () => {
   const [obsInfo, setObsInfo] = useState<any>();
   const [errorMessage, setErrorMessage] = useState<any>();
   const { sendMessage, latestMessage, readyState } = useWebSocket(HYBRID_URL, {
-    reconnectLimit: Infinity,
+    reconnectLimit: 10,
     reconnectInterval: 5000,
     onMessage: (message) => {
-      if (message?.data?.includes("/sirius/topics/safety_obs_info")) {
+      if (message?.data?.includes('/sirius/topics/safety_obs_info')) {
         const data = JSON.parse(message.data);
         setObsInfo((prev) => {
           if (prev?.type === data.type) return prev;
@@ -33,7 +33,7 @@ export const useNotification = () => {
         });
       }
 
-      if (message?.data?.includes("/sirius/topics/error_description")) {
+      if (message?.data?.includes('/sirius/topics/error_description')) {
         const data = JSON.parse(message.data);
         setErrorMessage((prev) => {
           if (isEqual(prev, data.data)) return prev;
@@ -43,17 +43,12 @@ export const useNotification = () => {
     },
   });
   // 定义异常严重程度，0普通 1警告 2错误 3失败
-  const levelColor = [
-    "!bg-teal-600",
-    "!bg-[#f59e0b]",
-    "!bg-[#d90707]",
-    "!bg-[#991b1b]",
-  ];
+  const levelColor = ['!bg-teal-600', '!bg-[#f59e0b]', '!bg-[#d90707]', '!bg-[#991b1b]'];
 
   // 分别弹出每条错误信息
   useEffect(() => {
     const currentToasts = activeErrorToasts.current;
-    console.log("errorMessage", errorMessage);
+
     // 如果没有错误信息，清除所有旧的弹窗
     if (!errorMessage || errorMessage.length === 0) {
       Object.values(currentToasts).forEach((id) => sonnerToast.dismiss(id));
@@ -73,21 +68,16 @@ export const useNotification = () => {
       if (!exists) {
         const toastId = toast({
           title: (
-            <div className="flex items-center justify-between">
-              <div className="text-white font-bold">
-                {t("common.errorMsg.title")}
-              </div>
+            <div className='flex items-center justify-between'>
+              <div className='text-white font-bold'>{t('common.errorMsg.title')}</div>
             </div>
           ),
           description: (
             <div>
-              <p>
-                {item.module ? <span>[{item?.module}]</span> : null}
-                {item?.description || "-"}
-              </p>
-              <div className="opacity-50">
+              <p>{item?.description || '-'}</p>
+              <div className='opacity-50'>
                 <p>{item?.solution}</p>
-                <p>{dayjs.unix(item?.time).format("YYYY-MM-DD HH:mm:ss")}</p>
+                <p>{dayjs.unix(item?.time).format('YYYY-MM-DD HH:mm:ss')}</p>
               </div>
             </div>
           ),
@@ -102,9 +92,7 @@ export const useNotification = () => {
 
     // 移除已不在 errorMessage 列表中的旧 toast
     Object.entries(currentToasts).forEach(([key, id]) => {
-      const stillExists = errorMessage.some(
-        (item: any) => item.error_code?.toString() === key,
-      );
+      const stillExists = errorMessage.some((item: any) => item.error_code?.toString() === key);
       if (!stillExists) sonnerToast.dismiss(id);
     });
 
@@ -119,7 +107,7 @@ export const useNotification = () => {
         sonnerToast.dismiss(obsMsg.current);
       }
       obsMsg.current = toast({
-        title: t("common.obsError.title"),
+        title: t('common.obsError.title'),
         description: getObsMsg(obsInfo),
         closable: true,
       });
@@ -135,11 +123,8 @@ export const useNotification = () => {
     if (readyState === 1) {
       sendMessage(
         JSON.stringify({
-          uri: "subscribe",
-          topics: [
-            "/sirius/topics/safety_obs_info",
-            "/sirius/topics/error_description",
-          ],
+          uri: 'subscribe',
+          topics: ['/sirius/topics/safety_obs_info', '/sirius/topics/error_description'],
         }),
       );
     }

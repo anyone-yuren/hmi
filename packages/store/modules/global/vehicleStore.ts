@@ -57,9 +57,6 @@ interface State {
 
   taskInfo: ITaskInfo;
   setTaskInfo: (taskInfo: ITaskInfo) => void;
-
-  isContentWss: boolean;
-  setIsContentWss: (data: boolean) => void;
 }
 export const useVehicleStore = create<State>()(
   persist(
@@ -149,12 +146,6 @@ export const useVehicleStore = create<State>()(
         if (cacheSave && !isEqual(taskInfo, get().taskInfo)) {
           set({ taskInfo });
         }
-      },
-      isContentWss: false,
-      setIsContentWss(data) {
-        set({
-          isContentWss: data,
-        });
       },
     }),
     {

@@ -67,7 +67,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
     min: !infiniteView ? maxScale * 0.9 : 0,
     max: !infiniteView ? 0.25 : 10000,
   });
-
   const {
     points: boundaryPoints,
     setPoints: setBoundaryPoints,
@@ -113,9 +112,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
   });
 
   useImperativeHandle(ref, () => ({
-    refresh: () => {
-      setCurrentScale((origin) => (origin += 0.1));
-    },
     setStageScale: (scale) => {
       const stage: any = stageRef.current?.getStage();
       stage.scale({ x: scale, y: scale });
@@ -318,7 +314,6 @@ const InitStage = forwardRef((props: IInitStage, ref) => {
 
         {/* 点位理论上不会变的 */}
         <Layer name='points' listening={true}>
-          <Rect x={0} y={0} width={1} height={1} fill={'green'}></Rect>
           {commonVisible && visibleConfig.commonPoints && (
             <Points.Common
               points={commonPoints}

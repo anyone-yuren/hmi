@@ -218,7 +218,8 @@
     "Sider",
     "signalr",
     "tanstack",
-    "troubleprool"
+    "troubleprool",
+    "xyflow"
   ],
   "deepscan.enable": true,
 
@@ -229,5 +230,10 @@
   "i18n-ally.theme.annotation": "rgba(255,255,255)",
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"
-  }
+  },
+  "prettier.prettierPath": "./node_modules/prettier",
+  "prettier.requireConfig": false,
+  "editor.formatOnSave": true,
+  "prettier.singleQuote": true,
+  "prettier.jsxSingleQuote": true
 }

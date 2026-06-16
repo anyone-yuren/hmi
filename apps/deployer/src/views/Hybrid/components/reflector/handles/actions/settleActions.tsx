@@ -90,7 +90,7 @@ const AddActions = () => {
         disabled={delay || calmLoading || btnIndex === 1}
         {...(btnIndex === 1 || delay ? { sx: defaultBtnBg } : {})}
       >
-        {t('deployer.hybrid.clam')}
+        {t('镇定')}
       </Button>
       <Button
         {...btnAttrs}

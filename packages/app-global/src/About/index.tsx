@@ -277,19 +277,22 @@ const About = () => {
                   classNames={{
                     actions: '!ml-4',
                   }}
-                  onClick={() => {
-                    setLoadingNode(item);
-                    setOpenNodeLogs(true);
-                    setChildNodeConfig({
-                      open: true,
-                      node: logResponse?.data?.[item],
-                      key: item,
-                    });
-                    // setLogsOpen(true);
-                    // getLogs({ node_name: item.title });
-                  }}
                   actions={[
-                    <Button type='primary' loading={loadingNode === item && logLoading}>
+                    <Button
+                      type='primary'
+                      loading={loadingNode === item && logLoading}
+                      onClick={() => {
+                        setLoadingNode(item);
+                        setOpenNodeLogs(true);
+                        setChildNodeConfig({
+                          open: true,
+                          node: logResponse?.data?.[item],
+                          key: item,
+                        });
+                        // setLogsOpen(true);
+                        // getLogs({ node_name: item.title });
+                      }}
+                    >
                       {t('common.about.viewlog')}
                     </Button>,
                   ]}

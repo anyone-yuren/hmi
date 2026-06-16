@@ -46,10 +46,6 @@ const router = createHashRouter([
       },
       {
         path: 'hybrid',
-        element: LazyLoad(lazy(() => import('@/views/FloorMapViewer'))),
-      },
-      {
-        path: 'hybridPc',
         element: LazyLoad(lazy(() => import('@/views/Hybrid'))),
       },
       {
@@ -80,10 +76,6 @@ const router = createHashRouter([
       {
         path: 'charging',
         element: LazyLoad(lazy(() => import('@/views/Charging'))),
-      },
-      {
-        path: 'vla',
-        element: LazyLoad(lazy(() => import('@/views/Vla'))),
       },
       {
         path: 'maintenance',

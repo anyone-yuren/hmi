@@ -1,108 +1,159 @@
-# 🤖 HMI (Human-Machine Interface) Monorepo System
+<a name="readme-top"></a>
 
-这是一个基于 **Monorepo** 架构构建的工业机器人/AGV（自动导引车）高科技人机交互系统（HMI）。项目集成实时数据流监控、二维/三维点云雷达渲染、多语言国际化管理以及高度可定制的中后台业务组件。
+<div align="center">
 
-## 🏗️ 项目架构 (Project Architecture)
+<img height="120" src="https://raw.githubusercontent.com/anyone-yuren/multiway/master/favicon.ico">
 
-项目采用 [Turborepo](https://turbo.build/) 管理 Monorepo 状态，并使用 `pnpm` 作为包管理工具。
+<h1>RCS 4.0</h1>
+<p>我们做了什么优化？</p>
+Gbeata Admin是一套用于快速构建后台管理系统模板，也是后续为达成全系统UI保持交互、主题一致而搭建的技术架构。我们已经在平煤汇总平台， WCS（平煤一期）、调度系统重构得到落地实践，并且不断的在迭代完善。
 
-```text
-hmi/
-├── apps/
-│   ├── deployer/          # 🚀 机器人现场部署端 HMI (React + Vite + Three.js)
-│   └── customer/          # 👥 终端客户使用端 HMI (React + Vite)
-├── packages/
-│   ├── ui/                # 💎 纯原子 UI 组件库 (动画、微件、特效)
-│   ├── gbeata/            # 📊 基于 Ant Design 深度定制的高级业务组件库 (表格、表单)
-│   ├── locales/           # 🌐 国际化静态资产包 (支持 Excel 多语言双向转换脚本)
-│   └── store/             # 🧠 基于 Zustand 的全局跨应用状态管理中心
-├── internal/              # ⚙️ 内部工程化配置 (eslint-config, tailwind-config, ts-config)
-└── script-locale/         # 🛠️ 自动化多语言翻译、同步与校验工具链
+文档地址：[https://docs.gbeata.cn/](https://docs.gbeata.cn/)
+
+组件库地址：[https://component.gbeata.cn/](https://component.gbeata.cn/)
+
+[English](./README.md) ・ 简体中文 ・ [更新日志](./CHANGELOG.md) · [报告问题][github-issues-link] · [请求功能][github-issues-link]
+
+<!-- SHIELD GROUP -->
+
+[![][npm-release-shield]][npm-release-link]
+[![][npm-downloads-shield]][npm-downloads-link]
+[![][github-releasedate-shield]][github-releasedate-link]
+[![][github-action-release-shield]][github-action-release-link]<br/>
+[![][github-contributors-shield]][github-contributors-link]
+
+</div>
+
+## 我们都做了什么
+
+> 结合3.0上线后，项目上标准与非标的具体情况，以下我们将围绕项目实施与技术方案两个维度来讲解4.0关于前端做了什么优化。
+
+### 项目实施
+
+1. 保持原有3.0分模块部署的方案，优化打包部署形式，保留镜像部署与nginx部署。在此基础上，增加环境变量动态控制系统模块部署。
+2. 增加独立大屏部署，通过环境变量参数控制，独立部署大屏，方便快速部署。
+
+### 技术方案
+
+1. 升级3.0系统所有技术栈架构，支持动态配置主题与布局，一件换肤与多语言切换不刷新系统（常规理解，我们还是会去手动刷新一下）
+2. 支持模块化定制开发，支持动态路由与非标项目快速定制。
+3. 支持动态变更logo，无需再次打包（这个跟部署形式有关，根据项目实际场景来选择）
+4. 统一全站公共组件技术栈，开发公司级组件库（gbeata）,支持所有系统一键切换升级（设计中），为后续系统统一做铺垫。
+5. 支持tailwindcss 与 css in js，支持响应式，支持pad与移动端（响应式设计细节放后）
+
+## 性能优化对比
+
+针对3.0 与 4.0， 我们使用相同维度与环境进行性能对比，拿监控页面为例，我们将以4个维度进行对比。
+
+首次内容绘制（FCP, First Contentful Paint）：页面的第一部分内容（例如文本、图片）在屏幕上显示的时间。
+
+最大内容绘制（LCP, Largest Contentful Paint）：页面的最大内容块完全渲染的时间，通常是页面的主要内容。
+
+累积布局偏移（CLS, Cumulative Layout Shift）：页面元素在加载过程中发生的视觉稳定性变化（布局偏移）总量。
+
+总阻塞时间（TBT, Total Blocking Time）：首次内容绘制和交互时间之间，由于主线程阻塞导致的时间。
+
+> 3.0
+
+![alt text](image-3.png)
+
+> 4.0
+
+![alt text](image-2.png)
+
+<!-- 生成lighthouse对比 -->
+
+| FCP       |    LCP    |        TBT |      CLS |
+| :-------- | :-------: | ---------: | -------: |
+| 19.1 秒   |  38.7 秒  | 4,060 毫秒 |  28.6 秒 |
+| 6.7 秒    |  13.6 秒  | 1,400 毫秒 |  10.6 秒 |
+| 优化 300% | 优化 284% |   优化290% | 优化269% |
+
+当然我们还有很多可以优化的空间：
+![alt text](image-4.png)
+
+## 我们还做了什么
+
+1. 新增四向车控制页面，重写、重构控制页面。
+2. 重构监控页面交互（参考高德地图）
+3. 重新设计任务模块交互
+4. 重新设计车辆状态模块交互
+
+## 使用
+
+> \[!IMPORTANT]\
+> 代码中包含gbeata组件库，如果不想使用到package/gbeata组件库源码，可直接从npm包中安装。
+
+```bash
+git clone git@github.com:anyone-yuren/react-antd-admin-pnpm.git
+
+pnpm bootstrap
+
+pnpm dev --filter gbeata-admin
 ```
 
-✨ 核心特性 (Key Features)
-高性能三维点云渲染：在 apps/deployer 深度整合 Three.js 与 React Three Fiber，配合多线程 Web Worker，在低配车载平板上依然能流畅、高频渲染激光雷达安全区域（Safety Zones）与实时点云。
+也可以直接使用pnpm dev，但这样就会启动项目中所有包含dev命令的包项目。
 
-现代化技术栈：全量拥抱 React 18, TypeScript, Zustand 状态流, Tailwind CSS 以及 Framer Motion 动态微交互。
+<div align="right">
 
-动态运行时配置 (Runtime Window Config)：支持局域网 WebSocket 终点、机器人 ID 的部署时动态挂载，实现“一次编译，现场到处运行”。
+[![][back-to-top]](#readme-top)
 
-Monorepo 资产高复用：packages/ 共享机制有效隔离了业务逻辑与纯资产依赖，彻底规避跨应用代码复制。
+</div>
 
-🛠️ 开发环境配置 (Development Setup)
+## 分支管理
 
-1. 前置要求
-   Node.js: ^18.x 或更高版本 (项目推荐通过 .node-version 锁定环境)
+发布组件库分支： `main`
 
-PNPM: ^8.x 或更高版本
+预发布分支： `release-admin`
 
-2. 安装依赖
-   在项目根目录下执行以下命令锁版本安装：
+开发分支： `fature-admin`
 
-Bash
-pnpm install 3. 本地启动开发服务
-使用 Turbo 缓存与并行处理能力，同时启动所有子应用及共享包的监控：
+<div align="right">
 
-Bash
-pnpm dev
-如果你只想单独开发部署端应用：
+[![][back-to-top]](#readme-top)
 
-Bash
-pnpm --filter deployer dev 4. 项目打包 (Build)
-Bash
-pnpm build
-🌐 国际化与翻译工作流 (Localization Workflow)
-项目提供了健全的国际化工具链（位于 script-locale/），支持实施人员或翻译团队通过 Excel 直接管理语言包：
+</div>
 
-Excel 转 JSON：当翻译人员修改了 HMI多语言翻译.xlsx 后，运行以下命令自动更新 packages/locales 字典：
+</div>
 
-Bash
-pnpm i18n:import
-JSON 转 Excel：将代码中新抽离的 Key 导出为 Excel 交付给翻译团队：
+<!-- LINK GROUP -->
 
-Bash
-pnpm i18n:export
-👮 代码提交规范 (Git Commit Guidelines)
-本项目引入了 Commitlint 与 commitizen 强制约束提交规范。在提交代码时，请使用以下命令代替传统的 git commit：
-
-Bash
-pnpm commit
-格式遵循：<type>(<scope>): <subject> (例如: feat(deployer): 优化安全区域Canvas在高频点云下的渲染吞吐量)
-
----
-
-### 💡 优化后的子应用目录描述（例如 `apps/deployer/README.md`）
-
-如果现场实施人员或前端新进组同事只需要看 `deployer` 应用，可以在 `apps/deployer/` 目录下放置如下描述：
-
-```markdown
-# 🚀 HMI Deployer Application
-```
-
-这是机器人/AGV 现场部署及参数标定专用的受控 HMI 端应用。
-
-## 📦 核心视图模块说明 (Core View Modules)
-
-- **`/views/Safety`**：安全避障区域与 3D 点云可视化面板。数据通过高性能长连接传输，内置全屏监控与画布受控切换。
-- **`/views/Hybrid`**：混合动力与激光 SLAM/反射板定位标定画布，支持现场建图与姿态（Pose）修正。
-- **`/views/Vision`**：视觉相机（Vision Pick/Stock）货物料架、堆垛状态识别标定。
-- **`/views/Diagnosis`**：设备核心健康度诊断、故障排查、历史日志高速检索。
-
-## 🔩 实施部署说明 (Field Deployment)
-
-为了避免在现场因为不同的车辆 IP 或局域网环境重复执行 `pnpm build` 打包，本项目采用**运行时动态注入配置**：
-
-1. 打包产物输出后，在部署目录的 `dist/` 下会包含一个 `config.js` 文件。
-2. 现场实施人员只需用文本编辑器修改该文件内的全局对象即可立即生效：
-   ```javascript
-   window.__HMI_CONFIG__ = {
-     WS_URL: "ws://192.168.1.105:9090", // 对应车载主控 WebSocket 终点
-     ROBOT_ID: "AGV-FORK-01",
-   };
-   ```
-
-### 🔥 为什么这样修改？（修改背后的设计考量）
-
-1. **突出项目壁垒和技术两点**：将你的 **Web Worker 处理高频点云**、**Three.js 避障渲染**、以及 **Zustand + Monorepo 资产管理** 放在 README 的开头，有助于任何阅读代码的人（包括技术主管、架构师）迅速get到项目含金量。
-2. **明确规范开发命令**：提供了清晰的 `pnpm dev` 和 `--filter` 命令，避免新人由于不熟悉 Monorepo 架构导致起错服务。
-3. **将运维部署、多语言脚本写进文档**：对于你的项目，`script-locale/`（多语言Excel转换）和现场环境配置是非常亮眼且实用的工程化设计，写进 README 能大幅提升项目的工业级规范感。
+[back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
+[banner]: https://github.com/anyone-yuren/multiway/blob/master/iShot_2024-01-05_17.05.52.gif?raw=true
+[bun-link]: https://bun.sh
+[bun-shield]: https://img.shields.io/badge/-speedup%20with%20bun-black?logo=bun&style=for-the-badge
+[codespaces-link]: https://codespaces.new/anyone-yuren/react-antd-admin-pnpm
+[codespaces-shield]: https://github.com/codespaces/badge.svg
+[contributors-contrib]: https://contrib.rocks/image?repo=anyone-yuren/react-antd-admin-pnpm
+[contributors-link]: https://github.com/anyone-yuren/react-antd-admin-pnpm/graphs/contributors
+[discord-link]: https://discord.gg/AYFPHvv2jT
+[discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
+[fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Fanyone-yuren%2Freact-antd-admin-pnpm
+[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fanyone-yuren%2Freact-antd-admin-pnpm.svg?type=large
+[github-action-release-link]: https://github.com/anyone-yuren/react-antd-admin-pnpm/actions/workflows/blank.yml
+[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/anyone-yuren/react-antd-admin-pnpm/release.yml?label=release&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-action-test-link]: https://github.com/actions/workflows/anyone-yuren/react-antd-admin-pnpm/test.yml
+[github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/anyone-yuren/react-antd-admin-pnpm/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
+[github-contributors-link]: https://github.com/anyone-yuren/react-antd-admin-pnpm/graphs/contributors
+[github-contributors-shield]: https://img.shields.io/github/contributors/anyone-yuren/react-antd-admin-pnpm?color=c4f042&labelColor=black&style=flat-square
+[github-forks-link]: https://github.com/anyone-yuren/react-antd-admin-pnpm/network/members
+[github-forks-shield]: https://img.shields.io/github/forks/anyone-yuren/react-antd-admin-pnpm?color=8ae8ff&labelColor=black&style=flat-square
+[github-issues-link]: https://github.com/anyone-yuren/react-antd-admin-pnpm/issues
+[github-issues-shield]: https://img.shields.io/github/issues/anyone-yuren/react-antd-admin-pnpm?color=ff80eb&labelColor=black&style=flat-square
+[github-license-link]: https://github.com/anyone-yuren/react-antd-admin-pnpm/blob/master/LICENSE
+[github-license-shield]: https://img.shields.io/github/license/anyone-yuren/react-antd-admin-pnpm?color=white&labelColor=black&style=flat-square
+[github-releasedate-link]: https://github.com/anyone-yuren/react-antd-admin-pnpm/releases
+[github-releasedate-shield]: https://img.shields.io/github/release-date/anyone-yuren/react-antd-admin-pnpm?labelColor=black&style=flat-square
+[github-stars-link]: https://github.com/anyone-yuren/react-antd-admin-pnpm/network/stargazers
+[github-stars-shield]: https://img.shields.io/github/stars/anyone-yuren/react-antd-admin-pnpm?color=ffcb47&labelColor=black&style=flat-square
+[react-antd-admin-pnpm]: https://github.com/anyone-yuren/react-antd-admin-pnpm
+[lobe-commit]: https://github.com/anyone-yuren/lobe-commit/tree/master/packages/lobe-commit
+[lobe-i18n]: https://github.com/anyone-yuren/lobe-commit/tree/master/packages/lobe-i18n
+[lobe-theme]: https://github.com/anyone-yuren/sd-webui-lobe-theme
+[npm-downloads-link]: https://www.npmjs.com/package/gbeata
+[npm-downloads-shield]: https://img.shields.io/npm/dt/@anyone-yuren/ui?labelColor=black&style=flat-square
+[npm-release-link]: https://www.npmjs.com/package/gbeata
+[npm-release-shield]: https://img.shields.io/npm/v/@anyone-yuren/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[pr-welcome-link]: https://github.com/anyone-yuren/react-antd-admin-pnpm/pulls
+[pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
+[profile-link]: https://github.com/anyone-yuren

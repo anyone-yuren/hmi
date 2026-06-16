@@ -69,7 +69,7 @@ const ParamsSetting = (props: any) => {
       <div className='text-black gap-[10px] justify-center'>
         <TextChangeRow
           className={'w-[260px]'}
-          title={t('deployer.vision.palletDisplayName')}
+          title={t('deployer.vision.palletName')}
           value={propsState?.['display_name']}
           type='text'
           onChange={(value: string) => {
@@ -93,15 +93,15 @@ const ParamsSetting = (props: any) => {
           <TextChangeRow
             className={'w-[260px]'}
             title={t('deployer.vision.forkExtendParams')}
-            value={propsState?.['forkarm_height_based_pallet_type']}
+            value={propsState?.['forkarm_final_width']}
             onChange={(value: string) => {
-              changeUpdateHashMap('forkarm_height_based_pallet_type', value);
+              changeUpdateHashMap('forkarm_final_width', value);
             }}
           >
-            <div>{propsState?.['forkarm_height_based_pallet_type'] || 0}</div>
+            <div>{propsState?.['forkarm_final_width'] || 0}</div>
           </TextChangeRow>
         )}
-        {propsState.type != 'tail_truck' && propsState.type != 'warehouse_shelves' && (
+        {propsState.type != 'tail_truck' && (
           <TextChangeRow
             className={'w-[260px]'}
             title={t('deployer.vision.forkFinalWidth')}

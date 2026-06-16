@@ -117,7 +117,7 @@ const PlaceMove = (props: IProps) => {
                   onChange={(value: string) => {
                     let val = updateHashMap?.['compensation'];
                     if (item.index === 3 && !Number.isInteger(Number(value))) {
-                      val[item.index] = parseFloat(Number(value).toFixed(1));
+                      val[item.index] = Number(value).toFixed(1);
                     } else {
                       val[item.index] = Number(value);
                     }

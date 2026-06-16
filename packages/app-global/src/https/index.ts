@@ -1,8 +1,8 @@
-import { useGlobalStore } from "@gbeata/store";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { t } from "i18next";
-import { toast } from "sonner";
-import ErrorMessageManager from "./errorMessage";
+import { useGlobalStore } from '@gbeata/store';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { t } from 'i18next';
+import { toast } from 'sonner';
+import ErrorMessageManager from './errorMessage';
 // 统一的响应枚举
 export enum ResultEnum {
   SUCCESS = 200,
@@ -14,13 +14,10 @@ export enum ResultEnum {
 const currentHost = window.location.hostname;
 
 const BASE_API = import.meta.env.VITE_BASE_API || `http://${currentHost}:10009`;
-const ADMIN_API =
-  import.meta.env.VITE_ADMIN_API || `http://${currentHost}:10001`;
+const ADMIN_API = import.meta.env.VITE_ADMIN_API || `http://${currentHost}:10001`;
 const TOOL_API = import.meta.env.VITE_TOOL_API || `http://${currentHost}:10020`;
-const VISION_API =
-  import.meta.env.VITE_VISION_API || `http://${currentHost}:10010`;
-const RCS_WEB_API =
-  import.meta.env.VITE_RCS_WEB_API || `http://${currentHost}:10009`;
+const VISION_API = import.meta.env.VITE_VISION_API || `http://${currentHost}:10010`;
+const RCS_WEB_API = import.meta.env.VITE_RCS_WEB_API || `http://${currentHost}:10009`;
 
 const PORT_BASEURL = {
   10009: BASE_API,
@@ -35,7 +32,7 @@ const instance = axios.create({
   baseURL: BASE_API, // 设置默认 baseURL
   timeout: 1000 * 60 * 2,
   headers: {
-    "Content-Type": "application/x-www-form-urlencoded",
+    'Content-Type': 'application/x-www-form-urlencoded',
   },
 });
 
@@ -46,11 +43,10 @@ instance.interceptors.request.use(
     const { resetSessionTimeout } = useGlobalStore.getState();
     resetSessionTimeout();
     // 这里可以统一携带 token
-    const token = localStorage.getItem("token");
-    if (config.url?.includes("/login")) {
+    const token = localStorage.getItem('token');
+    if (config.url?.includes('/login')) {
       return config;
     }
-    // console.log('config', config);
     // if (!token) {
     //   triggerLoginModal();
     // }
@@ -59,7 +55,7 @@ instance.interceptors.request.use(
     if (config.baseURL === RCS_WEB_API) {
       // RCS 特殊处理
       config.headers = config.headers || {};
-      config.headers["Content-Type"] = `application/json; charset=utf-8`;
+      config.headers['Content-Type'] = `application/json; charset=utf-8`;
       return config;
     }
     if (token) {
@@ -78,7 +74,7 @@ instance.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data, config } = response;
     // 如果没有 code 字段，直接返回原始数据（适配数组或对象）
-    if (!data || typeof data === "string" || !("code" in data)) {
+    if (!data || typeof data === 'string' || !('code' in data)) {
       return data;
     }
     const { code, msg, message, data: resData } = data;
@@ -88,9 +84,9 @@ instance.interceptors.response.use(
         return data;
       } else {
         toast.error(message, {
-          position: "top-center",
+          position: 'top-center',
         });
-        return Promise.reject(message || t("common.http.error"));
+        return Promise.reject(message || t('common.http.error'));
       }
     }
     if (code === ResultEnum.SUCCESS) {
@@ -100,56 +96,56 @@ instance.interceptors.response.use(
     if (code === ResultEnum.TIMEOUT) {
       // message.error(msg);
       toast.error(msg, {
-        position: "top-center",
+        position: 'top-center',
       });
       // 可以跳转登录页或者清空 token
-      localStorage.removeItem("token");
+      localStorage.removeItem('token');
       // window.location.href = '/login';
       return Promise.reject(msg);
     }
 
     // 其他错误
-    toast.error(config.url + " " + t("common.http.error"), {
-      position: "top-center",
+    toast.error(config.url + ' ' + t('common.http.error'), {
+      position: 'top-center',
     });
-    return Promise.reject(msg || t("common.http.error"));
+    return Promise.reject(msg || t('common.http.error'));
   },
   (error) => {
     // 处理 HTTP 错误状态码
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          toast.error(t("common.http.withoutAuth"), {
-            position: "top-center",
+          toast.error(t('common.http.withoutAuth'), {
+            position: 'top-center',
           });
-          localStorage.removeItem("token");
-          window.location.href = "/login";
+          localStorage.removeItem('token');
+          window.location.href = '/login';
           break;
         case 403:
-          toast.error(t("common.http.refused"), {
-            position: "top-center",
+          toast.error(t('common.http.refused'), {
+            position: 'top-center',
           });
           break;
         case 404:
-          toast.error(t("common.http.notFound"), {
-            position: "top-center",
+          toast.error(t('common.http.notFound'), {
+            position: 'top-center',
           });
           break;
         case 500:
           // message.error(t('common.http.serverError'));
           // 暂时只启用这一个,防止多次弹窗。其他有需要可以按需加。
-          manager.push(t("common.http.serverError"));
+          manager.push(t('common.http.serverError'));
           break;
         default:
-          toast.error(error?.response?.data?.message || t("common.http.fail"), {
-            position: "top-center",
+          toast.error(error?.response?.data?.message || t('common.http.fail'), {
+            position: 'top-center',
           });
       }
     } else if (error.request) {
-      manager.push(t("common.http.timeout"));
+      manager.push(t('common.http.timeout'));
     } else {
-      toast.error(t("common.http.fail"), {
-        position: "top-center",
+      toast.error(t('common.http.fail'), {
+        position: 'top-center',
       });
     }
     return Promise.reject(error);
@@ -157,7 +153,7 @@ instance.interceptors.response.use(
 );
 
 // GET 封装
-export const get = (url: string, params?: any, port: string = "10009") => {
+export const get = (url: string, params?: any, port: string = '10009') => {
   return instance.get(url, {
     baseURL: PORT_BASEURL[port],
     params,
@@ -165,19 +161,19 @@ export const get = (url: string, params?: any, port: string = "10009") => {
 };
 
 // POST 封装
-export const post = (url: string, data?: any, port: string = "10009") => {
+export const post = (url: string, data?: any, port: string = '10009') => {
   return instance.post(url, data, {
     baseURL: PORT_BASEURL[port],
   });
 };
 
-export const del = (url: string, data?: any, port: string = "10009") => {
+export const del = (url: string, data?: any, port: string = '10009') => {
   return instance.delete(url, {
     baseURL: PORT_BASEURL[port],
   });
 };
 
-export const put = (url: string, data?: any, port: string = "10009") => {
+export const put = (url: string, data?: any, port: string = '10009') => {
   return instance.put(url, data, {
     baseURL: PORT_BASEURL[port],
   });

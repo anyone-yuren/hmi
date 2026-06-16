@@ -1,5 +1,5 @@
 import { StyledComponent } from '@emotion/styled';
-import { Grid, GridProps, Input, MenuItem, Popover, styled } from '@mui/material';
+import { Grid, GridProps, MenuItem, Popover, styled } from '@mui/material';
 import { t } from 'i18next';
 import { memo, useMemo, useRef, useState } from 'react';
 
@@ -21,13 +21,11 @@ export interface IPointOrLineBoxProps {
   subTitleStyle?: Record<string, any>;
   list?: Array<TPointOrLine>;
   onChange?: (key: TItemKey) => void;
-  name?: string;
 }
 
 const PointOrLineBox = (props: IPointOrLineBoxProps) => {
-  const { title = null, subTitle, onChange, list = [], titleStyle = {}, subTitleStyle = {}, name } = props;
+  const { title = null, subTitle, onChange, list = [], titleStyle = {}, subTitleStyle = {} } = props;
 
-  const [inputValue, setInputValue] = useState<any>('');
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const labelBoxRef = useRef(null);
   const labelBoxSize = useSize(labelBoxRef);
@@ -54,9 +52,6 @@ const PointOrLineBox = (props: IPointOrLineBoxProps) => {
 
   const handleClose = () => {
     setAnchorEl(null);
-    Promise.resolve().then(() => {
-      setInputValue('');
-    });
   };
 
   const open = Boolean(anchorEl);
@@ -65,7 +60,6 @@ const PointOrLineBox = (props: IPointOrLineBoxProps) => {
   const handleItemClick = (item: TItemKey) => {
     onChange && onChange(item);
     handleClose();
-    setInputValue('');
   };
 
   const titleLabel = useMemo(() => {
@@ -75,6 +69,7 @@ const PointOrLineBox = (props: IPointOrLineBoxProps) => {
     const obj = list.filter((it: any) => it?.id === title);
     return obj.length ? obj[0]?.label || obj[0]?.id : '-';
   }, [title, list]);
+
   return (
     <div>
       <div ref={labelBoxRef}>
@@ -99,34 +94,21 @@ const PointOrLineBox = (props: IPointOrLineBoxProps) => {
         }}
       >
         <div style={{ maxHeight: '300px', overflow: 'auto', position: 'relative' }}>
-          {name === 'right_action_panel' && (
-            <Input
-              value={inputValue}
-              sx={{ width: labelBoxSize?.width, paddingInline: '20px' }}
-              onChange={(event) => {
-                setInputValue(event.target.value);
-              }}
-            />
-          )}
           {list.length ? (
-            list
-              ?.filter((item) => {
-                return inputValue ? String(item?.id).includes(inputValue) : true;
-              })
-              ?.map((item) => (
-                <MenuItem
-                  key={item.id}
-                  value={item?.label || item.id}
-                  sx={{
-                    width: labelBoxSize?.width,
-                    justifyContent: 'center',
-                    fontSize: '18px',
-                  }}
-                  onClick={() => handleItemClick(item.id)}
-                >
-                  {item?.label || item.id}
-                </MenuItem>
-              ))
+            list.map((item) => (
+              <MenuItem
+                key={item.id}
+                value={item?.label || item.id}
+                sx={{
+                  width: labelBoxSize?.width,
+                  justifyContent: 'center',
+                  fontSize: '18px',
+                }}
+                onClick={() => handleItemClick(item.id)}
+              >
+                {item?.label || item.id}
+              </MenuItem>
+            ))
           ) : (
             <MenuItem
               key='nodata'

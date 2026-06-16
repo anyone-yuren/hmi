@@ -121,12 +121,12 @@ const InitStage = (props: IProps) => {
       const pointer = stage.getPointerPosition(); // 获取当前指针位置
       if (!pointer) return;
       // 计算新的缩放比例
-      const newScale = oldScale * e?.scale;
+      const newScale = oldScale * e.scale;
       const mousePointTo = {
         x: (pointer.x - oldPos.x) / oldScale,
         y: (pointer.y - oldPos.y) / oldScale,
       };
-      stage?.scale({ x: newScale, y: newScale });
+      stage.scale({ x: newScale, y: newScale });
       stage.position({
         x: pointer.x - mousePointTo.x * newScale,
         y: pointer.y - mousePointTo.y * newScale,

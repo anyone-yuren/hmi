@@ -19,8 +19,8 @@ interface State {
   setObsInfo: (data: any) => void;
   seniorPoints: any[];
   setSeniorPoints: (data: any) => void;
-  // goodsInfo: any;
-  // setGoodsInfo: (data: any) => void;
+  goodsInfo: any;
+  setGoodsInfo: (data: any) => void;
   showPointCloud: boolean;
   setShowPointCloud: (data: any) => void;
   cloudCategory: Array<any>;
@@ -40,17 +40,10 @@ interface State {
 
   isDensePointCloud: boolean;
   setIsDensePointCloud: (isDensePointCloud: boolean) => void;
-
   sensorPoints: {};
   setSensorPoints: (key: string, data: any) => void;
   setAllSensorPoints: (sensorPoints: any) => void;
   clearSensorPoints: () => void;
-
-  pointCloudFilter: {
-    minY: number;
-    maxY: number;
-  };
-  setPointCloudFilter: (data) => void;
 }
 
 export const useSafetyStore = create<State>()(
@@ -77,8 +70,8 @@ export const useSafetyStore = create<State>()(
       },
       seniorPoints: [],
       setSeniorPoints: (data) => set({ seniorPoints: data }),
-      // goodsInfo: {},
-      // setGoodsInfo: (data) => set({ goodsInfo: data }),
+      goodsInfo: {},
+      setGoodsInfo: (data) => set({ goodsInfo: data }),
       showPointCloud: false,
       setShowPointCloud: (data) => set({ showPointCloud: data }),
       cloudCategory: [],
@@ -101,12 +94,6 @@ export const useSafetyStore = create<State>()(
       setSensorPoints: (key, data) => set({ sensorPoints: { ...get().sensorPoints, [key]: data } }),
       setAllSensorPoints: (sensorPoints) => set({ sensorPoints }),
       clearSensorPoints: () => set({ sensorPoints: {} }),
-
-      pointCloudFilter: {
-        minY: 0,
-        maxY: 9999,
-      },
-      setPointCloudFilter: (pointCloudFilter) => set({ pointCloudFilter }),
     }),
     {
       name: 'safety-store',

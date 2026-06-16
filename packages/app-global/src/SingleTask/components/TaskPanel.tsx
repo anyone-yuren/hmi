@@ -1,17 +1,8 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { Button, Tab, Tabs, Typography } from "@mui/material";
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useTranslation } from "react-i18next";
-import "swiper/css";
+import CloseIcon from '@mui/icons-material/Close';
+import { Tab, Tabs, Typography } from '@mui/material';
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import 'swiper/css';
 import {
   generateUniqueId,
   MapTaskPanel,
@@ -19,35 +10,28 @@ import {
   MapTaskPanelList,
   MapTaskPanelListHeader,
   TaskItem,
-} from "../Style";
-import EmptyBox from "../components/Empty";
-import PointsAdd from "./SvgIcon/PointsAdd";
+} from '../Style';
+import EmptyBox from '../components/Empty';
+import PointsAdd from './SvgIcon/PointsAdd';
 
-import { useAsyncEffect, useRequest } from "ahooks";
-import { Action } from "../components/SwiperAction";
-import {
-  cancelTask,
-  createTask,
-  deleteTemplate,
-  getTasks,
-  getTemplate,
-  reStoreTask,
-} from "../services/index";
-import DeleteIcon from "./SvgIcon/DeleteIcon";
-import StartIcon from "./SvgIcon/StartIcon";
-import TaskAction from "./TaskAction";
+import { useAsyncEffect, useRequest } from 'ahooks';
+import { Action } from '../components/SwiperAction';
+import { cancelTask, createTask, deleteTemplate, getTasks, getTemplate } from '../services/index';
+import DeleteIcon from './SvgIcon/DeleteIcon';
+import StartIcon from './SvgIcon/StartIcon';
+import TaskAction from './TaskAction';
 
-import { config_agv_info } from "../services/index";
-import { useSingleTaskStore } from "../store/singleTask.store";
+import { config_agv_info } from '../services/index';
+import { useSingleTaskStore } from '../store/singleTask.store';
 
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import _ from "lodash";
-import { toast } from "sonner";
-import MwConfirm from "../components/MwConfirm";
-import { ITaskItem } from "../index.d";
-import useConstants from "../useConstants";
-import { translateTempToTaskList } from "../utils/index";
-export type IActive = "task" | "template";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import _ from 'lodash';
+import { toast } from 'sonner';
+import MwConfirm from '../components/MwConfirm';
+import { ITaskItem } from '../index.d';
+import useConstants from '../useConstants';
+import { translateTempToTaskList } from '../utils/index';
+export type IActive = 'task' | 'template';
 const TaskPanel = forwardRef((props: any, ref) => {
   const {
     setTaskVisible,
@@ -61,19 +45,13 @@ const TaskPanel = forwardRef((props: any, ref) => {
     updateTask,
   } = props;
 
-  const [active, setActive] = useState<IActive>("task");
-  const [taskMode, setTaskMode] = useState<"create" | "update">("create");
+  const [active, setActive] = useState<IActive>('task');
+  const [taskMode, setTaskMode] = useState<'create' | 'update'>('create');
   const { data: taskList, runAsync: getTaskList } = useRequest(getTasks, {
     manual: true,
   });
-  const { data: templateList, runAsync: getTemplateList } = useRequest(
-    getTemplate,
-    { manual: true },
-  );
-  const { data: agvInfo, loading }: any = useRequest(
-    () => config_agv_info(),
-    {},
-  );
+  const { data: templateList, runAsync: getTemplateList } = useRequest(getTemplate, { manual: true });
+  const { data: agvInfo, loading }: any = useRequest(() => config_agv_info(), {});
   const isKVehicle = useMemo(() => {
     return agvInfo?.executor === 13;
   }, [agvInfo]);
@@ -82,19 +60,15 @@ const TaskPanel = forwardRef((props: any, ref) => {
   const { t } = useTranslation();
   const { TaskStatusHashMap } = useConstants();
   const isTask = useMemo(() => {
-    return active === "task";
+    return active === 'task';
   }, [active]);
 
   const list = useMemo(() => {
-    return (
-      { task: taskList?.data || [], template: templateList?.data || [] }[
-        active
-      ] || []
-    );
+    return { task: taskList?.data || [], template: templateList?.data || [] }[active] || [];
   }, [taskList, templateList, active]);
 
   useEffect(() => {
-    setTaskMode("create");
+    setTaskMode('create');
   }, []);
 
   const { refreshTaskList } = useSingleTaskStore((store) => ({
@@ -126,12 +100,12 @@ const TaskPanel = forwardRef((props: any, ref) => {
 
   const rightActions: Action[] = [
     {
-      key: "delete",
-      text: t("common.delete"),
-      color: "danger",
-      iconStyle: { width: "50px" },
+      key: 'delete',
+      text: t('common.delete'),
+      color: 'danger',
+      iconStyle: { width: '50px' },
       icon: (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: 'flex' }}>
           <DeleteIcon fontSize={26} isActive onClick={() => {}}></DeleteIcon>
         </div>
       ),
@@ -141,12 +115,12 @@ const TaskPanel = forwardRef((props: any, ref) => {
 
   const runActions: Action[] = [
     {
-      key: "start",
-      text: t("deployer.singleTask.execute"),
-      color: "danger",
-      iconStyle: { width: "50px" },
+      key: 'start',
+      text: t('deployer.singleTask.execute'),
+      color: 'danger',
+      iconStyle: { width: '50px' },
       icon: (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: 'flex' }}>
           <StartIcon fontSize={26} isActive></StartIcon>
         </div>
       ),
@@ -157,16 +131,12 @@ const TaskPanel = forwardRef((props: any, ref) => {
   const handleTaskDelete = async (mainTask: ITaskItem | any) => {
     const hashMap = {
       title: {
-        task: t("deployer.singleTask.deleteTask"),
-        template: t("deployer.singleTask.deleteTemplate"),
+        task: t('deployer.singleTask.deleteTask'),
+        template: t('deployer.singleTask.deleteTemplate'),
       },
       content: {
-        task:
-          `[${mainTask?.task_group_id}]:` +
-          t("deployer.singleTask.confirmDeleteTaskTips"),
-        template:
-          `[${mainTask?.name}]:` +
-          t("deployer.singleTask.confirmDeleteTemplateTips"),
+        task: `[${mainTask?.task_group_id}]:` + t('deployer.singleTask.confirmDeleteTaskTips'),
+        template: `[${mainTask?.name}]:` + t('deployer.singleTask.confirmDeleteTemplateTips'),
       },
       onOk: {
         task: async () => {
@@ -195,7 +165,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
   const handleTaskUpdate = (template) => {
     const list = translateTempToTaskList(template, isKVehicle);
     setPreTaskList(list);
-    setTaskMode("update");
+    setTaskMode('update');
     taskActionRef?.current?.setPublicParams({
       loopTime: template.loop_count,
       intervalTime: template.task_interval,
@@ -205,21 +175,17 @@ const TaskPanel = forwardRef((props: any, ref) => {
 
   const handleTaskStart = async (template: any) => {
     const params = _.cloneDeep(template);
-    // delete params.name;
+    delete params.name;
     const { code } = await createTask(params);
     if (code === 200) {
-      toast.success(t("common.actionSuccess"));
-      setActive("task");
+      toast.success(t('common.actionSuccess'));
+      setActive('task');
     }
   };
 
   const onFinish = useCallback(
     (isTemplateFinish?: boolean) => {
-      isTask
-        ? isTemplateFinish
-          ? setActive("template")
-          : getTaskList()
-        : getTemplateList();
+      isTask ? (isTemplateFinish ? setActive('template') : getTaskList()) : getTemplateList();
       setPreTaskList([initTaskActionRow]);
     },
     [isTask],
@@ -236,95 +202,94 @@ const TaskPanel = forwardRef((props: any, ref) => {
   const getMapTaskPanelListHashMap = (): any => {
     return {
       task: (list: any) => {
-        const taskGroupStop = list?.[0]?.task_state === "Stop" ? true : false;
-        console.log("list", list);
-        return (
-          <>
-            {taskGroupStop ? (
-              <Button
-                variant="contained"
-                fullWidth
-                sx={{ color: "white", marginBottom: "10px" }}
-                onClick={async () => {
-                  await reStoreTask();
-                  getTaskList();
-                  toast.success(t("common.actionSuccess"));
+        return list?.map((taskItem: ITaskItem) => {
+          return (
+            // <SwipeAction
+            //   key={taskItem?.task_group_id}
+            //   rightActions={rightActions}
+            //   closeOnAction={false}
+            //   onMove={() => {
+            //     move.current = true;
+            //   }}
+            //   onAction={() => {
+            //     handleTaskDelete(taskItem);
+            //   }}
+            // >
+            <TaskItem>
+              <div
+                className='flex-1 flex flex-col justify-center'
+                onClick={() => {
+                  handleTaskOption && handleTaskOption(taskItem, 'task');
                 }}
               >
-                {t("deployer.singleTask.restoreTask")}
-              </Button>
-            ) : null}
-            {list?.map((taskItem: ITaskItem) => {
-              return (
-                <TaskItem>
-                  <div
-                    className="flex-1 flex flex-col justify-center"
-                    onClick={() => {
-                      handleTaskOption && handleTaskOption(taskItem, "task");
+                <div className='title'>
+                  <span>{taskItem?.task_group_id || '-'}</span>
+                  <span style={{ fontSize: '12px' }}>
+                    {t('deployer.singleTask.loopCount')}: {taskItem?.loop_count}
+                  </span>
+                </div>
+                <div className='content'>
+                  <span
+                    style={{
+                      color: TaskStatusHashMap?.[taskItem?.task_state].color,
                     }}
                   >
-                    <div className="title">
-                      <span>
-                        {taskItem?.name || taskItem?.task_group_id || "-"}
-                      </span>
-                      <span style={{ fontSize: "12px" }}>
-                        {t("deployer.singleTask.loopCount")}:{" "}
-                        {taskItem?.loop_count}
-                      </span>
-                    </div>
-                    <div className="content">
-                      <span
-                        style={{
-                          color:
-                            TaskStatusHashMap?.[taskItem?.task_state].color,
-                        }}
-                      >
-                        {TaskStatusHashMap?.[taskItem?.task_state].text || "-"}
-                      </span>
-                      &nbsp;&nbsp;
-                      <span style={{ fontSize: "12px" }}>
-                        {t("deployer.singleTask.gapTime")}:{" "}
-                        {taskItem?.task_interval}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center pl-2">
-                    <DeleteIcon
-                      fontSize={18}
-                      isActive
-                      onClick={() => {
-                        handleTaskDelete(taskItem);
-                      }}
-                    ></DeleteIcon>
-                  </div>
-                </TaskItem>
-              );
-            })}
-          </>
-        );
+                    {TaskStatusHashMap?.[taskItem?.task_state].text || '-'}
+                  </span>
+                  &nbsp;&nbsp;
+                  <span style={{ fontSize: '12px' }}>
+                    {t('deployer.singleTask.gapTime')}: {taskItem?.task_interval}
+                  </span>
+                </div>
+              </div>
+              <div className='flex items-center pl-2'>
+                <DeleteIcon
+                  fontSize={18}
+                  isActive
+                  onClick={() => {
+                    handleTaskDelete(taskItem);
+                  }}
+                ></DeleteIcon>
+              </div>
+            </TaskItem>
+            // </SwipeAction>
+          );
+        });
       },
       template: (list: any) => {
         return list?.map((template: any) => {
           return (
+            // <SwipeAction
+            //   key={template?.name}
+            //   rightActions={[...runActions, ...rightActions]}
+            //   closeOnAction={false}
+            //   onMove={() => {
+            //     move.current = true;
+            //   }}
+            //   onAction={(object: any) => {
+            //     const { key } = object;
+            //     key === 'delete' && handleTaskDelete(template);
+            //     key === 'start' && handleTaskStart(template);
+            //   }}
+            // >
             <TaskItem>
               <div
-                className="flex-1 flex flex-col justify-center"
+                className='flex-1 flex flex-col justify-center'
                 onClick={() => {
-                  handleTaskOption && handleTaskOption(template, "template");
+                  handleTaskOption && handleTaskOption(template, 'template');
                 }}
               >
-                <div className="title">{template?.name || "-"}</div>
-                <div className="content" style={{ fontSize: 12 }}>
+                <div className='title'>{template?.name || '-'}</div>
+                <div className='content' style={{ fontSize: 12 }}>
                   <span>
-                    {t("deployer.singleTask.loopCount")}: {template?.loop_count}
+                    {t('deployer.singleTask.loopCount')}: {template?.loop_count}
                   </span>
                   <span>
-                    {t("deployer.singleTask.gapTime")}:{" "}
-                    {template?.task_interval}
+                    {t('deployer.singleTask.gapTime')}: {template?.task_interval}
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 pl-2">
+              <div className='flex items-center gap-2 pl-2'>
                 <StartIcon
                   fontSize={18}
                   isActive
@@ -333,7 +298,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
                   }}
                 ></StartIcon>
                 <BorderColorIcon
-                  sx={{ fontSize: 18, color: "white" }}
+                  sx={{ fontSize: 18, color: 'white' }}
                   onClick={() => {
                     handleTaskUpdate(template);
                   }}
@@ -347,6 +312,7 @@ const TaskPanel = forwardRef((props: any, ref) => {
                 ></DeleteIcon>
               </div>
             </TaskItem>
+            // </SwipeAction>
           );
         });
       },
@@ -358,19 +324,19 @@ const TaskPanel = forwardRef((props: any, ref) => {
       <MapTaskPanelHeader>
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             gap: 5,
           }}
         >
-          <Typography sx={{ fontSize: "20px" }} variant="h5">
-            {t("deployer.singleTask.task")}
+          <Typography sx={{ fontSize: '20px' }} variant='h5'>
+            {t('deployer.singleTask.task')}
           </Typography>
           <PointsAdd fontSize={18} onClick={handleAdd}></PointsAdd>
         </div>
         <CloseIcon
-          fontSize={"large"}
+          fontSize={'large'}
           onClick={() => {
             setTaskVisible(false);
             setPreTaskList([]);
@@ -397,34 +363,26 @@ const TaskPanel = forwardRef((props: any, ref) => {
       <MapTaskPanelList>
         <MapTaskPanelListHeader>
           <Tabs
-            sx={{ width: "100%" }}
+            sx={{ width: '100%' }}
             value={active}
             onChange={(event, newValue) => {
               setActive(newValue);
             }}
             centered
           >
-            <Tab
-              sx={{ fontSize: "18px" }}
-              label={t("deployer.singleTask.taskList")}
-              value={"task"}
-            />
-            <Tab
-              sx={{ fontSize: "18px" }}
-              label={t("deployer.singleTask.taskTemplate")}
-              value={"template"}
-            />
+            <Tab sx={{ fontSize: '18px' }} label={t('deployer.singleTask.taskList')} value={'task'} />
+            <Tab sx={{ fontSize: '18px' }} label={t('deployer.singleTask.taskTemplate')} value={'template'} />
           </Tabs>
         </MapTaskPanelListHeader>
-        <div style={{ height: "10px" }}></div>
+        <div style={{ height: '10px' }}></div>
         {list.length ? (
           getMapTaskPanelListHashMap()[active](list)
         ) : (
           <EmptyBox
-            title={t("common.noData")}
-            iconColor="white"
-            titleColor="white"
-            backgroundColor="transparent"
+            title={t('common.noData')}
+            iconColor='white'
+            titleColor='white'
+            backgroundColor='transparent'
           ></EmptyBox>
         )}
       </MapTaskPanelList>

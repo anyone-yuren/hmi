@@ -1,5 +1,5 @@
 // import convexHull from 'monotone-convex-hull-2d';
-import React from "react";
+import React from 'react';
 import {
   // common
   COMMON_POINT_COLOR,
@@ -17,8 +17,8 @@ import {
   STORAGE_POINT_STROKE_WIDTH,
   // storage
   STORAGE_POINT_WIDTH,
-} from "../constants/index";
-import { IOriginPoints, IPoint } from "../index.d";
+} from '../constants/index';
+import { IOriginPoints, IPoint } from '../index.d';
 const usePoints = (props: IOriginPoints) => {
   const {
     points = [],
@@ -49,8 +49,7 @@ const usePoints = (props: IOriginPoints) => {
     textVisible: COMMON_POINT_TEXT_VISIBLE,
     ...commonProps,
   });
-  const [common_text_visible, set_common_text_visible] =
-    React.useState(commonTextVisible);
+  const [common_text_visible, set_common_text_visible] = React.useState(commonTextVisible);
   const [common_text_props, set_common_text_props] = React.useState({
     fill: COMMON_POINT_TEXT_COLOR,
     height: STORAGE_POINT_WIDTH, // 用库位的点位去定义普通点的文字的高度
@@ -68,8 +67,7 @@ const usePoints = (props: IOriginPoints) => {
     offsetY: STORAGE_POINT_HEIGHT / 2,
     ...storageProps,
   });
-  const [storage_text_visible, set_storage_text_visible] =
-    React.useState(storageTextVisible);
+  const [storage_text_visible, set_storage_text_visible] = React.useState(storageTextVisible);
   const [storage_text_props, set_storage_text_props] = React.useState({
     ...storageTextProps,
   });
@@ -84,8 +82,7 @@ const usePoints = (props: IOriginPoints) => {
     strokeWidth: STORAGE_POINT_STROKE_WIDTH,
     ...stationProps,
   });
-  const [station_text_visible, set_station_text_visible] =
-    React.useState(stationTextVisible);
+  const [station_text_visible, set_station_text_visible] = React.useState(stationTextVisible);
   const [station_text_props, set_station_text_props] = React.useState({
     ...stationTextProps,
   });
@@ -102,13 +99,10 @@ const usePoints = (props: IOriginPoints) => {
     }
     return point.type === 2 || point.type === 6;
   };
-  // 普通的小圆点 视觉点也当做是普通点
+  // 普通的小圆点
   const isCommon = (point: IPoint) => {
     // 大于多个点的普通点不显示
-    return (
-      (point.type === 0 || point.type === 3 || point.type === 5) &&
-      point?.types?.length === 1
-    );
+    return (point.type === 0 || point.type === 3) && point?.types?.length === 1;
   };
 
   const isInside = (point: IPoint) => {
@@ -128,7 +122,7 @@ const usePoints = (props: IOriginPoints) => {
     let common: IPoint[] = [];
     let storage: IPoint[] = [];
     const station: IPoint[] = [];
-    const hashMap: Record<IPoint["id"], IPoint> = {};
+    const hashMap: Record<IPoint['id'], IPoint> = {};
     // 左下和右上的点位
     let { x1, y1, x2, y2 } = {
       x1: points.length ? points[0].x : 0,
@@ -139,18 +133,9 @@ const usePoints = (props: IOriginPoints) => {
 
     for (let index = 0; index < points.length; index += 1) {
       const _points = points[index];
-      storage_visible &&
-        isStorage(_points) &&
-        isInside(_points) &&
-        storage.push(_points);
-      station_visible &&
-        isStation(_points) &&
-        isInside(_points) &&
-        station.push(_points);
-      common_visible &&
-        isCommon(_points) &&
-        isInside(_points) &&
-        common.push(_points);
+      storage_visible && isStorage(_points) && isInside(_points) && storage.push(_points);
+      station_visible && isStation(_points) && isInside(_points) && station.push(_points);
+      common_visible && isCommon(_points) && isInside(_points) && common.push(_points);
       _points.x < x1 && (x1 = _points.x);
       _points.y < y1 && (y1 = _points.y);
       _points.x > x2 && (x2 = _points.x);
@@ -161,12 +146,10 @@ const usePoints = (props: IOriginPoints) => {
     }
     // 暂时做库位就行了,普通点要拉小才显示，不需要过滤
     const storage_percent = Math.ceil(storage.length / 500);
-    storage.length >= 500 &&
-      (storage = storage.filter((_, index) => index % storage_percent == 0));
+    storage.length >= 500 && (storage = storage.filter((_, index) => index % storage_percent == 0));
 
     const common_percent = Math.ceil(common.length / 300);
-    common.length >= 300 &&
-      (common = common.filter((_, index) => index % common_percent == 0));
+    common.length >= 300 && (common = common.filter((_, index) => index % common_percent == 0));
 
     // 直接硬补偿
     return {
@@ -177,15 +160,7 @@ const usePoints = (props: IOriginPoints) => {
       extremum: [x1 - 60, y1 - 60, x2 + 60, y2 + 60],
       polygon: [],
     };
-  }, [
-    station_visible,
-    common_visible,
-    storage_visible,
-    boundary,
-    points,
-    scale,
-    visibleConfig,
-  ]);
+  }, [station_visible, common_visible, storage_visible, boundary, points, scale, visibleConfig]);
 
   return {
     hashMap: origin_points.hashMap,

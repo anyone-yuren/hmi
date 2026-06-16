@@ -45,10 +45,10 @@ export default function useHybirdWsExtend() {
         setSeniorPoints(decompressedData ?? []);
       }
     },
-    // '/sirius/topics/goods_info': (data: any) => {
-    //   // 货物信息
-    //   setGoodsInfo(data);
-    // },
+    '/sirius/topics/goods_info': (data: any) => {
+      // 货物信息
+      setGoodsInfo(data);
+    },
     '/sirius/topics/safety_protect_region': (data: any) => {
       //转弯区域
       setTurnRegionData(data.points || []);

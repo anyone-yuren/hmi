@@ -227,7 +227,20 @@ const Safety = () => {
             distance={activeScheme.project_distance}
           ></SafetyVehicle>
         )}
-
+        {false && (
+          <SafetyVehicleModels
+            vehicleRect={vehicleOutline}
+            forksUnderRect={forksUnderOutline}
+            distance={activeScheme.project_distance}
+          ></SafetyVehicleModels>
+        )}
+        {false && (
+          <SafetyVehicle
+            vehicleRect={vehicleOutline}
+            forksUnderRect={forksUnderOutline}
+            distance={activeScheme.project_distance}
+          ></SafetyVehicle>
+        )}
         <SafetyObsLines lines={projectArea || []}></SafetyObsLines>
         {deviceList?.data?.length && <SafetySensors sensors={deviceList?.data || []}></SafetySensors>}
         {true && (

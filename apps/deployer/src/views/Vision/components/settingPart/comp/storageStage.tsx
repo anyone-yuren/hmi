@@ -1,7 +1,7 @@
 import { getLineList, getPointList } from '@/views/Vision/services/index';
 // import { InitStage } from '@gbeata/mapping';
 import { InitStage } from '@gbeata/app-global';
-import { Button, Chip } from '@mui/material';
+import { Button } from '@mui/material';
 import { useRequest, useSize } from 'ahooks';
 import { memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -49,7 +49,7 @@ const StorageStage = (props: IProps) => {
   const lines = useMemo(() => {
     const ary: any = [];
     for (let index = 0; index < linesList?.data?.length; index++) {
-      const { id, end_point, start_point, control_points = [] } = linesList?.data?.[index];
+      const { id, end_point, start_point, control_points } = linesList?.data?.[index];
       ary.push({
         id,
         type: 1,
@@ -68,11 +68,6 @@ const StorageStage = (props: IProps) => {
   const renderTemplateValue = useMemo(() => {
     return templateValue?.filter((point: any) => pointsMap?.hashMap[point]);
   }, [templateValue, pointsMap?.hashMap]);
-
-  const handleDeleteItem = (itemId: string | number) => {
-    const newSelected = renderTemplateValue.filter((id) => id !== itemId);
-    setTemplateValue(newSelected);
-  };
 
   const handleClick = () => {
     onChange && onChange(renderTemplateValue);
@@ -107,21 +102,7 @@ const StorageStage = (props: IProps) => {
       </div>
       <div className='w-full h-[30px] flex items-center'>
         <div className='flex-1'>
-          {t('deployer.vision.selected')}:{' '}
-          {renderTemplateValue?.map((item, index) => (
-            <Chip
-              key={index}
-              label={item}
-              onDelete={() => handleDeleteItem(item)}
-              size='small'
-              sx={{
-                backgroundColor: '#e3f2fd',
-                color: '#1976d2',
-                height: '24px',
-                margin: '0 5px',
-              }}
-            />
-          ))}
+          {t('deployer.vision.selected')}: {renderTemplateValue?.join('、')}
         </div>
         <div>
           <Button variant='contained' size={'small'} sx={{ color: 'white' }} onClick={handleClick}>

@@ -56,7 +56,7 @@ const GlobalHeader = () => {
   const { styles } = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
-  const { powerStatus, setPowerStatus, systemDateTime, taskInfo, isContentWss } = useVehicleStore(
+  const { powerStatus, setPowerStatus, systemDateTime, taskInfo } = useVehicleStore(
     useShallow((state) => {
       return {
         powerStatus: state.powerStatus,
@@ -64,7 +64,6 @@ const GlobalHeader = () => {
         systemDateTime: state.systemDateTime,
         // rcsIsOnline: state.rcsIsOnline,
         taskInfo: state.taskInfo,
-        isContentWss: state.isContentWss,
       };
     }),
   );
@@ -88,26 +87,13 @@ const GlobalHeader = () => {
     })),
   );
 
-  const {
-    data,
-    run: getConfigAgvInfo,
-    loading,
-  } = useRequest(config_agv_info, {
-    manual: true,
-    onSuccess: (res: any) => {
-      res?.agv_type && setAvgType(res?.agv_type);
-    },
-  });
+  const { data } = useRequest(config_agv_info);
 
   useEffect(() => {
-    isContentWss && getConfigAgvInfo();
-  }, [isContentWss]);
-
-  // useEffect(() => {
-  //   if (data) {
-  //     data?.agv_type && setAvgType(data?.agv_type);
-  //   }
-  // }, [data]);
+    if (data) {
+      data?.agv_type && setAvgType(data?.agv_type);
+    }
+  }, [data]);
 
   useEffect(() => {
     // 准备充电的时候就跳到充电页面
@@ -188,9 +174,9 @@ const GlobalHeader = () => {
       </p>
       <div className='flex flex-col items-center gap-2'>
         <BarBattery level={40} height={24} />
-        {isContentWss && <Signal canLinkWifi={data?.support_wireless_configuration} />}
+        <Signal canLinkWifi={data?.support_wireless_configuration} />
       </div>
-      {isContentWss && <Selectlangulage />}
+      <Selectlangulage />
       <ConfigProvider
         theme={{
           components: {
@@ -268,8 +254,7 @@ const GlobalHeader = () => {
         <ChargingAnimation
           onClick={() => {
             setShowChargingDialog(false);
-            // setCloseChargingTime(new Date().getTime());
-            setCloseChargingTime(Number(systemDateTime) || new Date().getTime());
+            setCloseChargingTime(new Date().getTime());
             // setPowerStatus({
             //   ...powerStatus,
             //   charge_status: 0,
