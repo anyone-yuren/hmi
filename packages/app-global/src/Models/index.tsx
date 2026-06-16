@@ -6,19 +6,24 @@ import * as THREE from 'three';
 import { IconifyIcon } from 'ui';
 import { useShallow } from 'zustand/react/shallow';
 import ScanLoading from '../toolkit/components/ScanLoading';
-import DrawHandle from './components/modelHandle';
 import OffsetTableScene from './components/OffsetTable';
 import OffsetTableUI from './components/OffsetTable/OffsetTableUI';
+import DrawHandle from './components/modelHandle';
 import RModelFbx from './components/r20';
 import RightPanel from './components/rightPanel';
 import TabsPanel from './components/tabsPanel';
 import { useModelStore } from './store';
-import BaseElement from './threeComponent/base';
 import ContextMenu from './threeComponent/ContextMenu';
 import PanelRoot from './threeComponent/PanelRoot';
 import { SceneRaycaster } from './threeComponent/SceneRaycaster';
+import BaseElement from './threeComponent/base';
 import VisionFlow from './visionFlow';
 import { useVisionFlowStore } from './visionFlow/store/visionFlowStore';
+
+// ⭐ 增量导入我们新写的隔离控制层
+import { SensorFilterDrawer } from './components/SensorFilterDrawer';
+import { useEditorStore } from './store/editorStore';
+import { FilterStrategy, SensorItem } from './types/sensor';
 
 interface RightTriangularPrismProps extends MeshProps {
   width?: number; // 直角三角形一条直角边长度 (X 方向)
@@ -149,6 +154,84 @@ export default function R3FBasicScene() {
   const [panelWidth, setPanelWidth] = useState(300);
   const [isOpen, setIsOpen] = useState(true); // true 表示面板打开
   const [bottomPanelOpen, setBottomPanelOpen] = useState(true); // 控制底部面板是否展开
+
+  // ==========================================
+  // 🔥 新增：感知器件独立状态机，完全不会与老代码的数据流交叉污染
+  // ==========================================
+  const [sensorDrawerOpen, setSensorDrawerOpen] = useState(false);
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [targetSensorId, setTargetSensorId] = useState<string | null>(null);
+  const [sensors, setSensors] = useState<SensorItem[]>([
+    {
+      id: 'lidar_front',
+      name: '前激光雷达 (Front LiDAR)',
+      type: 'lidar',
+      showPointCloud: true,
+      filters: [],
+    },
+    {
+      id: 'lidar_rear',
+      name: '后激光雷达 (Rear LiDAR)',
+      type: 'lidar',
+      showPointCloud: false,
+      filters: [],
+    },
+    {
+      id: 'camera_3d',
+      name: '3D 视觉相机 (Tray Vision)',
+      type: 'camera',
+      showPointCloud: true,
+      filters: [],
+    },
+  ]);
+
+  // 点云显示开关切换
+  const handleTogglePointCloud = (id: string, checked: boolean) => {
+    setSensors((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, showPointCloud: checked } : s)),
+    );
+    const setLayerVisible = useEditorStore.getState().setLayerVisible;
+    if (typeof setLayerVisible === 'function') {
+      setLayerVisible(id, checked);
+    }
+  };
+
+  // 面板内直接新增策略（零弹窗，实时响应）
+  const handleInlineAddStrategy = (
+    sensorId: string,
+    strategyValues: Omit<FilterStrategy, 'id'>,
+  ) => {
+    setSensors((prev) =>
+      prev.map((s) => {
+        if (s.id === sensorId) {
+          const newFilter: FilterStrategy = {
+            ...strategyValues,
+            id: `filter_${Date.now()}`,
+          };
+          return { ...s, filters: [...s.filters, newFilter] };
+        }
+        return s;
+      }),
+    );
+
+    // 这里可以直接将参数 push 给底层的 Three.js 点云过滤 Shader 或是计算矩阵进行实时清洗
+  };
+
+  // 面板内直接删除标定策略
+  const handleInlineDeleteStrategy = (sensorId: string, filterId: string) => {
+    setSensors((prev) =>
+      prev.map((s) => {
+        if (s.id === sensorId) {
+          return {
+            ...s,
+            filters: s.filters.filter((f) => f.id !== filterId),
+          };
+        }
+        return s;
+      }),
+    );
+  };
+
   const { openVisionPanel } = useVisionFlowStore(
     useShallow((store) => {
       return {
@@ -180,7 +263,10 @@ export default function R3FBasicScene() {
         className=' shadow-inner overflow-auto relative flex flex-col gap-2'
       >
         <DrawHandle />
-        <TabsPanel setPanelOpen={setIsOpen} />
+        <TabsPanel
+          setPanelOpen={setIsOpen}
+          onOpenSensorControl={() => setSensorDrawerOpen(true)}
+        />
         <motion.div
           animate={{
             height: openVisionPanel ? `calc(100% - 300px)` : '100%', // 80px 是底部面板的高度
@@ -257,6 +343,18 @@ export default function R3FBasicScene() {
       >
         <IconifyIcon icon='ep:arrow-left' size={18} />
       </span>
+
+      {/* ==========================================
+        🔥 增量挂载：在主 DOM 树最底部平行渲染抽屉与弹窗，对老功能完全零负荷
+      ========================================== */}
+      <SensorFilterDrawer
+        open={sensorDrawerOpen}
+        onClose={() => setSensorDrawerOpen(false)}
+        sensors={sensors}
+        onToggleVisible={handleTogglePointCloud}
+        onAddStrategy={handleInlineAddStrategy}
+        onDeleteStrategy={handleInlineDeleteStrategy}
+      />
 
       {/* 底部面板动画 */}
 

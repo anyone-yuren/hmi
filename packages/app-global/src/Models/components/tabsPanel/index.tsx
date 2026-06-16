@@ -1,3 +1,4 @@
+import { CloudOutlined } from '@ant-design/icons';
 import { Checkbox, Collapse, Form, Menu, Select, Tooltip } from 'antd';
 import classNames from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -8,7 +9,13 @@ import { useModelStore } from '../../store';
 import { useSafetyStore } from '../../store/safity';
 import ObstacleHandles from './obsHandles';
 
-const TabsPanel = ({ setPanelOpen }) => {
+interface TabsPanelProps {
+  setPanelOpen: (open: boolean) => void;
+  // ⭐ 增量接收由 R3FBasicScene 传下来的方法定义
+  onOpenSensorControl?: () => void;
+}
+
+const TabsPanel = ({ setPanelOpen, onOpenSensorControl }: TabsPanelProps) => {
   const {
     mode,
     setMode,
@@ -321,6 +328,7 @@ const TabsPanel = ({ setPanelOpen }) => {
               />
             </Tooltip>
           </div>
+
           <div
             className={classNames(
               'flex items-center cursor-pointer bg-black/40 active:bg-cyan-500/30 hover:bg-cyan-500/40 p-1',
@@ -336,6 +344,20 @@ const TabsPanel = ({ setPanelOpen }) => {
               />
             </Tooltip>
           </div>
+
+          {/* 🚀 新增：雷达外设可见性与高频滤波标定专用的点云触发器 */}
+          {onOpenSensorControl && (
+            <Tooltip title='感知外设可见性与滤波参数调校' placement='bottom'>
+              <button
+                type='button'
+                onClick={onOpenSensorControl}
+                className='px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-emerald-400 hover:text-emerald-300 rounded-lg flex items-center gap-1.5 text-xs font-semibold tracking-wide transition-all active:scale-95 shadow-md'
+              >
+                <CloudOutlined className='text-sm' />
+                <span>感知标定</span>
+              </button>
+            </Tooltip>
+          )}
         </div>
         {mode === 'obstacleAvoidance' && <ObstacleHandles />}
       </div>
