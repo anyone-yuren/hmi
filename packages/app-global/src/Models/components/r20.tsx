@@ -2,6 +2,7 @@
 R车模型组件
 包含分段升降逻辑：fork-left → first-door → second-door
 添加选中部件的发光效果
+增加车体轮廓配置功能
 */
 import { animated, useSpring } from '@react-spring/three';
 import { useFBX } from '@react-three/drei';
@@ -14,6 +15,7 @@ import { useModelStore } from '../store';
 import { useEditorStore } from '../store/editorStore';
 import { useSafetyStore } from '../store/safity';
 import { useVisionFlowStore } from '../visionFlow/store/visionFlowStore';
+import { BodyOutline } from './BodyOutline';
 
 const SCALE = 0.1;
 // 升降阶段阈值（单位：毫米）
@@ -130,19 +132,6 @@ const ForkLeft = forwardRef<any, ForkLeftProps>(
           };
         }),
       );
-
-    // 🟢 react-spring 动画
-    // const { y } = useSpring({
-    //   from: { y: MIN_HEIGHT, positionY: 50, scaleY: 1 },
-    //   to: { y: MAX_HEIGHT, positionY: MAX_HEIGHT / 2, scaleY: 3 },
-    //   config: {
-    //     mass: 1,
-    //     tension: 120,
-    //     friction: 20,
-    //     duration: 2000,
-    //   },
-    //   loop: { reverse: mode === 'obstacleAvoidance' }, // ✨ 上下往返循环
-    // });
 
     // 创建材质副本
     const [clonedMaterial, setClonedMaterial] = useState(null);
@@ -589,8 +578,8 @@ const RBody = forwardRef<any, RBodyProps>(
           onClick={(e) => {
             onClick?.(e);
             setModelSelect('body');
-            setPanelTab(null);
-            hidePanel();
+            setPanelTab('bodyOutline');
+            showPanel('body');
           }}
         >
           {isSelected && (
@@ -604,6 +593,9 @@ const RBody = forwardRef<any, RBodyProps>(
             </mesh>
           )}
         </mesh>
+
+        {/* 车体轮廓 */}
+        <BodyOutline bodyMesh={bodyMesh} isVisible={isSelected} />
       </>
     );
   },
