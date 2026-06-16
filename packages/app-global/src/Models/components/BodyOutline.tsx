@@ -1,5 +1,5 @@
-import { useRef, useMemo, useEffect } from 'react';
-import { BoxGeometry, LineSegments, LineBasicMaterial, BufferGeometry, Vector3 } from 'three';
+import { useEffect, useMemo, useRef } from 'react';
+import { BufferAttribute, BufferGeometry, Vector3 } from 'three';
 import { useShallow } from 'zustand/react/shallow';
 import { useBodyOutlineStore } from '../store/bodyOutlineStore';
 
@@ -67,7 +67,10 @@ export function BodyOutline({ bodyMesh, isVisible = true }: BodyOutlineProps) {
       positions.push(vertices[end].x, vertices[end].y, vertices[end].z);
     });
 
-    geometry.setAttribute('position', new (require('three').BufferAttribute)(new Float32Array(positions), 3));
+    geometry.setAttribute(
+      'position',
+      new BufferAttribute(new Float32Array(positions), 3),
+    );
 
     return geometry;
   }, [bodyOutlineConfig]);
@@ -85,7 +88,11 @@ export function BodyOutline({ bodyMesh, isVisible = true }: BodyOutlineProps) {
       line.material.linewidth = bodyOutlineConfig.lineWidth;
       line.material.needsUpdate = true;
     }
-  }, [bodyOutlineConfig.color, bodyOutlineConfig.opacity, bodyOutlineConfig.lineWidth]);
+  }, [
+    bodyOutlineConfig.color,
+    bodyOutlineConfig.opacity,
+    bodyOutlineConfig.lineWidth,
+  ]);
 
   if (!isVisible || !bodyOutlineConfig.enabled) {
     return null;
