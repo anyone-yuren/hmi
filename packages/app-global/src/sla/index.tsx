@@ -686,7 +686,7 @@ const VlaConsole = () => {
           className="w-8 h-8 border-2 border-[#00e5ff] border-t-transparent rounded-full"
         />
         <div className="text-[#00e5ff] tracking-widest text-sm font-bold animate-pulse">
-          正在握手自主 VLA 通信通道链路...
+          正在主控台与VLA建立通信通道...
         </div>
       </div>
     );
